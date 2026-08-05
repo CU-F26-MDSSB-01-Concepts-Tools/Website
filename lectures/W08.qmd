@@ -1,0 +1,957 @@
+---
+title: "W#08: Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression"
+author: Jan Lorenz
+format: 
+  revealjs: 
+    toc: true
+    toc-depth: 1
+    smaller: true
+    slide-number: true
+    code-fold: true
+    chalkboard: 
+      buttons: true
+    preview-links: true
+    logo: img/ConstructorUniversity.png
+    footer: "MDSSB-DSCO-02: Data Science Concepts"
+bibliography: "/home/janlo/Documents/literature/litlorenz_zot.bib"
+editor_options: 
+  chunk_output_type: console
+---
+
+## Preliminaries
+
+```{r}
+#| echo: true
+#| code-fold: false
+library(tidyverse)
+library(palmerpenguins)
+library(tidymodels)
+library(openintro)
+library(patchwork) # For pasting ggplots together
+```
+
+## Recap: Linear Model  {.smaller background-color="aquamarine"}
+
+We fit a linear model predicting `flipper_length_mm` from `body_mass_g` using least squares regression. In R: 
+
+```{r}
+lm(flipper_length_mm ~ body_mass_g, data = penguins)
+```
+
+As equation: average `flipper_length_mm` $= 137 + 0.0153\cdot$ `body_mass_g`
+
+```{r}
+#| echo: true
+pengmod <- linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins)
+penguins |>
+  bind_cols(predict(pengmod, penguins)) |>
+  ggplot(aes(body_mass_g, flipper_length_mm)) +
+  geom_segment(
+    aes(
+      x = body_mass_g,
+      y = flipper_length_mm,
+      xend = body_mass_g,
+      yend = .pred
+    ),
+    color = "gray"
+  ) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm") +
+  geom_point(aes(y = .pred), color = "red", alpha = 0.3) +
+  geom_point(
+    data = tibble(
+      x = mean(penguins$body_mass_g, na.rm = T),
+      y = mean(penguins$flipper_length_mm, na.rm = T)
+    ),
+    mapping = aes(x, y),
+    color = "green",
+    size = 5
+  )
+```
+
+
+# Linear Models with Categorical Variables as Predictors
+
+## Categorical variables as predictors? 
+
+When a variable has categories the entries are not numbers. Can we use it as predictors?
+
+. . . 
+
+Let's explore and just try what happens with `species` as explanatory variable: 
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ species, data = penguins) |>
+  tidy()
+```
+Remember, we have three species: Adelie, Chinstrap, Gentoo. What happened? 
+
+. . . 
+
+Two of the three species categories appear as variables now.
+
+- Categorical variables are automatically encoded as **dummy variables**
+- Each coefficient describes the expected difference between flipper length of that particular species compared to the baseline level
+- What is the baseline level? [[The first category!]{style='color:red;'} (Here alphabetically `"Adelie"`)]{.fragment}
+
+
+## How do dummy variables look? 
+
+
+species    | speciesChinstrap | speciesGentoo 
+-----------|------------------|--------------
+Adelie     |      0           | 0
+Adelie     |      0           | 0
+Chinstrap  |      1           | 0
+Gentoo     |      0           | 1
+Gentoo     |      0           | 1
+Gentoo     |      0           | 1
+Adelie     |      0           | 0
+Chinstrap  |      1           | 0
+
+
+Then the fitting of the linear model is as before using variables which just have 0's and 1's as entries. (In machine learning called *one-hot encoding*) 
+
+
+## Check: Create Dummies ourselves 
+
+::: {.columns}
+::: {.column}
+Create dummy variables with `if_else` and show three example rows, one for each species:
+
+```{r}
+#| echo: true
+penguins_with_dummies <- penguins |>
+  mutate(
+    speciesChinstrap = if_else(species == "Chinstrap", 1, 0),
+    speciesGentoo = if_else(species == "Gentoo", 1, 0)
+  ) |>
+  select(flipper_length_mm, speciesChinstrap, speciesGentoo)
+penguins_with_dummies |> slice(1, 200, 300)
+```
+
+:::
+::: {.column}
+Fit the model manually:
+
+```{r}
+#| echo: true
+penguins_with_dummies |>
+  lm(flipper_length_mm ~ speciesChinstrap + speciesGentoo, data = _)
+```
+
+:::
+::: 
+
+Equation:   
+average `flipper_length_mm` $= \beta_0 + \beta_1\cdot$ `speciesChinstrap` $+ \beta_2\cdot$ `speciesGentoo`    
+With fitted parameters $\beta_0 \approx 190, \beta_1 \approx 5.87$ and $\beta_2 = 27.2$ 
+
+::: aside 
+
+Coding notes: With `lm` we use the linear model engine directly without the tidymodels pipeline. With `data = _` we use the data that is piped in. The `_` is a placeholder for the piped data. We need it because `lm` does not have a `data` argument in the first position. (`lm` is older than the tidyverse and does not support piping directly.)
+
+:::
+
+
+
+
+
+## Interpretation {.smaller background-color="khaki"}
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ species, data = penguins) |>
+  tidy()
+```
+
+- Flipper length of the baseline species is the intercept.    
+    - Average flipper length of Adelie is 190 mm
+- Flipper length of the two other species add their coefficient
+    - Average flipper length of Chinstrap is 190 + 5.87 mm
+    - Average flipper length of Gentoo is 190 + 27.2 mm
+
+
+## Compare to a visualization {.smaller}
+
+```{r}
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ species, data = penguins) |>
+  tidy()
+```
+
+```{r}
+#| echo: true
+jitterplots <- penguins |> 
+  ggplot(aes(species, flipper_length_mm)) +
+  geom_jitter(width = 0.1, alpha = 0.3) +
+  stat_summary(fun.y = mean, geom = "point", size = 5, color = "red")
+boxplots <- penguins |>
+  ggplot(aes(species, flipper_length_mm)) +
+  geom_boxplot() +
+  stat_summary(fun.y = mean, geom = "point", size = 5, color = "red")
+jitterplots + boxplots
+```
+
+The red dots are the mean values for species. 
+
+# Linear models and R-squared
+
+## Quality of different linear models? {.smaller} 
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  tidy()
+```
+
+average `flipper_length_mm` $= 137 + 0.0153\cdot$ `body_mass_g`
+
+. . .
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(bill_depth_mm ~ bill_length_mm, data = penguins) |>
+  tidy()
+```
+
+average `bill_depth_mm` $= 20.9 -0.085\cdot$ `bill_length_mm`
+
+. . .
+
+**Technical:** The idea of the `tidy()` function is to turn an object into a tidy tibble. Here, it extracts the coefficients of the linear model (and more statistical information).
+
+
+
+
+## R-squared of a fitted model {.smaller background-color="aquamarine"}
+
+$R^2$ is the percentage of variability in the response explained by the regression model. 
+
+R-squared is also called **coefficient of determination**. 
+
+**Definition**: 
+
+$R^2 = 1 - \frac{SS_\text{res}}{SS_\text{tot}}$
+
+where $SS_\text{res} = \sum_i(y_i - f_i)^2 = \sum_i e_i^2$ is the *sum of the squared residuals*, and   
+$SS_\text{tot} = \sum_i(y_i - \bar y)^2$ the *total sum of squares* which is proportional to the variance of $y$. ($\bar y$ is the mean of $y$.)
+
+![](https://upload.wikimedia.org/wikipedia/commons/8/86/Coefficient_of_Determination.svg)
+
+
+
+## Linear model R-squared {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  glance()
+```
+
+The command `glance` shows summary statistics of model fits in a single row.
+
+
+**Interpretation R-squared?** 75.9% of the variance of flipper length can be explained by a linear relation with body mass. [Warning: "Explain" $\neq$ causal claim!]{.fragment style='color:red;'}
+
+. . .
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(bill_depth_mm ~ bill_length_mm, data = penguins) |>
+  glance()
+```
+
+5.52% of the variance of bill depth can be explained by a linear relation with bill length. 
+
+
+## R-squared and correlation {.smaller}
+
+For a linear model with one predictor, the square of the correlation coefficient is the same as the R-squared of the model. Hence, the name $R^2$! Check with code:
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  glance()
+```
+
+```{r}
+#| echo: true
+#| code-fold: false
+cor(
+  penguins$flipper_length_mm,
+  penguins$body_mass_g,
+  use = "pairwise.complete.obs"
+)
+```
+
+```{r}
+#| echo: true
+#| code-fold: false
+cor(
+  penguins$flipper_length_mm,
+  penguins$body_mass_g,
+  use = "pairwise.complete.obs"
+)^2
+```
+
+. . . 
+
+
+# Linear models with more predictors
+
+- Hey, we had already two predictors created all of a sudden when we were using a categorical variable with 3 categories
+- We can also add more numerical predictors
+
+## Add predictors $\to$ More coefficients {.smaller}
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  tidy()
+```
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + bill_length_mm, data = penguins) |>
+  tidy()
+```
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(
+    flipper_length_mm ~ body_mass_g + bill_length_mm + bill_depth_mm,
+    data = penguins
+  ) |>
+  tidy()
+```
+
+## More predictors: `glance` R-squared {.smaller}
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  glance()
+```
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + bill_length_mm, data = penguins) |>
+  glance()
+```
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(
+    flipper_length_mm ~ body_mass_g + bill_length_mm + bill_depth_mm,
+    data = penguins
+  ) |>
+  glance()
+```
+
+##  More predictors: Equations {.smaller}
+
+average `flipper_length_mm` $= 137 + 0.0153\cdot$ `body_mass_g`    
+75.9% explained variance
+
+average `flipper_length_mm` $= 122 + 0.0131\cdot$ `body_mass_g` $+ 0.549\cdot$ `bill_length_mm`    
+78.8% explained variance
+
+average `flipper_length_mm` $= 158 + 0.0109\cdot$ `body_mass_g` $+ 0.592\cdot$ `bill_length_mm` $- 1.68\cdot$ `bill_length_mm`   
+83.1% explained variance
+
+Often more predictors bring higher R-squared. However, doing it blindly makes  interpretation complicated and can lead to **overfitting**! (Treated later.)
+
+
+# Interaction Effects
+
+Adding products of variables as new variable.
+
+## Categorical variable as main effect {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + species, data = penguins) |>
+  tidy()
+```
+
+A **main effect** by categorical dummy variables allows for different intercepts per species. (However, the slopes are the same.)
+
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + species, data = penguins) |>
+  glance()
+```
+
+Adding species increases R-squared better than adding bill length and bill depth together!
+
+
+## Adding as interaction effect {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g * species, data = penguins) |>
+  tidy()
+```
+
+- Note the `*` for interaction effect!
+- Also main effects for both variables are in as coefficients.
+- Adelie is the baseline species (because it is first in the alphabet).
+- An **interaction effect** allows for different slopes for each species!
+
+
+## Regression lines by species {.smaller}
+
+```{r}
+penguins |>
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal()
+```
+
+Compare the slopes to the regression output on the slides before!
+
+
+## Different equations for each species! {.smaller}
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g * species, data = penguins) |>
+  tidy()
+```
+
+Adelie:   
+average `flipper_length_mm` $= 165 + 0.00668\cdot$ `body_mass_g`    
+
+Chinstrap:   
+average `flipper_length_mm` $= 165 - 13.6 + (0.00668 + 0.00523)\cdot$ `body_mass_g`    
+
+Gentoo:   
+average `flipper_length_mm` $= 165 + 6.06 + (0.00668 + 0.00236)\cdot$ `body_mass_g`    
+
+
+## Improvement of interaction effects is small here {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + species, data = penguins) |>
+  glance()
+```
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g * species, data = penguins) |>
+  glance()
+```
+
+
+## Interaction effects of two categoricals {.smaller}
+
+Assume $x_1$ and $x_2$ are categorical variables. We add their product in the linear model as a *new variable*: 
+$y_i = \beta_0 + \beta_1x_1  + \beta_2x_2 + \beta_{3}x_1x_2 + \dots$. 
+
+**Example:** $x_1$ is *gender female* and $x_2$ *having kids* 
+
+```{r}
+#| echo: true
+#| code-fold: true
+tibble(gender_female = c(0, 1, 1, 0), has_kids = c(1, 0, 1, 0)) |>
+  mutate(gender_female_x_has_kids = gender_female * has_kids) |>
+  knitr::kable()
+```
+
+- What is the baseline? [*Being male without kids.*]{.fragment}
+- Thought experiment: When we estimate a model explaining life satisfaction with these. How would we see if being a mother increases life satisfaction more than being a father? [*positive coefficient for `gender_female_x_has_kids`*]{.fragment}
+
+
+
+# Predicting Categorical Data
+
+Large part of the content adapted from <http://datasciencebox.org>.
+ 
+## What if response is binary?  {.smaller}
+
+- Example: **Spam filter** for emails
+
+```{r}
+#| echo: true
+glimpse(email) # Part of the openintro data package
+```
+
+## Multinomial response variable?
+
+- We will not cover other categorical variables than binary ones here.
+- However, many of the probabilistic concepts transfer. 
+
+
+
+## Email Example: Variables {.smaller}
+
+`?email` shows all variable descriptions. For example: 
+
+- `spam` Indicator for whether the email was spam.
+- `from` Whether the message was listed as from anyone (this is usually set by default for regular outgoing email).
+- `cc` Number of people cc'ed.
+- `time` Time at which email was sent.
+- `attach` The number of attached files.
+- `dollar` The number of times a dollar sign or the word “dollar” appeared in the email.
+- `num_char` The number of characters in the email, in thousands.
+- `re_subj` Whether the subject started with “Re:”, “RE:”, “re:”, or “rE:”
+
+:::{.aside}
+The development, extraction, or discovery of such variables is called **feature engineering**, **feature extraction** or **feature discovery**. Usually, a combination of *domain knowledge* and *data science* skill is needed to do this. 
+:::
+
+## Email Example: Data exploration {.smaller}
+
+Would you expect spam to be longer or shorter?
+
+. . . 
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+email |> ggplot(aes(x = num_char, y = spam)) + geom_boxplot()
+```
+
+. . .
+
+Would you expect spam subject to start with "Re:" or the like?
+
+. . . 
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+email |> ggplot(aes(y = re_subj, fill = spam)) + geom_bar()
+```
+
+## Linear models? {.smaller}
+
+Both seem to give some signal. **How can we model the relationship?**
+
+We focus first on just `num_char`:
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+email |>
+  ggplot(aes(x = num_char, y = as.numeric(spam) - 1)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm")
+```
+
+We would like to have a better concept!
+
+::: aside
+Why do we need `y = as.numeric(spam)-1` instead of just `y = spam`?? Answer: `spam` is a factor although it looks like a numeric variable. The underlying integers for the two categories `"0"` and `"1"` are `1` and `2`. The strange form transforms the factor into a numerical variables with the values `0` and `1` as we need it for a target variable in a linear model.
+:::
+
+
+## A penguins example - predict sex{.smaller}
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+penguins |>
+  na.omit() |>
+  ggplot(aes(x = body_mass_g, y = as.numeric(sex) - 1)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm")
+```
+
+[It does not make much sense to predict 0-1-values with a linear model.]{style='color:red;'}
+
+
+
+## A probabilistic concept {.smaller background-color="aquamarine"}
+
+- We treat each outcome (spam and not) as successes and failures arising from separate Bernoulli trials
+  - **Bernoulli trial:** a random experiment with exactly two possible outcomes, *success* and *failure*, in which the *probability of success* is the same every time the experiment is conducted
+
+. . .
+
+- Each email is treated as Bernoulli trial with separate probability of success
+
+$$ y_i ∼ \text{Bernoulli}(p_i) $$
+
+. . .
+
+- We use the predictor variables to model the Bernoulli parameter $p_i$
+
+. . .
+
+- Now we conceptualized a continuous response, but still a linear model does not fit perfectly for $p_i$ (since a probability is between 0 and 1). 
+- However, we can transform the linear model to have the appropriate range.
+
+
+
+# Generalized linear models
+
+## Characterising GLMs {.smaller background-color="aquamarine"}
+
+- **Generalized linear models (GLMs)** are a way of addressing many problems in regression
+- Logistic regression is one example
+
+All GLMs have the following three characteristics:
+
+1. A **probability distribution** as a generative model for the outcome variable $y_i \sim \text{Distribution}(\text{parameter})$
+
+. . .
+
+2. A **linear model** $\eta = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k$  
+where $\eta$ is related to a mean parameter of the distribution by the ...
+
+. . .
+
+3. **Link function** that relates the linear model to the parameter of the outcome distribution. 
+  
+
+
+# Logistic regression
+
+## Logistic regression {.smaller background-color="aquamarine"}
+
+- **Logistic regression** is a GLM used to model a binary categorical outcome using numerical and categorical predictors.
+- The *distribution* is the Bernoulli distribution with parameter $p$ (success probability). 
+- As *link function* connecting $\eta_i$ to $p_i$ we use the **logit function**.
+
+. . .
+
+- **Logit function:** $\text{logit}: [0,1] \to \mathbb{R}$
+
+$$\text{logit}(p) = \log\left(\frac{p}{1-p}\right)$$
+
+- $\frac{p}{1-p}$ is called the **odds** of a success which happens with probability $p$.  
+Example: Roll a six with a die has $p=1/6$. Thus, the odds are $\frac{1/6}{5/6} = 1/5$. Sometimes written as 1:5. *"The odds of success are one to five."*
+
+
+## Properties of the logit {.smaller background-color="aquamarine"}
+
+- Logit takes values between 0 and 1 and returns values between $-\infty$ and $\infty$
+- The inverse of the logit function if the **logistic function** (mapping values from $-\infty$ and $\infty$ to values between 0 and 1):
+$$\text{logit}^{-1}(x) = \text{logistic}(x) = \frac{e^x}{1+e^x} = \frac{1}{1+e^{-x}}$$
+- Logit can be interpreted as the log odds of a success -- more on this later.
+
+:::{.aside}
+- The logistic function is the solution of the differential equation $\frac{d}{dx}f(x) = f(x)(1-f(x))$ which also appears in the SI-model of epidemics (and other models of exponential growth with saturation).
+- Good exercises to check your math skills:
+  1. Show that $\text{logit}^{-1}(x) = \text{logistic}(x)$ or the other way round. 
+  2. Transform $\frac{e^x}{1+e^x}$ into $\frac{1}{1+e^{-x}}$.
+  3. Check that $\text{logistic}(x)$ is a solution to $\frac{d}{dx}f(x) = f(x)(1-f(x))$.
+- You can request hints from me when you get stuck.
+:::
+
+
+## Logit and [logistic]{style='color:red;'} function {.smaller background-color="aquamarine"}
+
+```{r}
+#| echo: true
+#| fig-height: 5
+ggplot() +
+  geom_function(
+    fun = function(x) log(x / (1 - x)),
+    xlim = c(0.001, 0.999),
+    n = 500
+  ) +
+  geom_function(fun = function(x) 1 / (1 + exp(-x)), color = "red") +
+  scale_x_continuous(breaks = seq(-5, 5, 1), limits = c(-5, 5)) +
+  scale_y_continuous(breaks = seq(-5, 5, 1), limits = c(-5, 5)) +
+  coord_fixed() +
+  theme_minimal(base_size = 24) +
+  labs(x = "x")
+```
+
+
+## The logistic regression model {background-color="aquamarine"}
+
+- Based on the three GLM criteria we have
+  - $y_i \sim \text{Bernoulli}(p_i)$
+  - $\eta_i = \beta_0+\beta_1 x_{1,i} + \cdots + \beta_n x_{n,i}$
+  - $\text{logit}(p_i) = \eta_i$
+
+. . .
+
+- From which we get
+
+$$p_i = \frac{e^{\beta_0+\beta_1 x_{1,i} + \cdots + \beta_k x_{k,i}}}{1 + e^{\beta_0+\beta_1 x_{1,i} + \cdots + \beta_k x_{k,i}}}$$
+
+
+## Modeling spam {.smaller}
+
+With `tidymodels` we fit a GLM in the same way as a linear model except we
+
+- specify the model with `logistic_reg()`
+- use `"glm"` instead of `"lm"` as the engine 
+- define `family = "binomial"` for the link function to be used in the model
+
+```{r}
+#| echo: true
+#| code-fold: false
+spam_fit <- logistic_reg() |>
+  set_engine("glm") |>
+  fit(spam ~ num_char, data = email, family = "binomial")
+tidy(spam_fit)
+```
+
+:::{.aside}
+- The family is *binomial* because the Bernoulli distribution is a special case of the binomial distribution $\text{Binomial}(n,p)$ with $n=1$. 
+- The binomial distribution specifies the probability to have $k$ successes in $n$ Bernoulli trials with the same success probability $p$. 
+:::
+
+## Spam model  {.smaller}
+
+```{r}
+tidy(spam_fit)
+```
+
+Model:
+$$\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot \text{num_char}$$
+
+
+
+## Predicted probability: Examples {.smaller}
+
+We can compute the **predicted probability** that an email with 2000 character is spam as follows:
+
+$$\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot 2 = -1.9242$$
+
+(Note: `num_char` is in thousands.)
+
+$$\frac{p}{1-p} = e^{-1.9242} = 0.15 \Rightarrow p = 0.15 \cdot (1 - p)$$
+
+$$p = 0.15 - 0.15\cdot p \Rightarrow 1.15\cdot p = 0.15$$
+
+$$p = 0.15 / 1.15 = 0.13$$
+
+
+## Predicted probability {.smaller}
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+logistic <- function(t) 1 / (1 + exp(-t))
+preds <- tibble(x = c(2, 15, 40), y = logistic(-1.80 - 0.0621 * x))
+email |>
+  ggplot(aes(x = num_char, y = as.numeric(spam) - 1)) +
+  geom_point(alpha = 0.2) +
+  geom_function(fun = function(x) logistic(-1.80 - 0.0621 * x), color = "red") +
+  geom_point(data = preds, mapping = aes(x, y), color = "blue", size = 3)
+```
+
+Spam probability 2,000 characters: `r preds[1,2]`  
+Spam probability 15,000 characters: `r preds[2,2]`  
+Spam probability 40,000 characters: `r preds[3,2]`
+
+## Interpretation of coefficients {.smaller}
+
+$$\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot \text{num_char}$$
+
+What does an increase by thousand characters (`num_char + 1`) imply?
+
+. . .
+
+Let us assume the predicted probability of an email is $p_0$. Then an increase of `num_char` by one implied that the log-odds become 
+
+$$\log\left(\frac{p_0}{1-p_0}\right) - 0.0621 = \log\left(\frac{p_0}{1-p_0}\right) - \log(e^{0.0621})$$
+
+$$ = \log\left(\frac{p_0}{1-p_0}\right) + \log(\frac{1}{e^{0.0621}}) = \log\left(\frac{p_0}{1-p_0} \frac{1}{e^{0.0621}}\right) = \log\left(\frac{p_0}{1-p_0} 0.94\right)$$ 
+
+That means the odds of being spam decrease by 6%. 
+
+
+## Penguins example {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+library(palmerpenguins)
+sex_fit <- logistic_reg() |>
+  set_engine("glm") |>
+  fit(sex ~ body_mass_g, data = na.omit(penguins), family = "binomial")
+tidy(sex_fit)
+```
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+na.omit(penguins) |>
+  ggplot(aes(x = body_mass_g, y = sex)) +
+  geom_point(alpha = 0.2) +
+  geom_function(
+    fun = function(x) logistic(-5.16 + 0.00124 * x) + 1,
+    color = "red"
+  ) +
+  xlim(c(2000, 7000))
+```
+
+
+## Summarizing the Idea of Logistic Regression {.smaller}
+
+- We want to explain/predict a binary response variable. 
+- We want to use the concept of linear models.
+- To that end we first interprete each outcome as the outcome of a probabilisitic event happening with probability $p_i$. That way we transform the problem from modeling a binary outcome to a numerical outcome.
+- However, probabilities are bounded between 0 and 1.
+- We use the logit function to map probabilities to the real line. That means we predict the log-odds of the probability.
+- We model the log-odds with a linear model.
+
+
+
+
+
+
+
+
+
+# Sensitivity and specificity
+
+- Two performance measures for a prediction model with binary outcome. 
+- Also called a "binary classifier. 
+- Today, just the idea. 
+
+## False positive and negative {.smaller}
+
+|                         | Email labelled spam           | Email labelled not spam       |
+|-------------------------|-------------------------------|-------------------------------|
+| **Email is spam**       | True positive                 | False negative (Type 2 error) |
+| **Email is not spam**   | False positive (Type 1 error) | True negative                 |
+
+
+## Confusion matrix
+
+More general: [**Confusion matrix**](https://en.wikipedia.org/wiki/Confusion_matrix)
+of statistical classification: 
+
+![](img/confusion_small.png)
+
+## Sensitivity and specificity {.smaller}
+
+:::: {.columns}
+
+::: {.column width='40%'}
+![](img/confusion_small.png)
+:::
+
+::: {.column width='60%'}
+**Sensitivity** is the *true positive rate*: TP / (TP + FN)  
+**Specificity** is the *true negative rate*: TN / (TN + FP)
+:::
+
+::::
+
+
+For spam a *positive* case is an email labelled as *spam*: 
+
+**Sensitivity:** Fraction of emails *labelled as* spam among all emails which *are* spam.  
+Low sensitivity $\to$ More false negatives $\to$ More spam in you inbox!
+
+**Specificity:** Fraction of emails *labelled as not* spam among all emails which *are not* spam.  
+Low specificity $\to$ More false positives $\to$ More relevant emails in spam folder!
+
+. . .
+
+If you were designing a spam filter, would you want sensitivity and specificity to be high or low? 
+What are the trade-offs associated with each decision? 
+
+
+## COVID-19 tests {.smaller}
+
+A COVID-19 test is called *positive* when it indicates the presence of the virus.
+
+*What is the sensitivity of a test?*
+
+. . . 
+
+Probability the test is positive when the tested person has COVID-19. (The true positive rate.)
+
+. . .
+
+*What is the specificity of a test?*
+
+. . . 
+
+Probability the test is negative when the tested person does not have COVID-19. (The true negative rate.)
+
+Often the sensitivity is around 90% and the specificity is around 99%. What does that mean?  
+
+. . .
+
+- When you do not have COVID the test is more likely to be correct, than when you do have COVID. However, specificity and sensitivity do not tell something about the probability to have COVID when the test is positive, or to not have COVID when the test is negative.
+
+
+## Another view
+
+![](https://upload.wikimedia.org/wikipedia/commons/5/5a/Sensitivity_and_specificity_1.01.svg)
+
+# Prediction
+
+## Prediction vs. Explanation {.smaller}
+
+**Explanation** and **Prediction** are different **Modelling Mindsets**^[From Molnar, C. (2022). Modeling mindsets: The many cultures of learning from data. Christoph Molnar c/o Mucbook Clubhouse.].
+
+- With an *Explanatory Mindset* we want to understand the relationship between the predictors and the outcome.
+    - We interpret coefficients
+    - We ask what variance can be explained by a linear model or a PCA
+- With a *Predictive Mindset* we want to predict the outcome for new observations.
+    - We use the model to predict the outcome for new observations
+    - We ask how well we can predict the outcome for new observations
+    - We may ignore why the model works
+    
+Important: The mindsets are very different but they may use the same models!
+
+
+
+
+

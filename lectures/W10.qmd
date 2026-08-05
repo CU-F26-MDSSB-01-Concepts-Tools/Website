@@ -1,0 +1,1107 @@
+---
+title: "W#10: Overfitting, Clustering Algorithms"
+author: Jan Lorenz
+format: 
+  revealjs: 
+    smaller: true
+    toc: true
+    toc-depth: 1
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: true
+    logo: img/ConstructorUniversity.png
+    footer: "MDSSB-DSCO-02: Data Science Concepts"
+css: ../styles.css
+---
+
+
+## Preliminaries 
+
+```{r}
+#| echo: true
+library(tidymodels)
+library(openintro)
+library(palmerpenguins)
+library(tidyverse)
+library(rpart.plot)
+```
+
+# Decisions Trees
+
+## Workflow make a prediction model
+
+::: {.incremental}
+1. Data splitting into training and test data  
+`initial_split()`, `training()`, `testing()` $\to$ `train` and `test` datasets
+2. Recipe for preprocessing  
+`recipe()`, specify response variable and preprocessing steps for predictors 
+3. Model specification  
+E.g. `decision_tree()`, set engine `rpart`, mode `regression` or `classification`
+4. Workflow to combine recipe and model (still all just specifications)   
+`workflow()` with `add_recipe()`, `add_model()` creates a workflow object
+5. Fit the model with training data using the workflow  (finally the computation happens!)
+`fit()` with workflow and `train` data
+6. Predict response variable for rows of the test data  
+`predict()` with fitted workflow and `test` data
+7. Evaluate performance using the orignal variable (ground truth) in test data  
+`metrics()` by specifying `truth` and `estimate` columns
+:::
+
+
+## Decision tree
+
+Steps: 1. Train-Test-Split, 2. Preprocessing-Recipe 3. Model 4. Workflow 5. Fit     
+Postponed: 6. Make predictions, 7. Evaluate performance
+
+```{r}
+#| echo: true
+#| output-location: column
+set.seed(12345) # Just to fix the presentation, test without when doing yourself!
+
+# 1. Train-Test-Split
+peng_split <- initial_split(na.omit(penguins), prop = 0.7, strata = sex)
+peng_train <- training(peng_split)
+peng_test <- testing(peng_split)
+# 2. Preprocessing-Recipe
+peng_recipe <- recipe(body_mass_g ~ ., data = peng_train) |>
+  step_rm(year)
+# 3. Model
+peng_regtree <- decision_tree() |>
+  set_engine("rpart") |>
+  set_mode("regression")
+# 4. Workflow
+peng_regtree_fit <- workflow() |>
+  add_recipe(peng_recipe) |>
+  add_model(peng_regtree) |>
+  # 5. Fit
+  fit(data = peng_train)
+# Look at the output
+peng_regtree_fit
+```
+
+
+## Show rules / visualize tree {.smaller}
+
+
+::: {.columns}
+::: {.column}
+
+```{r}
+#| echo: true
+rpart.rules(peng_regtree_fit$fit$fit$fit, roundint = FALSE)
+```
+
+:::
+::: {.column}
+
+```{r}
+#| echo: true
+rpart.plot(peng_regtree_fit$fit$fit$fit, roundint = FALSE, tweak = 1.5)
+```
+
+:::
+:::
+
+- The percentage is the fraction of the total cases in this group
+- The number is the predicted outcome (mean body mass) at this decision node
+- Finally only 4 different values are possible in this tree
+
+[**Can we add more decisions?**]{.red .fragment}  [Yes, by tuning **hyper-parameters**.]{.green .fragment} 
+
+## How a tree is made {.smaller}
+
+The algorithm is **recursive partioning**:
+
+- First the single variable is found which *best* splits the data into two groups of rows (what *best* is will not be explained and discussed here) 
+- The data is separated, and then this process is applied separately to each sub-group, and so on recursively until the subgroups either 
+  - reach a minimum number of rows or 
+  - until no improvement can be made.
+
+
+
+::: aside 
+- For learning more: Use help functions. Here `?rpart` and `?rpart.control` (This explains several hyper-parameters). Or see the CRAN page [rpart](https://cran.r-project.org/web/packages/rpart) and watch out for *Vignettes*. These are introductory texts. See [rpart Vignette](https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf).   
+- `tidymodels` uses `rpart` as engine for decision trees. The command `decision_tree()` has hyper-parameters which are passed to `rpart` when setting the engine with `set_engine("rpart")`, though the parameters have not identical names! See `?decision_tree` for that.
+:::
+
+
+## Deeper tree
+
+Two hyper-parameters of `decision_tree()` to control the tree growth.
+
+- `cost_complexity` (`cp` in `rpart`): Complexity parameter. Higher values prune the tree more. Default is 0.01.
+- `min_n` (`minsplit` in `rpart`): Minimum number of data points in a node to continue splitting. Default is 20.
+
+A deeper tree with lower `cost_complexity` and same `min_n`:
+
+```{r}
+#| echo: true
+peng_regtree_deep <- decision_tree(
+  cost_complexity = 0.001,
+  min_n = 20
+) |>
+  set_engine("rpart") |>
+  set_mode("regression")
+peng_regtree_deep_fit <- workflow() |>
+  add_recipe(peng_recipe) |>
+  add_model(peng_regtree_deep) |>
+  fit(data = peng_train)
+```
+
+## The deep tree
+
+```{r}
+#| echo: true
+rpart.plot(peng_regtree_deep_fit$fit$fit$fit, roundint = FALSE, tweak = 1)
+```
+
+Note: Some variables are used multiple times in different parts of the tree.
+
+## The deepest tree
+
+```{r}
+#| echo: true
+#| code-fold: true
+peng_regtree_deepest <- decision_tree(
+  cost_complexity = 0,
+  min_n = 2
+) |>
+  set_engine("rpart") |>
+  set_mode("regression")
+peng_regtree_deepest_fit <- workflow() |>
+  add_recipe(peng_recipe) |>
+  add_model(peng_regtree_deepest) |>
+  fit(data = peng_train)
+rpart.plot(peng_regtree_deepest_fit$fit$fit$fit, roundint = FALSE, tweak = 1)
+```
+
+
+
+## Make predictions
+
+6\. Predict response variable for rows of the test data.  
+
+::: {.columns}
+
+::: {.column width="33%"}
+**Default Tree**
+```{r}
+#| echo: true
+peng_regtree_pred <-
+  predict(peng_regtree_fit, peng_test)
+peng_regtree_pred
+```
+
+:::
+
+::: {.column width="33%"}
+**Deeper Tree**
+```{r}
+#| echo: true
+peng_regtree_deep_pred <-
+  predict(peng_regtree_deep_fit, peng_test)
+peng_regtree_deep_pred
+```
+
+:::
+
+::: {.column width="33%"}
+**Deepest Tree**
+```{r}
+#| echo: true
+peng_regtree_deepest_pred <-
+  predict(peng_regtree_deepest_fit, peng_test)
+peng_regtree_deepest_pred
+```
+
+:::
+
+:::
+
+. . . 
+
+See how the number of different predicted values increases with tree depth.
+
+## Evaluate performance (Step 1)
+
+7\. Evaluate performance using the orignal variable (ground truth) in test data attached with `bind_cols()`.    
+
+
+::: {.columns}
+
+::: {.column width="33%"}
+**Default Tree**
+```{r}
+#| echo: true
+peng_regtree_pred |>
+  bind_cols(peng_test) |>
+  select(.pred, body_mass_g)
+```
+
+:::
+
+::: {.column width="33%"}
+**Deeper Tree**
+```{r}
+#| echo: true
+peng_regtree_deep_pred |>
+  bind_cols(peng_test) |>
+  select(.pred, body_mass_g)
+```
+
+:::
+
+::: {.column width="33%"}
+**Deepest Tree**
+```{r}
+#| echo: true
+peng_regtree_deepest_pred |>
+  bind_cols(peng_test) |>
+  select(.pred, body_mass_g)
+```
+
+:::
+
+:::
+
+
+
+
+
+## Evaluate performance (Step 2)
+
+7\. Use `metrics()` by specifying `truth` and `estimate` columns
+   
+::: {.columns}
+
+::: {.column width="33%"}
+**Default Tree**
+```{r}
+#| echo: true
+peng_regtree_pred |>
+  bind_cols(peng_test) |>
+  metrics(truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+::: {.column width="33%"}
+**Deeper Tree**
+```{r}
+#| echo: true
+peng_regtree_deep_pred |>
+  bind_cols(peng_test) |>
+  metrics(truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+::: {.column width="33%"}
+**Deepest Tree**
+```{r}
+#| echo: true
+peng_regtree_deepest_pred |>
+  bind_cols(peng_test) |>
+  metrics(truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+:::
+
+Focus on RMSE (Root Mean Squared Error). The lower the better.  
+
+. . . 
+
+[Why is the deepest tree not best?]{.red} [Overfitting?]{.green .fragment}
+
+# Overfitting
+
+Phenomenon: Overfitting means that a model fits the training data too well, capturing noise and random fluctuations instead of the underlying patterns relevant for new data. Generalization error increases.
+
+## Compare with predicting training data
+
+::: {.columns}
+
+::: {.column width="33%"}
+**Default Tree**
+
+```{r}
+#| echo: true
+
+predict(peng_regtree_fit, peng_train) |>
+  bind_cols(peng_train) |>
+  metrics(truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+::: {.column width="33%"}
+**Deeper Tree**
+```{r}
+#| echo: true
+predict(peng_regtree_deep_fit, peng_train) |>
+  bind_cols(peng_train) |>
+  metrics(truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+::: {.column width="33%"}
+**Deepest Tree**
+```{r}
+#| echo: true
+predict(peng_regtree_deepest_fit, peng_train) |>
+  bind_cols(peng_train) |>
+  metrics(truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+:::
+
+Ah! The deepest tree makes perfect predictions on the training data (RMSE = 0) but is worst on the test data.
+
+. . . 
+
+[Let us look at it more systematically!]{.red}
+
+
+
+
+## Use `expand_grid` and list-columns
+
+For a [**systematic comparison**]{.green} of the three models on train and test data we build a [**analysis dataframe**]{.green} with all combinations of model and data. 
+
+```{r}
+#| echo: true
+#| output-location: column
+
+peng_deep_analysis_structure <- expand_grid(
+  tibble(
+    model = c("Default", "Deeper", "Deepest"),
+    fit = list(
+      peng_regtree_fit,
+      peng_regtree_deep_fit,
+      peng_regtree_deepest_fit
+    )
+  ),
+  tibble(
+    data_name = c("train", "test"),
+    data = list(peng_train, peng_test)
+  )
+)
+peng_deep_analysis_structure
+```
+
+- The two `tibble` commands produce two data-frames of sizes 3 x 2 and 2 x 2.
+- `expand_grid` creates all combinations of rows resulting in a 6 x 4 data-frame. 
+- The columns `fit` and `data` are [**list-columns**]{.red}. Instead of a vector, each entry is a list. 
+- Each list entry in `fit` is a fitted workflow, and in `data` it is a data-frame.
+
+## Use `mutate` and `map2` and `map_dbl` 
+
+We predict for all combinations of model and data:
+
+```{r}
+#| echo: true
+#| output-location: column
+
+peng_deep_analysis <- peng_deep_analysis_structure |>
+  mutate(
+    predictions = map2(fit, data, \(f, d) {
+      predict(f, d) |> bind_cols(d)
+    }),
+    r_squared = map_dbl(predictions, \(p) {
+      p |>
+        rsq(truth = body_mass_g, estimate = .pred) |>
+        pull(.estimate)
+    })
+  )
+peng_deep_analysis |> select(model, data_name, r_squared)
+```
+
+- `map2` goes through 2 lists (here `fit` and `data`) and applies the [**anonymous function**]{.red}   
+` \(f, d) {predict(f, d) |> bind_cols(d))}` to all 6 pair of entries. Results go into `predictions`, a new list-column.
+- `map_dbl` outputs a vector instead of list. (`pull` extracts the value from the one-row tibble output of `rsq`.)
+
+## Summary new programming concepts
+
+::: {.incremental}
+- `expand_grid()` to create all combinations of two data-frames
+- list-columns can store complex objects in a matrix. Powerful for structuring a systematic analysis. 
+- The analysis can be executed with `map`-functions.
+- `map` takes as inputs *a vector or list*, and a *function* which is applies to each entry.
+- Often an *anonymous function* is enough. It does not need a name and can be defined on-the-fly as `\(arg1, arg2, ...) { ... }`
+- `map` always returns a list of the same length as the input vector or list.
+- Different `map`-versions: `map2()` takes two input vectors or lists. `map_dbl` (or similar `map_*` function return a vector instead of a list.
+:::
+
+## Visualization
+
+```{r}
+#| echo: true
+#| output-location: column
+
+peng_deep_analysis |>
+  ggplot(aes(
+    x = fct_inorder(model),
+    y = r_squared,
+    color = data_name,
+    group = data_name
+  )) +
+  geom_line() +
+  geom_point() +
+  theme_minimal(base_size = 20)
+```
+
+```{r}
+#| echo: true
+#| output-location: column
+
+peng_deep_analysis |>
+  ggplot(aes(
+    x = fct_inorder(data_name),
+    y = r_squared,
+    color = fct_inorder(model),
+    group = fct_inorder(model)
+  )) +
+  geom_line() +
+  geom_point() + 
+  theme_minimal(base_size = 20)
+
+```
+  
+## Overfitting in classification: Spam
+  
+`email` dataset from `openintro`:   
+Steps: 1. Train-Test-Split, 2. Preprocessing-Recipe 
+  
+```{r}
+#| echo: true
+#| message: true
+
+set.seed(12345) # Just to fix the presentation, test without when doing yourself!
+email_split <- initial_split(email, prop = 0.7, strata = spam)
+email_train <- training(email_split)
+email_test <- testing(email_split)
+email_recipe <- recipe(spam ~ ., data = email) |>
+  step_rm(from, sent_email, viagra) |> # Remove some variables (see former lectures)
+  step_date(time, features = c("dow", "month")) |> # Make day-of-week and month features ...
+  step_rm(time) |> # ... and remove the date-time itself
+  step_zv(all_predictors()) # remove predictors with zero variance
+email_recipe
+```
+
+## Classification trees
+
+Analysis structure for different complexity costs and train/test data
+
+```{r}
+#| echo: true
+email_cp_analysis_structure <- expand_grid(
+  tibble(
+    complexity_cost = seq(0, 0.02, by = 0.002),
+    model_spec = map(complexity_cost, \(x) decision_tree(
+      cost_complexity = x,
+      tree_depth = 30,
+      min_n = 2
+      ) |>
+      set_engine("rpart") |>
+      set_mode("classification")
+    )
+  ),
+  tibble(
+    data_name = c("train", "test"),
+    data = list(email_train, email_test)
+  )
+)
+email_cp_analysis_structure
+```
+
+
+## Fit, predict, evaluate performance
+
+```{r}
+#| echo: true
+
+email_cp_analysis <- email_cp_analysis_structure |>
+  mutate(
+    workflow = map(model_spec, \(m) {
+      workflow() |>
+        add_recipe(email_recipe) |>
+        add_model(m)
+    }),
+    fit = map(workflow, \(w,d) {
+      fit(w, data = email_train)
+    }),
+    predictions = map2(fit, data, \(f, d) {
+      predict(f, d) |> bind_cols(d)
+    }),
+    accuracy = map_dbl(predictions, \(p) {
+      p |>
+        accuracy(truth = spam, estimate = .pred_class) |>
+        pull(.estimate)
+    }
+    ),
+    specificity = map_dbl(predictions, \(p) {
+      p |>
+        specificity(truth = spam, estimate = .pred_class, event_level = "second") |>
+        pull(.estimate)
+    }
+    ),
+    sensitivity = map_dbl(predictions, \(p) {
+      p |>
+        sensitivity(truth = spam, estimate = .pred_class, event_level = "second") |>
+        pull(.estimate)
+    }
+    )
+  )  
+```
+
+## Overfitting plot
+
+- sensitivity = TP / (TP + FN) true positive rate, probability spam in spam-folder  
+- specificity = TN / (TN + FP) true negative rate, probability wanted mail in inbox    
+- accuracy = (TP + TN) / (TP + TN + FP + FN) probability of correct classification
+
+```{r}
+#| echo: true
+#| code-fold: true
+
+email_cp_analysis |>
+  pivot_longer(
+    cols = c(accuracy, specificity, sensitivity),
+    names_to = "metric",
+    values_to = "value"
+  ) |>
+  ggplot(aes(
+    x = complexity_cost,
+    y = value,
+    color = data_name,
+    group = data_name
+  )) +
+  geom_line() +
+  geom_point() +
+  scale_x_reverse() +
+  facet_wrap(~metric, nrow = 1, scales = "free_y") +
+  theme_minimal()
+```
+
+## Summary: Overfitting Analysis 
+
+::: {.incremental}
+- The complexity of a model is often controlled by **hyper-parameters**.
+- **Overfitting** means that a model fits the training data too well, capturing noise and random fluctuations instead of the underlying patterns relevant for new data. 
+- There is no general rule how to set hyper-parameters to avoid overfitting! It depends on data and model. 
+- Ultimately, **generalization** capability on new data is what matters. We mimick it with the train-test-split. 
+- A **systematic analysis** of different models on different data-sets can be organized in a data-frame with list-columns and executed with `map`-functions. [**Learn it!**]{.red}
+- Best learning: [**Try it yourself with other predicition models and other hyper-parameters!**]{.red}
+- Document it in a repository. That way you can show analytical skills and ability to go "under the hood" of prediction models to future employers.
+:::
+
+# Cluster Analysis
+
+## 3 common data analysis tasks {.smaller}
+
+1. **Regression:** We want to *explain/predict* a **numerical** variable.    
+Example: In a linear regression, we model a numerical response variable as a linear combination of predictors and estimate the coefficients with data. 
+2. **Classification:** We want to *explain/predict* a **nominal** (often binary) variable.  
+Example: In a logistic regression, we assume the binary outcomes are realized randomly based on a probability which is a the logistic transformation of a linear combination of predictors and estimate the coefficients with data. 
+3. [**Clustering:**]{style='color:red;'} We want to label cases in data. 
+
+**Classification and clustering** are about producing new nominal/categorical data. In classification the categories are already know from the training data. [Clustering algorithms produces the categories without training data.]{style='color:blue;'}
+
+
+## Supervised vs. unsupervised statistical learning {.smaller}
+
+- Regression and classification problems are solved by **supervised** algorithms. 
+  - That means they receive *training data* which includes the outcome variable (which is often made by humans) and should perform on new test data. 
+  - *Prediction questions* can be:
+    - What is a house worth?
+    - Which emails are spam?
+- A clustering problems is a problem of **unsupervised** learning. 
+  - The algorithm shall generate labels for the cases as a new variable.  
+  - *Prediction questions* can be:
+    - What different types of customers exist and how can each one be labelled?
+    - Which players in a sport league are similar and how can we label them?
+  
+## Cluster analysis and PCA {.smaller}
+
+Solving a clustering problem is also called **cluster analysis**. 
+
+- **Cluster analysis** and **principle component analysis** (PCA) both extract information from existing rectangular data without specifying predictors and response. 
+  - PCA extracts relations based on linear correlations between numerical **variables** (columns). These principle components can be used to create *new numerical variables* (and thereby reduce the number of variables).
+  - Cluster analysis tries to group **cases** (rows) into clusters such that cases in a cluster are similar. 
+    - When clusters are found they are labelled and a *new nominal variable* in the data set is created. Each case receives a nominal label to which cluster it belongs. 
+
+## Two clustering methods {.smaller}
+
+Today, we do a quick tour through two methods focusing on 
+
+- the general idea, and
+- how to apply, interpret, and look at the results. 
+
+The two paradigms are 
+ 
+ - centroid based clustering
+ - connectivity based hierarchical clustering
+
+# k-means clustering
+
+
+## Centroid based: k-means clustering {.smaller}
+
+k-means clustering aims to *partition* $n$ observations into $k$ clusters in which 
+each observation belongs to the cluster with the nearest mean (*cluster centers* or *cluster centroid*) serving as a *prototype* of the cluster.
+
+::: {style='color:blue;'}
+**Important** 
+
+- We must specify **how many** ($k$) clusters we want to have.
+- We need a measure of **distance** between cases. How far is one case from each other?
+- A cluster is characterized by its **centroid**. 
+:::
+ 
+ 
+## Measuring distance between cases {.smaller background-color="aquamarine"} 
+
+Assume we have $m$ numerical variables.  
+$\to$ Every case is a **point** in $m$-dimensional space.
+
+In the following we will use the *Euclidean distance* in $m$ dimensions:
+
+For two points $(x_1, x_2, \dots, x_m)$ and  $(y_1, y_2, \dots, y_m)$ it is 
+
+$$\sqrt{(x_1-y_1)^2 +(x_2-y_2)^2 + \dots + (x_m-y_m)^2}$$
+
+- In $m=2$ or $3$ dimensions it is what we would measure with a ruler. ]
+- Note, the points represents rows in a dataset.
+
+[There are many more useful distance measures! It is a field to constantly learn about. Two visual examples: Manhattan distance, French railway metric]{style='color:green;'}
+
+## k-means algorithm: Start
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/ee71c89f-04e1-48f1-9ebc-350c8c872bf7.jpg?h=6b41c8a833b6137f529d59170ea90533)
+
+::: aside
+From <https://allisonhorst.com/k-means-clustering>
+:::
+
+
+## k-means algorithm: Iteration step 1
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/05cc17da-8ad7-4095-ba40-e0e492f2fd2b_rw_1920.jpg?h=500cfd89f65f6ec23eb6bf47c00bf1a2)
+
+::: aside
+From <https://allisonhorst.com/k-means-clustering>
+:::
+
+
+## k-means algorithm: Iteration step 2
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/caaad9b0-398b-4edb-92b6-25a224ae05bc_rw_1920.jpg?h=bf56b093b88b6b0e435cf2ffcfa91c18)
+
+::: aside
+From <https://allisonhorst.com/k-means-clustering>
+:::
+
+
+
+## Why we need iteration:
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/2f2e8dff-bcb4-4623-a38d-3cc71fba24c3_rw_1920.jpg?h=0fbd4da2938d4f69c91df95c842b942b)
+
+::: aside
+From <https://allisonhorst.com/k-means-clustering>
+:::
+
+
+## Iterate steps 1 and 2
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/f97bc420-d704-4bbe-ad00-28678e9c58cb_rw_1920.jpg?h=1cdfcef8903f8d8be17404ed6bd7aba1)
+
+::: aside
+From <https://allisonhorst.com/k-means-clustering>
+:::
+
+## k-means algorithm: Stop
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/614b8766-c72d-4c8f-9fd3-d738c36b073f.jpg?h=ae43d74e48e4d472a06dbee511e773af)
+
+::: aside
+From <https://allisonhorst.com/k-means-clustering>
+:::
+
+## Clustering penguins: Preprocessing {.smaller}
+
+- Standardization (shift-scale transformation by mean and standard deviation)
+    - When we measure distance between cases it is desireable that variables are of the same scale.
+    - If we do not standardize, body mass will dominate the distance measure!
+
+```{r}
+#| echo: true
+peng_rec <- penguins |>
+  recipe() |> # No model specification to distinguish response ond predictor!
+  step_rm(all_nominal(), year) |> # Keep only numeric variables
+  step_center(all_numeric()) |> # shift by mean
+  step_scale(all_numeric())
+# Call prep to calculate transformed variables
+peng_prepped <- peng_rec |> prep(penguins |> drop_na())
+```
+
+Note: `prep` is a `tidyverse`-function to execute preprocessing steps specified in a `recipe` on a dataset. When we fit a prediction model, `prep` is done as a part of `fit`!
+
+
+## Whats in the `prep`ed object? {.smaller .scrollable}
+
+A lot!
+
+```{r}
+#| echo: true
+glimpse(peng_prepped)
+```
+
+
+## Preprocessing in a list in `$steps`  {.smaller .scrollable}
+
+```{r}
+#| echo: true
+glimpse(peng_prepped$steps)
+```
+
+## Parameters of Standardization {.smaller}
+
+```{r}
+#| echo: true
+peng_prepped$steps[[2]]$means # Shifting was step 2
+peng_prepped$steps[[3]]$sds # Scaling was step 3
+```
+
+Transformed data in `$template`
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+
+peng_transformed <- peng_prepped$template
+peng_transformed
+```
+
+## k-means for $k=3$ clusters {.smaller .scrollable}
+
+- `kmean` from base-R
+- Output: *Cluster means* are the centroids, *Cluster vector* are the labels for the cases, *Within cluster sum of squares by cluster* are performance measures
+- [Warning:]{style='color:red;'} In principle, k-means can results in different clusters for different initial starting positions of clusters. 
+
+```{r}
+#| echo: true
+peng_transformed |> kmeans(centers = 3)
+```
+
+## How many clusters should we ask for? {.smaller .scrollable}
+
+- Compute solutions for different numbers of cluster $k$ 
+
+```{r}
+#| echo: true
+set.seed(2023)
+kclusts <- tibble(k = 1:9) |>
+  mutate(
+    kclust = map(k, \(x) kmeans(peng_transformed, x)), # kmeans for k=1:9
+    tidied = map(kclust, tidy), # tidy extracts the centroids here
+    glanced = map(kclust, glance), #
+    augmented = map(kclust, augment, peng_transformed) # add cluster labels to data
+  ) # This is large data frame with nested objects as entries. We unnest next
+
+clusters <- kclusts |> unnest(cols = c(tidied))
+clusters
+
+clusterings <- kclusts |> unnest(cols = c(glanced))
+clusterings
+
+assignments <- kclusts |> unnest(cols = c(augmented))
+assignments
+```
+
+
+## Total within sum of squares to decide {.smaller}
+
+```{r}
+#| echo: true
+ggplot(clusterings, aes(k, tot.withinss)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = 1:9) +
+  theme_minimal(base_size = 20)
+```
+
+- From 3 to 4 clusters there is little improvement
+- From 6 to more clusters there is very little improvement (or worsening)
+
+[Warning:]{style='color:red;'} Better do more clusterings for each $k$ and average `tot.withness` to see if the graph is stable!
+
+## Visualization: Cluster centroids {.smaller}
+
+```{r}
+#| echo: true
+#| fig-width: 18
+#| code-fold: true
+library(patchwork)
+g_3clusters <- clusters |>
+  filter(k == 3) |>
+  select(bill_length_mm:body_mass_g, cluster) |>
+  pivot_longer(bill_length_mm:body_mass_g) |>
+  ggplot(aes(value, name)) +
+  geom_col() +
+  facet_grid(~cluster) +
+  geom_vline(xintercept = 0, color = "blue") +
+  theme_minimal(base_size = 16)
+g_6clusters <- clusters |>
+  filter(k == 6) |>
+  select(bill_length_mm:body_mass_g, cluster) |>
+  pivot_longer(bill_length_mm:body_mass_g) |>
+  ggplot(aes(value, name)) +
+  geom_col() +
+  facet_grid(~cluster) +
+  geom_vline(xintercept = 0, color = "blue") +
+  theme_minimal(base_size = 16)
+g_3clusters + g_6clusters
+```
+
+## Visualization: Scatter plot {.smaller}
+
+```{r}
+#| echo: true
+#| message: false
+#| code-fold: true
+g1 <- assignments |>
+  filter(k == 3) |>
+  ggplot(aes(bill_length_mm, bill_depth_mm, color = .cluster)) +
+  geom_point() +
+  labs(title = "k = 3 clusters")
+g2 <- assignments |>
+  filter(k == 6) |>
+  mutate(species = na.omit(penguins)$species) |>
+  ggplot(aes(bill_length_mm, bill_depth_mm, color = .cluster)) +
+  geom_point() +
+  labs(title = "k = 6 clusters")
+g3 <- penguins |>
+  ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) +
+  geom_point() +
+  labs(title = "Species")
+g4 <- penguins |>
+  ggplot(aes(bill_length_mm, bill_depth_mm, color = sex)) +
+  geom_point() +
+  labs(title = "Sex")
+g1 + g2 + g3 + g4 + plot_layout(nrow = 2)
+```
+
+- This 3-cluster solution "finds the species fairly well! 
+- [Attention:]{style='color:red;'} These are just two out of four variables!
+
+
+
+## Visualization: Clusters and species {.smaller}
+
+```{r}
+#| echo: true
+clustspecies <- assignments |>
+  filter(k == 6) |>
+  mutate(species = na.omit(penguins)$species) |>
+  select(.cluster, species) |>
+  arrange(.cluster, species)
+g1 <- clustspecies |> ggplot(aes(.cluster, fill = species)) + geom_bar()
+g1 + g_6clusters
+```
+
+
+
+
+
+## It can go differently... {.smaller}
+
+```{r}
+#| echo: true
+set.seed(2)
+peng_transformed |>
+  mutate(cluster = kmeans(peng_transformed, 3)$cluster) |>
+  ggplot(aes(bill_length_mm, bill_depth_mm, color = factor(cluster))) +
+  geom_point()
+```
+
+This 3-cluster solution divides the Gentoo penguins into two clusters and keeps most Adelie and Chinstrap in one cluster.
+
+Why? Different random starting positions of the cluster centroids!
+
+
+# Hierarchical clustering
+
+## Connectivity based: Hierarchical clustering {.smaller}
+
+Hierarchical clustering seeks to build a *hierarchy* of clusters. 
+
+Here, we use a bottom up approach:
+
+- We start with every case building its own cluster
+- Then we iteratively join clusters which are close to each other to form a cluster
+
+To that end we first build the **distance matrix**. It is a symmetric $n \times n$ matrix where each entry is the **Euclidean distance** between two cases. 
+
+## Hierarchical clustering: Step 1
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/a8deb407-0aac-4eec-bf06-9eff89ec60f4_rw_1920.jpg?h=ba48313c2b9793700c204592c545d366)
+
+::: aside
+From <https://allisonhorst.com/agglomerative-hierarchical-clustering>
+:::
+
+
+## Hierarchical clustering: Step 2
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/23f5ebe7-5108-43d4-8ee3-e21bcc90368c_rw_1920.jpg?h=dfefdbcba3b07bbd3b21847d6989878e)
+
+::: aside
+From <https://allisonhorst.com/agglomerative-hierarchical-clustering>
+:::
+
+## Hierarchical clustering: Step 3
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/8be02f8f-296d-4b8d-9bd1-b05f9b82bd0e_rw_1920.jpg?h=f28b9120a354e7ffebec309fecf6cd42)
+
+::: aside
+From <https://allisonhorst.com/agglomerative-hierarchical-clustering>
+:::
+
+## Hierarchical clustering: Step 4
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/55463c7d-d414-49ac-a229-23420caf6a17_rw_1920.jpg?h=5e9f3867df8550e0b013cf82009f0002)
+
+::: aside
+From <https://allisonhorst.com/agglomerative-hierarchical-clustering>
+:::
+
+
+## Hierarchical clustering: Step 5
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/393b3b7a-47d9-47b7-8e39-61264d37561a_rw_1920.jpg?h=8c22aaae3262f253cb7ca2ab23be3085)
+
+::: aside
+From <https://allisonhorst.com/agglomerative-hierarchical-clustering>
+:::
+
+
+## Hierarchical clustering: Step 6
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/aa0be35e-89c6-4b82-8aba-d261c2c2d061_rw_1920.jpg?h=6a93d982b2832cc53fa3e207fa9243bc)
+
+::: aside
+From <https://allisonhorst.com/agglomerative-hierarchical-clustering>
+:::
+
+
+
+## Hierarchical clustering: Step 7
+
+![](https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/0310beae-ab04-49a8-ab09-ba73d727ed02_rw_1920.jpg?h=65b0e4106a62ecea3476414db247dfdf)
+
+::: aside
+From <https://allisonhorst.com/agglomerative-hierarchical-clustering>
+:::
+
+
+## Calculate hierarchical clustering in R {.smaller}
+
+- First compute the distance matrix (entry $i,j$ is the distance between case $i$ and case $j$)
+
+```{r}
+#| echo: true
+peng_transformed |> dist(method = "euclidean")
+```
+
+## Calculate hierarchical clustering in R {.smaller}
+
+- `hclust` from base-R
+
+```{r}
+#| echo: true
+peng_df <- as.data.frame(peng_transformed) # base-R data.frame
+#row.names(peng_df) <- peng_df$iso_code # base-R way to have row names for hclust
+hc_peng <- peng_df |> dist(method = "euclidean") |> hclust()
+hc_peng
+glimpse(hc_peng)
+```
+
+
+## Plot the dendrogram {.smaller}
+
+```{r}
+#| echo: true
+plot(hc_peng, cex = 0.4) # base-R way of plotting hclust object
+```
+
+## Plot height of hierarchy steps {.smaller}
+
+- Now we start looking at the *height* from the top.
+- Height at $x$ is the Euclidean distance which needs to be bridged to join the closest two clusters from the $x+1$-cluster solution to get the $x$-cluster solution. We should not cut where the increase in height is marginal.
+
+
+```{r}
+#| echo: true
+tibble(
+  height = hc_peng$height |> tail(10), # last ten values of height
+  num_cluster = 10:1
+) |>
+  ggplot(aes(num_cluster, height)) +
+  geom_point() +
+  geom_line()
+```
+
+- Empirically, we do not see clear cut points in this case. 
+
+
+## Dendrogram with cutpoints {.smaller}
+
+```{r}
+#| echo: true
+plot(hc_peng, cex = 0.4) # base-R way of plotting hclust object
+rect.hclust(hc_peng, k = 3) # base-R way of plotting in an existing plot
+rect.hclust(hc_peng, k = 6)
+```
+
+## Visualization: Clusters {.smaller}
+
+Use `cutree`. 
+
+```{r}
+#| echo: true
+peng_transformed |>
+  mutate(
+    species = na.omit(penguins)$species,
+    sex = na.omit(penguins)$sex,
+    hclust3 = cutree(hc_peng, k = 3),
+    hclust4 = cutree(hc_peng, k = 4),
+    hclust6 = cutree(hc_peng, k = 6)
+  ) |>
+  pivot_longer(c(hclust3, hclust4, hclust6)) |>
+  ggplot(aes(value, fill = species, alpha = sex)) +
+  geom_bar() +
+  facet_wrap(~name, scales = "free_x") +
+  scale_alpha_discrete(range = c(0.6, 1)) +
+  theme_minimal(base_size = 24)
+```
+
+## Clustering Summary {.smaller}
+
+::: {.incremental}
+- We have seen two clustering methods: k-means and hierarchical clustering.
+- k-means is a partitioning method, hierarchical clustering is a nested method.
+- k-means clusterings may differ from run to run, hierarchical clusterings uniquely deliver a hierarchy of clusters
+- However, hierarchical clusterings may change substantially with time changes in the data (not practically shown here)
+- The choice of the number of clusters is a difficult one. There are some quantitative methods (not shown in detail), but in the end it often involves qualitative criteria.
+:::
+
+. . .
+
+Tip: For visualization purposes it could make sense to plot the data in principal component space with dimensions PC1 and PC2 and on top show the clustering with colors. 

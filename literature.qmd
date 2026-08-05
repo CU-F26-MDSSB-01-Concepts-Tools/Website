@@ -1,0 +1,65 @@
+---
+title: "Learning Resources"
+---
+
+<!-- LITERATURE / READING LIST -->
+<!-- Please describe required texts, computer software, and module materials and their cost estimates (if applicable). You may also provide advice on cost-effective means of obtaining module materials, such as through the library or other open-source materials.  -->
+
+All the materials here are freely accessible, many are community standards. 
+The [Schedule](schedule.qmd) might refer to specific sections in these materials. 
+
+## R
+
+- **R for Data Science (2nd Edition)** <https://r4ds.hadley.nz//> by Hadley Wickham, Garrett Grolemand, Mine Çetinkaya-Rundel and the R data science community around is our core resource for self-learning data science with R using `tidyverse` tools. 
+- **Tidy Modeling with R** <https://www.tmwr.org/> by Max Kuhn and Julia Silge is the resource for learning to work with `tidymodels` building upon the `tidyverse` tools.
+- Part of the course builds on or be inspired by material in **Data Science in the Box** <https://datasciencebox.org/> by Mine Çetinkaya-Rundel and the data science education community around. You can also use the website for accompanying self-study on selected topics. 
+
+## python
+
+- **Python Data Science Handbook** <https://jakevdp.github.io/PythonDataScienceHandbook/> by Jake VanderPlas is a core resource for data science with python. Also there is a good video playlist <https://www.youtube.com/playlist?list=PLWKjhJtqVAbkmRvnFmOd4KhDdlK1oIq23> and a 4-hour "full-course" video <https://youtu.be/rfscVS0vtbw>.
+
+## Data Visualization
+
+*ggplot2: Elegant Graphics for Data Analysis* <https://ggplot2-book.org> is a resource on understanding the logic of ggplot better. 
+
+A great source for **Graphic Design with ggplot2**: <https://rstudio-conf-2022.github.io/ggplot2-graphic-design/>.
+Look at the [Introduction](https://rstudio-conf-2022.github.io/ggplot2-graphic-design/modules/d1-01_introduction.html) to see what cool things are possible. Work through 
+[Concepts of the `ggplot2` Package Pt. 1](https://rstudio-conf-2022.github.io/ggplot2-graphic-design/modules/d1-02_concepts_pt1.html) and [Concepts of the `ggplot2` Package Pt. 2](https://rstudio-conf-2022.github.io/ggplot2-graphic-design/modules/d1-05_concepts_pt2.html) for a full introduction to all of ggplot2. 
+
+Websites on how to decide for what visualization to choose:   
+<https://www.data-to-viz.com/>   
+<https://datavizcatalogue.com/search.html>
+
+## Mathematics
+
+A video on how to read math <https://www.youtube.com/watch?v=Kp2bYWRQylk>. Essential to start reading text including math.
+
+As a data scientist it is necessary to be able to delve into mathematical concepts in some depth. It is not necessary to become a mathematician and proof theorems. A lot can be learned when needed using short videos, wikipedia, and practice and play using your favorite programming environment. However, it makes sense to have an accessible text books to look up and learn some topics in a more systematic way. 
+
+The [**Open Intro**](https://www.openintro.org/) project and their partner programs provide such [math textbooks](https://www.openintro.org/book/math/) for free (you may need to "buy" the pdf of 0 EUR or a donation of your choice). 
+
+- Study **Pre-Calculus** to refresh your basic math skill on functions including polynomials; root, radical, and power function, and exponential and logarithmic functions.
+- Gain the basic concepts of **Calculus** including limits, derivatives, and integrals.
+- Gain the basic concepts of **Linear Algebra** and how to read and understand *matrix-language*. Linear models, PCA and many other data science tools are most systematically understood using matrix language. On linear algebra this is a good video resource about the essence of linear algebra: <https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab>.
+
+For **Probability Theory** the open textbook for the course [Probability for Data Science](https://www.openintro.org/book/stat/) is very useful. 
+
+
+## Statistics 
+
+Some statisticians say that data science is statistics. There is some truth in it. However, data science is more than statistics and statiscics has a certain view point. To get a deeper understanding of it is useful to study data science concepts through the lense of statistics.
+
+The [**Open Intro**](https://www.openintro.org/) project also provide good open and free [statistics  textbooks](https://www.openintro.org/book/stat/). 
+
+Many concepts in data science can be described as statistical learning. A core and very accessible resource for it is 
+
+[An Introduction to Statistical Learning](https://www.statlearning.com/) which provides a version with code in R as well as in python. 
+
+
+## Project-based learning
+
+Project-based learning (especially in programming) means to learn things by reproducing a project (or make your own project in a very similar way). This is a resource for various projects in various languages: <https://github.com/practical-tutorials/project-based-learning/tree/master>
+
+## The Art of Data Science
+
+The Art of Data Science <https://bookdown.org/rdpeng/artofdatascience/> is a great resource for learning about the process of data science and how to communicate about it.

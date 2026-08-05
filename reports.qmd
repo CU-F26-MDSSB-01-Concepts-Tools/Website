@@ -1,0 +1,57 @@
+---
+title: "Create a homework report"
+---
+
+When you are to create a reports in your Homework Project in quarto yourself these are the first steps. 
+
+- In RStudio select "New File" -> "Quarto Document..." to create a new .qmd-file.
+- In Visual Studio Code "New File..." and then type "quarto" and select "Quarto Document Quarto" to create a new .qmd-file.
+
+## YAML
+
+A useful YAML header for a homework report is
+
+```yaml
+---
+title: "Homework 02"
+format:   
+  html:                     
+    standalone: true        # quarto will render to a html-file with a header 
+                            # and all css and javascript included (no extra directory with files for these needed)
+    embed-resources: true   # The html will also embed all figures you produce 
+                            # (no extra directory with files for these needed)
+    code-fold: true         # Code does not appear visually in the report, but can be "folded out"
+    number-sections: true   # Usually you want to number the sections in a report
+    toc : true              # Table of contents make navigation in longer files easier
+---
+```
+
+:::{.callout-note collapse=false appearance='default' icon=true}
+## Writing in a jupyter notebook (.ipynb)
+Instead of a .qmd file you can also write in a jupyter notebook (.ipynb) and render this file with quarto. To that end you start your notebook with the YAML header above in a *raw* cell.
+:::
+
+
+## After the YAML
+
+Typically, you have a chunk loading your packages directly after the YAML header.
+
+This is for an R report:
+
+```{{r}}
+#| label: load-packages  
+library(tidyverse) # You always need the tidyverse
+
+# More helpful packages 
+library(patchwork) # for combining plots
+```
+
+## Structuring your report
+
+Make headers with `#` and maybe `##` for second level headers.
+
+
+
+
+
+

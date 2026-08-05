@@ -1,0 +1,34 @@
+---
+title: "Checklist Technical Setup"
+---
+
+- [ ] I have made a GitHub account and submitted it
+- [ ] I have installed R
+- [ ] I have installed git
+- [ ] I have installed positron
+- [ ] I have tested that R runs in positron
+- [ ] I have installed the `tidyverse` package in R
+
+If any of this does not work, read the details below and try to solve it. Many problems will depend on specific things of your operating system. Many problems may be easy once you got what the problem is. Some maybe harder. If it does not work, write to the instructors or assistants (Teams chat or email) describing exactly what you have done and where you get stuck. A clear and specific description of the problem is essential for getting help! 
+
+## Details {.unnumbered} 
+
+You need a GitHub account and become member of the [GitHub Organization: {{< var org.name >}}]({{< var org.link >}}) of the course. Follow the instructions on the linked page of the organization.
+- You need a computer with Windows, MacOS, or Linux (maybe also other exotic operating systems). A tablet, phone or Chromebook is probably not sufficient.
+- You need to install software on your computer. Here is what you need including links where to download and find instructions for you operating system:
+    - *Statistical Programming Language:* [R](https://cran.r-project.org/), later we will alos use python. Instructions will come in class. 
+    - *Version Control System:* [Git](https://git-scm.com/)
+    - *Integrated Development Environments* (IDE): The instructors uses [positron](https://positron.posit.co/). All instructions will be based on this. In the past the instructors used RStudio. Positron is developed by the same people and is somehow its modern version. 
+ 
+When [R](https://cran.r-project.org/), [Git](https://git-scm.com/), [positron](https://positron.posit.co/) are installed, open positron and test that everything works together:
+
+- **Is R running?** On the top right you should see the R-symbol and its version numbers. That should be your current session. If not click on it, maybe it lists a python session or *Start Session*. Then a *Select Interpreter Session* dialog should pop up and you can start a new one and find R. If R is not offered solve this first by finding out how Positron can find the R installation. Usually it is detected automatically.   
+Another check: Go the CONSOLE tab (usually at the bottom). Scroll to the beginning. It should start with something like `R 4.5.1 started`. At the end of the console you should see a `>`-prompt. Type `version` and hit ENTER. You should see the version of printed.
+- **Do you have access to the tidyverse?** In R, you will use packages in the **package family** [**`tidyverse`**](https://www.tidyverse.org/). You can install it by running `install.packages("tidyverse")` in the CONSOLE.
+- **Do `git` and `quarto` run from the TERMINAL?** Go to the TERMINAL tab besides the CONSOLE. Type `git --version` and hit ENTER. You should see the version of git printed. Then type `quarto --version` and hit ENTER. You should see the version of quarto printed.   
+Note: You can also write `R` and hit ENTER. You start an R session in the Terminal. We do not need it, so type `q()` and ENTER to leave R again. (No need to save the workspace, just hit ENTER again if asked.)
+
+**Learning:** Understand the difference between the CONSOLE and the TERMINAL! Both are *command line interfaces* (CLI). 
+
+- The CONSOLE is for R commands in the current session in positron. 
+- The TERMINAL is for system commands. It is also called SHELL (or also Console ..., but that is confusing here). It also works outside of positron. You can control your whole computer using the TERMINAL. It does not start with a simple `>` but first with a name of your machine and then with the current working directory. *Working directory* means where in your file system the computer will operate your next command. We the command line tools mainly for `git` and `quarto`. For both we will also use short cuts and convenient click and point interfaces in positron. But it is important to understand what happens in the background and that you can always use the TERMINAL directly for all the things of git and quarto. 

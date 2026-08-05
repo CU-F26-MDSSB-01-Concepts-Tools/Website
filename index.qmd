@@ -1,0 +1,225 @@
+---
+title: "Data Science Concepts / Data Science Tools"
+---
+
+:::{.callout-warning collapse=true appearance='default' icon=true}
+## Note for students of **Master program: Data Science for Society and Business (online)**
+
+This is NOT the official syllabus of the [Master program: Data Science for Society and Business (online)](https://constructor.university/programs/online-programs/data-science-for-society-and-business)! 
+
+You have modules with the same names in your program and also the instructors are the same, but the Modules are different! Look it up in your [DSSB (online) handbook]({{< var link.handbook_online >}}). Most importantly, your course will give you more ECTS, so do NOT count on the information here. 
+
+You are free to also use the material provided here, but look in the handbook and the learning platform for the official information!
+:::
+
+
+:::{.callout-important collapse=false appearance='default' icon=true}
+## Developing Syllabus
+This syllabus may change during the course of the semester with some additions and clarifications.   
+All substantial changes will marked here with date. 
+
+2025-10-18: List all [Homework](homework.qmd) Projects to come. Specify requirement information about passing and bonus for *Tools* module. 
+:::
+
+## Module Names
+
+This syllabus is for two modules which require each other.
+
+- MDSSB-DSOC-02 Data Science Concepts (Core area, 5 credits)
+- MDSSB-MET-01 Data Science Tools (Methods area, 5 credits)
+
+Offered in the [Master program: Data Science for Society and Business (DSSB)]({{< var link.program_onsite >}}). See the module description in the [DSSB Handbook]({{< var link.handbook_onsite >}}). 
+
+
+## Module Components
+
+- Data Science Concepts (5 Credits)
+- Data Science Tools in R (2.5 credits)
+- Data Science Tools in python (2.5 credits)
+
+All are courses offered in the Fall term and have no entry requirement.   
+Data Science Concepts and Data Science Tools are co-requirements. 
+
+The Concepts treated in the lectures are applied in exercises and homework in the Tools course.
+
+## Class Meeting Information
+
+**Data Science Concepts:**   
+{{< var session1.concepts >}}    
+{{< var session2.concepts >}}       
+Location: {{< var room.concepts >}} in-person    
+*Video streaming and recording* in Microsoft Teams is provided for late-arriving students: 
+Team **{{< var teams.concepts.name >}}**, [General Channel]({{< var teams.concepts.link >}}) 
+
+**Data Science Tools:**   
+{{< var session1.tools >}}    
+{{< var session2.tools >}}       
+Location: **see campusnet** in-person     
+*Video streaming and recording* in Microsoft Teams is provided for late-arriving students. Coordinates tba, you should also find them in Teams
+
+Note: The R and python courses are provided in the same time slot. Details in the schedule. 
+
+## Instructors
+
+Concepts: 
+[**Jan Lorenz**](http://janlo.de) Email: <jlorenz@constructor.univeristy>
+
+Tools in R:   
+**Armin Müller** Email: <armmueller@constructor.university>
+
+Tools in python:   
+**Aiman Alam** Email: <aalam@constructor.university>
+
+Student Assistants:    
+**Matvei Trifanov** Email: <mtrifanov@constructor.university>  
+**Mustafa Ansari** Email: <muansari@constructor.university>
+
+
+## Format and Workload
+
+Concepts: **Lectures**, sometimes with aspects of Tutorials (35 hours in presence, total expected workload 125 hours)   
+Tools: **Tutorials**, sometimes with aspects of Lectures (35 hours in presence, total expected workload 125 hours)  
+
+Besides homework, both modules require a **decent amount of self-study**.   
+Workload homework and self-study is expect to be 90/125 = 72% of the total workload. 
+
+Homework assignments are given along the concepts treated in *Concepts* to be solved with the tools treated in *Tools*. 
+
+
+## Intended Learning Outcomes
+
+The module descriptions can be found in the [DSSB Handbook]({{< var link.handbook_onsite >}}).  
+
+### From the handbook
+
+By the end of the *Concepts* module, you will be able to:
+
+1. understand and use the mathematical foundations of statistical learning algorithms
+2. explain and classify data science problems
+3. explain and classify data-driven approaches
+4. understand the application of data science techniques to typical situations and tasks in business and societal
+research, including the search, retrieval, preparation, and statistical analysis of data
+5. interpret complexity analysis and performance evaluation of data science problems and algorithms
+
+By the end of the *Tools* module, you will be able to:
+
+1. explain basic concepts of imperative and object-oriented programming
+2. write, test, and debug programs
+3. perform data handling and data manipulation tasks in R and Python
+4. apply your knowledge to implement own functions in R and Python
+5. effectively use core packages and libraries of R and Python for data analysis
+6. know about the typical applications of R and Python in data science
+7. implement and apply advanced data mining methods with appropriate tools
+8. perform a full cycle of data analysis
+
+### Main Learning Goal
+
+Our main goal to help you build a good basis for your more and more independent work in the whole study program. That means you can
+
+- learn core concepts in data science on your own, for example
+    - concepts to explore data (import, wrangle, visualize)
+    - learn and explore *mathematics* and *statistics* through the data science lens
+    - learn concepts to model and draw conclusions from data (model, infer, predict)
+- **create and maintain a digital working environment on your computer to do data science**
+- learn to program in the data science languages R and python, and become able to learn new skills in these independently
+- do a data science project of your own interest
+
+## Examination and Assessment
+
+:::{.callout-warning collapse=true appearance='default' icon=true}
+## For students of DSSB (online)
+These information does NOT apply for you, check your handbook. 
+:::
+
+
+### *Concepts* Module
+
+Assessment Type: **Written Examination**   
+Duration: 120 min  
+Weight: 100%   
+Scope: All intended learning outcomes of the module.  
+Completion: to pass this module, the examination has to be passed with at least 45%  
+
+An exam will take place after all lectures in December. The date will be published by the university adminstration later. The date range is in the [Academic Calendar]({{< var link.academic-calendar >}}).
+
+There are no additional achievements necessary and there are no bonus options. 
+
+### *Tools* Module
+
+**Module achievement: 50% of the assignments correctly solved**   
+Programming and analysis assignments will appear step by step during the courses as Homework Projects.   
+To pass the module you have to solve half of them by the end of the semester. 
+
+Assessment Type: **Project Report**   
+Length: 4000 - 5000 words (This is a guideline, not a strict rule! Content counts, we will not count words.)  
+Weight: 100%  
+Scope: All intended learning outcomes of the module.  
+
+**More information of project formats and grading rubric:** [Final Projects](final.qmd)
+
+**Bonus option:** Students receive **0.33 points** grade improvements on their project grade on the numerical grade as specified in the [Grading Table]({{< var link.grading >}}) when all assignments are solved by the end of the semester.  (Note, the bonus is not necessary to reach the best grade in the module.)
+
+All assignments and the final project must be delivered in personalized repositories in the [GitHub organization]({{< var org.link >}}).
+
+
+:::{.callout-important collapse=false appearance='default' icon=true}
+## Homework Specification for Passing and Bonus
+
+By the end of the semester, all Homework repositories will be assessed as 
+
+- "Just Passed" when half of the tasks are solved meaningfully,
+- "Passed" when almost all tasks are solved (some shortcomings are acceptable), 
+- "Bonus" when the solutions are great, or 
+- "Fail" when none of this has been achieved. 
+
+To **pass the module** (50% Module Achievement such that the student can be assessed on the final project) a student needs to have all Homework Projects at least as "Just Passed" (no "Fail"). However, a "Fail" in one Homework can be compensated by a another Homework being "Passed" or "Bonus". 
+
+To receive the **bonus** for the module assessments a student needs to have more than half of the Homework Projects at "Bonus" and all others at "Passed" (no "Fail" or "Just Passed").  
+:::
+
+
+
+## Module Policies
+
+There are no formal requirement about attendance and active participation. However, we rely on your **engagement** in a many-facted way including: 
+
+* Preparation (looking at readings and material before and after class, being informed about syllabus and course material)
+* Focus (avoid distraction during in class and self-learning activities)
+* Presence (listening and responding during group activities)
+* Asking questions (in class, out of class, online, offline, when you get stuck conclude by writing a question)
+* Specificity (being as specific as possible when describing your problem or question)
+* Synthesizing (making connections between concepts from reading and discussion)
+* Persistence (you don't need to understand everything immediately, but stay engaged, try again, confusion shows that you pay attention)
+
+## Academic Integrity
+All involved parties (professors and lecturers, instructors and students) are expected to abide by the word and spirit of the ["Code of Academic Integrity"](https://constructor.university/student-life/student-services/university-policies/academic-policies/code-of-academic-integrity). Violations of the Code might be brought to the attention of the Academic Integrity Committee.
+
+## Artifical Intelligence (AI) Use Policy
+
+This policy covers any generative AI tool, such as ChatGPT, Elicit, Gemini, Claude, CoPilot, etc. This includes text, code, slides, artwork/graphics/video/audio and other products.
+
+We instructors encourage exploring AI tools for these purposes: 
+
+  - **Learning by dialog with a chatbot.** AI chatbots can be helpful to explain you concepts *on your desired level* and get a feeling about how topics are treated. You can ask for an easier or more detailed explanation or focus on certain aspects. Note: The capabilities are limited and you likely receive also false information! An AI chat can be a good entry point to learn about a specific topic but the more specific it gets the more likely it is that AI will start to deliver useless or wrong answers. Using chatbots should remain a small part of your learning process. Rule of thumb: Spend not more than 25% of the learning time with chatting with AI. There is no way around reading textbooks, reading software documentation, learning and understanding concepts, searching for help online, asking instructors or fellow students.
+  - **Have code snippets written.** Tools like GitHub Copilot can be a great help in coding! Try them, many coders do it. Maybe the GitHub Copilot is stil free to use for students and teachers who join [GitHub Education](https://github.com/education)), they can be integrated in your programming IDE like RStudio and VSCode. Copilots can speed up writing. However, they may deliver bad code. There is no way around understanding yourself what code is doing! Do not spend endless hours asking for new code with new prompts, spend time understanding a language and the functions and objects you are using! AI chatbots and Copilots can also help you to understand code. Copilots can be a great help to get a skeleton of code and an idea how your solution *might* look. They rarely deliver the complete code. Expect that the code does not work, expect that the code seems to works but the results are wrong! [You are 100% accountable for the code you produce, with or without the help of a copilot!]{style='color:red;'} When a task in a Homework project can be well solved by Copilot we are happy if you drop us a note, same when it is totally off, it is interesting to explore what AI can do well and what not. 
+  - **Have a draft text snippet written.** I do not recommend to use AI for writing. Writing is to a large extent thinking and this is important. It is not "forbidden" to use AI for writing. However, you are 100% accountable for the text you deliver. You are expected to know what your text is about and to be able to answer questions about what your text means! With text generated purely by chatbots, it is often evident for us that students do not understand. We consider such cases worse than incomplete but sensible self-written text. Text written by chatbots is often very generic and not specific. In general, we value more specific text higher than generic text. [Generic text is considered **worse** than specific self-written text.]{style='color:red;'} 
+
+Note: **Philosophical and legal questions around the training and use of chatbots and code copilots are controversially contested and re-examined constantly!** We encourage to engage with such questions and become aware of arguments and debates.
+
+If any part of this AI policy is confusing or uncertain, please reach out to us for a conversation before submitting your work.
+
+## Schedule and Homework
+
+The [**Schedule**](schedule.qmd) is on an extra page and will be updated continuously with 
+
+- Links to slides
+- What homework you are expected to do
+- Some questions which you should be able to answer after each week.  
+
+Read about the concepts of our [**Homework Projects**](homework.qmd). 
+
+
+
+## Feedback from Students
+
+We are eager to constantly improve the quality of our teaching. We would be glad to obtain your feedback at any time of the course to improve your learning experience.

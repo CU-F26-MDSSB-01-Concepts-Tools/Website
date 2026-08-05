@@ -1,0 +1,41 @@
+---
+title: "Need help for Homework?"
+---
+
+## Setting up the basic toolkit
+
+- Go through the [Checklist Technical Setup](setup.qmd) and make sure everything works.
+
+## Good practices
+
+- Do homework together with other students. **Working together is encouraged!**
+- **Commit and push** your intermediate results often, instructors may check your code directly.
+- Read error messages carefully! Often they are informative or even tell you what to do! (Hint: Uninformative error messages are also common. Maybe you get at least a hint where the problem lies. You will become more advanced on this, error messages which are not helpful now may become helpful in the future.)
+- Do the homework before the next Data Science Tools Session and prepare questions to ask in class. 
+
+
+## Good ways to ask for help
+
+- Ask your fellow students, but show willingness to learn by being prepared. Do not "abuse" your students to fix your computer problems.  
+- It is absolutely OK to ask instructors for help outside of class. We try to care, if we are not too busy with other things. If you do, please do first: **Document and describe where you get stuck as precise as possible.** Try to find out **why** as much as possible. Use Teams chat (or email)!
+
+
+## Problems with the git-GitHub-dance 
+
+[Happy Git with R](https://happygitwithr.com/) is a great resource for helping you practically and for learning the version control concepts better. The site is well suited for our purpose of data science! Git was developed for software development and a lot of the advice and good practices you find by searching the internet are targeted for software engineering. Whenever you consult [Happy Git with R](https://happygitwithr.com/) for solutions for a problem, try to learn a bit about the basics. Git is not something to learn in one course but step by step while doing. 
+
+Problems with **getting started** are likely related to the installation of software and connecting git and GitHub. Reading in Sections 4 - 14.
+
+- After installing git, you need to [Introduce yourself to Git](https://happygitwithr.com/hello-git) (Use the email associated with your GitHub account.)
+- Then you have to make the communication with GitHub possible as outlined by the introduction [Can you here me now?](https://happygitwithr.com/connect-intro). The default is to communicate via HTTPS (instead of SSH). 
+  - In the past you could authenticate via your GitHub-user password, now you need a *personal access token* which is something like a password created by GitHub which you can see and copy only once. (No worries, if loose the connection you can create a new one.) 
+  - These are the instructions for [Personal access token for HTTPS](https://happygitwithr.com/https-pat). Ideally it works following the instructions in "TL;DR". (Install the packages `usethis` and `gitcreds` in R.) 
+  - Now, you should be able to clone the Homework repos analog to [Connect RStudio to Git and GitHub](https://happygitwithr.com/rstudio-git-github). 
+  - Sometimes you have git installed but RStudio does not find it. Usually it works out of the box. If not, read [Detect Git from RStudio](https://happygitwithr.com/rstudio-see-git)
+  - Finally there is a page for problems which appear sometimes which you can scroll through looking if it is related to your problem: [https://happygitwithr.com/troubleshooting](RStudio, Git, GitHub Hell)
+
+For problems *appearing after your first successful git-GitHub-dance* operations helpful sections are for example:
+ 
+  - You want to bring your new versions to GitHub but when you push it does not work: [Dealing with push rejection](https://happygitwithr.com/push-rejected)
+  - You need to pull (to synchronize remote and local) but you made changes locally and get warnings: [Pull, but you have local work](https://happygitwithr.com/pull-tricky)
+  - If you can not properly push and pull anymore and there are conflicts all over the place: Consider [Burn it all down](https://happygitwithr.com/burn) (Meaning to start again by cloning again ...)

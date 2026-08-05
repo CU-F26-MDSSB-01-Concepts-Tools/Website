@@ -1,0 +1,133 @@
+---
+title: "Homework Projects"
+subtitle: "Do data science by working on Homework Projects!"
+---
+
+::: {.callout-important appearance="simple"}
+
+## Homework Projects are essential for mastering the Data Science Concets and Tools courses! 
+
+Read the following to understand its purpose, format, workflow, and its role in the assessment. Start right a way to work on homework projects! That's doing data science. 
+
+:::
+
+## Homework Projects List
+
+As a registered student, you will find personalized repositories for your Homework Projects in the [GitHub-Organization]({{< var org.link >}}). 
+These projects will appear here once they are deployed:
+
+1. Project_NYCFlights
+2. Project_COVID19
+3. Project_DataScienceProfiles
+4. Project_FuelWatch
+
+Please read the next sections. 
+
+
+## Purpose 
+
+You learn to
+
+- understand and answer **data science questions**
+- apply **data science concepts** and use the **basic data science skills**
+  - importing data
+  - tidying data
+  - transforming data
+  - visualizing data
+  - applying models for different purposes like 
+    - describing, exploring, and predicting data
+    - understanding the data generating process
+    - inferring insights about the world from data
+- delve into a certain **domain** with each project
+- develop, ask, and answer your own data science questions 
+- **communicate** your results and insights in a reproducible way with `quarto`
+- create a professionally looking **Project Report** for each Homework Project
+- get into the basics of version control with `git` and [GitHub](http://github.com)
+
+
+## Format
+
+A Homework Project is a mix of a *simple Homework Assignment* to apply what you just learned and a *fully fledged Data Science Project*. 
+
+You work on projects towards *milestones*. All projects require some data import, some tidying of data, some exploratory data analysis with visualizations and computations of summary statistics. You will start with basic things as first milestones in more than one project. You do not need to finish one project after the other but you pick up work on some projects again when you learned new methods. Homework Projects and Milestones will be provided along the course. Finally, a Homework Project develop towards a readable Project Report on a certain topic. 
+
+Task of the Homework can range from
+
+1. guided tasks to learn basic things, over 
+2. tasks to answer a particular data science question (where you choose analysis, visualization and other output yourself), to
+3. open tasks where you formulate data science questions yourself. 
+
+
+## Technical Setup: The data science process in practice!
+
+:::{.callout-important collapse=true appearance='simple' icon=true}
+## Needed infrastructure
+
+On your computer: 
+
+- A terminal as *Command Line Interface* (CLI) where you can run `git`, `quarto`, `R`, and `python3`
+- *Integrated Development Environments* (IDE): For R and python we use positron, for python you may also use VS Code. When well configured, you have a termin and can run `git` and `quarto` within the IDE. 
+
+In the cloud: 
+
+- Be registered in Data Science Concepts and Data Science Tools at Constructor University
+- Have a GitHub account
+- Have your GitHub user registered as a member of the [GitHub-Organization]({{< var org.link >}})
+:::
+
+- Homework Projects are git-repositories hosted on GitHub in the [GitHub-Organization]({{< var org.link >}}) of the courses.  
+- Every registered student receives one individual repository for each project. Only the student and the instructors can see these repositories. **You need to become a member of the [GitHub-Organization]({{< var org.link >}})!**
+- The **Tasks and Questions** for the project are written in the `README.md` file in each project repository. 
+- **Workflow** for each project repository: 
+  1. `git clone` the Project Repository to your local computer
+  2. Work and the Project's main quarto markdown document (`.qmd`-file)  
+     What does *working on the project document* mean?
+     - You structure the markdown document with headlines
+     - You draft plain markdown text to explain what you analyze or report your results
+     - You write code chunks either for loading packages, importing data and computations, or for producing visualizations and tables in the output document
+     - While you do this you work a lot using the programming console in which you execute part of your written code to test it or modify it to explore other options until you develop something which goes into your file 
+  3. (Sometimes/Optionally) Create an additional script-file, for example for downloading data, or performing lengthy calculation and creating intermediate datasets. 
+  4. `quarto render` the main Project's quarto markdown document and create a HTML-file with your Project Report ([Guide for postitron](https://quarto.org/docs/get-started/hello/positron.html))
+  5. You repeat step 2.-4. and repeatedly check if your (local) HTML-output looks good. You repeat until you are done for the session. Ideally, you leave the document such that it renders well and with a short list of problems to solve and next steps to do.  
+  6. `git add` your (intermediate) markdown file, your additional scripts, the HTML-file, and (if necessary) all additional automatically created files or directories necessary to view the report properly to the `git` staging area of your repository on your computer
+  7. Create a `git commit` of the (intermediate) state of your project and 
+  8. `git push` the commit to the remote repository at http://github.com/ such that it can be viewed by the instructors
+  9. Repeat steps 2.-8. until your Project Report reaches a Milestone or is final and end with a commit with commit message "Milestone 1" (or other number), or "Final".
+  
+Organization Advise: Create a folder for all projects on your computer. In this folder you will have all the subfolders created by the cloning of the project repositories. 
+
+
+## Assessment
+
+**Homework Projects are mostly for your learning!** Use them as that. 
+
+Nevertheless, they also play a role in the assessment of the **Module "Data Science Tools"** in the following forms:
+
+1. Some tasks are requirements. You need to have solved more than 50% of these required tasks correctly to be eligible to pass the module! The percentage does not affect the grade, it is a *requirement*. 
+2. When you solve 100% of the required tasks you can receive a bonus of 0.33 for your grade.
+
+The grade of the Module "Data Science Tools" is made for your final project. This can depart and build on topics and data of Homework Projects.  
+
+Whatever the data and topic for your final project will be, it is assumed to have the same format as a Homework Project: A private repository provided by the instructors.  
+
+The **Module "Data Science Concepts"** is assessed with an exam. It does not rely on the Homework Projects. However, some examples in the exam maybe relate to content of Homework Projects, so familiarity with Homework content will be of help. 
+
+
+## Feedback
+
+Together with teaching assistant the instructors will try to give feedback on your work. 
+
+The preferred way is via **[GitHub Issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues)**. 
+An *Issues*-Section is part of every repository. They are used to organize collaborative work and organize user interaction. You can also use issues for yourself as a project-specific To-Do-List. 
+
+Instructors and Teaching Assistants may use Issues to give you some feedback on the current state of your work in the project. 
+
+If you require feedback: 
+
+- File an issue and describe on what you need feedback or help as specific as possible. 
+- Point the instructors to your issue. 
+
+
+## Making a Homework Project repository public
+
+You may want to use your Homework Projects in your portfolio. The repositories can be made public from where they are. If you want to do so, please inform the instructors. In the case of publication, the README should tell in a "License" how I think it should be done in line with Academic Integrity. 

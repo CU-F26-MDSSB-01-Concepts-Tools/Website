@@ -1,0 +1,74 @@
+---
+title: "Data Science on the Internet and in Social Media"
+---
+
+## Data Science on Social Media
+
+Many people talk data science and related things on social media. Some people even make a business publishing short snippets because they love communicating about data science but also trying to attract you to their newsletters or courses. Also many developers of R or python packages are on social media occasionally posting new releases, ideas, or reacting. 
+
+## Should you follow data science on social media?
+
+*Yes, you should!* Because 
+
+* you can get a feeling of how the field develops. 
+* you can find nice snippets to learn things, when lucky they are exactly on your level.
+* many people learn data science things on social media, you react with a questions and may be lucky to get a response.
+* there may sometimes be release for your confused mind through data science memes, cartoons, or jokes.
+
+*No, you should not!* Because 
+
+* all social media is disctraction from focused learning and concentrated working.
+* you may develop [imposter syndrome](https://en.wikipedia.org/wiki/Impostor_syndrome) symptoms. There is so much stuff out and you may think everybody else knows so much more and you will never catch up. (Hint, the reality is more like this: No one knows everything, you already have your own perspective and own unique set of skills, every good data scientist is constantly learning and is constantly able to rethink and also sometimes has similar feelings, what gets pushed on social media tends to be more opinionated and overstated.)
+* you may fall into hype topics where people overstate the importance, risks, dangers, or opportunities a lot. 
+
+**Final answer:** You decide. If you do, learn to stop when it feels bad, learn to detect hype, and do more other data science learning: real exercises, tutorials or your projects. Just assume you are in the blue region on the graph in [this cartoon](https://www.smbc-comics.com/comic/gifted) 😉.  
+
+## Which social media and how to follow data science?
+
+The following is not intended to be complete or balanced in anyway. If you find something interesting let me know and I may add it to the lists. 
+
+For following Data Science in social media you often need platform accounts, otherwise most platform do not even let you see things. Anyway, accounts help you by selecting who to follow. You do not need to post or like things, you can start just looking around and following. 
+
+The general ways to access content is by **following** interesting people, **searching** for words or **hashtags**, or use the **explore** options the platforms offer. 
+
+For sure data science is a common topic on 𝕏 (which I still call [Twitter](https://twitter.com) which is still the URL), [Reddit](https://www.reddit.com/) ![reddit](https://b.thumbs.redditmedia.com/S6FTc5IJqEbgR3rTXD5boslU49bEYpLWOlh8-CMyjTY.png){height=30}, and [Mastodon](https://joinmastodon.org/) ![](https://joinmastodon.org/logos/logo-purple.svg){height=30}. 
+
+On Mastodon: It is not a propriatary service, it is offering a joint open source protocol which different independent servers can use to run something like a decentralized twitter. Some people call it Twitter with an open protocol like email. I think, this is a very good development! When you want to have a mastodon account, you need to decide for a server where to live. In the end it is not so important because you can follow people on all servers and you can also move with your account later. I am in the community <https://datasci.social> but you could take anythings.
+
+After Elon Musk's twitter take over microblogging people are a but puzzled where to go and many maintain more than one plattform like twitter/X, bluesky, threads, or mastodon (which I support most). So, you may find the same people at different places. 
+
+## Some "entry points"
+
+### People
+
+A cool statistician: https://twitter.com/kareem_carr
+
+https://fosstodon.org/@juliasilge
+
+Allison Horst
+Chelsea 
+
+
+Christoph Molnar https://twitter.com/ChristophMolnar
+Albert Rapp https://twitter.com/rappa753
+Daniël Lakens https://twitter.com/lakens
+
+Hadley wickham
+
+
+
+### Other things
+Subreddits and the like
+
+Youtube, and podcasts
+
+
+
+
+
+
+
+
+
+A reddit thread
+<https://www.reddit.com/r/datascience/comments/16dk5b6/r_vs_python_detailed_examples_from_proficient/>

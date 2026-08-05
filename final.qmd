@@ -1,0 +1,157 @@
+---
+title: "Final Project"
+---
+
+::: {.callout-important collapse=false appearance='default' icon=true}
+Project check-in has started. Deadline: Saturday, Nov 8.   
+Fill the form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim). (Ideally after you have formed a team and discussed your data source and initial questions.)
+:::
+
+
+These are specifications and guidelines for the final **Data Science Project** and the **Project report**, the assessment for the *Data Science Tools* (see [Syllabus](index.qmd)): How to write it, when and how to deliver it, and how it will be graded. 
+
+
+## How to write a project report in a nutshell
+
+- You find a team,  
+- pick a dataset or the data source of the Homework Projects COVID19, FuelWatch, or DataScienceProfiles
+- check-in your project in the Form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim), 
+- do some interesting question-driven data analysis with it, and
+- write up a well-structured and nicely formatted report about the analysis in your team's repository. 
+
+## Work in Teams and Register your Project
+
+Projects should be done in **teams of 3-6 students**. This serves two additional learning goals:
+
+1. Learning to pursue and coordinate data science workflows collaboratively.
+2. Learning to work collaboratively on code with `git` and [GitHub](http://GitHub.com).
+
+**Individual teams** are possible upon request when there are reasons for it. 
+
+:::{.callout-important collapse=false appearance='default' icon=true}
+## The team's work is graded as one piece.
+
+All members receive the same grade for it. However, the module grade can be different because of the bonus for fully complete homework. **A dysfunctional team can be split anytime before submission upon request by any individual member.** Write to the instructors in case you want to depart from your team.
+:::
+
+**How to form a team and register your project:**
+
+1. Form a team on your own with fellow students. 
+2. Go through these guidelines together. 
+3. Decide if you want to build on one of your Homework Projects or search for your own data. 
+    a. Find a suitable dataset (see below). 
+4. Come up with **one initial question per team member**. Discuss in your team how the questions are related and if and how they build on each other.  
+5. Fill out the Form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim)
+
+
+## Delivery
+
+- Delivery is via GitHub in a private repository (the same way as Homework Projects). 
+- The repository for the final project will be created in the [{{< var org.name >}}]({{< var org.link >}}) by the instructors **upon team and project approval**. 
+- **The assessment will be done of the HTML file `report.html`.** You write the report in Quarto Markdown (`report.qmd`) or Jupyter Notebook (`report.ipynb`) and render it to HTML.
+- The source files (`report.qmd` or `report.ipynb`) must be included.
+    - Note: In large teams it can be helpful that members work on individual files for some time to avoid to much technical coordination (e.g. `analysis_NAME.qmd`). This is OK. However, in the end you need to put everything together in one file `report.html`! Reseve some time for it as a team. Individual files (and rendered files) should be removed from the repository before delivery time.
+- The assessment will start after the deadline with the latest commit. Help us by calling your final commit message `DELIVERY`.
+- Assessment will be done based on reading the HTML-file `report.html`. Additionally and if necessary, the Quarto Markdown File and other provided files may be looked at. Ideally, the HTML-Report is sufficient to assess the project!  
+(To test if the HTML file looks good for the instructors do the following: Clone the repository anew to a temporaty directory on your computer, open the HTML file from this newly cloned directory. Check if it looks good. This is what instructors will do.)
+
+
+## Deadline
+
+See [Schedule](schedule.qmd).
+
+Note: The deadline is before the Winter (German Christmas) break in December. In total you have 3 attampts to pass any module. The second attempt will be with a deadline in late January 2025. The third attempt will be in the next academic year. If you feel very time pressured in December and you are still keeping up with learning. You can consider to let the first attempt pass and work furterh in January. A failed attempt does not harm your transcript.      
+
+
+## Grading
+
+- The reports will be graded jointly by the instructor of Data Science Tools and Data Science Concepts.   
+- The presentation in class is informal and will not be graded.
+- All team members receive the same grade for the project report. In case of a dysfunctional team, members can leave or split the team upon prior communication with the team and the instructors.
+
+**Assessment rubric**
+
+Project reports can be quite different depending on the data used and the type of question(s) (Descriptive, Exploratory, Inferential, Predictive, Causal, Mechanistic). Therefore, there will not be a fixed rubric. We will communicate back the final percentage grade (compare [Constructor University's Grading Table](https://constructor.university/sites/default/files/2023-02/Grading_Table_2023.pdf). Additionally, we aim to give short textual feedback about strong and weak points. 
+
+Nevertheless, the assessment goes along some criteria with some approximate weights: 
+
+- Introduction/Questions (10%)
+- Data Handling/Preparation	(10%)
+- Modeling (20%)
+- Comprehensiveness/Visualizations (20%)
+- Results/Conclusion (20%)
+- Programming style (10%)
+- Document Structure and Layout (10%)
+
+
+## Advice for data science team work (with git)
+
+- Select your language R or python!
+- Put the data you need into a folder `data`. Very large datasets need not be committed and pushed. Document where the data can be retrieved and where it should be put to Use it with your code.  
+- All team members need to clone the repository to their local computers.
+- Try both:
+    - Working together at the same time with realtime communction. 
+    - Working together remotely based on a plan who should do what. Feel free to use GitHub issues in your repository for this!
+- Every team member should finally have pushed some work to GitHub!
+- Commit early and often! We help you when you have questions or need directions based on committed code. 
+- Before you start to work as a team member: Always do `git pull` first to receive potentially new content!
+- Try to finish an individual work session with comments on next steps and open questions. Push the files in a state such that it renders. 
+- **Conflicts in git:** Git conflicts will probably occur when you work in teams while pulling and pushing. These can be solved. If you do not manage, ask for help. Sometimes git-conflicts become too confusing that [Burn it all down](https://happygitwithr.com/burn) can be the best approach to have a fresh start on your local machine by cloning again. (See also <https://xkcd.com/1597/>.) Check what is in the remote repo before and save relevant local work somewhere.  
+- **Conflicts in the team.** Please communicate about tensions in your team and try to solve them. However, you are not obliged to finish your project as a dysfunctional team. To avoid being bound to the same grade in a dysfunctional team, every team member has the right to leave the team and continue independently. This can only be realized upon prior communication with team members and consequently with the instructors! 
+
+
+## How to define a project?
+
+Part of the work is to define a good project for question-driven data analysis. 
+
+Essentially there are two approaches to coming to a project setup:
+
+- Find and select data that interests you, do some question-driven data exploration, and focus and narrow the question. 
+- Start with a question and search data to answer it.
+
+**You can build on topics and datasets of the Homework.**
+
+
+## Guidelines for drafting your project
+
+- If you do not build on a Homework Project: Find a manageable dataset. A guideline is at least 50 cases (rows), good is 10-20 variables (columns) with a mix of categorical and numerical ones. Deviations are allowed based on your interest and capability.
+- Go through the visualizations, statistics, and models we had in lectures and homework and think if similar things would be interesting.
+- The goal is not an exhaustive data analysis with every method! Do not calculate every statistic and procedure you have learned for every variable, but rather show that you can ask meaningful questions and answer them with results of data analysis and proficient interpretation and presentation of the results.
+- Do NOT blindly do all visualization and all statistics on all variables in the data set! You may do that in your data exploration. But not all exploratory data analysis goes into your report. At some point, you have to focus on what is needed to answer your questions. Your report is not a documentation of all your exploratory steps. Throw out what is not needed anymore, improve the remaining visualizations, and explain well in the text what you want to communicate.
+- A single high-quality visualization that shows a point clearly will receive a much higher appreciation than a large number of poor-quality visualizations without an explanation of what they should communicate.
+
+
+## (Optional) Making your project public
+
+By default, project repositories are *private* and only visible to team members and instructors. The repositories can be made *public* such that students can use it as part of their portfolio, for example for referring to it in applications for internships and student jobs. Please let the instructors know if you want to make the repository public. 
+
+Additionally, the HTML file can be made accessible directly as a webpage with a few tweaks from quarto using the service of *GitHub Pages*. See the [documentation](https://quarto.org/docs/publishing/github-pages.html).
+
+
+## Frequently Asked Questions *(may be extended)*
+
+1. **Do we need to stick to methods and visualizations treated in lectures?**
+   
+    No, you are invited to use other data analysis and visualization methods (from other courses or packages which you self-learn)! We are happy to give advice if we can.
+   
+2. **Are we only allowed to use one dataset?**
+   
+    No, you can also merge data from different sources. This is a more challenging project because the data wrangling work would be a bit more. If your question calls for it we encourage you to use another data source. The additional effort will be recognized. 
+
+3. **Can we use AI in the production or our analysis and report writing?**
+   
+   It is not forbidden to use AI tools for whatever purpose. So, any text and code can only be treated as written by the claimed author. When not properly used during analysis, AI text tends to meander around topics, not becoming specific, remaining generic, or generating a lot of not very related content. All of this is not what should be in questions-driven data analysis and will be assessed accordingly. Instructors rather want to read one interpretation sentence which shows understanding even of a basic thing than several paragraphs of AI blurb. So, this one sentence will contribute positively to the grade, the AI blurb will contribute negatively to the grade. Take this serious! Massive text harms your grade when mostly meaningless. It harms your grade more than no text at all.
+   
+   AI code also has very typical structures and patterns. If AI code is used, it should be adapted and improved to the specific analysis context. Scrutinze such code step by step to understand what is happening. Do not just rely on pleasing looking outcomes. Blindly using AI-generated code will often lead to wrong results or unprofessional coding style (too many comments, to lengthy, not up to date functions used and so on). Also remove code you do not need anymore. You know what code you need when you understand your code step by step. This is also a way to learn. 
+
+4. **What about the word count?**
+
+    Please do not count words. Also the instructors will not count words. Anyway at least half of the work lies in code and visuals. A minimal word count needs to be in the requirements as a guideline. It will not be used as a strict criterion. Quality over quantity. Massive text which is mostly meangingless or unrelated to the data analysis is worse than no text at all.
+
+5. **I did my project and it looks fine but the feedback says I submitted nothing or incomplete material. How can I test that my submission on GitHub is as it should be?**
+   
+   Sometimes, students forget to `git add` and (most importantly) `git push` all necessary files. This can imply that the student did everything fine b ut when instructors clone the repository it is incomplete or not even touched. How can you check? To test if the HTML file looks good for the instructors do the following:
+   
+   Go to the repository on GitHub [{{< var org.name >}}]({{< var org.link >}}). Clone your repository anew to a temporary directory on your computer, open the HTML file from this newly cloned directory. Check if it looks good. This is what instructors will do. Then you can delete the temporary directory again. 
+   
+   LEARNING: What is on your computer is not always the same to what is in GitHub. This is not unusual in git workflows. Always check what is in GitHub if you are unsure! For checking the HTML file the easiest way is to make the temporary clone as described above.

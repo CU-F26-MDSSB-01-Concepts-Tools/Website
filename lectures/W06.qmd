@@ -1,0 +1,1105 @@
+---
+title: "W#06: Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus"
+author: Jan Lorenz
+format: 
+  revealjs: 
+    toc: true
+    toc-depth: 1
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: true
+    logo: img/ConstructorUniversity.png
+    footer: "MDSSB-DSCO-02: Data Science Concepts"
+bibliography: "/home/janlo/Documents/literature/litlorenz_zot.bib"
+editor_options: 
+  chunk_output_type: console
+---
+
+
+## Preliminaries
+
+```{r}
+#| echo: true
+
+library(tidyverse)
+library(palmerpenguins)
+```
+
+
+# Principal component analysis (PCA)
+
+A typical part of Exploratory Data Analysis. 
+
+## PCA Description {.smaller}
+
+Principle component analysis 
+
+- is a **dimensionality-reduction** technique, that means it can be used to reduce the number of variables
+- computes new variables which represent the data in a different way
+- transforms the data **linearly** to a new coordinate system where most of the variation in the data can be described with fewer variables than the original data
+
+**Today:** Quick walk through how to use and interpret it. 
+
+
+## Example: Numerical variables of penguins {.smaller}
+
+```{r}
+#| echo: true
+peng <-
+  penguins |>
+  select(
+    species,
+    bill_length_mm,
+    bill_depth_mm,
+    flipper_length_mm,
+    body_mass_g
+  ) |>
+  na.omit()
+peng |> count(species)
+```
+
+We have `r nrow(peng)` penguins and `r ncol(peng) - 1` numeric variables.
+
+
+## Two Variables {.smaller}
+
+
+Example for the new axes. 
+
+```{r}
+#| fig-height: 4
+#| echo: true
+#| code-fold: true
+pca1 <- peng |>
+  select(flipper_length_mm, bill_length_mm) |>
+  prcomp(~., data = _, scale = FALSE)
+pca_vec <- t(pca1$rotation) |> as_tibble() # Vectors with x = flipper_length, y = bill_length
+ggplot(peng) +
+  geom_point(aes(x = flipper_length_mm, y = bill_length_mm, color = species)) +
+  geom_segment(
+    data = pca_vec,
+    aes(
+      x = mean(peng$flipper_length_mm),
+      y = mean(peng$bill_length_mm),
+      xend = c(pca1$sdev) * flipper_length_mm + mean(peng$flipper_length_mm),
+      yend = c(pca1$sdev) * bill_length_mm + mean(peng$bill_length_mm)
+    ),
+    arrow = arrow(length = unit(0.3, "cm"))
+  ) +
+  coord_fixed()
+```
+
+::: aside
+The two arrows show the two eigenvectors of the covariance matrix of the two variables scaled by the square root of the corresponding eigenvalues, and shifted so their origins are at the means of both variables. 
+:::
+
+
+## Computation in R {.smaller}
+
+The basic function is base-R's `prcomp` (there is an older `princomp` which is not advisable to use). 
+
+```{r}
+#| echo: true
+# prcomp can take a data frame with all numerical vectors as 1st argument
+P <- peng |>
+  select(flipper_length_mm, bill_length_mm) |>
+  prcomp()
+```
+
+:::: {.columns}
+
+::: {.column width='50%'}
+The base output
+
+```{r}
+#| echo: true
+P
+```
+
+:::
+
+::: {.column width='50%'}
+The summary output
+```{r}
+#| echo: true
+summary(P)
+```
+
+:::
+
+::::
+
+
+
+## The `prcomp` object {.smaller}
+
+Includes 4 different related entities.
+
+:::: {.columns}
+
+::: {.column width='50%'}
+The **standard deviations** related to each principal component.   
+```{r}
+#| echo: true
+P$sdev
+```
+
+The matrix of variable **loadings**. (It is also the matrix which rotates the original data vectors.)
+```{r}
+#| echo: true
+P$rotation
+```
+
+:::
+
+::: {.column width='50%'}
+The means for each original variable. 
+```{r}
+#| echo: true
+P$center
+```
+Note, there are also standard deviations of original variables in `$scale` when this is set to be used.
+
+The centered (scaled, if set) and rotated data.
+```{r}
+#| echo: true
+P$x
+```
+
+:::
+
+::::
+
+## PCA as Exploratory Data Analysis {.smaller}
+
+Suppose we do a PCA with all `r nrow(peng)` penguins (rows) and all `r ncol(peng) - 1` numeric variables.
+
+- *How long will the vector of standard deviations be?* [`r ncol(peng) - 1`]{.fragment}  
+- *What dimensions will the rotation matrix have?* [`r ncol(peng) - 1` x `r ncol(peng) - 1`]{.fragment}  
+- *What dimensions will the rotated data frame have?* [`r nrow(peng)` x `r ncol(peng) - 1`]{.fragment}
+
+. . . 
+
+When we do a PCA for exploration there are 3 things to look at: 
+
+1. The data in PC coordinates - the centered (scaled, if set) and rotated data.  
+2. The rotation matrix - the variable loadings.
+3. The variance explained by each PC - based on the standard deviations. 
+
+## All variables {.smaller}
+
+Now, with `scale = TRUE` (recommended). Data will be centered and scaled (a.k.a. standardized) first. 
+
+```{r}
+#| echo: true
+peng_PCA <- peng |> select(-species) |> prcomp(scale = TRUE)
+peng_PCA
+```
+
+
+## Explore data in PC coordinates {.smaller}
+
+
+:::: {.columns}
+
+::: {.column width='35%'}
+- Start plotting PC1 against PC2. By default these are the most important ones. Drill deeper later. 
+- Append the original data. Here used to color by species. 
+:::
+
+::: {.column width='65%'}
+```{r}
+#| echo: true
+#| fig-height: 5
+plotdata <- peng_PCA$x |>
+  as_tibble() |>
+  bind_cols(peng)
+plotdata |>
+  ggplot(aes(PC1, PC2, color = species)) +
+  geom_point() +
+  coord_fixed() +
+  theme_minimal(base_size = 20)
+```
+
+:::
+
+::::
+
+
+## Variable loadings {.smaller}
+
+- The columns of the rotation matrix shows how the original variables *load* on the principle components. 
+- We can interpret these loadings and give descriptive names to principal components. 
+- For plotting we bring the rotation matrix to long format with `PC` and `value` column.
+
+```{r}
+#| echo: true
+#| fig-height: 3
+peng_PCA$rotation |>
+  as_tibble(rownames = "variable") |>
+  pivot_longer(starts_with("PC"), names_to = "PC", values_to = "value") |>
+  ggplot(aes(value, variable)) +
+  geom_col() +
+  geom_vline(xintercept = 0, color = "blue") +
+  facet_wrap(~PC, nrow = 1) +
+  theme_minimal(base_size = 20)
+```
+
+## Variance explained {.smaller}
+
+- Principle components are by default sorted by importance. 
+- The squares of the standard deviation for each component gives its variances and **variances have to sum up to the sum of the variances** of the original variables. 
+    - When original variables were standardized their original variances are all each one. Consequently, the variances of the principal components sum up to the number of original variables.
+- A typical plot to visualize the importance of the components is to plot the percentage of the variance explained by each component.
+
+```{r}
+#| echo: true
+#| output-location: column
+tibble(PC = 1:4, sdev = peng_PCA$sdev) |>
+  mutate(percent = sdev^2 / sum(sdev^2) * 100) |>
+  ggplot(aes(PC, percent)) +
+  geom_col() +
+  theme_grey(base_size = 20)
+```
+
+
+## Interpretations (1) {.smaller}
+
+```{r}
+#| fig-height: 3
+#| fig-width: 5
+tibble(PC = 1:4, sdev = peng_PCA$sdev) |>
+  mutate(percent = sdev^2 / sum(sdev^2) * 100, cum_percent = cumsum(percent)) |>
+  ggplot(aes(PC, percent)) +
+  geom_col() +
+  geom_line(aes(y = cum_percent), color = "blue") +
+  geom_point(aes(y = cum_percent), color = "blue") +
+  scale_y_continuous(breaks = seq(0, 100, 20))
+```
+
+- The first component explains almost 70% of the variance.  
+- The first two explain about 88% of the total variance. 
+
+
+## Interpretations (2) {.smaller}
+
+```{r}
+#| fig-height: 3
+peng_PCA$rotation |>
+  as_tibble(rownames = "variable") |>
+  pivot_longer(starts_with("PC"), names_to = "PC", values_to = "value") |>
+  ggplot(aes(value, variable)) +
+  geom_col() +
+  geom_vline(xintercept = 0, color = "blue") +
+  facet_wrap(~PC, nrow = 1)
+```
+
+1. To score high on PC1 a penguin needs to be generally large but with low bill depth.
+2. Penguins scoring high on PC2 are penguins with generally small bills.  
+
+## Interpretations (3) {.smaller}
+
+```{r}
+#| fig-height: 4
+
+g1 <- plotdata |>
+  ggplot(aes(PC1, PC2, color = species)) +
+  geom_point() +
+  coord_fixed()
+g2 <- peng_PCA$rotation |>
+  as_tibble(rownames = "variable") |>
+  pivot_longer(starts_with("PC"), names_to = "PC", values_to = "value") |>
+  filter(PC == "PC2" | PC == "PC1") |>
+  ggplot(aes(value, variable)) +
+  geom_col() +
+  facet_wrap(~PC, nrow = 1)
+library(patchwork)
+g1 + g2
+```
+
+![](https://upload.wikimedia.org/wikipedia/commons/e/e3/Hope_Bay-2016-Trinity_Peninsula%E2%80%93Ad%C3%A9lie_penguin_%28Pygoscelis_adeliae%29_04.jpg){height=120}
+![](https://upload.wikimedia.org/wikipedia/commons/0/08/South_Shetland-2016-Deception_Island%E2%80%93Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg){height=120}
+![](https://upload.wikimedia.org/wikipedia/commons/0/00/Brown_Bluff-2016-Tabarin_Peninsula%E2%80%93Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg){height=120}
+
+
+
+## Apply PCA {.smaller}
+
+- Besides standardization, PCA may benefit from **preprocessing** steps of **data transformation** with variables with skew distributions. Use log, square-root, or Box-Cox transformation. This may result in less outliers.
+- PCA is a often a useful step of **exploratory data analysis** when you have a large number of numerical variables to show the empirical *dimensionality* of the data and its structure.
+- It is related to the correlation-matrix and can "summarize" its structure.
+- Limitation: PCA is only sensitive for linear relation ships (no U-shaped) or the like
+- The principal components can be used **as predictors** in a model instead of the raw variables. 
+
+## Properties of PCA {.smaller}
+
+::: {.incremental}
+- The principal components (the columns of the rotation matrix) are maximally *uncorrelated* (actually they are even *orthogonal*).
+- This also holds for the columns of the rotated data. 
+- The total variances of all prinicipal components sum up to the number of variables (when variables are standardized)
+- The PCA is unique. All principle components together are a complete representation of the data. (Unlike other technique of dimensionality reduction which may rely on starting values, random factors, or tuning parameters)
+    - To be precise: It is unique modulo the sign of the PCs. When $x$ is a PC, then $-x$ is as well and can replace it.  
+:::
+
+
+## Relations of PCA {.smaller}
+
+::: {.incremental}
+- A technique similar in spirit is *factor analysis* (e.g. `factanal`). It is more theory based as it requires to specify to the theoriezed number of factors up front. 
+- PCA is an example of the importance of linear algebra ("matrixology") in data science techniques. 
+:::
+
+. . .
+
+:::: {.columns}
+
+::: {.column width='50%'}
+  - PCA is based on the **eigenvalue decomposition** of the covariance matrix (or correlation matrix in the standardized case) of the data.
+:::
+
+::: {.column width='50%'}
+![](https://imgs.xkcd.com/comics/machine_learning.png){ height=350 }<https://xkcd.com/1838/>
+:::
+
+::::
+
+
+
+
+
+
+
+# Math: Exponentiations and Logarithms
+
+## Rules for Exponentiation {background-color="aquamarine" .smaller}
+
+:::{.columns}
+:::{.column width="20%"}
+$x^0$  
+
+$0^x$  
+
+$0^0$  
+
+$(x\cdot y)^a$  
+
+$x^{-a}$, $x^{-1}$  
+
+$x^\frac{a}{b}$, $x^\frac{1}{2}$  
+
+$(x^a)^b$  
+
+::: 
+:::{.column}
+:::{.fragment fragment-index=1}
+$x^0 = 1$
+:::
+:::{.fragment fragment-index=2}
+$0^x = 0$ for $x\neq 0$
+:::
+:::{.fragment fragment-index=3}
+$0^0 = 1$ (discontinuity in $0^x$)
+:::
+:::{.fragment fragment-index=4}
+$(x\cdot y)^a = x^a\cdot x^b$  
+:::
+:::{.fragment fragment-index=5}
+$x^{-a} = \frac{1}{x^a}$, $x^{-1} = \frac{1}{x}$  
+:::
+:::{.fragment fragment-index=6}
+$x^\frac{a}{b} = \sqrt[b]{x^a} = (\sqrt[b]{x})^a,\ x^\frac{1}{2} = \sqrt{x}$  
+:::
+:::{.fragment fragment-index=7}
+$(x^a)^b = x^{a\cdot b} = (x^b)^a \neq x^{a^b} = x^{(a^b)}$   
+Example: $(4^3)^2 = 64^2 = 4096 \qquad 4^{3^2} = 4^9 = 262144$
+:::
+:::
+:::
+
+
+## More rules for exponentiation {.smaller background-color="aquamarine"}
+
+:::{.columns}
+:::{.column width="20%"}
+$x^a\cdot x^b$
+::: 
+:::{.column width="79%"}
+:::{.fragment}
+$x^a\cdot x^b = x^{a+b}$  Multiplication of powers (with same base $x$) becomes addition of exponents.
+:::
+:::
+:::
+
+. . . 
+
+:::{.columns}
+:::{.column width="20%"}
+$(x+y)^a$
+::: 
+:::{.column width="79%"}
+:::{.fragment}
+No "simple" form! For $a$ integer use *binomial expansion*.
+$(x+y)^2 = x^2 + 2xy + y^2$  
+$(x+y)^3 = x^3 + 3x^2y + 3xy^2 + y^3$  
+$(x+y)^n = \sum_{k=0}^n {n \choose k} x^{n-k}y^k$
+:::
+:::
+:::
+
+. . . 
+
+**Pascal's triangle**
+
+:::{.columns}
+:::{.column width="40%"}
+![From wikipedia](https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif){height=200} 
+:::
+:::{.column}
+We meet it again in **Probability**:   
+A row represents a *binomial distribution*   
+Which tends to mimics the *normal distribution* more and more  
+and is related to the *central limit theorem*
+:::
+:::
+
+
+## Logarithms {.smaller background-color="aquamarine"}
+
+**Definition:** A *logarithm* of $a$ for some base $b$ is the value of the exponent which brings $b$ to $a$: 
+$\log_b(a) = x$ means that $b^x =a$
+
+**Most common:**
+
+- $\log_{10}$ useful for plotting data in logarithmic scales because the numbers can be interpreted easiest (number of decimals of the original values)
+- $\log_{e}$ *natural logarithm* (also $\log$ or $\ln$) useful in calculus and statistics because of nice mathematical properties
+
+. . .
+
+:::{.columns}
+:::{.column width="30%"}
+$\log_{10}(100) =$
+::: 
+:::{.column}
+:::{.fragment}
+$2$
+:::
+:::
+:::
+
+. . .
+
+:::{.columns}
+:::{.column width="30%"}
+$\log_{10}(1) =$
+::: 
+:::{.column}
+:::{.fragment}
+$0$
+:::
+:::
+:::
+
+. . .
+
+:::{.columns}
+:::{.column width="30%"}
+$\log_{10}(6590) =$
+::: 
+:::{.column}
+:::{.fragment}
+$3.818885$
+:::
+:::
+:::
+
+. . .
+
+:::{.columns}
+:::{.column width="30%"}
+$\log_{10}(0.02) =$
+::: 
+:::{.column}
+:::{.fragment}
+$-1.69897$
+:::
+:::
+:::
+
+
+## Rules for logarithms {.smaller background-color="aquamarine"}
+
+Usually only one base is used in the same context, because changing base is easy:
+
+$\log_c(x) = \frac{\log_b(x)}{\log_b(c)} = \frac{\log(x)}{\log(c)}$
+
+
+
+
+:::{.columns}
+:::{.column width="20%"}
+$\log(x\cdot y)$
+::: 
+:::{.column width="79%"}
+:::{.fragment}
+$= \log(x) + \log(y)$ Multiplication $\to$ addition.
+:::
+:::
+:::
+
+. . .
+
+:::{.columns}
+:::{.column width="20%"}
+$\log(x^y)$
+::: 
+:::{.column width="75%"}
+:::{.fragment}
+$= y\cdot\log(x)$
+:::
+:::
+
+
+:::
+:::{.columns}
+:::{.column width="20%"}
+$\log(x+y)$
+::: 
+:::{.column width="75%"}
+:::{.fragment}
+complicated!
+:::
+:::
+:::
+
+. . . 
+
+Also changing bases for powers is easy: $x^y = (e^{\log(x)})^y = e^{y\cdot\log(x)}$
+
+
+
+
+
+
+
+# Epidemic Modeling
+
+An example for **modeling** the **data generating process**
+
+
+## SIR model  {.smaller  background-color="khaki"}
+
+- Assume a population of $N$ individuals.  
+- Individuals can have different states, e.g.: **S**usceptible, **I**nfectious, **R**ecovered, ...
+- The population divides into compartments of these states which change over time, e.g.:   $S(t), I(t), R(t)$ *number of susceptible, infectious, recovered* individuals
+
+Now we define dynamics like
+
+![](https://upload.wikimedia.org/wikipedia/commons/3/30/Diagram_of_SIR_epidemic_model_states_and_transition_rates.svg)
+
+where the numbers on the arrows represent transition probabilities. 
+
+## Agent-based Simulation {.smaller  background-color="khaki"}
+
+**Agent-based model**: Individual agents are simulated and interact with each other.  
+Explore and analyze with **computer simulations**.
+
+A tool: **NetLogo** <https://ccl.northwestern.edu/netlogo/>
+
+![](http://netlogoweb.org/assets/images/desktopicon.png)
+
+We look at the model **"Virus on a Network"** from the model library.
+
+Direct Link to [Virus on a Network in NetLogoWeb](https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Networks/Virus%20on%20a%20Network.nlogo)
+
+## Virus on a Network: 6 links, initial {.smaller  background-color="khaki"}
+
+Agents connected in a **network** with on average 6 links per agent. 3 are infected initially.
+
+![](img/netlogo_SIR_6links_init.png)
+
+
+## Virus on a Network: 6 links, final {.smaller  background-color="khaki"}
+
+The outbreak dies out after some time.
+
+![](img/netlogo_SIR_6links_final.png)
+
+
+## Virus on a Network: 15 links, initial {.smaller  background-color="khaki"}
+
+Repeat the simulation with 15 links per agent. 3 are infected initially.
+![](img/netlogo_SIR_15links_init.png)
+
+
+## Virus on a Network: 15 links, final {.smaller  background-color="khaki"}
+
+The outbreak had infected most agents.
+
+![](img/netlogo_SIR_15links_final.png)
+
+
+## SI model {.smaller  background-color="khaki"}
+
+Now, we only treat the SI part of the model. We ignore recovery. 
+
+- People who are susceptible can become infected through contact with infectious
+- People who are infectious stay infectious 
+
+The parameter $\beta$ is the average number of contacts per unit time multiplied with the probability that an infection happens during such a contact. 
+
+
+## SI-model: Simulation in R {.smaller background-color="khaki"}
+
+- We produce a vector of length $N$ with entries representing the state of each individual as `"S"` or `"I"`. 
+- We model the random infection process in each step of unit time
+
+**Setup**
+
+Parameters: $N=150, \beta=0.3$, a function to produce randomly infect individuals
+
+```{r}
+#| echo: true
+#| output-location: column
+N <- 150
+beta <- 0.3
+randomly_infect <- function(N, prob) { 
+ runif(N) < prob 
+ # Gives a logical vector of length N
+ # where TRUE appears with probability beta
+}
+# Test
+randomly_infect(N, beta) |> head() # First 6
+```
+
+```{r}
+#| echo: true
+#| output-location: column
+init <- rep("S",N) # All susceptible
+init[1] <- "I" # Infect one individual
+init |> head() # First 6
+``` 
+
+
+## SI-model: Simulation in R {.smaller background-color="khaki"}
+
+Iteration over 75 time steps.
+
+```{r}
+#| echo: true
+#| output-location: column
+tmax <- 75
+sim_run <- list(init) # list with one element
+# This list will collect the states of 
+# all individuals over tmax time steps 
+for (i in 2:tmax) {
+ # Every agents has a contact with a random other
+ contacts <- sample(sim_run[[i-1]], size = N)
+ sim_run[[i]] <- if_else( # vectorised ifelse
+  # conditions vector: contact is infected
+  # and a random infection happens
+  contacts == "I" & randomly_infect(N, beta), 
+  true = "I", 
+  false = sim_run[[i-1]]
+  ) # otherwise state stays the same
+}
+sim_output <- tibble( # create tibble for ggplot
+ # Compute a vector with length tmax 
+ # with the count of "I" in sim_run list
+ t = 0:(tmax-1), # times steps
+ # count of infected and output a vector
+ infected = sim_run |> map_dbl(\(x) sum(x == "I"))) 
+sim_output |> 
+ ggplot(aes(t,infected)) + geom_line() +
+ theme_minimal(base_size = 20)
+```
+
+## SI-model: Simulation in R {.smaller background-color="khaki"}
+
+Run with $N = 10000$
+
+```{r}
+#| echo: true
+#| output-location: column
+N <- 10000
+init <- rep("S",N) # All susceptible
+init[1] <- "I" # Infect one individual
+tmax <- 75
+sim_run <- list(init) # list with one element
+# This list will collect the states of 
+# all individuals over tmax time steps 
+for (i in 2:tmax) {
+ # Every agents has a contact with a random other
+ contacts <- sample(sim_run[[i-1]], size = N)
+ sim_run[[i]] <- if_else( # vectorised ifelse
+  # conditions vector: contact is infected
+  # and a random infection happens
+  contacts == "I" & randomly_infect(N, beta), 
+  true = "I", 
+  false = sim_run[[i-1]]
+  ) # otherwise state stays the same
+}
+sim_output <- tibble( # create tibble for ggplot
+ # Compute a vector with length tmax 
+ # with the count of "I" in sim_run list
+ t = 0:(tmax-1), # times steps
+ # count of infected, notice map_dbl
+ infected = map_dbl(sim_run, \(x) sum(x == "I"))) 
+sim_output |> 
+ ggplot(aes(t,infected)) + geom_line() +
+ theme_minimal(base_size = 20)
+```
+
+
+
+## New programming concepts {.smaller}
+
+From base R:
+
+`runif` random numbers from uniform distribution  
+`sample` random sampling from a vector  
+`for` loop over commands with index (`i`) taking values of a vector (`2:tmax`) one by one
+`if_else` vectorized version of conditional statements
+
+
+# Calculus
+
+The mathematics of the **change** and the **accumulation** of quantities
+
+## Motivation:  SI model with <br> population compartments {background-color="khaki"}
+
+Two compartments:   
+$S(t)$ is the number of susceptible people at time $t$.  
+$I(t)$ is the number of infected people at time $t$.  
+
+It always holds $S(t) + I(t) = N$. (The total population is constant.)
+
+## How many infections per time? {.smaller background-color="khaki"}
+
+The **change** of the number of infectious
+
+$$\frac{dI}{dt} = \underbrace{\beta}_\text{infection prob.} \cdot \underbrace{\frac{S}{N}}_\text{frac. of $S$ still there} \cdot \underbrace{\frac{I}{N}}_\text{frac. $I$ to meet} \cdot N = \frac{\beta\cdot S\cdot I}{N}$$
+
+where $dI$ is the *change* of $I$ (the newly infected here) and $dt$ the time interval. 
+
+. . . 
+
+**Interpretation:** The newly infected are from the fraction of susceptible *times* the probability that they meet an infected *times* the infection probability *times* the total number of individuals.   
+[Same logic as our Simulation in R!]{style='color:red;'}
+
+. . . 
+
+Using $S = N - I$ we rewrite
+
+$$\frac{dI}{dt} = \frac{\beta (N-I)I}{N}$$
+
+
+## Ordinary differential equation {background-color="aquamarine"}
+
+We interpret $I(t)$ as a function of time which gives us the number of infectious at each point in time. The change function is now
+
+$$\frac{dI(t)}{dt} = \frac{\beta (N-I(t))I(t)}{N}$$
+
+and $\frac{dI(t)}{dt}$ is also called the **derivative** of $I(t)$. 
+
+## Derivatives {.smaller  background-color="aquamarine"}
+
+::: {.columns}
+
+::: {.column width='70%'}
+- The *derivative* of a function is also a function with the same domain. 
+- Measures the sensitivity to change of the function output when the input changes (a bit)
+- Example from physics: The derivative of the *position* of a moving object is its *speed*. The derivative of its speed is its *acceleration.* 
+- Graphically: The derivative is the *slope* of a *tangent line* of the graph of a function. 
+:::
+
+::: {.column width='30%'}
+![](https://upload.wikimedia.org/wikipedia/commons/2/2d/Tangent_function_animation.gif)
+:::
+
+:::
+
+## Differentiation {.smaller  background-color="aquamarine"}
+ 
+is the process to compute the derivative. For parameters $a$ and $b$ and other functions $g$ and $h$, rules of differentiation are
+
+:::{.columns}
+:::{.column width="30%"}
+Function $f(x)$
+::: 
+:::{.column width='70%'}
+Its derivative $\frac{df(x)}{dx}$ or  $\frac{d}{dx}f(x)$ or $f'(x)$
+:::
+:::
+
+:::{.columns}
+:::{.column width="30%"}
+$a\cdot x$
+
+$b$
+
+$x^2,\ x^{-1} = \frac{1}{x},\ x^k$
+
+$g(x) + h(x)$
+
+$g(x)\cdot h(x)$
+
+$g(h(x))$
+
+$e^x,\ 10^x  = e^{\log(10)x}$
+
+$\log(x)$
+::: 
+:::{.column width='70%'}
+:::{.fragment fragment-index=1}
+$a$
+:::
+:::{.fragment fragment-index=2}
+$0$
+:::
+:::{.fragment fragment-index=3}
+$2\cdot x,\ -x^{-2} = -\frac{1}{x^2},\ k\cdot x^{k-1}$
+:::
+:::{.fragment fragment-index=4}
+$g'(x) + h'(x)$
+:::
+:::{.fragment fragment-index=5}
+$g'(x)\cdot h(x) + g(x)\cdot h'(x)$ (product rule)
+:::
+:::{.fragment fragment-index=6}
+$g'(h(x))\cdot h'(x)$ (chain rule)
+:::
+:::{.fragment fragment-index=7}
+$e^x,\ 10^x = \log(10)\cdot10^x$
+:::
+:::{.fragment fragment-index=}
+$\frac{1}{x}$ (A surprising relation to me at least)
+:::
+:::
+:::
+
+## Differential equation {.smaller  background-color="aquamarine"}
+
+In a differential equation the *unknown* is a function!
+
+We are looking for a function which derivative is a function of the function itself. 
+
+**Example: SI-model**
+
+$$\frac{dI(t)}{dt} = \frac{\beta (N-I(t))I(t)}{N}$$
+
+Which function $I(t)$ fulfills this equation?
+
+The **analytical solution**^[Can you check that this is correct? Compute $I'(t)$ ($=\frac{dI(t)}{dt}$) and check if $I'(t) = \frac{\beta (N-I(t))I(t)}{N}$. It is a bit of work, but try it! Let me know, if you want a solution.] 
+
+$I(t) = \frac{N}{1 + (\frac{N}{I(0)} - 1)e^{-\beta t}}$
+
+Which is called the *logistic equation*. 
+Note, we need to specify the initial number of infectious individuals $I(0)$. 
+
+## SI-model: Logistic Equation {.smaller  background-color="khaki"}
+
+$I(t) = \frac{N}{1 + (\frac{N}{I(0)} - 1)e^{-\beta t}}$
+
+Plot the equation for $N = 10000$, $I_0 = 1$, and $\beta = 0.3$
+
+```{r}
+#| echo: true
+#| fig-height: 3
+N <- 10000
+I0 <- 1
+beta <- 0.3
+ggplot() + 
+ geom_function( fun = function(t) N / (1 + (N/I0 - 1)*exp(-beta*t)) ) + 
+ xlim(c(0,75))
+```
+
+## SI-model: Numerical integration {.smaller background-color="khaki"}
+
+Another way of solution is **numerical integration**, e.g. using *Euler's method*. 
+
+We compute the solution step-by-step using increments of, e.g. $dt = 1$.
+
+```{r}
+#| echo: true
+#| output-location: column
+N <- 10000
+I0 <- 1
+dI <- function(I,N,b) b*I*(N - I)/N
+beta <- 0.3
+dt <- 1 # time increment, 
+# supposed to be infinitesimally small
+tmax <- 75
+t <- seq(0,tmax,dt) 
+# this is the vector of timesteps
+It <- I0 # this will become the vector 
+# of the number infected I(t) over time
+for (i in 2:length(t)) { 
+ # We iterate over the vector of time steps 
+ # and incrementally compute It
+ It[i] = It[i-1] + dt * dI(It[i-1], N, beta) 
+ # This is called Euler's method
+}
+tibble(t, It) |> ggplot(aes(t,It)) + 
+ geom_line(color = "red") + 
+ geom_function( 
+  fun = function(t) N / (1 + (N/I0 - 1)*exp(-beta*t)), color = "blue") + 
+ # In blue: Analytical solution for comparison
+ theme_minimal(base_size = 20)
+```
+
+Why do the graphs deviate? [The step size $dt$ must be "infinitely" small]{.fragment}
+
+## Numerical integration with smaller $dt$ {.smaller background-color="khaki"}
+
+We compute the solution step-by-step using small increments of, e.g. $dt = 0.05$.
+
+```{r}
+#| echo: true
+#| output-location: column
+N <- 10000
+I0 <- 1
+dI <- function(I,N,b) b*I*(N - I)/N
+beta <- 0.3
+dt <- 0.05 # time increment, 
+# supposed to be infinitesimally small
+tmax <- 75
+t <- seq(0,tmax,dt) 
+# this is the vector of timesteps
+It <- I0 # this will become the vector 
+# of the number infected I(t) over time
+for (i in 2:length(t)) { 
+ # We iterate over the vector of time steps 
+ # and incrementally compute It
+ It[i] = It[i-1] + dt * dI(It[i-1], N, beta) 
+ # This is called Euler's method
+}
+tibble(t, It) |> ggplot(aes(t,It)) + 
+ geom_line(color = "red") +
+ geom_function( 
+  fun = function(t) N / (1 + (N/I0 - 1)*exp(-beta*t)), color = "blue") + 
+ # In blue: Analytical solution for comparison
+ theme_minimal(base_size = 20)
+```
+
+
+## Mechanistic model {.smaller background-color="khaki"}
+
+The SI model is a potential answer to the **mechanistic question** *How do epidemics spread?*
+
+The examples above show 3 different ways to explore the model:
+
+- *Agent-based simulation*
+  - We model every individual explicitly
+  - Simulation involve random numbers! So simulation runs can be different!
+
+. . .
+
+- *Numerical integration* of differential equation
+  - Needs a more abstract concept of *compartments*
+
+. . . 
+
+- *Analytical solutions* of differential equation
+  - often not possible (therefore numerical integration is common)
+
+
+## Differentiation with data {.smaller}
+
+[**We can do calculus operations with data!**]{style='color:red;'}
+
+In empirical data we can compute the increase in a vector with the function `diff`:
+
+```{r}
+#| echo: true
+x <- c(1,2,4,5,5,3,0)
+diff(x)
+```
+
+. . . 
+
+More convenient in a data frame is to use `x - lag(x)` because the vector has the same length.
+
+```{r}
+#| echo: true
+x - lag(x)
+```
+
+
+## The diff of our simulation output {.smaller}
+
+```{r}
+#| echo: true
+#| fig-height: 2
+g1 <- sim_output |> ggplot(aes(x = t)) + geom_line(aes(y = infected))
+g1
+g2 <- sim_output |> 
+ mutate(derivative_infected = infected - lag(infected)) |> 
+ ggplot(aes(x = t)) + geom_line(aes(y = derivative_infected))
+g2
+```
+
+## 2nd derivative: Change of change 
+
+```{r}
+#| echo: true
+#| fig-height: 2
+g3 <- sim_output |> 
+ mutate(derivative_infected = infected - lag(infected),
+        derivative2_infected = derivative_infected - lag(derivative_infected)) |> 
+ ggplot(aes(x = t)) + geom_line(aes(y = derivative2_infected))
+g3
+```
+
+In empirical data: Derivatives of higher order tend to show fluctuation
+
+
+## Interpretation in SI-model {.smaller  background-color="khaki"}
+
+```{r}
+#| fig-height: 3
+library(patchwork)
+g1 + g2 + g3
+```
+
+- $I(t)$ total number of infected
+- $I'(t)$ number of new cases per day (time step)
+- $I''(t)$ how the number of new cases has changes compared to yesterday
+  - [2nd derivatives are a good early indicator for the end of a wave.]{style='color:red;'}
+
+## Integration {.smaller background-color="aquamarine"}
+
+The **integral** of the daily new cases from the beginning to day $s$ is $\int_{-\infty}^s f(t)dt$ and represents the total cases at day $s$. 
+
+- The integral of a function $f$ up to time $s$ is also called the **anti-derivative** $F(s) = \int_{-\infty}^s f(t)dt$.
+    - The symbol $\int$ comes from an S and means "sum".
+- Compute the anti-derivative of data vector with `cumsum`.
+
+```{r}
+#| echo: true
+x <- c(1,2,4,5,5,3,0)
+cumsum(x)
+```
+
+- Empirically: Derivatives tend to become noisy, while integrals tend to become smooth.   
+
+
+## The fundamental theorem of calculus {.smaller background-color="aquamarine"}
+
+**The integral of the derivative is the function itself.**
+
+
+This is not a proof but shows the idea:
+```{r}
+#| echo: true
+f <- c(1,2,4,5,5,3,0)
+antiderivative <- cumsum(f)
+antiderivative
+diff(c(0, antiderivative)) 
+# We have to put 0 before to regain the full vector
+derivative <- diff(f)
+derivative
+cumsum(c(1,derivative)) 
+# We have to put in the first value (here 1) 
+# manually because it was lost during the diff
+```

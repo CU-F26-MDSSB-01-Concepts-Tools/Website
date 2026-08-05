@@ -1,0 +1,19 @@
+---
+title: "Onboarding for late arriving students"
+---
+
+If you are a registered student but arrive after the semester start on campus or struggled with course registration, this is the page for you guiding you on how to **catch up** and **get into the study program for Data Science Concepts and Tools**! 
+
+All the information is out there accessible to you, this should help you prioritize and continue step by step:
+
+1. **Complete formal registration.** Register for modules and courses on campusnet: Modules "Data Science Concepts" (and the lecture course) and "Data Science Tools" (and the two courses on R and python). The formal registration is not in the instructors' hands. Contact registrars if it cannot be done. Most of the other things for our courses do not strictly rely on this, but it is essential to have it finalized for such that exam participation and grading can happen.  
+
+2. [**Complete the informal setup!**]{style="color:red;"} *These two points are important!* Prioritize to get it going. 
+    - **Microsoft Teams:** There is a Team for each course. You are added automatically if you are formally registered, but we can also add you manually when you have a university account. We use it to offer **hybrid lectures**. They happen in the class room but you can *participate online*. They will also be *recorded*. Teams is also used for announcements and bilateral chats and questions. You find meetings for class in the Teams calendar. *When you arrive on campus, please come to class!*
+    - **GitHub:** We provide [**Homework Projects**](homework.qmd) over GitHub, a common tool in Data Science and Collaborative Software Building. You need to create a GitHub account (this is an external company, but it is free). You find the instructions on the front page of the GitHub-Organization: Follow this link [{{< var org.name >}}]({{< var org.link >}}). [*Send your GitHub username to the instructor as soon as possible! No need to wait for the formal registration.*{style='color:blue;'}
+
+2. **Read the information material.** Here you are on the main information website of the course: *Read the syllabus and the schedule!* Read also the other information and help pages on this website to understand what is all there. 
+
+3. **Study plan to catch up:** On the [schedule](schedule.qmd) you find links to the *slides of the classes* taught so far. Below you find a list of *achievements* which you should have after each week. That is your study plan to catch up. You can work through it linearly but also consult them while starting on [Homework Projects](homework.qmd). You find the course syllabus and schedule linked there. Read these with all subpages! There are also slides of Data Science Concepts lectures linked there. You will work though these step by step. The only additional thing is Microsoft Teams.
+
+4. **Start with Homework Projects.** The Homework Projects are where you learn doing data science. Start now, we are ready to help you when you get stuck. Important: We need to create your personal homework repositories. [*For that we need your GitHub username now (see 2.)!*]{style='color:red;'}

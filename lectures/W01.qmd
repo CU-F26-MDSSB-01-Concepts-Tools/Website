@@ -1,0 +1,18 @@
+---
+title: "W#01 What is Data Science?"
+subtitle: ""
+author: Jan Lorenz
+format: 
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: false
+    logo: img/ConstructorUniversity.png
+    footer: "MDSSB-DSCO-02: Data Science Concepts"
+    smaller: true
+---
+
+# Data Science Profiles 
+
+Not ready yet. 

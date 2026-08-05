@@ -1,0 +1,1522 @@
+---
+title: "W#09: Prediction (Building a Spam Filter), Classification and Regression with Decision Trees"
+author: Jan Lorenz
+format: 
+  revealjs: 
+    smaller: true
+    toc: true
+    toc-depth: 1
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: false
+    logo: img/ConstructorUniversity.png
+    footer: "MDSSB-DSCO-02: Data Science Concepts"
+bibliography: "/home/janlo/Documents/literature/litlorenz_zot.bib"
+editor_options: 
+  chunk_output_type: console
+---
+
+## Packages used here
+
+```{r}
+#| echo: true
+library(tidyverse)
+library(tidymodels)
+library(rpart.plot)
+library(openintro)
+library(palmerpenguins)
+```
+
+## Prediction Example: Building a spam filter {.smaller}
+
+- Data: Set of emails and we know
+    - if each email is spam or not 
+    -  several other features 
+- Use logistic regression to predict the probability that an incoming email is spam
+- Use model selection to pick the model with the best predictive performance
+
+. . .
+
+- Building a model to predict the probability that an email is spam is only half of the battle! We also need a decision rule about which emails get flagged as spam (e.g. what probability should we use as out cutoff?)
+
+. . .
+
+- A simple approach: choose a single threshold probability and any email that exceeds that probability is flagged as spam
+
+## Emails: Use all predictors {.smaller}
+
+```{r}
+#| echo: true
+#| warning: true
+logistic_reg() |>
+  set_engine("glm") |>
+  fit(spam ~ ., data = email, family = "binomial") |>
+  tidy() |>
+  print(n = 22)
+```
+
+:::{.aside}
+We treat the warning later.
+:::
+
+## The prediction task
+
+- The mechanics of prediction is **easy**:
+  - Plug in values of predictors to the model equation
+  - Calculate the predicted value of the response variable, $\hat{y}$
+
+. . . 
+
+- Getting it right is **harder**
+  - There is no guarantee the model estimates you have are correct
+  - Or that your model will perform as well with **new data** as it did with your sample data
+
+
+
+
+## Balance Over- and Underfitting
+
+In a one predictor model we can show both visually:
+
+```{r}
+#| echo: true
+#| code-fold: true
+lm_fit <- linear_reg() |>
+  set_engine("lm") |>
+  fit(y4 ~ x2, data = association)
+
+loess_fit <- loess(y4 ~ x2, data = association)
+
+loess_overfit <- loess(y4 ~ x2, span = 0.05, data = association)
+
+association |>
+  select(x2, y4) |>
+  mutate(
+    Underfit = augment(lm_fit$fit) |> select(.fitted) |> pull(),
+    OK = augment(loess_fit) |> select(.fitted) |> pull(),
+    Overfit = augment(loess_overfit) |> select(.fitted) |> pull(),
+  ) |>
+  pivot_longer(
+    cols = Underfit:Overfit,
+    names_to = "fit",
+    values_to = "y_hat"
+  ) |>
+  mutate(fit = fct_relevel(fit, "Underfit", "OK", "Overfit")) |>
+  ggplot(aes(x = x2)) +
+  geom_point(aes(y = y4), color = "darkgray") +
+  geom_line(aes(y = y_hat, group = fit, color = fit), size = 1) +
+  labs(x = NULL, y = NULL, color = NULL) +
+  scale_color_viridis_d(option = "plasma", end = 0.7)
+```
+
+:::{.aside}
+This is simulated data. 
+:::
+
+## Spending our data
+
+**Problem:** 
+
+- There are several steps to create a useful prediction model: parameter estimation, model selection, performance assessment, etc.
+- Doing all of this on the entire data we have available can lead to **overfitting**.
+
+
+**Solution:** We subsets our data for different tasks, as opposed to allocating all data to parameter estimation (as we have done so far). 
+
+
+# Splitting Data
+
+## Splitting data {.smaller}
+
+- **Training set:**
+  - Sandbox for model building 
+  - Spend most of your time using the training set to develop the model
+  - Majority of the data (usually 80%)
+  
+- **Testing set:**
+  - Held in reserve to determine efficacy of one or two chosen models
+  - Critical to look at it once, otherwise it becomes part of the modeling process
+  - Remainder of the data (usually 20%)
+  
+
+
+[Sidenote:]{style='color:blue;'} Splitting data is very important for the predictive questions, because we want to know how well our model performs on new data. It is not relevant for explanatory questions where we want to interpret coefficients and infer about the underlying population.
+
+
+
+## Performing the split {.smaller}
+
+```{r}
+#| echo: true
+# Fix random numbers by setting the seed
+# Enables analysis to be reproducible when random numbers are used
+set.seed(1116)
+
+# Put 80% of the data into the training set
+email_split <- initial_split(email, prop = 0.80)
+
+# Create data frames for the two sets:
+train_data <- training(email_split)
+test_data <- testing(email_split)
+```
+
+**A note on the seed:** The seed is an arbitrary number that is used to initialize a pseudorandom number generator. The same seed will always result in the same sequence of pseudorandom numbers. This is useful for reproducibility.
+
+## Peek at the split {.smaller}
+
+:::: {.columns}
+::: {.column width='50%'}
+
+```{r}
+#| echo: true
+glimpse(train_data)
+```
+
+:::
+::: {.column width='50%'}
+
+```{r}
+#| echo: true
+glimpse(test_data)
+```
+
+:::
+::::
+
+
+# Workflow of Predictive Modeling
+
+## Fit a model to the training dataset 
+
+```{r}
+#| echo: true
+#| warning: true
+email_fit <- logistic_reg() |>
+  set_engine("glm") |>
+  fit(spam ~ ., data = train_data, family = "binomial")
+```
+
+We get a warning and should explore the reasons for 0 or 1 probability. 
+
+::: aside
+- A deeper looking into the predicted probabilities (not shown here) shows that 4 cases are predicted to be spam with 100% probability, as well as 864 cases are predicted to be not spam with 100% probability. 
+- Note: The `dplyr` function `near` was used to assess if predicted probabilities were one. 
+- This is usually undesirable. Hence the warning. 
+:::
+
+## Look at categorical predictors
+
+```{r}
+factor_predictors <- train_data |>
+  select(where(is.factor), -spam) |>
+  names()
+
+p_to_multiple <- ggplot(train_data, aes(x = to_multiple, fill = spam)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#E48957", "#CA235F"))
+
+p_from <- ggplot(train_data, aes(x = from, fill = spam)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#E48957", "#CA235F"))
+
+p_sent_email <- ggplot(train_data, aes(x = sent_email, fill = spam)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#E48957", "#CA235F"))
+
+p_winner <- ggplot(train_data, aes(x = winner, fill = spam)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#E48957", "#CA235F"))
+
+p_format <- ggplot(train_data, aes(x = format, fill = spam)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#E48957", "#CA235F"))
+
+p_re_subj <- ggplot(train_data, aes(x = re_subj, fill = spam)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#E48957", "#CA235F"))
+
+p_urgent_subj <- ggplot(train_data, aes(x = urgent_subj, fill = spam)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#E48957", "#CA235F"))
+
+p_number <- ggplot(train_data, aes(x = number, fill = spam)) +
+  geom_bar() +
+  scale_fill_manual(values = c("#E48957", "#CA235F"))
+
+library(patchwork)
+p_to_multiple +
+  p_from +
+  p_sent_email +
+  p_winner +
+  p_format +
+  p_re_subj +
+  p_urgent_subj +
+  p_number +
+  plot_layout(ncol = 4, guides = "collect") &
+  theme(axis.title.y = element_blank())
+```
+
+Closer look at `from` and `sent_email`. 
+
+## Counting cases {.smaller}
+
+:::: {.columns}
+
+::: {.column width='50%'}
+`from`: Whether the message was listed as from anyone (this is usually set by default for regular outgoing email). 
+
+```{r}
+#| echo: true
+train_data |> count(spam, from)
+```
+
+*No non-spam mails without `from`.*
+:::
+
+::: {.column width='50%'}
+`sent_mail`: Indicator for whether the sender had been sent an email from the receiver in the last 30 days.
+
+```{r}
+#| echo: true
+train_data |> count(spam, sent_email)
+```
+
+*No spam mails with `sent_email`.*
+
+:::
+
+::::
+
+- There is *incomplete separation* in the data for those variables. 
+- That mean we have a *sure* prediction probabilities (0 or 1). (That is the warning. Also, these variables have the highest coefficients.)
+- This is not what we assume about reality. Maybe our sample is too small to see it. 
+- Therefore we exclude these variables.
+
+## Look at numerical variables {.smaller}
+
+```{r}
+#| echo: true
+#| output-location: column
+train_data |>
+  group_by(spam) |>
+  select(where(is.numeric)) |>
+  pivot_longer(-spam) |>
+  group_by(name, spam) |>
+  summarize(mean = mean(value), sd = sd(value)) |>
+  print(n = 22)
+```
+
+`viagra` has no mentions in non-spam emails.
+
+- We should exclude this variable for the same reason. 
+
+
+## Fit a model to the training dataset {.smaller}
+
+```{r}
+#| echo: true
+#| warning: true
+email_fit <- logistic_reg() |>
+  set_engine("glm") |>
+  fit(
+    spam ~ . - from - sent_email - viagra,
+    data = train_data,
+    family = "binomial"
+  )
+```
+
+We still get a warning, but without very high coefficients. 
+
+::: aside
+A deeper analysis shows that now only two cases are predicted not spam with 100% probability. 
+:::
+
+## The fitted model
+
+```{r}
+#| echo: true
+#| warning: true
+email_fit
+```
+
+
+
+## Predict with the testing dataset {.smaller}
+
+Predicting the raw values (log-odds)
+```{r}
+#| echo: true
+predict(email_fit, test_data, type = "raw") |> head() # head prints the first values
+```
+
+:::: {.columns}
+
+::: {.column width='50%'}
+Predicting probabilities
+
+```{r}
+#| echo: true
+predict(email_fit, test_data, type = "prob") |> head()
+```
+
+:::
+
+::: {.column width='50%'}
+Predicting spam (default)
+
+```{r}
+#| echo: true
+predict(email_fit, test_data) # Would be type = "class"
+```
+
+:::
+
+::::
+
+
+## Relate back to the model concept {.smaller}
+
+```{r}
+#| echo: true
+#| output-location: column
+email_pred <-
+  predict(email_fit, test_data, type = "prob") |>
+  select(spam_prob = .pred_1) |>
+  mutate(
+    spam_logodds = predict(email_fit, test_data, type = "raw"),
+    spam_odds = exp(spam_logodds)
+  ) |>
+  bind_cols(predict(email_fit, test_data)) |>
+  # Append real data
+  bind_cols(test_data |> select(spam))
+email_pred
+```
+
+- The raw predictions are the log-odds.
+- From which we can compute the odds. 
+- From which the probability is computed. Here it is done by `predict`. 
+- The `.pred_class` prediction is when the probability > 0.5. 
+  - What does it mean for the odds and the log-odds?
+  
+. . . 
+
+Answers: odds > 1, log-odds > 0
+
+## Another look {.smaller}
+
+```{r}
+#| echo: true
+email_pred |> arrange(desc(spam_prob)) |> print(n = 20)
+```
+
+We see false positives and false negatives.
+
+## Evaluate the performance {.smaller}
+
+**Receiver operating characteristic (ROC) curve**^[Originally developed for operators of military radar receivers, hence the odd name.] which plots true positive rate (sensitivity) vs. false positive rate (1 - specificity)
+
+```{r}
+#| echo: true
+#| fig-height: 3.5
+email_pred |>
+  roc_curve(
+    truth = spam,
+    spam_prob,
+    event_level = "second" # this adjusts the location above the diagonal
+  ) |>
+  autoplot()
+```
+
+
+## Evaluate the performance  {.smaller}
+
+Find the area under the curve (AUC). 
+
+In calculus language:    
+$\int_0^1 \text{TPR}(\text{FPR}) d\text{FPR}$    
+
+Remember: 
+
+- TPR = True Positive Rate = sensitivity 
+- FPR = False Positive Rate = 1 - specificity
+- specificity is the true negative rate. 
+
+```{r}
+#| echo: true
+email_pred |>
+  roc_auc(
+    truth = spam,
+    spam_prob,
+    event_level = "second"
+  )
+```
+
+# Feature engineering
+
+## Feature engineering {.smaller}
+
+- We prefer simple models when possible, but **parsimony** does not mean sacrificing accuracy (or predictive performance) in the interest of simplicity
+- Variables that go into the model and how they are represented are critical to the success of the model
+- **Feature engineering** is getting creative with our predictors in an effort to make them more useful for our model (to increase its predictive performance) 
+
+## Modeling workflow, revisited {.smaller}
+
+- Create a **recipe** for feature engineering steps to be applied to the training data
+  - The `tidymodels` way (similar to a pipeline in python's scikit-learn). 
+
+- Fit the model to the training data after these steps have been applied
+
+- Using the model estimates from the training data, predict outcomes for the test data
+
+- Evaluate the performance of the model on the test data
+
+# Recipes
+
+## Initiate a recipe {.smaller}
+
+```{r}
+#| echo: true
+email_rec <- recipe(
+  spam ~ ., # formula
+  data = train_data # data to use for cataloguing names and types of variables
+)
+summary(email_rec) |> print(n = 21)
+```
+
+The object `email_rec` only includes *meta-data* (columns names and types)! 
+
+
+
+## Remove certain variables {.smaller}
+
+```{r}
+#| echo: true
+email_rec |>
+  step_rm(from, sent_email, viagra)
+```
+
+
+## Feature engineer date {.smaller}
+
+- The date-time may not be such an interesting predictor. 
+  - It could only bring in a general trend over time
+- Often decomposing the date to the month or the day of the week (dow) is more interesting.
+  - `step_date` can easily extract these
+
+```{r}
+#| echo: true
+email_rec |>
+  step_rm(from, sent_email, viagra) |>
+  step_date(time, features = c("dow", "month")) |>
+  step_rm(time)
+```
+
+## Create dummy variables {.smaller}
+
+- Use helper functions like `all_nominal` or `all_outcomes` from `tidymodels` for column selection.
+
+```{r}
+#| echo: true
+email_rec |>
+  step_rm(from, sent_email, viagra) |>
+  step_date(time, features = c("dow", "month")) |>
+  step_rm(time) |>
+  step_dummy(all_nominal(), -all_outcomes())
+```
+
+## Remove zero variance variables {.smaller}
+
+Variables that contain only a single value.
+
+```{r}
+#| echo: true
+email_rec |>
+  step_rm(from, sent_email, viagra) |>
+  step_date(time, features = c("dow", "month")) |>
+  step_rm(time) |>
+  step_dummy(all_nominal(), -all_outcomes()) |>
+  step_zv(all_predictors())
+```
+
+## Full recipe {.smaller}
+
+```{r}
+#| echo: true
+#| warning: true
+email_rec <- recipe(
+  spam ~ ., # formula
+  data = train_data # data to use for cataloguing names and types of variables
+) |>
+  step_rm(from, sent_email, viagra) |>
+  step_date(time, features = c("dow", "month")) |>
+  step_rm(time) |>
+  step_dummy(all_nominal(), -all_outcomes()) |>
+  step_zv(all_predictors())
+print(email_rec)
+```
+
+## Recipes are only metadata
+
+The object `email_rec` only includes *meta-data* of the data frame it shall work on. Metadata here means 
+
+- a formula
+- column names
+- columns types
+
+No actual data transformation has happened yet!
+
+# Building workflows
+
+
+## Define model {.smaller}
+
+```{r}
+#| echo: true
+email_mod <- logistic_reg() |>
+  set_engine("glm")
+
+email_mod
+```
+
+## Define workflow {.smaller}
+
+**Workflows** bring together models and recipes so that they can be easily applied to both the training and test data.
+
+```{r}
+#| echo: true
+email_wflow <- workflow() |>
+  add_model(email_mod) |>
+  add_recipe(email_rec)
+email_wflow
+```
+
+
+## Fit model to training data {.smaller}
+
+```{r}
+#| echo: true
+email_fit <- email_wflow |>
+  fit(data = train_data)
+
+tidy(email_fit) |> print(n = 27)
+```
+
+Note: `email_fit` builds on the workflow object `email_wflow` defined before, which specified a model and a recipe.
+
+
+## Make predictions for test data {.smaller}
+
+```{r}
+#| echo: true
+email_pred <- email_fit |>
+  predict(test_data, type = "prob") |>
+  bind_cols(test_data)
+email_pred
+```
+
+Note: `email_pred` builds on the fit object `email_fit` defined and computed before, which in turn builds on workflow defined before, which specified a model and a recipe.
+
+## Summary of the workflow steps {.smaller}
+
+- Define a model
+- Define a recipe for data preprocessing, feature engineering and selection
+- Define a workflow that brings model and recipe together
+- Nothing is computed so far!
+- Fit the workflow with the **training** data
+- Make predictions for the **test** data
+
+The purpose of modularization is to separate the different tasks and to make it easy to re-use and combine parts of it, e.g. to test and compare different versions or to do cross-validation with different splits of *testing* and *training* data.
+
+
+
+## Evaluate the performance {.smaller}
+
+```{r}
+#| echo: true
+email_pred |>
+  roc_curve(
+    truth = spam,
+    .pred_1,
+    event_level = "second"
+  ) |>
+  autoplot()
+```
+
+
+
+## Evaluate the performance  {.smaller}
+
+```{r}
+#| echo: true
+email_pred |>
+  roc_auc(
+    truth = spam,
+    .pred_1,
+    event_level = "second"
+  )
+```
+
+This is better than our former model (without the feature engineering workflow), which had AUC = 0.857. 
+
+# From probabilities to decisions {.smaller}
+
+## Cutoff probability: 0.5 {.smaller}
+
+Suppose we decide to label an email as spam if the model predicts the probability of spam to be **more than 0.5**. (That is the default.)
+
+**Confusion matrix:**
+
+```{r}
+#| echo: true
+cutoff_prob <- 0.5
+email_pred |>
+  mutate(
+    spam = if_else(spam == 1, "Email is spam", "Email is not spam"),
+    spam_pred = if_else(
+      .pred_1 > cutoff_prob,
+      "Email labelled spam",
+      "Email labelled not spam"
+    )
+  ) |>
+  count(spam_pred, spam) |>
+  pivot_wider(names_from = spam_pred, values_from = n) |>
+  select(1, 3, 2) |>
+  slice(c(2, 1)) |> # reorder rows and cols to fit convention
+  knitr::kable()
+```
+
+
+## Confusion Matrix, Sensitivity, Specificity {.smaller}
+
+
+```{r}
+#| echo: false
+cutoff_prob <- 0.5
+email_pred |>
+  mutate(
+    spam = if_else(spam == 1, "Email is spam", "Email is not spam"),
+    spam_pred = if_else(
+      .pred_1 > cutoff_prob,
+      "Email labelled spam",
+      "Email labelled not spam"
+    )
+  ) |>
+  count(spam_pred, spam) |>
+  pivot_wider(names_from = spam_pred, values_from = n) |>
+  select(1, 3, 2) |>
+  slice(c(2, 1)) |> # reorder rows and cols to fit convention
+  knitr::kable()
+```
+
+**Sensitivity:** 14/(14+54) = 0.206   
+**Specificity:** 707/(707+10) = 0.986   
+
+## Cutoff probability: 0.25  {.smaller}
+
+Suppose we decide to label an email as spam if the model predicts the probability of spam to be **more than 0.25**.
+
+**Confusion matrix:**
+
+```{r}
+cutoff_prob <- 0.25
+email_pred |>
+  mutate(
+    spam = if_else(spam == 1, "Email is spam", "Email is not spam"),
+    spam_pred = if_else(
+      .pred_1 > cutoff_prob,
+      "Email labelled spam",
+      "Email labelled not spam"
+    )
+  ) |>
+  count(spam_pred, spam) |>
+  pivot_wider(names_from = spam_pred, values_from = n) |>
+  select(1, 3, 2) |>
+  slice(c(2, 1)) |> # reorder rows and cols to fit convention
+  knitr::kable()
+```
+
+**Sensitivity:** 32/(32+36) = 0.471   
+**Specificity:** 656/(656 + 61) = 0.915   
+
+
+## Cutoff probability: 0.75 {.smaller}
+
+Suppose we decide to label an email as spam if the model predicts the probability of spam to be **more than 0.75**.
+
+**Confusion matrix:**
+
+```{r}
+cutoff_prob <- 0.75
+email_pred |>
+  mutate(
+    spam = if_else(spam == 1, "Email is spam", "Email is not spam"),
+    spam_pred = if_else(
+      .pred_1 > cutoff_prob,
+      "Email labelled spam",
+      "Email labelled not spam"
+    )
+  ) |>
+  count(spam_pred, spam) |>
+  pivot_wider(names_from = spam_pred, values_from = n) |>
+  select(1, 3, 2) |>
+  slice(c(2, 1)) |> # reorder rows and cols to fit convention
+  knitr::kable()
+```
+
+**Sensitivity:** 3/(3+65) = 0.044   
+**Specificity:** 716/(716+1) = 0.999
+
+
+## Compare: Check our very first model {.smaller}
+
+Using the modular sturcutr: We make a new simple recipe and draw workflow and fitting re-using the same specified logisitc regression model `email_mod`. 
+
+```{r}
+#| echo: true
+simple_email_rec <- recipe(
+  spam ~ num_char, # formula
+  data = train_data # data to use for cataloguing names and types of variables
+)
+simple_email_pred <-
+  workflow() |>
+  add_model(email_mod) |>
+  add_recipe(simple_email_rec) |>
+  fit(data = train_data) |>
+  predict(test_data, type = "prob") |>
+  bind_cols(test_data |> select(spam, num_char, time))
+simple_email_pred
+```
+
+## Evaluate the performance {.smaller}
+
+```{r}
+#| echo: true
+#| fig-height: 3.5
+simple_email_pred |>
+  roc_curve(
+    truth = spam,
+    .pred_1,
+    event_level = "second" # this adjusts the location above the diagonal
+  ) |>
+  autoplot()
+```
+
+
+```{r}
+simple_email_pred |>
+  roc_auc(
+    truth = spam,
+    .pred_1,
+    event_level = "second"
+  )
+```
+
+**Conclusion:** It is not as good compared to AUC 0.86
+
+
+## Compare: Predict Penguins' Sex {.scrollable .smaller}
+
+Following all the steps introduced before:
+
+```{r}
+#| echo: true
+set.seed(1)
+# Put 80% of the data into the training set
+peng_split <- initial_split(penguins, prop = 0.80)
+# Create data frames for the two sets:
+train_data_peng <- training(peng_split)
+test_data_peng <- testing(peng_split)
+
+# Create a recipe for the model
+peng_rec <- recipe(
+  sex ~ .,
+  data = train_data_peng
+) |>
+  step_naomit(all_predictors()) |>
+  step_dummy(all_nominal(), -all_outcomes()) |>
+  step_zv(all_predictors())
+
+# Create a logistic regression model
+peng_mod <- logistic_reg() |>
+  set_engine("glm")
+
+# Create a workflow
+peng_wflow <- workflow() |>
+  add_model(peng_mod) |>
+  add_recipe(peng_rec)
+
+# Fitting model to training data
+peng_fit <- peng_wflow |>
+  fit(data = train_data_peng)
+
+# Make predictions for test data
+peng_pred <- peng_fit |>
+  predict(test_data_peng, type = "prob") |>
+  bind_cols(test_data_peng)
+```
+
+## Penguins: Evaluate Performance {.smaller}
+
+```{r}
+#| echo: true
+#| fig-height: 3.5
+peng_pred |>
+  roc_curve(
+    truth = sex,
+    .pred_male,
+    event_level = "second"
+  ) |>
+  autoplot()
+```
+
+```{r}
+#| echo: true
+peng_pred |>
+  roc_auc(
+    truth = sex,
+    .pred_male,
+    event_level = "second"
+  )
+```
+
+
+
+## Penguins: Cutoff probability 0.5 {.smaller}
+
+**Confusion matrix:**
+
+```{r}
+#| echo: true
+cutoff_prob <- 0.5
+peng_pred |>
+  mutate(
+    sex = if_else(sex == "male", "Penguin is male", "Penguin is female"),
+    sex_pred = if_else(
+      .pred_male > cutoff_prob,
+      "Penguin labelled male",
+      "Penguin labelled female"
+    )
+  ) |>
+  count(sex_pred, sex) |>
+  pivot_wider(names_from = sex_pred, values_from = n) |>
+  select(1, 3, 2) |>
+  slice(c(2, 1)) |> # reorder rows and cols to fit convention
+  knitr::kable()
+```
+
+**Sensitivity:** 31/(31+4) = 0.886   
+**Specificity:** 28/(28+4) = 0.875
+
+## Penguins: Cutoff probability 0.25 {.smaller}
+
+**Confusion matrix:**
+
+```{r}
+#| echo: true
+cutoff_prob <- 0.25
+peng_pred |>
+  mutate(
+    sex = if_else(sex == "male", "Penguin is male", "Penguin is female"),
+    sex_pred = if_else(
+      .pred_male > cutoff_prob,
+      "Penguin labelled male",
+      "Penguin labelled female"
+    )
+  ) |>
+  count(sex_pred, sex) |>
+  pivot_wider(names_from = sex_pred, values_from = n) |>
+  select(1, 3, 2) |>
+  slice(c(2, 1)) |> # reorder rows and cols to fit convention
+  knitr::kable()
+```
+
+**Sensitivity:** 34/(34+1) = 0.971   
+**Specificity:** 25/(25+7) = 0.781
+
+
+## Penguins: Cutoff probability 0.75 {.smaller}
+
+**Confusion matrix:**
+
+```{r}
+#| echo: true
+cutoff_prob <- 0.75
+peng_pred |>
+  mutate(
+    sex = if_else(sex == "male", "Penguin is male", "Penguin is female"),
+    sex_pred = if_else(
+      .pred_male > cutoff_prob,
+      "Penguin labelled male",
+      "Penguin labelled female"
+    )
+  ) |>
+  count(sex_pred, sex) |>
+  pivot_wider(names_from = sex_pred, values_from = n) |>
+  select(1, 3, 2) |>
+  slice(c(2, 1)) |> # reorder rows and cols to fit convention
+  knitr::kable()
+```
+
+**Sensitivity:** 29/(29+6) = 0.829    
+**Specificity:** 30/(30+2) = 0.938
+
+## Penguins vs. Emails
+
+Why are the differences between different cutoff probabilities smaller for penguins than for emails?
+
+. . . 
+
+**Answer:** The response variable `sex` in `penguins` is more balanced (about 50% males and 50% females) than the response variable `spam` in `email`.
+
+::: {.columns}
+::: {.column}
+
+```{r}
+#| echo: true
+penguins |> count(sex) |> mutate(prop = n / sum(n))
+```
+
+:::
+::: {.column}
+
+```{r}
+#| echo: true
+email |> count(spam) |> mutate(prop = n / sum(n))
+```
+
+:::
+:::
+
+. . .
+
+A naive classifier that classifies everything as the majority class would achieve about 50% accuracy for `penguins`, but about 88% accuracy for `email`.
+
+
+
+# Classification: Compare logistic regression and decision tree
+
+## Purpose of the section {.smaller}
+
+- Go again through the modeling workflow (with `tidymodels`) and see that large parts are identical
+- Look again at the coefficients of a logistic regression model
+- Learn the basic idea of a decision tree (you will not learn the details here)
+- Do the classification with both models and compare the confusion matrices
+
+## Specify recipe and models {.smaller}
+
+For both logistic regression and decision tree:
+
+```{r}
+#| echo: true
+peng_recipe <- recipe(sex ~ ., data = penguins) |>
+  step_rm(year)
+```
+
+. . .
+
+- We specify a recipe to predict `sex` with all available variables in `penguins`
+    - In typical model development, more pre-processing steps are done. 
+
+. . .
+
+:::: {.columns}
+
+::: {.column width='50%'}
+
+**Logistic Regression**
+
+```{r}
+#| echo: true
+peng_logreg <- logistic_reg() |>
+  set_engine("glm")
+```
+
+`peng_logreg` specifies to fit with `glm` (generalized linear model from `base` R) 
+:::
+
+::: {.column width='50%'}
+
+**Decision Tree**
+
+```{r}
+#| echo: true
+peng_tree <- decision_tree() |>
+  set_engine("rpart") |>
+  set_mode("classification")
+```
+
+`peng_tree` specifies to fit  for `classification` with the `rpart`^[`rpart` is a package for *recursive partitioning and regression trees*. Different decision tree procedures are subsumed as **classification and regression trees (CART)**] as engine. 
+
+:::
+::::
+
+
+## Split and fit {.smaller}
+
+For logistic regression and decision tree:
+
+Split into test and training data
+
+```{r}
+#| echo: true
+set.seed(1)
+penguins_split <- initial_split(penguins, prop = 0.7, strata = sex)
+peng_train <- training(penguins_split)
+peng_test <- testing(penguins_split)
+peng_workflow <- workflow() |> add_recipe(peng_recipe)
+```
+
+. . .
+
+:::: {.columns}
+
+::: {.column width='50%'}
+**Logistic Regression**
+
+```{r}
+#| echo: true
+peng_logreg_fit <- peng_workflow |>
+  add_model(peng_logreg) |>
+  fit(data = peng_train)
+```
+
+:::
+
+::: {.column width='50%'}
+**Decision Tree**
+
+```{r}
+#| echo: true
+peng_tree_fit <- peng_workflow |>
+  add_model(peng_tree) |>
+  fit(data = peng_train)
+```
+
+:::
+
+::::
+
+
+## Look at fitted logistic regression {.smaller}
+
+:::: {.columns}
+
+::: {.column width='60%'}
+
+```{r}
+#| echo: true
+peng_logreg_fit |> tidy()
+```
+
+:::
+
+::: {.column width='40%'}
+- What do the categorical predictors tell us? Which are signigficant?
+- What do the numerical predictors tell us? Which are signigficant?
+- Why is the coefficient for `body_mass_g` so small, but highly significant?
+:::
+
+::::
+ 
+. . . 
+
+
+**Categorical predictors:** We have 3 `species`, 3 `island`. So, we see 4 new variables, 2 for `species` and 2 for `island` (the third is the reference category). Species are significant (p < 0.05), but islands not.
+
+**Numerical predictors:** `flipper_length_mm` is insignificant, though its coefficient is larger than for `body_mass_g`. Reason: values of `body_mass_g` are larger than those of `flipper_length_mm`. Body mass differs by much more grams than flipper length differs by millimeters. 
+
+
+## What is a decision tree? {.smaller}
+
+```{r}
+#| echo: true
+peng_tree_fit
+```
+
+- A sequence of rules for yes/no decisions
+- Selects variables and thresholds which separate the data to predict (here `sex`) best 
+- Further details are not the scope of this course
+
+
+## Show rules {.smaller}
+
+We "dig out" the original fitted `rpart`-object from the `workflow`-object with `peng_tree_fit$fit$fit$fit` and plot it:
+
+```{r}
+#| echo: true
+rpart.rules(peng_tree_fit$fit$fit$fit, roundint = FALSE)
+```
+
+- The first three rules would predict `female` for all observations
+- The last five rules would predict `male` for all observations
+
+The order of `male` and `female` is because `sex` is a factor with the first level `female` and the second level `male`. The probabilities in front of the rule-text are for the second level: `male`.
+
+## Visualize tree {.smaller}
+
+```{r}
+#| echo: true
+rpart.plot(peng_tree_fit$fit$fit$fit, roundint = FALSE, tweak = 1.5)
+```
+
+How to read?
+
+- The percentage is the fraction of the total cases in this group
+- The probability-number is the fraction of observations which are male in the group
+- `male` of `female` and color would match the predicted outcome at this decision node
+
+
+## Make predictions for test data {.smaller}
+
+:::: {.columns}
+
+::: {.column width='50%'}
+```{r}
+#| echo: true
+peng_logreg_pred <-
+  predict(peng_logreg_fit, peng_test) |>
+  bind_cols(peng_test)
+peng_logreg_pred |>
+  conf_mat(truth = sex, estimate = .pred_class)
+```
+
+:::
+
+::: {.column width='50%'}
+
+```{r}
+#| echo: true
+peng_tree_pred <-
+  predict(peng_tree_fit, peng_test) |>
+  bind_cols(peng_test)
+peng_tree_pred |>
+  conf_mat(truth = sex, estimate = .pred_class)
+```
+
+:::
+
+::::
+
+- The logistic regression has more correct predictions. 
+- [Warning:]{style='color:red;'} The function `conf_mat` (from `yardstick` of `tidymodels`) shows the transposed confusion matrix compared with [Wikipedia:Confusion Matrix](https://en.wikipedia.org/wiki/Confusion_matrix). In `conf_mat`, the *true conditions* are in columns. The wikipedia convention is that columns are the *predicted conditions*. 
+
+
+# Regression: Compare linear regression and decision tree
+
+## Purpose of the section {.smaller}
+
+- Go again through the modeling workflow (with `
+tidymodels
+`) and see that large parts are identical
+- Look again at the coefficients of a linear model
+- See how the decision tree looks like for a regression problem
+- Compare the two most common performance measures for regression models: Root Mean Squared Error (RMSE) and R-squared
+
+## Specify recipe and models {.smaller}
+
+- We specify a recipe to predict `body_mass_g` with all available variables in `penguins` and put it in a workflow
+    - Typically, more pre-processing steps are specified here, but we are mostly fine
+
+```{r}
+#| echo: true
+peng_recipe2 <- recipe(body_mass_g ~ ., data = penguins) |>
+  step_rm(year)
+peng_workflow2 <- workflow() |>
+  add_recipe(peng_recipe2)
+```
+
+We can re-use the split and the training and test set. 
+
+
+. . .
+
+:::: {.columns}
+
+::: {.column width='50%'}
+
+**Linear Regression**
+
+```{r}
+#| echo: true
+peng_linreg <- linear_reg() |>
+  set_engine("lm")
+```
+
+:::
+
+::: {.column width='50%'}
+
+**Decision Tree**
+
+```{r}
+#| echo: true
+peng_regtree <- decision_tree() |>
+  set_engine("rpart") |>
+  set_mode("regression")
+```
+
+:::
+::::
+
+
+## Fit Regression Models {.smaller}
+
+:::: {.columns}
+
+::: {.column width='50%'}
+**Linear Regression**
+
+```{r}
+#| echo: true
+peng_linreg_fit <- peng_workflow2 |>
+  add_model(peng_linreg) |>
+  fit(data = peng_train)
+```
+
+:::
+
+::: {.column width='50%'}
+**Decision Tree**
+
+```{r}
+#| echo: true
+peng_regtree_fit <- peng_workflow2 |>
+  add_model(peng_regtree) |>
+  fit(data = peng_train)
+```
+
+:::
+
+::::
+
+
+## Look at fitted linear regression {.smaller}
+
+:::: {.columns}
+
+::: {.column width='60%'}
+
+```{r}
+#| echo: true
+peng_linreg_fit |> tidy()
+```
+
+:::
+
+::: {.column width='40%'}
+- What do the categorical predictors tell us? Which are signigficant?
+- What do the numerical predictors tell us? Which are signigficant?
+:::
+
+::::
+ 
+. . . 
+
+
+**Categorical predictors:** We have 3 `species`, 3 `island` and 2 `sex`. So, we see
+5 new variables. Species and sex are significant, but islands not.
+
+**Numerical predictors:** All 3 are significant.
+
+
+## Show rules {.smaller}
+
+```{r}
+#| echo: true
+rpart.rules(peng_regtree_fit$fit$fit$fit, roundint = FALSE)
+```
+
+- For each terminal node a certain value is predicted (the mean of the remaining penguins)
+
+
+## Visualize tree {.smaller}
+
+```{r}
+#| echo: true
+rpart.plot(peng_regtree_fit$fit$fit$fit, roundint = FALSE, tweak = 1.5)
+```
+
+How to read?
+
+- The percentage is the fraction of the total cases in this group
+- The number is the predicted outcome (mean body mass) at this decision node
+
+
+## Make predictions for test data {.smaller}
+
+:::: {.columns}
+
+::: {.column width='65%'}
+**Linear Regression**
+
+```{r}
+#| echo: true
+peng_linreg_pred <-
+  predict(peng_linreg_fit, peng_test) |>
+  bind_cols(peng_test)
+peng_linreg_pred |>
+  select(.pred, body_mass_g, everything()) |>
+  slice(10 * (1:10)) # show selected rows
+```
+
+:::
+
+::: {.column width='35%'}
+**Decision Tree**
+
+```{r}
+#| echo: true
+peng_regtree_pred <-
+  predict(peng_regtree_fit, peng_test) |>
+  bind_cols(peng_test)
+peng_regtree_pred |>
+  select(.pred, body_mass_g, species, sex) |>
+  slice(10 * (1:10)) # show same selected rows
+```
+
+:::
+
+::::
+
+## Regression Performance Evaluation {.smaller}
+
+[**R-squared**]{style='color:blue;'}: Percentage of variability in `body_mass_g` explained by the model
+
+:::: {.columns}
+
+::: {.column width='50%'}
+**Linear Regression**
+
+```{r}
+#| echo: true
+rsq(peng_linreg_pred, truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+::: {.column width='50%'}
+
+**Decision Tree**
+
+```{r}
+#| echo: true
+rsq(peng_regtree_pred, truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+::::
+
+[**Root Mean Squared Error (RMSE)**:]{style='color:blue;'} $\text{RMSE} = \sqrt{\frac{1}{n}\sum_{i = 1}^n (y_i - \hat{y}_i)^2}$  
+where $\hat{y}_i$ is the predicted value and $y_i$ the true value. (The name RMSE is descriptive.)
+
+:::: {.columns}
+
+::: {.column width='50%'}
+```{r}
+#| echo: true
+rmse(peng_linreg_pred, truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+::: {.column width='50%'}
+
+```{r}
+#| echo: true
+rmse(peng_regtree_pred, truth = body_mass_g, estimate = .pred)
+```
+
+:::
+
+::::
+
+Which model is better in prediction? [**Linear regression.** The R-squared is higher.]{.fragment}
+
+
+## Should RMSE be high or low? {.smaller}
+
+. . .
+
+**Low. The lower the error, the better the model's prediction.**
+
+It is the other way round than R-squared! Do not confuse them.
+
+. . .
+
+Notes: 
+
+- The common method to fit a linear model is the *ordinary least squares* (OLS) method
+- That means the fitted parameters should deliver the lowest possible sum of squared errors (SSE) between predicted and observed values. 
+- Minimizing the sum of squared errors (SSE) is identical to minimizing the mean of squared errors (MSE) because it only adds the factor $1/n$.
+- Minimizing the mean of squared errors (MSE) is identical to minimizing the root mean of squared errors (RMSE) because the square root is strictly monotone function.
+
+Conclusion: RMSE can be seen as a definition of the OLS optimization goal. 
+
+## Interpreting RMSE {.smaller}
+
+In contrast to R-squared, RMSE can only be interpreted with knowledge about the range and of the response variable! It also has the same unit (grams for `body_mass_g`).
+
+
+```{r}
+#| echo: true
+#| output-location: column
+#| fig-height: 1.8
+peng_test |>
+  ggplot(aes(x = body_mass_g, fill = species)) +
+  geom_histogram(binwidth = 50) +
+  theme_minimal(base_size = 20)
+```
+
+```{r}
+#| echo: true
+#| output-location: column
+#| fig-height: 1.8
+peng_linreg_pred |>
+  ggplot(aes(x = .pred, fill = species)) +
+  geom_histogram(binwidth = 50) +
+  theme_minimal(base_size = 20)
+```
+
+```{r}
+#| echo: true
+#| output-location: column
+#| #| fig-height: 1.8
+peng_regtree_pred |>
+  ggplot(aes(x = .pred, fill = species)) +
+  geom_histogram(binwidth = 50) +
+  theme_minimal(base_size = 20)
+```
+
+
+
+The RMSE shows many grams predicted values deviate from the true value on average. (Taking the squaring of differences and root of the average into account.)
+
+# What do we mean by "model"? How to be specific
+
+## "Model" in Statistical Learning {.smaller}
+
+We already had the difference between *variable-based* and *agent-based* models in earlier lectures.
+
+But even in the variable-based model setting of **statistical learning**, the term *model* can be more or less abstract: 
+
+1. Very general: $Y = f(X_1, \dots, X_m) + \varepsilon$ where $Y$ is the response variable and $X_i$ are features which we put in our **model**: the abstract and unknown function $f$.   
+$\varepsilon$ is the *error* which we can never explain usually do not know. 
+2. More specific: The **model** $f$ could already be of a specific type, like *logistic regression*, a *decision tree* or other functional forms. As this need not be the *real* function we may call it *assumed model* $\hat f$   For example a linear model $\hat f(X_1, \dots, X_m) = \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m + \varepsilon$. Now, the model has specified parameters which values are unknown. 
+
+
+## More specific: Fitted model {.smaller}
+
+3. Fitted model: When we have a data set with values for $Y, X_1, \dots, X_m$ we can fit values for the parameters $\hat\beta_0, \dots, \hat\beta_m$ to the data. This is the *fitted model* $\hat f$. This is called parameter estimation: We estimate $\hat\beta_0, \dots, \hat\beta_m$ with the hope that they match the *real* values $\beta_0, \dots, \beta_m$ and that the linear model $\hat f$ matches the *real* function $f$. 
+4. Now we could specify further to fit a specific parameterized model with a specific algorithm, and a specific set of hyperparameters, and maybe more ...
+    
+Sometimes model means only a certain aspect of all these, for example the *formula* like `sex ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g + species + island`
+
+. . .
+
+[Take away:]{style='color:blue;'} "Model" can mean things with very different granularity. That is OK because they are all related and all fit the definition of being a **simplified representation of reality**. 
+
+[**Be prepared to specify what you mean when you are talking about a model.**]{style='color:blue;'}
+
+

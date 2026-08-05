@@ -1,0 +1,1052 @@
+---
+title: "W#03 Data Import, Data Wrangling"
+subtitle: "With material adopted from [Data Science in a Box](https://datasciencebox.org) and [R4DS](https://r4ds.hadley.nz)"
+author: Jan Lorenz
+format: 
+  revealjs: 
+    toc: true
+    toc-depth: 1
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: true
+    logo: img/ConstructorUniversity.png
+    footer: "MDSSB-DSCO-02: Data Science Concepts"
+filters: 
+  - webr
+webr:
+  packages:
+    - tidyverse
+  autoload-packages: true
+---
+
+```{r}
+#| include: false
+library(tidyverse)
+```
+
+
+# Data Import, First Look
+
+![](img/data-science-explore.png){height=250}
+
+
+## `readr` and `readxl` {.smaller}
+
+::: columns
+::: {.column width="60%"}
+`readr` is loaded with `tidyverse`
+
+![](img/readr.png){height=150}
+
+- `read_csv()` - comma delimited files
+- `read_csv2()` - semicolon delimited files (common where "," is used as decimal place)
+- `read_tsv()` - tab delimited files
+- `read_delim()` - reads in files with any delimiter
+- ...
+
+:::
+
+::: {.column width="30%"}
+`readxl` has to be installed and loaded separately
+
+![](img/readxl.png){height=150}
+
+- `read_excel()` read xls or xlsx files from MS Excel
+- ...
+:::
+:::
+
+
+::: aside
+There are also packages to write data from R to excel files (`writexl`, `openxlsx`, `xlsx`, ...).
+:::
+
+## Importing data from other sources {.smaller}
+
+**R packages** for some cases. They provide function to read from the source into dataframes. 
+
+- Data collected in a [**Google Spreadsheet**]{style='color:darkred;'}:  `googlesheets4` 
+- Data in native formats of [**SPSS**, **Stata**, or **SAS**]{style='color:darkred;'}: `haven` 
+- Data in [**SQL Databases**]{style='color:darkred;'}: `DBI`, together with a database specific backend (`RMySQL`, `RSQLite`, `RPostgreSQL`)
+- Data in [**JSON**]{style='color:darkred;'} or [**XML**]{style='color:darkred;'} format as often used by web applications (e.g. written in JavaScript): `jsonlite` and `xml2`
+- [**Scraping**]{style='color:darkred;'} data directly from websites: `rvest`
+- Using [Appache Arrow](https://arrow.apache.org/), e.g. `.parquet` files: `arrow`
+
+::: aside
+Analog libraries will exist for python
+:::
+
+
+
+## Comma-separated values (CSV) {.smaller}
+
+CSV files are delimited text file
+
+- Can be viewed with any text editor
+- Show each row of the dataframe in a line
+- Separates the content of columns by commas (or the delimiter character)
+- Each cell could be surrounded by quotes (when long text with commas (!) is in cells)
+- The first line is interpreted as listing the variable names by default
+
+`readr` tries to guess the data type of variables
+
+You can also customize it yourself! 
+
+
+We use CSV file when there is no certain reason to do otherwise.
+Reasons are: CSV is not provided or the dataset being very larger and hard-disk storage is an issue. Other formats or more space efficient.
+
+
+
+## Data import workflow {.smaller}
+
+1. You download your CSV file to the `data/` directory. You may use `download.file()` for this, but make sure you do not download large amounts of data each time you render your file! 
+2. Read the data with `data <- read_csv("data/FILENAME.csv")` and read the report in the console.
+3. Explore if you are happy and iterate by customizing the data import line using specifications until the data is as you want it to be. 
+
+Good practices to document the data download:
+
+- One or low number of files: Put the download line(s) in you main document, but comment out `#` after usage.
+- Write a script (**data-download.r**) to document the download commands.
+- Make your code check first if the file already exist, like this `if (!(file.exists("DATA_FILE.csv"))) {DOWNLOAD-CODE}`
+
+
+## 1. Download, 2. Read {.smaller}
+
+This downloads data only if the file does not exist. Then it loads it. 
+
+```{r}
+#| echo: true
+#| message: true
+
+library(tidyverse)
+if (!file.exists("hotels.csv")) {
+  download.file(
+    url = "https://raw.githubusercontent.com/rstudio-education/datascience-box/main/course-materials/_slides/u2-d06-grammar-wrangle/data/hotels.csv",
+    destfile = "hotels.csv"
+  )
+}
+hotels <- read_csv("hotels.csv")
+```
+
+Output is a summary how `read_csv` guessed the data types of columns. 
+
+
+## 3. Explore using `spec()` {.smaller}
+
+All details to check or customize: 
+
+```{r}
+#| echo: true
+
+spec(hotels)
+```
+
+## Finalize data import, option 1 {.smaller}
+
+When 
+
+- all columns are how they should
+- you consider it not necessary to document the specifications
+
+Then use `show_col_types = FALSE` to quiet the reading message. 
+
+```{r}
+#| echo: true
+hotels <- read_csv("hotels.csv", show_col_types = FALSE)
+```
+
+
+## Finalize data import, option 2 {.smaller}
+ 
+- Copy the `spec(hotels)` output into the `col_types` argument
+- If necessary, customize it
+
+```{r}
+#| echo: true
+hotels <- read_csv(
+  "hotels.csv",
+  col_types = cols(
+    hotel = col_character(),
+    is_canceled = col_logical(),
+    lead_time = col_integer(),
+    arrival_date_year = col_integer(),
+    arrival_date_month = col_character(),
+    arrival_date_week_number = col_integer(),
+    arrival_date_day_of_month = col_integer(),
+    stays_in_weekend_nights = col_integer(),
+    stays_in_week_nights = col_integer(),
+    adults = col_integer(),
+    children = col_integer(),
+    babies = col_integer(),
+    meal = col_character(),
+    country = col_character(),
+    market_segment = col_character(),
+    distribution_channel = col_character(),
+    is_repeated_guest = col_logical(),
+    previous_cancellations = col_integer(),
+    previous_bookings_not_canceled = col_integer(),
+    reserved_room_type = col_character(),
+    assigned_room_type = col_character(),
+    booking_changes = col_integer(),
+    deposit_type = col_character(),
+    agent = col_integer(),
+    company = col_integer(),
+    days_in_waiting_list = col_integer(),
+    customer_type = col_character(),
+    adr = col_double(),
+    required_car_parking_spaces = col_integer(),
+    total_of_special_requests = col_integer(),
+    reservation_status = col_character(),
+    reservation_status_date = col_date(format = "")
+  )
+)
+```
+
+
+## Columns types {.smaller}
+
+**type function**  | **data type**
+------------------ | -------------
+`col_character()`  | character
+`col_date()`       | date
+`col_datetime()`   | POSIXct (date-time)
+`col_double()`     | double (numeric)
+`col_factor()`     | factor
+`col_guess()`      | let readr guess (default)
+`col_integer()`    | integer
+`col_logical()`    | logical
+`col_number()`     | numbers mixed with non-number characters
+`col_skip()`       | do not read
+`col_time()`       | time
+
+
+
+## Hotels data 
+
+-   Data from two hotels: one resort and one city hotel
+-   Observations: Each row represents a hotel booking
+
+## First look on data {.smaller}
+
+Type the name of the dataframe
+
+::: {.columns}
+::: {.column width="70%"}
+
+```{r}
+#| echo: true
+hotels
+```
+
+:::
+::: {.column width="30%" .fragment}
+- Look are the number of rows and columns
+- Look at the column names, types, and first entries for the first columns
+- Notice how many more columns are there and decide what to look for next
+:::
+::: 
+
+
+
+## Look on variable names {.smaller}
+
+```{r} 
+#| echo: true
+names(hotels)
+```
+
+This gives you a vector of column names.
+
+
+
+## Second look with `glimpse` {.smaller}
+
+```{r} 
+#| echo: true
+glimpse(hotels)
+```
+
+- Showing you all variables listed including data type and the first entries.  
+
+
+# Data Wrangling
+
+Wrangling = Import + Tidy + Transform (first iteration) 
+
+![](img/data-science-wrangle.png){height=250}
+
+
+## Grammar of Data Wrangling {.smaller}
+
+:::{.columns{}
+:::{.column width="30%"}
+![](img/dplyr.png) 
+:::
+:::{.column width="69%"}
+Grammar of data wrangling: Start with a dataset and *pipe* it through several manipulations with `|>`
+```R
+mpg |> 
+  filter(cyl == 8) |> 
+  select(manufacturer, hwy) |> 
+  group_by(manufacturer) |> 
+  summarize(mean_hwy = mean(hwy))
+```
+:::
+:::
+
+Similar in `python`:  Make a chain using `.` to apply `pandas` methods for dataframes one after the other.
+
+
+Similar in `ggplot2`: Creating a ggplot object, then add graphical layers (`geom_` functions) with `+` (instead of a pipe)
+
+```R
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = manufacturer)) + 
+  geom_point() + 
+  geom_line()
+``` 
+
+## What is the pipe `|>`? {.smaller}
+
+`x |> f(a,b)` is the same as `f(x,a,b)`
+
+**The outcome of a command is put into the first argument of the next function call.**
+Practice it. See that it is exactly identical! (Example: try `c()` as `f` and just numbera like `1` or `2` as `a` and `b`; or `paste()` with `"a"` as `"b"`.)
+
+
+```{webr-r}
+
+
+```
+
+## Reasons for using pipes `|>` {.smaller}
+
+- structure the sequence of your data operations from left to right
+- avoid nested function calls:  
+nested: `filter(select(hotels, hotel, adults), adults == 2)`   
+piped: **`hotels |> select(hotel, adults) |> filter(adults == 2)`**  
+(base R: `hotels[hotels$adults == 2, c("hotel", "adults")]`)
+- You'll minimize the need for local variables and function definitions
+- You'll make it easy to add steps anywhere in the sequence of operations
+
+::: aside
+Since R 4.1.0, the pipe is part of base R. Before you had to load the `magrittr` package and use `%>%`. 
+You still find it in a lot of code out in the wild. It is almost the same. 
+:::
+
+
+## `dplyr` uses verbs to manipulate {.smaller}
+
+- `select`: pick columns by name
+- `arrange`: reorder rows
+- `slice`: pick rows using index(es)
+- `filter`: pick rows matching criteria
+- `distinct`: filter for unique rows
+- `mutate`: add new variables
+- `summarise`: reduce variables to values
+- `group_by`: for grouped operations
+- ... (many more)
+
+# Data Subsetting
+
+## `select` a single column {.smaller}
+
+:::: {.columns}
+
+::: {.column width='60%'}
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |> select(lead_time)
+```
+
+Note: `select(hotels, lead_time)` is identical (Reminder to understand the pipe `|>`!). 
+
+:::
+
+::: {.column width='40%'  .fragment}
+Why does piping `|>` work? 
+
+#### dplyr philosophy
+
+Every `dplyr` function
+
+   - takes a dataframe (tibble) as first argument
+   - outputs a (manipulated) dataframe (tibble)
+
+:::
+
+::::
+
+::: aside
+In hotel business, lead time is the time betweeen booking and arrival.
+:::
+
+## Select more columns
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |> select(hotel, lead_time)
+```
+  
+Important: `hotel` is a column (variable) name, but `hotels` the object name of the dataframe
+
+
+## Select helper `starts_with`  {.smaller}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+hotels |> select(starts_with("arrival"))
+```
+
+## Bring columns to the front {.smaller}
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |> select(hotel, market_segment, children, everything())
+```
+
+## More select helpers {.smaller}
+
+- `starts_with()`: Starts with a prefix
+- `ends_with()`: Ends with a suffix
+- `contains()`: Contains a literal string
+- `num_range()`: Matches a numerical range like x01, x02, x03
+- `everything()`: Matches all variables
+- `last_col()`: Select last variable, possibly with an offset
+- `matches()`: Matches a regular expression (a sequence of symbols/characters expressing a string/pattern to be searched for within text)
+
+
+## `slice` for certain rows {.smaller}
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |> slice(2:4)
+```
+
+## `filter` for rows with certain criteria {.smaller}
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |> filter(hotel == "City Hotel")
+```
+
+
+## `filter` for multiple criteria {.smaller}
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  filter(
+    babies >= 1,
+    children >= 1
+  ) |>
+  select(hotel, adults, babies, children)
+```
+
+Comma-separated conditions are interpreted as all these should be fulfilled.   
+This is identical to the logical AND `&`.    
+`hotels |> filter(babies >= 1 & children >= 1)`  
+delivers the same. (Spot the tiny difference!)
+
+
+## `filter` for more complex criteria {.smaller}
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  filter(
+    babies >= 1 | children >= 1
+  ) |>
+  select(hotel, adults, babies, children)
+```
+
+`|` is the logical OR. Only one criterion needs to be fulfilled. 
+
+
+## Logical operators^[Logical is sometimes called **Boolean**] {.smaller .scrollable}
+
+
+:::: {.columns}
+
+::: {.column width='50%'}
+operator      | definition                   
+--------------|------------------------------
+`<`           | less than                    
+`<=`          |	less than or equal to        
+`>`           | greater than                 
+`>=`          |	greater than or equal to     
+`==`          |	exactly equal to             
+`!=`          |	not equal to                 
+`x & y`       | `x` AND `y`                  
+`x | y`       | `x` OR `y` 
+`!x`          | not `x`
+:::
+
+::: {.column width='50%'}
+Test these (vectors of) logical statements
+
+```{r}
+#| echo: true
+#| output-location: fragment
+c(2 == 2, 2 == 3)
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+c(2 != 2, 2 != 3)
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+c(2 != 2 & 2 != 3, 2 != 2 | 2 != 3)
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+c(2 == 2, !(2 == 2))
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+c(2 != 2, !(2 != 2))
+```
+
+:::
+
+::::
+
+# Numerical and Logical Indexing
+
+## The Concept of Indexing {.smaller}
+
+Select and filter can also be achieved by **numerical indexing**.  
+
+**In (base) R as well as in python.**
+
+Select ranges of rows and columns
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels[1:3, 5:7]
+```
+
+You can use any vector (with non-overshooting indexes)
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels[c(1:3, 100232), c(5:7, 1)]
+```
+
+## python is 0-indexed, R is 1-indexed! {.smaller}
+
+**python:** indexes go from 0 to n-1
+
+**R:** indexes go from 1 to n
+
+[**Be aware!**]{style='color:red;'}
+
+**Note:** There is no correct way. For some use cases one is more *natural* for others the other. 
+
+**Analogy:** In mathematics there is an unsettled debate if $0 \in \mathbb{N}$ or $0 \notin \mathbb{N}$
+
+
+## Logical Indexing {.smaller}
+
+Instead of numerical indexing (with a vector of numbers) you can also use **logical indexing** with a vector of logicals. 
+
+With logical vectors you can select rows and columns. 
+
+We create a small sample data frame
+
+```{r} 
+#| echo: true
+#| output-location: column-fragment
+data <- tibble(x = LETTERS[1:5], y = letters[6:10])
+data
+```
+
+. . . 
+
+Now, we select some rows and a column with logical index vectors
+
+```{r} 
+#| echo: true
+#| output-location: column-fragment
+data[c(TRUE, FALSE, TRUE, FALSE, TRUE), c(TRUE, FALSE)]
+```
+
+
+## Logical vectors from conditional statements {.smaller}
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+data$x
+```
+
+. . .
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+data$x %in% c("C", "E")
+```
+
+. . .
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+data[data$x %in% c("C", "E"), ]
+```
+
+. . .
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+data[data$x %in% c("C", "E") | data$y %in% c("h", "i"), ]
+```
+
+. . .
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+data |>
+  filter(
+    x %in% c("C", "E") | y %in% c("h", "i")
+  )
+```
+
+# Counting and Sorting
+
+## Unique combinations, arranging
+ 
+`distinct` and `arrange` (for sorting)
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  distinct(hotel, market_segment) |>
+  arrange(hotel, market_segment)
+```
+
+## Counting 
+
+`count`
+
+```{r}
+#| echo: true
+#| output-location: fragment
+hotels |>
+  count(hotel, market_segment) |> # This produces a new variable n
+  arrange(n)
+```
+
+## Counting, arrange descending
+
+`count`, `arrange`, `desc` 
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  count(hotel, market_segment) |> # This produces a new variable n
+  arrange(desc(n))
+```
+
+
+# Data Transformation
+
+
+## Create a new variable with `mutate`
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  mutate(little_ones = children + babies) |>
+  select(children, babies, little_ones) |>
+  arrange(desc(little_ones)) # This sorts in descending order. See the big things!
+```
+
+## More mutating
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  mutate(little_ones = children + babies) |>
+  count(hotel, little_ones) |>
+  mutate(prop = n / sum(n))
+```
+
+## Summarizing
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  summarize(mean_adr = mean(adr))
+```
+
+- That shrinks the dataframe to one row!
+- Don't forget to name the new variable (here `mean_adr`)
+- You can use any function you can apply to a vector!  
+  (Sometimes you may need to write your own one.)
+
+:::{.aside}
+In hoteling, ADR is the average daily rate, the average daily rental income per paid occupied room. A performce indicator.
+:::
+
+
+## Grouped operations {.smaller}
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  group_by(hotel) |>
+  summarise(mean_adr = mean(adr))
+```
+
+Look at the grouping attributes:
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  group_by(hotel)
+```
+
+
+## Grouping, summarizing, visualizing {.smaller}
+
+```{r} 
+#| echo: true
+#| output-location: fragment
+hotels |>
+  group_by(hotel, arrival_date_week_number) |>
+  summarise(mean_adr = mean(adr)) |>
+  ggplot(aes(x = arrival_date_week_number, y = mean_adr, color = hotel)) +
+  geom_line()
+```
+
+
+## Grouping alternative {.smaller}
+
+Instead of a `group_by(...)` you can also use the `.by = ...` argument in `summarize` (or `mutate`) 
+
+```{r} 
+#| echo: true
+hotels |>
+  summarise(mean_adr = mean(adr), .by = c(hotel, arrival_date_week_number)) |>
+  ggplot(aes(x = arrival_date_week_number, y = mean_adr, color = hotel)) +
+  geom_line()
+```
+
+# Where to find help
+
+## Resources {.smaller}
+
+* For systemic understanding: Learning resources linked in the syllabus
+  * R for Data Science
+  * Python Data Science Handbook
+* For quick overview to get inspiration
+  * Cheatsheets (find some in RStudio -> Help, others by google)
+    * ggplot2 Cheatsheet
+    * dplyr Cheatsheet
+* For detailed help with a function 
+  * Help file of the function `?FUNCTION-NAME`, or search box in Help tab
+  * Reference page on the package webpage
+* Talk to ChatGPT? *Does it work?*
+  
+
+# More under the hood: Names vectors, Indexing
+
+## Named vectors
+
+All types of vectors can be named upon creation
+```{r}
+#| echo: true
+#| output-location: fragment
+c(Num1 = 4, Second = 7, Last = 8)
+```
+
+. . . 
+
+or names can be set afterward.
+```{r}
+#| echo: true
+#| output-location: fragment
+x <- 1:4
+y <- set_names(x, c("a", "b", "c", "d"))
+y
+```
+
+. . . 
+
+Named vectors can be used for subsetting.
+```{r}
+#| echo: true
+#| output-location: fragment
+y[c("b", "d")]
+```
+
+## Reminder: Indexing and vectorized thinking {.smaller}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+x <- set_names(1:10, LETTERS[1:10])
+x
+```
+
+. . . 
+
+```{r}
+#| echo: true
+#| output-location: fragment
+x[c(4, 2, 1, 1, 1, 1, 4, 1, 5)]
+```
+
+. . . 
+
+Removing with negative index numbers.
+```{r}
+#| echo: true
+#| output-location: fragment
+x[c(-3, -5, -2)]
+```
+
+. . . 
+
+Mixing negative and positive numbers does not work!
+
+```R
+x[c(-3, 1)] # Will throw an error
+```
+
+## R objects can have attributes {.smaller}
+
+In a named vector, the names are an attribute.
+
+```{r}
+#| echo: true
+x
+attributes(x)
+```
+
+. . . 
+
+Attributes can be assigned freely.
+
+```{r}
+#| echo: true
+#| output-location: fragment
+attr(x, "SayHi") <- "Hi"
+attr(x, "SayBye") <- "Bye"
+attributes(x)
+```
+
+
+## Attributes in data structures {.scrollable}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+library(nycflights13)
+attributes(airports)
+```
+
+## Three important attributes {.smaller}
+
+- **Names** are used to name element of a vector, also works for lists and therefore also dataframes (lists of atomic vectors of the same length)
+- **Dimensions** (`dim()`) is a short numeric vector making a vector behave as a matrix or a higher dimensional array. A vector `1:6` together with `dim` being `c(2,3)` is a matrix with 2 rows and 3 columns  
+$\begin{bmatrix} 1 & 3 & 5 \\ 2 & 4 & 6 \end{bmatrix}$
+- **Class** is used to implement the S3 object oriented system. We don't need to know the details here. The class system makes it for example possible that the same function, e.g. `print()` behaves differently for objects of a different class.
+
+**Class** plays a role in specifying *augmented vectors* like factors, dates, date-times, or tibbles. 
+
+# Augmented vectors: Factors and Dates
+
+## Factors {.smaller}
+
+R uses factors to handle **categorical** variables
+
+```{r}
+#| echo: true
+#| output-location: fragment
+x <- factor(c("BS", "MS", "PhD", "MS", "BS", "BS"))
+x
+```
+
+. . .
+
+Technically, a factor is vector of integers with a `levels` attribute which specifies the categories for the integers. 
+
+```{r}
+#| echo: true
+typeof(x)
+as.integer(x)
+attributes(x)
+```
+
+. . .
+
+The `$class` `"factor"` makes R print the level of each element of the vector instead of the underlying integer! 
+
+## Factors for data visualization {.smaller}
+
+We manipulate factors with functions from the [`forcats`](https://forcats.tidyverse.org/) package of the tidyverse core. 
+
+::: {.panel-tabset}
+
+#### Plot
+
+```{r}
+#| echo: true
+#| fig-height: 4
+#| fig-width: 7
+mpg |> ggplot(aes(y = manufacturer)) + geom_bar()
+```
+
+#### Reverse
+
+```{r}
+#| echo: true
+#| fig-height: 4
+#| fig-width: 7
+mpg |> ggplot(aes(y = fct_rev(manufacturer))) + geom_bar()
+```
+
+#### Order by frequency
+
+```{r}
+#| echo: true
+#| fig-height: 4
+#| fig-width: 7
+mpg |> ggplot(aes(y = fct_rev(fct_infreq(manufacturer)))) + geom_bar()
+```
+
+#### Regroup
+
+```{r}
+#| echo: true
+#| fig-height: 4
+#| fig-width: 7
+mpg |>
+  ggplot(aes(
+    y = fct_other(manufacturer, keep = c("dodge", "toyota", "volkswagen"))
+  )) +
+  geom_bar()
+```
+
+:::
+
+## Dates {.smaller}
+:::: {.columns}
+
+::: {.column width='60%'}
+- ISO 8601 standard for dates: **YYYY-MM-DD**. 
+- Dates in R are numeric vectors that represent the number of days since 1 January 1970.
+
+```{r}
+#| echo: true
+y <- as.Date("2025-01-01")
+y
+typeof(y)
+attributes(y)
+as.double(y)
+as.double(as.Date("1970-01-01"))
+as.double(as.Date("1969-01-01"))
+```
+
+:::
+
+::: {.column width='40%'}
+![](img/perfect_date.jpg)
+
+Sources Cartoons: [Reddit](https://www.reddit.com/r/puns/comments/83e7xi/whats_your_idea_of_a_perfect_date/) [xkcd](https://xkcd.com/1179/)
+:::
+
+::::
+
+![](https://imgs.xkcd.com/comics/iso_8601_2x.png){.absolute .fragment bottom="110" right="130" width="500"}
+
+
+## How many days are you old?
+
+. . .
+
+```{r}
+#| echo: true
+Sys.Date() - as.Date("1976-01-16")
+```
+
+`Sys.Date()` gives the current day your computer is set to
+
+Test yours and don't miss your 10.000th day on earth (if you are under 27 years old now)!
+
+```{webr-r}
+Sys.Date() - as.Date("1997-01-01")
+```
+
+
+## Date-times  {.smaller}
+
+For date-time manipulation use [`lubridate`](https://lubridate.tidyverse.org/) form the tidyverse. 
+
+```{r}
+#| echo: true
+x <- lubridate::ymd_hm("1970-01-01 01:00")
+# Note: Instead of loading package `pack` to use its function `func` you can also write `pack::func`
+# This works when the package is installed even when not loaded.
+x
+attributes(x)
+as.double(x)
+```
+
+UTC: Coordinated Universal Time. We are in the UTC+1 timezone.    
+POSIXct: Portable Operating System Interface, calendar time. Stores date and time in seconds with the number of seconds beginning at 1 January 1970. 
+
+
+## How many seconds are you old? 
+
+```{r}
+#| echo: true
+as.double(lubridate::now()) -
+  as.double(lubridate::ymd_hm("1976-01-16_12:04"))
+```
+
+
+
+
+## Summary on Factors and Dates {.smaller}
+
+- Factors
+    - Can be used to create categorical variables specified by the `levels`-attribute
+    - Often used to specify the order of categories. Particularly useful for graphics!
+    - Can be manipulated with functions from the `forcats` package
+    - Often it is sufficient to work with character vectors. 
+- Dates and times
+    - Do not shy away from learning to work with dates and times properly!
+    - Tedious to get right when the date format from the data is messy, but it is worth it!
+    - Use the `lubridate` package. Usually you just need one command to convert a character vector to a date or date-time vector, but you have to customize correctly. 
+
+Read the chapter of factors and dates in [R for Data Science](https://r4ds.hadley.nz)

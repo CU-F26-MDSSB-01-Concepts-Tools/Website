@@ -1,0 +1,1163 @@
+---
+title: "W#05: Descriptive Statistics, Exploratory Data Analysis"
+author: Jan Lorenz
+format: 
+  revealjs: 
+    toc: true
+    toc-depth: 1
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: true
+    logo: img/ConstructorUniversity.png
+    footer: "MDSSB-DSCO-02: Data Science Concepts"
+bibliography: "/home/janlo/Documents/literature/litlorenz_zot.bib"
+editor_options: 
+  chunk_output_type: console
+---
+
+## Preliminaries {.smaller}
+
+In this lectures we will use these packages and datasets. You need to do this code in the Console to download data and play with some of the code in this lecture.
+
+```{r}
+#| echo: true
+library(tidyverse)
+library(palmerpenguins)
+galton <- read_csv("galton.csv")
+viertel <- read_csv("Viertelfest.csv")
+```
+
+The datasets used can be downloaded from:   
+<https://github.com/CU-F25-MDSSB-01-Concepts-Tools/Website/tree/main/lectures>
+
+
+# Descriptive Statistics 
+
+
+## Descriptive vs. Inferential Statistics {background-color="khaki"}
+
+- The process of using and analyzing [**summary statistics**]{style='color:red;'}
+  - Solely concerned with properties of the **observed data**.
+
+- Distinct from [**inferential statistics**]{style='color:red;'}: 
+  - Inference of properties of an underlying distribution given sampled observations from a larger population. 
+  
+  
+**Summary Statistics** are used to summarize a set of observations to communicate the largest amount of information as simple as possible. 
+
+
+## Summary statistics {background-color="khaki"}
+
+*Univariate* (for one variable)
+
+- Measures of **location**, or *central tendency*
+- Measures of statistical **dispersion** 
+- Measure of the **shape** of the distribution like skewness or kurtosis
+
+*Bivariate* (for two variables)
+
+- Measures of statistical dependence or **correlation**
+
+# Measures of central tendency 
+
+## Measures of central tendency {.smaller background-color="aquamarine"}
+
+Goal: For a sequence of numerical observations $x_1,\dots,x_n$ we want to measure
+
+- the "typical" value.
+- a value summarizing the **location** of values on the numerical axis.
+
+Three different ways:
+
+1. **Arithmetic mean** (also *mean*, *average*): Sum of the all observations divided by the number of observations $\frac{1}{n}\sum_{i=1}^n x_i$
+2. **Median**: Assume $x_1 \leq x_2 \leq\dots\leq x_n$. Then the median is middlemost values in the sequence $x_\frac{n+1}{2}$ when $n$ odd. For $n$ even there are two middlemost values and the median is $\frac{x_\frac{n}{2} + x_\frac{n+1}{2}}{2}$
+3. **Mode**: The value that appears most often in the sequence. 
+
+
+## Measures of central tendency: Examples {.smaller background-color="aquamarine"}
+
+
+:::: {.columns}
+
+::: {.column width='50%'}
+```{r}
+#| echo: true
+#| output-location: fragment
+x <- c(1, 2, 4, 10, 300)
+mean(x)
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+median(x)
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+y <- c(-2, -2, 4, 7, 7, 7)
+mean(y)
+```
+
+
+```{r}
+#| echo: true
+#| output-location: fragment
+median(y)
+```
+
+Median of an even number of numbers: Mean of two most central numbers. 
+:::
+
+::: {.column width='50%'}
+There is no function for the *Mode* in R. 
+
+```{r}
+#| echo: true
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+Mode(y)
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+Mode(x)
+```
+
+Warning: Mode is not unique and there is no fix like for the Median. 
+:::
+
+::::
+
+
+
+
+## Philosophy of aggregation {.smaller background-color="khaki"}
+
+::: {.incremental}
+- The **mean** represents *total value* per value.   
+[Example: *per capita income* in a town is the total income per individual]{style="color:blue;"}
+- The **median** represents the value such that half of the values are lower *and* higher.    
+[In a *democracy* where each value is represented by one voter preferring it, the median is the value which is *unbeatable* by an *absolute majority*. Half of the people prefer higher the other half lower values. ([Median voter model](https://en.wikipedia.org/wiki/Median_voter_theorem))]{style='color:blue;'}
+- The **mode** represents the most common value.  
+[In a *democracy*, the mode represents the winner of a *plurality vote* where each value runs as a candidate and the winner is the one with the most votes.]{style='color:blue;'}
+:::
+
+## Mean, Median, Mode properties  {.smaller background-color="aquamarine"}
+
+**Do they deliver one unambiguous answer for any sequence?**
+
+. . . 
+
+Mean and median, yes.   
+The mode has no rules for a tie. 
+
+. . . 
+
+**Can they by generalized to variables with ordered or even unordered categories?**
+
+. . .
+
+Mean: No.   
+Median: For ordered categories (except when even number and the two middlemost are not the same)   
+Mode: For any categorical variable.
+
+. . .
+
+**Is the measured value also always in the data?**
+
+. . . 
+
+Mean: No.   
+Median: Yes, for sequences of odd length.   
+Mode: Yes. 
+
+
+## Generalized means^[Also called *power mean* or *$p$-mean*. ] {.smaller background-color="aquamarine"}
+
+For $x_1, \dots, x_n > 0$ and $p\in \mathbb{R}_{\neq 0}$ the generalized mean is
+
+$$M_p(x_1, \dots, x_n) = (\frac{1}{n}\sum_{i=1}^n x_i^p)^\frac{1}{p}$$
+
+For $p = 0$ it is $M_0(x_1, \dots, x_n) = (\prod_{i=1}^n x_i)^\frac{1}{n}$. 
+
+$M_1$ is the arithmetic mean. $M_0$ is called the **geometric mean**. $M_{-1}$ the **harmonic mean**. 
+
+Note: Generalized means are often only reasonable when all values are positive $x_i > 0$.
+
+::: aside
+$M_0$ can also be expressed as the exponential ($\exp(x) = e^x$) of the mean of the the $\log$'s of the $x_i$'s: $\exp(\log((\prod_{i=1}^n x_i)^\frac{1}{n})) = \exp(\frac{1}{n}\sum_{i=1}^n\log(x_i))$. 
+:::
+
+## Box-Cox transformation function  {.smaller background-color="aquamarine"}
+
+For $p \in \mathbb{R}$: $f(x) = \begin{cases}\frac{x^p - 1}{p} & \text{for $p\neq 0$} \\ \log(x) & \text{for $p= 0$}\end{cases}$
+
+::: {.columns}
+
+::: {.column width='60%' .smaller}
+The $p$-mean is
+
+$$M_p(x) = f^{-1}(\frac{1}{n}\sum_{i=1}^n f(x_i))$$
+
+with $x = [x_1, \dots, x_n]$. $f^{-1}$ is the **inverse** of $f$.
+
+
+- **Inverse** means $f^-1(f(x)) = x =f(f^-1(x))$.  
+- Box-Cox is a common transformation in data pre-processing to make the variable's (arithmetic) mean being a "good" measure of central tendency.
+:::
+
+::: {.column width='40%'}
+```{r}
+#| fig-width: 4
+#| echo: true
+#| code-fold: true
+pfun <- function(x, p) (x^p - 1) / p
+ipfun <- function(x, p) (p * x + 1)^(1 / p)
+ggplot() +
+  geom_function(fun = pfun, args = list(p = 1), color = "red", size = 1.5) +
+  geom_function(fun = pfun, args = list(p = 2), color = "red", alpha = 0.6) +
+  geom_function(fun = pfun, args = list(p = 3), color = "red", alpha = 0.3) +
+  geom_function(fun = pfun, args = list(p = 1 / 2), color = "red3") +
+  geom_function(fun = pfun, args = list(p = 1 / 3), color = "red4") +
+  geom_function(fun = pfun, args = list(p = -1), color = "blue", size = 1.5) +
+  geom_function(fun = pfun, args = list(p = -1 / 2), color = "blue3") +
+  geom_function(fun = pfun, args = list(p = -1 / 3), color = "blue4") +
+  geom_function(fun = pfun, args = list(p = -2), color = "blue", alpha = 0.6) +
+  geom_function(fun = pfun, args = list(p = -3), color = "blue", alpha = 0.3) +
+  geom_function(fun = log, color = "black", size = 1.5) +
+  coord_fixed() +
+  xlim(c(0.01, 4)) +
+  ylim(c(-2, 2)) +
+  labs(x = "x", y = "f(x)", title = "p = -1 (blue), 0 (black), +1 (red)") +
+  theme(title = element_text(size = 2)) +
+  theme_minimal()
+```
+:::
+
+:::
+
+
+
+# Measures of central tendency and the Wisdom of the Crowd 
+
+## Application: The Wisdom of the Crowd {.smaller background-color="khaki"}
+
+::: {.columns}
+
+::: {.column width='80%'}
+- **Phenomenon:** When collective estimate of a diverse group of independent individuals is better than that of single experts. 
+- The classical wisdom-of-the-crowds finding is about **point estimation** of a continuous quantity.
+- Popularized by James Surowiecki (2004).
+- The opening anecdote is about Francis Galton's^[Galton (1822-1911) was a half-cousin to Charles Darwin and one of the founding fathers of statistics. He also was a scientific racist, see <https://twitter.com/kareem_carr/status/1575506343401775104?s=20&t=8T5TzrayAWNShmOSzJgCJQ.>.] surprise in 1907 that the crowd at a county fair accurately guessed the weight of an ox's meat when their individual guesses were averaged.
+:::
+
+::: {.column width='20%'}
+
+![](https://upload.wikimedia.org/wikipedia/en/9/95/Wisecrowds.jpg) 
+
+![](https://upload.wikimedia.org/wikipedia/commons/a/ae/Sir_Francis_Galton_by_Charles_Wellington_Furse.jpg){width=150}  
+:::
+
+:::
+
+## Galton's data^[Kenneth Wallis dug out the data from Galton's notebook and put it here <https://warwick.ac.uk/fac/soc/economics/staff/kfwallis/publications/galton_data.xlsx>] {.smaller background-color="khaki"}
+
+*What is the weight of the meat of this ox?*
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+galton |>
+  ggplot(aes(Estimate)) +
+  geom_histogram(binwidth = 5) +
+  geom_vline(xintercept = 1198, color = "green") +
+  geom_vline(xintercept = mean(galton$Estimate), color = "red") +
+  geom_vline(xintercept = median(galton$Estimate), color = "blue") +
+  geom_vline(xintercept = Mode(galton$Estimate), color = "purple")
+```
+
+`r nrow(galton)` estimates, [true value]{style="color:green;"} 1198, [mean]{style="color:red;"} `r round(mean((galton$Estimate)), digits=1)`, [median]{style="color:blue;"} `r median((galton$Estimate))`, [mode]{style="color:purple;"} `r Mode((galton$Estimate))`
+
+
+## Viertelfest Bremen 2008^[Data collected as additional guessing game at the Lottery "Haste mal 'nen Euro?", data provided by Jan Lorenz  <https://docs.google.com/spreadsheets/d/1HiYhUrYrsbeybJ10mwsae_hQCawZlUQFOOZzcugXzgA/edit#gid=0>] {.smaller background-color="aquamarine"}
+
+*How many lots will be sold by the end of the festival?*
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+viertel |>
+  ggplot(aes(
+    `Schätzung`
+  )) +
+  geom_histogram() +
+  geom_vline(xintercept = 10788, color = "green") +
+  geom_vline(xintercept = mean(viertel$Schätzung), color = "red") +
+  geom_vline(xintercept = median(viertel$Schätzung), color = "blue") +
+  geom_vline(xintercept = Mode(viertel$Schätzung), color = "purple")
+```
+
+`r nrow(viertel)` estimates, the maximal value is `r format(max(viertel$Schätzung))`!  We should filter ... 
+
+
+## Viertelfest Bremen 2008 {.smaller background-color="khaki"}
+
+*How many lots will be sold by the end of the festival?*
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+viertel |>
+  filter(Schätzung < 100000) |>
+  ggplot(aes(`Schätzung`)) +
+  geom_histogram(binwidth = 500) +
+  geom_vline(xintercept = 10788, color = "green") +
+  geom_vline(xintercept = mean(viertel$Schätzung), color = "red") +
+  geom_vline(xintercept = median(viertel$Schätzung), color = "blue") +
+  geom_vline(xintercept = Mode(viertel$Schätzung), color = "purple") +
+  geom_vline(xintercept = exp(mean(log(viertel$Schätzung))), color = "orange")
+```
+
+`r nrow(viertel)` estimates, [true value]{style="color:green;"} 10788, [mean]{style="color:red;"} `r format(round(mean(viertel$Schätzung), digits=1))`, [median]{style="color:blue;"} `r median(viertel$Schätzung)`, [mode]{style="color:purple;"} `r format(Mode(viertel$Schätzung))`,   
+[geometric mean]{style="color:orange;"} `r format(round(exp(mean(log(viertel$Schätzung))), digits=1))`
+
+
+## $\log_{10}$ transformation Viertelfest {.smaller background-color="khaki"}
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+viertel |>
+  mutate(log10Est = log10(Schätzung)) |>
+  ggplot(aes(log10Est)) +
+  geom_histogram(binwidth = 0.05) +
+  geom_vline(xintercept = log10(10788), color = "green") +
+  geom_vline(xintercept = log10(mean(viertel$Schätzung)), color = "red") +
+  geom_vline(xintercept = log10(median(viertel$Schätzung)), color = "blue") +
+  geom_vline(xintercept = log10(Mode(viertel$Schätzung)), color = "purple") +
+  geom_vline(xintercept = mean(log10(viertel$Schätzung)), color = "orange")
+```
+
+`r nrow(viertel)` estimates, [true value]{style="color:green;"} 10788, [mean]{style="color:red;"} `r format(round(mean(viertel$Schätzung), digits=1))`, [median]{style="color:blue;"} `r median(viertel$Schätzung)`, [mode]{style="color:purple;"} `r format(Mode(viertel$Schätzung))`,   
+[geometric mean]{style="color:orange;"} `r format(round(exp(mean(log(viertel$Schätzung))), digits=1))`
+
+
+## Wisdom of the crowd insights {.smaller background-color="khaki"}
+
+::: {.incremental}
+- In Galton's sample the different measures do not make a big difference
+- In the Viertelfest data the arithmetic mean performs very bad!
+- The mean is *vulnerable to extreme values*.   
+Quoting Galton on the mean as a democratic aggregation function:   
+*"The mean gives voting power to the cranks in proportion to their crankiness."*
+- The mode tends to be on *focal* values as round numbers (10,000). In Galton's data this is not so pronounced beause estimators used several weight units (which Galton converted to pounds). 
+- **How to choose a measure to aggregate the wisdom?**
+  - By the nature of the estimate problem? Is the scale mostly clear? (Are we in the hundreds, thousands, ten thousands, ...)
+  - By the nature of the distribution?
+  - There is no real insurance against a systematic bias in the population.
+:::
+  
+
+# Measures of dispersion
+
+## Measures of dispersion^[Also called *variability*, *scatter*, or *spread*.] {.smaller background-color="aquamarine"}
+
+Goal: We want to measure 
+
+- How spread out values are around the central tendency. 
+- How stretched or squeezed is the distribution?
+
+**Variance** is the mean of the squared deviation from the mean:  $\text{Var}(x) = \frac{1}{n}\sum_{i=1}^n(x_i - \mu)^2$ where $\mu$ (mu) is the mean. 
+
+. . .
+
+**Standard deviation** is the square root of the variance $\text{SD}(x) = \sqrt{\text{Var}(x)}$. 
+
+The standard deviation is often denoted $\sigma$ (sigma) and the variance $\sigma^2$.
+
+. . .
+
+**Mean absolute deviation** (MAD) is the mean of the absolute deviation from the mean:  $\text{MAD}(x) = \frac{1}{n}\sum_{i=1}^n|x_i - \mu|$.
+
+. . .
+
+[Warning:]{style='color:red;'} MAD can also be **Median absolute deviation from the median**.
+
+**Range** is the difference of the maximal and the minimal value $\max(x) - \min(x)$.
+
+
+## Examples of measures of dispersion {.smaller background-color="khaki"}
+
+:::: {.columns}
+
+::: {.column width='50%'}
+```{r}
+#| echo: true
+var(galton$Estimate)
+sd(galton$Estimate)
+mad(galton$Estimate) # Warning: median absolute deviation is default
+range(galton$Estimate) # Oh, range gives us a vector of min and max. So, we diff
+diff(range(galton$Estimate))
+```
+:::
+
+::: {.column width='50%' .fragment}
+```{r}
+#| echo: true
+var(viertel$Schätzung)
+sd(viertel$Schätzung)
+mad(viertel$Schätzung) # Warning: median absolute deviation is default
+range(viertel$Schätzung) # Oh, range gives us a vector of min and max. So, we diff
+diff(range(viertel$Schätzung))
+```
+
+:::
+
+::::
+
+:::{.aside}
+Variance (and standard deviation) in statistics is usually computed with $\frac{1}{n-1}$ instead of $\frac{1}{n}$ to provide an unbiased estimator of the potentially underlying population variance. We omit more detail here.  
+:::
+
+## Normalization of variables {.smaller background-color="aquamarine"}
+
+In Machine Learning, Statistics, and Descripitve Analysis we often want to bring different variables to **common scales**. We want to make the *dispersion* and the *location* comparable.  
+
+To that end, some linear transformation are common:
+
+- Standardization
+- Min-max Feature Scaling
+
+When we normalize a variable we receive a dimensionless variable. It does not have a unit.   
+Example: We measure height in $m$ meters. When we standardize are scale by min-max the new variable has no unit. Mathematically it cancels out.
+
+ 
+
+## Standardization {.smaller background-color="aquamarine"}
+
+Variables are *standardized* by subtracting their mean and then dividing by their standard deviations. 
+
+A value from a standardized variable is called a **standard score** or **z-score**. 
+
+$z_i = \frac{x_i - \mu}{\sigma}$ 
+
+where $\mu$ is the mean and $\sigma$ the standard deviation of the vector $x$.
+
+- This is a *shift-scale transformation*. We shift each value by the mean and scale by the standard deviation. 
+- A standard score $z_i$ represents how many standard deviations $x_i$ is away from the mean of $x$.
+- The standard scores $z_i$'s have a mean of zero and a standard deviation of one (by construction). 
+
+
+## Min-max Feature Scaling  {.smaller background-color="aquamarine"}
+
+When we want to make the values of the scaled variable to range from zero to one. 
+
+The transformed variable values $y_i$'s are
+
+$$y_i = \frac{x_i - \min(x)}{\max(x) - \min(x)}.$$
+
+We shift by the minimum $\min(x)$ and scale by the range $\max(x) - \min(x)$.
+
+- What are mean and standard deviation of $y$? [We do not know, but less than one.]{.fragment}
+- Caution: The new values are heavily dependent of the actual values of $\min$ and $\max$! 
+
+
+# Data Overview with `
+summary
+`
+
+## Data Sets 1a and 1b: Widsom of Crowd {.smaller}
+
+1a: Ox weigh guessing competition 1907 (collected by **Galton**)
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+galton |> ggplot(aes(Estimate)) + geom_histogram(binwidth = 5)
+```
+
+1b: **Viertelfest** "guess the number of sold lots"-competition 2009
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+viertel |>
+  filter(Schätzung < 100000) |>
+  ggplot(aes(`Schätzung`)) +
+  geom_histogram(binwidth = 500)
+```
+
+## Data Set 2: Palmer Penguins {.scrollable .smaller}
+
+[Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/)
+
+Chinstrap, Gentoo, and Adélie Penguins
+
+![](https://upload.wikimedia.org/wikipedia/commons/0/08/South_Shetland-2016-Deception_Island%E2%80%93Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg){height=200}
+![](https://upload.wikimedia.org/wikipedia/commons/0/00/Brown_Bluff-2016-Tabarin_Peninsula%E2%80%93Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg){height=200}
+![](https://upload.wikimedia.org/wikipedia/commons/e/e3/Hope_Bay-2016-Trinity_Peninsula%E2%80%93Ad%C3%A9lie_penguin_%28Pygoscelis_adeliae%29_04.jpg){height=200}
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){height=200}  
+
+```{r}
+penguins
+```
+
+## `summary` from base R {.smaller}
+
+:::: {.columns}
+
+::: {.column width='65%'}
+Shows summary statistics for the values in a vector
+
+```{r}
+#| echo: true
+summary(galton$Estimate)
+```
+```{r}
+#| echo: true
+summary(viertel$Schätzung)
+```
+
+Or for all columns in a data frame
+
+```{r}
+#| echo: true
+summary(penguins)
+```
+
+:::
+
+::: {.column width='35%'}
+
+[Question]{style='color:red;'}
+
+What does   
+`1 st Qu.` and   
+`3 rd Qu.` mean?
+
+:::
+
+::::
+
+# Quantiles
+
+## Quantiles {.smaller  background-color="khaki"}
+ 
+Cut points specifying intervals which contain equal amounts of values of the distribution. 
+
+**$q$-quantiles** divide numbers into $q$ intervals covering all values. 
+
+The quantiles are the cut points: For $q$ intervals there are $q-1$ cut points of interest. 
+
+- The one 2-quantile is the median
+- The three 4-quantiles are called **quartiles**
+    - `1st Qu.` is the first quartile
+    - The second quartile is the median
+    - `3rd Qu.` is the third quartile
+- 100-quantiles are called **percentiles**
+
+::: {.aside}
+We omit problems of estimating quantiles from a sample where the number of estimates does not fit to a desired partition of equal size here. 
+:::
+
+
+## 1a Galton: Quartiles {.smaller}
+
+```{r}
+#| echo: true
+# Min, 3 Quartiles, Max
+quantile(galton$Estimate, prob = seq(0, 1, by = 0.25))
+```
+
+Interpretation: What does the value at 25% mean?
+
+. . . 
+
+The 25% of all values are lower than the value. 75% are larger. 
+
+. . .
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+galton |>
+  ggplot(aes(Estimate)) +
+  geom_histogram(binwidth = 5) +
+  geom_vline(
+    xintercept = quantile(galton$Estimate, prob = seq(0, 1, by = 0.25)),
+    color = "red"
+  )
+```
+
+
+## 1a Galton: 20-quantiles {.smaller}
+
+```{r}
+#| echo: true
+# Min, 3 Quartiles, Max
+quantile(galton$Estimate, prob = seq(0, 1, by = 0.05))
+```
+```{r}
+#| echo: true
+#| fig-height: 1.5
+galton |>
+  ggplot(aes(Estimate)) +
+  geom_histogram(binwidth = 5) +
+  geom_vline(
+    xintercept = quantile(galton$Estimate, prob = seq(0, 1, by = 0.05)),
+    color = "red"
+  )
+```
+
+
+
+## 1b Viertelfest: Quartiles {.smaller}
+
+```{r}
+#| echo: true
+quantile(viertel$Schätzung, prob = seq(0, 1, by = 0.25))
+```
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+viertel |>
+  filter(Schätzung < 100000) |>
+  ggplot(aes(
+    `Schätzung`
+  )) +
+  geom_histogram(binwidth = 500) +
+  geom_vline(
+    xintercept = quantile(
+      viertel$`Schätzung`,
+      prob = seq(0, 1, by = 0.25)
+    )[1:4],
+    color = "red"
+  )
+```
+
+## 1b Viertelfest: 20-quantiles {.smaller}
+
+```{r}
+#| echo: true
+quantile(viertel$Schätzung, prob = seq(0, 1, by = 0.05))
+```
+```{r}
+#| echo: true
+#| fig-height: 1.5
+viertel |>
+  filter(Schätzung < 100000) |>
+  ggplot(aes(`Schätzung`)) +
+  geom_histogram(binwidth = 500) +
+  geom_vline(
+    xintercept = quantile(viertel$`Schätzung`, prob = seq(0, 1, by = 0.05))[
+      1:19
+    ],
+    color = "red"
+  )
+```
+
+## 2 Palmer Penguins Flipper Length: Quartiles {.smaller}
+
+```{r}
+#| echo: true
+quantile(penguins$flipper_length_mm, prob = seq(0, 1, by = 0.25), na.rm = TRUE)
+```
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+penguins |>
+  ggplot(aes(flipper_length_mm)) +
+  geom_histogram(binwidth = 1) +
+  geom_vline(
+    xintercept = quantile(
+      penguins$flipper_length_mm,
+      prob = seq(0, 1, by = 0.25),
+      na.rm = TRUE
+    ),
+    color = "red"
+  )
+```
+
+
+## 2 Palmer Penguins Flipper Length: 20-quantiles {.smaller}
+
+```{r}
+#| echo: true
+quantile(penguins$flipper_length_mm, prob = seq(0, 1, by = 0.05), na.rm = TRUE)
+```
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+penguins |>
+  ggplot(aes(flipper_length_mm)) +
+  geom_histogram(binwidth = 1) +
+  geom_vline(
+    xintercept = quantile(
+      penguins$flipper_length_mm,
+      prob = seq(0, 1, by = 0.05),
+      na.rm = TRUE
+    ),
+    color = "red"
+  )
+```
+
+
+
+## Interquartile range (IQR) {.smaller background-color="khaki"}
+
+The difference between the 1st and the 3rd quartile. Alternative **dispersion measure**.   
+The range in which the middle 50% of the values are located.
+
+Examples: 
+
+
+:::: {.columns}
+
+::: {.column width='40%'}
+
+```{r}
+#| echo: true
+# Min, 3 Quartiles, Max
+IQR(galton$Estimate)
+sd(galton$Estimate) # for comparison
+IQR(viertel$Schätzung)
+sd(viertel$Schätzung) # for comparison
+IQR(penguins$flipper_length_mm, na.rm = TRUE)
+sd(penguins$flipper_length_mm, na.rm = TRUE) # for comparison
+```
+
+:::
+
+::: {.column width='60%'}
+
+```{r}
+#| fig-height: 1.8
+q <- quantile(galton$Estimate, prob = seq(0, 1, by = 0.25))
+galton |>
+  ggplot(aes(Estimate)) +
+  geom_histogram(binwidth = 5) +
+  geom_vline(xintercept = q, color = "red") +
+  annotate(
+    "segment",
+    x = q[2],
+    xend = q[4],
+    y = 0,
+    yend = 0,
+    color = "blue",
+    size = 4
+  ) +
+  theme_grey(base_size = 20)
+```
+
+```{r}
+#| fig-height: 1.8
+q <- quantile(
+  viertel$`Schätzung`,
+  prob = seq(0, 1, by = 0.25)
+)
+viertel |>
+  filter(Schätzung < 100000) |>
+  ggplot(aes(
+    `Schätzung`
+  )) +
+  geom_histogram(binwidth = 500) +
+  geom_vline(xintercept = q[1:4], color = "red") +
+  annotate(
+    "segment",
+    x = q[2],
+    xend = q[4],
+    y = 0,
+    yend = 0,
+    color = "blue",
+    size = 4
+  ) +
+  theme_grey(base_size = 20)
+```
+
+```{r}
+#| fig-height: 1.8
+q <- quantile(
+  penguins$flipper_length_mm,
+  prob = seq(0, 1, by = 0.25),
+  na.rm = TRUE
+)
+penguins |>
+  ggplot(aes(flipper_length_mm)) +
+  geom_histogram(binwidth = 1) +
+  geom_vline(xintercept = q, color = "red") +
+  annotate(
+    "segment",
+    x = q[2],
+    xend = q[4],
+    y = 0,
+    yend = 0,
+    color = "blue",
+    size = 4
+  ) +
+  theme_grey(base_size = 20)
+```
+
+:::
+
+::::
+
+
+
+## Boxplots {.smaller}
+
+A condensed visualization of a distribution showing location, spread, skewness and outliers. 
+
+```{r}
+#| echo: true
+#| fig-height: 1
+galton |> ggplot(aes(x = Estimate)) + geom_boxplot()
+```
+
+- The **box** shows the median in the middle and the other two quartiles as their borders.
+- **Whiskers**: From above the upper quartile, a distance of 1.5 times the IQR is measured out and a whisker is drawn up to the largest observed data point from the dataset that falls within this distance. Similarly, for the lower quartile. 
+- Whiskers must end at an observed data point! (So lengths can differ.) 
+- All other values outside of box and whiskers are shown as points and often called **outliers**. (There may be none.)
+
+## Boxplots vs. histograms {.smaller}
+
+- Histograms can show the shape of the distribution well, but not the summary statistics like the median.
+
+```{r}
+#| echo: true
+#| fig-height: 1
+galton |> ggplot(aes(x = Estimate)) + geom_boxplot()
+```
+
+```{r}
+#| echo: true
+#| fig-height: 2
+galton |> ggplot(aes(x = Estimate)) + geom_histogram(binwidth = 5)
+```
+
+
+
+## Boxplots vs. histograms {.smaller}
+
+- Boxplots [can not]{style='color:red;'} show the patterns of **bimodal or multimodal** distributions. 
+
+```{r}
+#| echo: true
+#| fig-height: 1
+palmerpenguins::penguins |> ggplot(aes(x = flipper_length_mm)) + geom_boxplot()
+```
+
+```{r}
+#| echo: true
+#| fig-height: 2
+palmerpenguins::penguins |>
+  ggplot(aes(x = flipper_length_mm)) +
+  geom_histogram(binwidth = 1)
+```
+
+# More Summary Statistics
+
+## Minimizing proporties of Mean and Median { background-color="aquamarine" .smaller}
+
+*Mean* minimizes the mean of squared deviations from it. No other value $a$ has a lower mean of square distances from the data points. $\frac{1}{n}\sum_{i=1}^n(x_i - a)^2$.
+
+. . .
+
+*Median* minimizes the sum of the absolute deviation. No other value $a$ has a lower mean of absolute distances from the data points. $\frac{1}{n}\sum_{i=1}^n|x_i - a|$.
+
+. . . 
+
+[**The Concept of Minimizing**]{style='color:blue;'}  
+Is central for all statisitical fitting and learning procedures! These are among the simplest examples of this concept. 
+
+## Two families of summary statistics {background-color="aquamarine" .smaller}
+
+- Measures based on **sums** (related to *mathematical moments*)
+  - Mean
+  - Standard deviation
+- Measures based on the **ordered** sequence of these observations (*order statistics*)
+  - Median (and all quantiles)
+  - Interquartile range
+  
+## A hierarchy of moments {background-color="aquamarine" .smaller}
+
+$k$th raw moment: $\frac{1}{n}\sum_i^n x_i^k$.  
+
+1. The *mean* is the *1st raw moment* (because no exponents appear in formula)
+2. The *variance* is the *2nd raw moment* the mean-shifted $x$
+3. The *3rd moment* appears in the definition of the **skewness** of $x$
+4. The *4th moment* appears in the definition of the **kurtosis** of $x$ 
+
+## Skewness {background-color="aquamarine" .smaller}
+
+The skewness of a distribution is a measure of its asymmetry.
+
+Equation: $\text{skewness} = \frac{\frac{1}{n}\sum_{i=1}^n(x_i - \mu)^3}{\left(\frac{1}{n}\sum_{i=1}^n(x_i - \mu)^2\right)^{3/2}}$
+
+- **Positive skewness**: The right tail is longer or fatter than the left tail.
+- **Negative skewness**: The left tail is longer or fatter than the right tail.
+
+![](https://upload.wikimedia.org/wikipedia/commons/c/cc/Relationship_between_mean_and_median_under_different_skewness.png)
+
+The relation of *mean* and *median* can give a hint on skewness!  
+The Viertelfest data is heavily positively skew. (The Galton data is a little bit negatively skew, but it is barely visible.)
+
+
+
+## Kurtosis {background-color="aquamarine" .smaller}
+
+The kurtosis of a distribution is a measure of the "tailedness" of the distribution. It often goes along with also higher "peakedness". 
+
+Equation: $\text{kurtosis} = \frac{\frac{1}{n}\sum_{i=1}^n(x_i - \mu)^4}{\left(\frac{1}{n}\sum_{i=1}^n(x_i - \mu)^2\right)^{2}}$
+
+- **Leptokurtic**: Fatter tails and a higher peak than the normal distribution.
+- **Platykurtic**: Thinner tails and a lower peak than the normal distribution.
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Standard_symmetric_pdfs.svg/1920px-Standard_symmetric_pdfs.svg.png){height=200}
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Standard_symmetric_pdfs_logscale.svg/1920px-Standard_symmetric_pdfs_logscale.svg.png){height=200} 
+A logarithmic y-axis shows the fatter tails!
+
+
+# Bivariate Summary Statistics
+
+## Covariance  {.smaller background-color="aquamarine"}
+
+Goal: We want to measure the joint variation in numerical observations of two variables $x_1,\dots,x_n$ and $y_1, \dots, y_n$. 
+
+**Covariance** 
+
+$\text{cov}(x,y) = \frac{1}{n}\sum_{i=1}^n(x_i - \mu_x)(y_i - \mu_y)$
+
+where $\mu_x$ and $\mu_y$ are the arithmetic means of $x$ and $y$. 
+
+. . .
+
+Note: $\text{cov}(x,x) = \frac{1}{n}\sum_{i=1}^n(x_i - \mu_x)(x_i - \mu_x) = \frac{1}{n}\sum_{i=1}^n(x_i - \mu_x)^2 = \text{Var}(x)$
+
+
+## Correlation {.smaller background-color="aquamarine"}
+
+Goal: We want to measure the linear correlation in numerical observations of two variables $x_1,\dots,x_n$ and $y_1, \dots, y_n$. 
+
+**Pearson correlation coefficient**
+$r_{xy} = \frac{\sum_{i=1}^n(x_i - \mu_x)(y_i - \mu_y)}{\sqrt{\sum_{i=1}^n(x_i - \mu_x)^2}\sqrt{\sum_{i=1}^n(y_i - \mu_y)^2}}$ 
+
+(Note: Do you are missing $\frac{1}{n} terms compared to covariance? They all cancel out!)
+
+. . . 
+
+Relation to covariance: $r_{xy} = \frac{\text{cov}(x,y)}{\sigma_x\sigma_y}$
+
+where $\sigma_x$ and $\sigma_y$ are the standard deviations of $x$ and $y$.
+
+Relation to standard scores:  
+When $x$ and $y$ are standard scores (each with mean zero and standard deviation one), then $\text{cov}(x,y) = r_{xy}$. 
+
+
+:::{.aside}
+There are other correlation coefficients which we omit here. 
+:::
+
+
+## Interpretation of correlation {.smaller}
+
+Correlation between two vectors $x$ and $y$ is "normalized". 
+
+- The maximal possible values is $r_{xy} = 1$ 
+  - $x$ and $y$ are *fully correlated*
+- The minimal values is $r_{xy} = -1$
+  - $x$ and $y$ are *anticorrelated*
+- $r_{xy} \approx 0$ mean 
+  - the variables are *uncorrelated*
+
+- $r_{xy} = r_{yx}$
+
+## Correlation matrix {.smaller}
+
+Using `corrr` from the packages `tidymodels`
+
+```{r}
+#| echo: true
+library(corrr)
+penguins |> select(-species, -island, -sex) |> correlate()
+```
+
+
+## Correlation table {.smaller}
+
+Using `correlation` from the packages `correlation`
+
+```{r}
+#| echo: true
+library(correlation)
+results <- palmerpenguins::penguins |>
+  select(-species, -island, -sex) |>
+  correlation()
+results
+```
+
+::: aside
+What do the stars mean? Statistical significance automatically added by the . We treat that later. 
+:::
+
+## Correlation visualization {.smaller}
+
+```{r}
+#| echo: true
+results %>%
+  summary(redundant = TRUE) %>%
+  plot()
+```
+
+
+
+
+
+
+
+# Exploratory Data Analysis {background-color="khaki"}
+
+## Exploratory Data Analysis {background-color="khaki" .smaller}
+
+![](img/data-science-explore.png)
+
+EDA is the systematic exploration of data using
+
+- visualization
+- transformation
+- computation of characteristic values
+- modeling
+
+
+:::{.aside}
+Computation of characteristic values: Functions like mean, median, mode, standard deviation, or interquartile range  
+Modeling: Operations like linear regression or dimensionality reduction. We haven't talked about it, but will do soon.   
+:::
+
+
+## Systematic but no standard routine {background-color="khaki"}
+
+> “There are no routine statistical questions, only questionable statistical routines.” — Sir David Cox
+
+> “Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.” — John Tukey 
+
+## Systematic but no standard routine {background-color="khaki"}
+
+- Goal of EDA: Develop understanding of your data.
+- EDA's iterative cycle
+    1. Generate questions about your data.
+    2. Search for answers by visualizing, transforming, and modelling your data.
+    3. Use what you learn to refine your questions and/or generate new questions.
+- EDA is fundamentally a *creative* process. *What could be interesting?*
+
+## Questions {background-color="khaki"}
+
+- The way to ask quality questions:
+  - Generate many questions!
+  - You cannot come up with most interesting questions when you start. 
+- There is no rule which questions to ask. These are useful
+    1. What type of **variation** occurs within my variables?  
+    (Barplots, Histograms,...)
+    2. What type of **covariation** occurs between my variables?   
+    (Scatterplots, Timelines,...)
+
+## EDA embedded in a *statistical* data science project {background-color="khaki"}
+
+1.  Stating and refining the question
+2.  **Exploring the data**
+3.  Building formal statistical models
+4.  Interpreting the results
+5.  Communicating the results
+
+:::{.aside}
+Roger D. Peng and Elizabeth Matsui.
+"The Art of Data Science." A Guide for Anyone Who Works with Data.
+Skybrude Consulting, LLC (2015).
+:::
+
+
+# Data science projects {background-color="khaki"}
+
+Outline of question-driven data work
+
+## Six types of questions {background-color="khaki" .smaller}
+
+1.  **Descriptive:** summarize a characteristic of a set of data
+2.  **Exploratory:** analyze to see if there are patterns, trends, or relationships between variables (hypothesis generating)
+3.  **Inferential:** analyze patterns, trends, or relationships in representative data from a population
+4.  **Predictive:** make predictions for individuals or groups of individuals
+5.  **Causal:** whether changing one factor will change another factor, on average, in a population
+6.  **Mechanistic:** explore "how" one factor (probably/most likely/potentially) changes another
+
+. . . 
+
+*We only did 1 and 2, so far.*
+
+:::{.aside}
+Leek, Jeffery T., and Roger D. Peng. 2015. “What Is the Question?” Science 347 (6228): 1314–15. <https://doi.org/10.1126/science.aaa6146>.
+:::
+
+
+## Descriptive Projects {background-color="khaki"}
+
+![](img/DescripitiveResearch_Dubin1969.png)
+
+::: aside
+Dubin (1969). Theory Building - A Practical Guide to the Construction and Testing of Theoretical Models
+:::
+
+
+## Data Analysis Flowchart {background-color="khaki"}
+
+![](img/DataAnalysisFlowChart_LeekPeng.jpeg){fig-align="center" height="550"}
+
+## Example: COVID-19 and Vitamin D  {background-color="khaki" .smaller}
+
+Examine
+
+::: {.incremental}
+1. **Descriptive:** the frequency of daily hospitalisations due to COVID-19 and the frequency of Vitamin D intake in a sample of people
+2. **Exploratory:** examine the relationships between taking Vitamine D supplements and COVID-19 hospitalisations in a sample of people diagnosed with COVID-19
+3.  **Inferential:** examine whether any relationship between taking Vitamin D supplements and COVID-19 hospitalisations found in the sample hold *for the population at large*
+4. **Predictive:** examine what types of people and how many will take Vitamin D supplements next year
+5. **Causal:** examine whether people with COVID-19 who were randomly assigned to take Vitamin D supplements or those who were not are hospitalised 
+6.  **Mechanistic:** examine when and *how* increased vitamin D intake leads to a reduction in the number of viral illnesses
+:::
+
+## Questions to questions  {background-color="khaki"}
+
+-   Do you have appropriate data to answer your question?
+-   Do you have information on confounding variables?
+-   Was the data you're working with collected in a way that introduces bias?
+
+:::{.aside}
+**Example**  
+I want to estimate the average number of children in households in Bremen.
+I conduct a survey at an elementary school and ask pupils how many children, including themselves, live in their house.
+Then, I take the average of the responses.
+
+- Is this a biased or an unbiased estimate of the number of children in households in Bremen?
+- If biased, will the value be an overestimate or underestimate?
+:::
+
+
+## Context Information is important! {background-color="khaki" .smaller}
+
+- Not all information is in the data!
+- Potential confounding variables you infer from general knowledge
+- Information about data collection you may receive from an accompanying report
+- Information about computed variables you may need to look up in accompanying documentation
+- Information about certain variables you may find in an accompanying **codebook**. For example the exact wording of questions in survey data. 

@@ -1,0 +1,53 @@
+---
+week: "03"
+title: "W#03"
+---
+
+## Data Import, Data Wrangling  {.unnumbered}
+
+Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.
+
+## Lecture Material
+
+Slides: [Direct Link](../lectures/W{{< meta week >}}.qmd)
+
+```{=html}
+<iframe src="https://{{< var org.name >}}.github.io/Website/lectures/W{{< meta week >}}.html" frameborder="0" width="800" height="550" style="border:1px solid black;" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+```
+
+
+Find the live recording in the [Course's Team's Recording Folder]({{< var teams.concepts.recording_folder_link >}}). 
+
+## Additional Readings and Material  
+
+The following sections in [R for Data Science](http://r4ds.hadley.nz) 
+
+ - [Ch 3: Data transformation](https://r4ds.hadley.nz/data-transform)
+ - [Ch 5: Tidy Data](https://r4ds.hadley.nz/data-tidy)
+ - [Ch 7: Data Import](https://r4ds.hadley.nz/data-import)
+
+## Achievements
+
+You 
+
+- [ ] have read in a csv-file, you can interpret the output of column type guessing, and use it to adjust and correct it for your needs if necessary
+- [ ] can take a statement with a pipe operator and translate it into a nested function call without the pipe operator (and the other way round)
+- [ ] you have used the `dplyr` functions `select`, `slice`, and `filter`
+- [ ] you understood the concept of logical indexing, vectorized logical operation (in particular AND, OR, and NOT), and how it relates to filtering data
+- [ ] you know if R or python is 0- or 1-indexed and what this means
+- [ ] you have used the `dplyr` functions `distinct`, and `arrange`
+- [ ] you understood how you use `mutate` and `summarize` to gather with the `.by =` specification (or `group_by`) to create new variables and data frames with aggregated data
+- [ ] you know about the practical importance of the special data types `factor` and `date`
+
+## Homework Projects Progress Guides
+
+Find the Repositories of your Homework Projects in the Course's GitHub-Organization's [{{< var org.name >}} > Repositories](https://github.com/orgs/{{< var org.name >}}/repositories).
+
+Project's INSTRUCTIONS you should have completed:   
+
+**Project_NYCFlights**: 1., 2., 3., **4. 5., 6.**   
+**Project_COVID19**: **1.1 and 1.2**
+
+::: {.callout-note}
+Don't panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!
+:::

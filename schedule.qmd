@@ -1,0 +1,33 @@
+---
+title: "Schedule"
+---
+
+
+# Tabular Schedule  {.unnumbered}
+
+Date format MM-DD (month-day) (09-05 is Sep, 5) 
+
+**Data Science Tools** is Thursdays. First meeting: **09-04**.   
+**Data Science Concepts** is Mondays. First meeting:  **09-08**. 
+
+| Week | Dates Concepts  | **Concepts Topics**                                | Dates Tools  | **Tools Topic**    |
+|------|--------|-------------------------------------------------------------|----------|:------------:|
+| 1    | 09-01  | *No class, Academic Opening*                                | 09-04    | R            |
+| 2    | 09-08  | W#1 [What is Data Science?](material/M01.qmd)  | 09-11    | R            |
+| 3    | 09-15  | W#2 [Data Visualization, Data Formats](material/M02.qmd) | 09-18    | R            |
+| 4    | 09-22  | W#3 [Data Import, Data Wrangling](material/M03.qmd) | 09-25    | R            |
+| 5    | 09-29  | [**Room Change!** Come to SH-229 Video Conference in South Hall from now on!]{.red} <br> W#4 [Relational Data, Math: Sets and Functions, Shift-Scale Transformation, Function Programming](material/M04.qmd)  | 10-02    | R |
+| 6    | 10-06  | W#5 [Descriptive Statistics, Exploratory Data Analysis](material/M05.qmd) | 10-09    | R            |
+| 7    | 10-13  | W#6 [Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus](material/M06.qmd) | 10-16    | R            |
+| 8    | 10-20  | W#07 [Models in Science, Linear Model, Interaction Effects, Nonlinear Models](material/M07.qmd) | 10-23    | python       |
+| 9    | 10-27  | W#08 [Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression](material/M08.qmd) | 10-30    | python |
+| 10   | 11-03  | W#09 [**Data Science Tools Final Project Check-In**](https://forms.office.com/e/75qEdyZbim) [Prediction (Building a Spam Filter), Classification and Regression with Decision Trees](material/M09.qmd) | 11-06    | python   |
+| 11   | 11-10  | W#10 [Overfitting, Clustering Algorithms](material/M10.qmd)  | 11-13    | python       |
+| 12   | 11-17  | W#11 [Collaborative Git, More Prediction Modeling, Quantifying Uncertainty, Crowd Wisdom](material/M11.qmd) | 11-20    | python  |
+| 13   | 11-24  | W#12 [Hypothesis Testing, Matrices, Probability](material/M12.qmd) | 11-27    | python   |
+| 14   | 12-01  | ***No Class*** Exam Preparation with a Mock Exam       | 12-04    | python |
+| *Extra* | 12-08  | *Q&A Session before the exam*  | |  |
+| Exam | 12-15  | **The exam takes place as an online exam** in the date range marked in the [academic calendar]({{< var link.academic-calendar >}}) Set for 14:00-16:00 |  |  |
+| Project |        | **Deadline for submission of the Final Project marked in the [academic calendar]({{< var link.academic-calendar >}})** |  |  |
+|      |        | *2026* |  |  |
+| 2nd <br> Exam | 01-27  | Those who fail the exam and those who are officially excused can sit in the second exam end of January 2026. <br> Date range marked in the [academic calendar]({{< var link.academic-calendar >}}) Set for 14:00-16:00  |   |   |
