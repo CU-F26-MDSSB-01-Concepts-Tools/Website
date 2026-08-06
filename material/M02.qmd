@@ -1,0 +1,151 @@
+---
+week: "02"
+title: "W#02"
+---
+
+## Data Visualization, Data Formats  {.unnumbered}
+
+Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself.
+
+## Lecture Material
+
+Slides: [Direct Link Part 1](https://docs.google.com/presentation/d/e/2PACX-1vTWTV9mb8L05yOeBOmJJ3N6KZSyI5WCFYsK0Z2NrnxMJhazAZGgz8vIXseN1lnOoVPllbGLRDOHajdk/pubembed?start=false&loop=false&delayms=3000)
+
+```{=html}
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTWTV9mb8L05yOeBOmJJ3N6KZSyI5WCFYsK0Z2NrnxMJhazAZGgz8vIXseN1lnOoVPllbGLRDOHajdk/pubembed?start=false&loop=false&delayms=3000" frameborder="1" width="800" height="485" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+```
+
+Slides: [Direct Link Part 2](../lectures/W{{< meta week >}}.qmd)
+
+```{=html}
+<iframe src="https://{{< var org.name >}}.github.io/Website/lectures/W{{< meta week >}}.html" frameborder="0" width="800" height="550" style="border:1px solid black;" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+```
+
+
+Find the live recording in the [Course's Team's Recording Folder]({{< var teams.concepts.recording_folder_link >}}). 
+
+## Additional Readings and Material  
+
+- ggplot: The following sections in [R for Data Science](http://r4ds.hadley.nz) 
+    - [Ch 1: Data Visualization](https://r4ds.hadley.nz/data-visualize)
+    - If you want to go deeper already now, chapter [Ch 9: Layers](https://r4ds.hadley.nz/layers)
+
+
+## Achievements
+You  
+
+- [ ] have understood the *data science process*, in particular you can describe with examples what is understood as *data wrangling* and *data exploration*, and you can describe two different purposes of data visualization in the data science process
+- [ ] have identified and can explain when a pie chart is a bad visualization (when the pieces do not add up to 100%) and when a truncated y-axis is a bad visualization (when it is used to make a small difference look big).
+- [ ] have understood the basic idea of the grammar of graphics and can explain what the role of a mapping and and geom is
+- [ ] have made a bar chart, a scatter plot, and a line plot with ggplot
+- [ ] know how many rows and columns an $m\times n$ data frame has
+- [ ] can explain the basic data types, in particular `character`, `logical`, and `double` 
+- [ ] know what coercion of data is (what happens when different data types are combined in a vector)
+- [ ] have understood the concept of the tidy data format and can argue why a certain form of data representation is more or less tidy
+- [ ] made a data frame longer and wider 
+
+## Homework Projects Progress Guides
+
+Find the Repositories of your Homework Projects in the Course's GitHub-Organization's [{{< var org.name >}} > Repositories](https://github.com/orgs/{{< var org.name >}}/repositories).
+
+**Project setup:** Follow the HOW-TO in your project repositry. Also: *Watch the first part of the Recording of Data Science Concepts* to see how the process of cloning the repository, previewing the report, and committing and pushing work back to GitHub looks. 
+
+Project's INSTRUCTIONS you should have completed:   
+
+**Project_NYCFlights**: 1., **2., 3.**
+
+::: {.callout-note}
+Don't panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!
+:::
+
+## Questions on Coercion
+
+What happens when you combine different data types in a vector? 
+
+### What does this return?
+
+```r 
+c(TRUE, 1)
+``` 
+
+1. Characters `"TRUE" "1"`
+2. Numericals `1 1`
+3. Logicals  `TRUE, TRUE`
+4. Numericals `0 1`
+
+```{r}
+#| echo: false
+
+library(checkdown)
+check_question(
+  2,
+  options = c(1, 2, 3, 4),
+  type = "radio"
+)
+```
+
+### What does this return?
+
+```r 
+c("1", FALSE)
+``` 
+
+1. Characters `"1" "FALSE`
+2. Numericals `1 0`
+3. Logicals  `TRUE, FALSE`
+4. Numericals `"FALSE" "FALSE"`
+
+```{r}
+#| echo: false
+
+library(checkdown)
+check_question(
+  1,
+  options = c(1, 2, 3, 4),
+  type = "radio"
+)
+```
+
+### What does this return?
+
+```r 
+1 + TRUE
+``` 
+
+1. ***Error***
+2. `1`
+3. `2`
+4. `TRUE`
+
+```{r}
+#| echo: false
+
+library(checkdown)
+check_question(
+  3,
+  options = c(1, 2, 3, 4),
+  type = "radio"
+)
+```
+
+### What does this return?
+
+```r 
+1 + "TRUE"
+``` 
+
+1. ***Error***
+2. `1`
+3. `2`
+4. `TRUE`
+
+```{r}
+#| echo: false
+
+library(checkdown)
+check_question(
+  1,
+  options = c(1, 2, 3, 4),
+  type = "radio"
+)
+```

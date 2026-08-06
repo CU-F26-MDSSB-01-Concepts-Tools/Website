@@ -1,0 +1,57 @@
+---
+week: "06"
+title: "W#06"
+---
+
+## Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus {.unnumbered}
+
+Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.
+
+## Lecture Material
+
+Slides: [Direct Link](../lectures/W{{< meta week >}}.qmd)
+
+```{=html}
+<iframe src="https://{{< var org.name >}}.github.io/Website/lectures/W{{< meta week >}}.html" frameborder="0" width="800" height="550" style="border:1px solid black;" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+```
+
+
+Find the live recording in the [Course's Team's Recording Folder]({{< var teams.concepts.recording_folder_link >}}). 
+
+## Additional Readings and Material  
+
+For more mathematical details about PCA read Chapter 12.2 in [An Introduction to Statistical Learning](https://www.statlearning.com/). You can read the PDF for R to have the examples coded in R. The content is largely the same when you read the python version. 
+
+
+## Achievements
+
+You
+
+- [ ] you can create and interpret a principal component analysis, in particular you can 
+    - look at the principle components, 
+    - the data in PCA coordinates, and 
+    - the explained variance of the principle components 
+    
+    and relate them to each other
+- [ ] can handle computations with exponents and logarithms
+- [ ] understood why logarithms appear mostly as the natural logarithm (with base $e = 2.718...$) or the logarithm with base 10
+- [ ] can interpret the numbers in a vector after a $\log_{10}$ transformation
+- [ ] can operationalize the concept of differentiation and integration of calculus to data science operations, e.g. with time series data:
+    - You can visualize on paper the ideas that 
+        - the derivative represents the slope of a function at a certain $x$-value, and 
+        - the integral represents the area under the curve of a function from $x=0$ up to a certain $x$-value.
+    - With time series data you can compute the change and the cumulative sum of a variable over time.
+- [ ] know how the fundamental theorem of calculus relates the derivative and the integral of a function and how you can show it with data.
+
+## Homework Projects Progress Guides
+
+Find the Repositories of your Homework Projects in the Course's GitHub-Organization's [{{< var org.name >}} > Repositories](https://github.com/orgs/{{< var org.name >}}/repositories).
+
+Project's INSTRUCTIONS you should have completed:   
+
+**Project_NYCFlights**: 1., 2., 3., 4. 5., 6., 7.    
+**Project_COVID19**: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, **2.2** (Make a PCA!)
+
+::: {.callout-note}
+Don't panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!
+:::

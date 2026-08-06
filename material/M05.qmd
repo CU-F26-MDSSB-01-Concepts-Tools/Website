@@ -1,0 +1,54 @@
+---
+week: "05"
+title: "W#05"
+---
+
+## Descriptive Statistics, Exploratory Data Analysis {.unnumbered}
+
+Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.
+
+## Lecture Material
+
+Slides: [Direct Link](../lectures/W{{< meta week >}}.qmd)
+
+```{=html}
+<iframe src="https://{{< var org.name >}}.github.io/Website/lectures/W{{< meta week >}}.html" frameborder="0" width="800" height="550" style="border:1px solid black;" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+```
+
+
+Find the live recording in the [Course's Team's Recording Folder]({{< var teams.concepts.recording_folder_link >}}). 
+
+## Additional Readings and Material  
+
+Leek, Jeffery T., and Peng, Roger D. 2015. “What Is the Question?” Science 347 (6228): 1314–15. <https://doi.org/10.1126/science.aaa6146>.
+
+Read the following sections in [R for Data Science](http://r4ds.hadley.nz) 
+
+- [Ch 10: Exploratory Data Analysis](https://r4ds.hadley.nz/eda)
+
+
+## Achievements
+
+You
+
+- [ ] can compute and interpret the mean, median, variance, and standard deviation of a vector of numbers
+- [ ] can create and interpret histogram plots
+- [ ] can compute and interpret quantiles of a data set
+- [ ] can create and interpret boxplots
+- [ ] can compute and interpret the correlation between two vectors of numbers
+- [ ] you have done a first exploratory data analysis and have a first feeling of why it is not a fully standardized process
+- [ ] you can classify data science research questions according to the six types of questions of Leek and Peng (2015)
+
+
+## Homework Projects Progress Guides
+
+Find the Repositories of your Homework Projects in the Course's GitHub-Organization's [{{< var org.name >}} > Repositories](https://github.com/orgs/{{< var org.name >}}/repositories).
+
+Project's INSTRUCTIONS you should have completed:   
+
+**Project_NYCFlights**: 1., 2., 3., 4. 5., 6., **7.** (This is an open question to practice exploratory data analysis.)   
+**Project_COVID19**: 1.1, 1.2, 1.3, 1.4, 1.5, **2.1**
+
+::: {.callout-note}
+Don't panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!
+:::

@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jan Lorenz">
+
+<title>W#06: Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus – Data Science Concepts / Data Science Tools</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-16b4b51782fe9067b751a2cdf7d3de3a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Data Science Concepts / Data Science Tools</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/CU-F25-MDSSB-01-Concepts-Tools"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text">CU-F25-MDSSB-01-Concepts-Tools</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">W#06: Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+  <div id="quarto-announcement" data-announcement-id="0f8f92da8bb6fd80db00a7a45d195a06" class="alert alert-warning hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p><a href="https://forms.office.com/e/75qEdyZbim"><strong>Data Science Tools Final Project Check-In</strong></a> open! Deadline Sat, Nov 8.</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../schedule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schedule</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#01</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#02</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#03</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#04</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#05</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#06</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#07</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#08</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#09</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#10</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#11</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#12</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Checklist Technical Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../literature.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning Resources</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework Projects</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Need help for Homework?</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#preliminaries" id="toc-preliminaries" class="nav-link active" data-scroll-target="#preliminaries"><span class="header-section-number">0.1</span> Preliminaries</a></li>
+  <li><a href="#principal-component-analysis-pca" id="toc-principal-component-analysis-pca" class="nav-link" data-scroll-target="#principal-component-analysis-pca"><span class="header-section-number">1</span> Principal component analysis (PCA)</a>
+  <ul class="collapse">
+  <li><a href="#pca-description" id="toc-pca-description" class="nav-link" data-scroll-target="#pca-description"><span class="header-section-number">1.1</span> PCA Description</a></li>
+  <li><a href="#example-numerical-variables-of-penguins" id="toc-example-numerical-variables-of-penguins" class="nav-link" data-scroll-target="#example-numerical-variables-of-penguins"><span class="header-section-number">1.2</span> Example: Numerical variables of penguins</a></li>
+  <li><a href="#two-variables" id="toc-two-variables" class="nav-link" data-scroll-target="#two-variables"><span class="header-section-number">1.3</span> Two Variables</a></li>
+  <li><a href="#computation-in-r" id="toc-computation-in-r" class="nav-link" data-scroll-target="#computation-in-r"><span class="header-section-number">1.4</span> Computation in R</a></li>
+  <li><a href="#the-prcomp-object" id="toc-the-prcomp-object" class="nav-link" data-scroll-target="#the-prcomp-object"><span class="header-section-number">1.5</span> The <code>prcomp</code> object</a></li>
+  <li><a href="#pca-as-exploratory-data-analysis" id="toc-pca-as-exploratory-data-analysis" class="nav-link" data-scroll-target="#pca-as-exploratory-data-analysis"><span class="header-section-number">1.6</span> PCA as Exploratory Data Analysis</a></li>
+  <li><a href="#all-variables" id="toc-all-variables" class="nav-link" data-scroll-target="#all-variables"><span class="header-section-number">1.7</span> All variables</a></li>
+  <li><a href="#explore-data-in-pc-coordinates" id="toc-explore-data-in-pc-coordinates" class="nav-link" data-scroll-target="#explore-data-in-pc-coordinates"><span class="header-section-number">1.8</span> Explore data in PC coordinates</a></li>
+  <li><a href="#variable-loadings" id="toc-variable-loadings" class="nav-link" data-scroll-target="#variable-loadings"><span class="header-section-number">1.9</span> Variable loadings</a></li>
+  <li><a href="#variance-explained" id="toc-variance-explained" class="nav-link" data-scroll-target="#variance-explained"><span class="header-section-number">1.10</span> Variance explained</a></li>
+  <li><a href="#interpretations-1" id="toc-interpretations-1" class="nav-link" data-scroll-target="#interpretations-1"><span class="header-section-number">1.11</span> Interpretations (1)</a></li>
+  <li><a href="#interpretations-2" id="toc-interpretations-2" class="nav-link" data-scroll-target="#interpretations-2"><span class="header-section-number">1.12</span> Interpretations (2)</a></li>
+  <li><a href="#interpretations-3" id="toc-interpretations-3" class="nav-link" data-scroll-target="#interpretations-3"><span class="header-section-number">1.13</span> Interpretations (3)</a></li>
+  <li><a href="#apply-pca" id="toc-apply-pca" class="nav-link" data-scroll-target="#apply-pca"><span class="header-section-number">1.14</span> Apply PCA</a></li>
+  <li><a href="#properties-of-pca" id="toc-properties-of-pca" class="nav-link" data-scroll-target="#properties-of-pca"><span class="header-section-number">1.15</span> Properties of PCA</a></li>
+  <li><a href="#relations-of-pca" id="toc-relations-of-pca" class="nav-link" data-scroll-target="#relations-of-pca"><span class="header-section-number">1.16</span> Relations of PCA</a></li>
+  </ul></li>
+  <li><a href="#math-exponentiations-and-logarithms" id="toc-math-exponentiations-and-logarithms" class="nav-link" data-scroll-target="#math-exponentiations-and-logarithms"><span class="header-section-number">2</span> Math: Exponentiations and Logarithms</a>
+  <ul class="collapse">
+  <li><a href="#rules-for-exponentiation" id="toc-rules-for-exponentiation" class="nav-link" data-scroll-target="#rules-for-exponentiation"><span class="header-section-number">2.1</span> Rules for Exponentiation</a></li>
+  <li><a href="#more-rules-for-exponentiation" id="toc-more-rules-for-exponentiation" class="nav-link" data-scroll-target="#more-rules-for-exponentiation"><span class="header-section-number">2.2</span> More rules for exponentiation</a></li>
+  <li><a href="#logarithms" id="toc-logarithms" class="nav-link" data-scroll-target="#logarithms"><span class="header-section-number">2.3</span> Logarithms</a></li>
+  <li><a href="#rules-for-logarithms" id="toc-rules-for-logarithms" class="nav-link" data-scroll-target="#rules-for-logarithms"><span class="header-section-number">2.4</span> Rules for logarithms</a></li>
+  </ul></li>
+  <li><a href="#epidemic-modeling" id="toc-epidemic-modeling" class="nav-link" data-scroll-target="#epidemic-modeling"><span class="header-section-number">3</span> Epidemic Modeling</a>
+  <ul class="collapse">
+  <li><a href="#sir-model" id="toc-sir-model" class="nav-link" data-scroll-target="#sir-model"><span class="header-section-number">3.1</span> SIR model</a></li>
+  <li><a href="#agent-based-simulation" id="toc-agent-based-simulation" class="nav-link" data-scroll-target="#agent-based-simulation"><span class="header-section-number">3.2</span> Agent-based Simulation</a></li>
+  <li><a href="#virus-on-a-network-6-links-initial" id="toc-virus-on-a-network-6-links-initial" class="nav-link" data-scroll-target="#virus-on-a-network-6-links-initial"><span class="header-section-number">3.3</span> Virus on a Network: 6 links, initial</a></li>
+  <li><a href="#virus-on-a-network-6-links-final" id="toc-virus-on-a-network-6-links-final" class="nav-link" data-scroll-target="#virus-on-a-network-6-links-final"><span class="header-section-number">3.4</span> Virus on a Network: 6 links, final</a></li>
+  <li><a href="#virus-on-a-network-15-links-initial" id="toc-virus-on-a-network-15-links-initial" class="nav-link" data-scroll-target="#virus-on-a-network-15-links-initial"><span class="header-section-number">3.5</span> Virus on a Network: 15 links, initial</a></li>
+  <li><a href="#virus-on-a-network-15-links-final" id="toc-virus-on-a-network-15-links-final" class="nav-link" data-scroll-target="#virus-on-a-network-15-links-final"><span class="header-section-number">3.6</span> Virus on a Network: 15 links, final</a></li>
+  <li><a href="#si-model" id="toc-si-model" class="nav-link" data-scroll-target="#si-model"><span class="header-section-number">3.7</span> SI model</a></li>
+  <li><a href="#si-model-simulation-in-r" id="toc-si-model-simulation-in-r" class="nav-link" data-scroll-target="#si-model-simulation-in-r"><span class="header-section-number">3.8</span> SI-model: Simulation in R</a></li>
+  <li><a href="#si-model-simulation-in-r-1" id="toc-si-model-simulation-in-r-1" class="nav-link" data-scroll-target="#si-model-simulation-in-r-1"><span class="header-section-number">3.9</span> SI-model: Simulation in R</a></li>
+  <li><a href="#si-model-simulation-in-r-2" id="toc-si-model-simulation-in-r-2" class="nav-link" data-scroll-target="#si-model-simulation-in-r-2"><span class="header-section-number">3.10</span> SI-model: Simulation in R</a></li>
+  <li><a href="#new-programming-concepts" id="toc-new-programming-concepts" class="nav-link" data-scroll-target="#new-programming-concepts"><span class="header-section-number">3.11</span> New programming concepts</a></li>
+  </ul></li>
+  <li><a href="#calculus" id="toc-calculus" class="nav-link" data-scroll-target="#calculus"><span class="header-section-number">4</span> Calculus</a>
+  <ul class="collapse">
+  <li><a href="#motivation-si-model-with-population-compartments" id="toc-motivation-si-model-with-population-compartments" class="nav-link" data-scroll-target="#motivation-si-model-with-population-compartments"><span class="header-section-number">4.1</span> Motivation: SI model with <br> population compartments</a></li>
+  <li><a href="#how-many-infections-per-time" id="toc-how-many-infections-per-time" class="nav-link" data-scroll-target="#how-many-infections-per-time"><span class="header-section-number">4.2</span> How many infections per time?</a></li>
+  <li><a href="#ordinary-differential-equation" id="toc-ordinary-differential-equation" class="nav-link" data-scroll-target="#ordinary-differential-equation"><span class="header-section-number">4.3</span> Ordinary differential equation</a></li>
+  <li><a href="#derivatives" id="toc-derivatives" class="nav-link" data-scroll-target="#derivatives"><span class="header-section-number">4.4</span> Derivatives</a></li>
+  <li><a href="#differentiation" id="toc-differentiation" class="nav-link" data-scroll-target="#differentiation"><span class="header-section-number">4.5</span> Differentiation</a></li>
+  <li><a href="#differential-equation" id="toc-differential-equation" class="nav-link" data-scroll-target="#differential-equation"><span class="header-section-number">4.6</span> Differential equation</a></li>
+  <li><a href="#si-model-logistic-equation" id="toc-si-model-logistic-equation" class="nav-link" data-scroll-target="#si-model-logistic-equation"><span class="header-section-number">4.7</span> SI-model: Logistic Equation</a></li>
+  <li><a href="#si-model-numerical-integration" id="toc-si-model-numerical-integration" class="nav-link" data-scroll-target="#si-model-numerical-integration"><span class="header-section-number">4.8</span> SI-model: Numerical integration</a></li>
+  <li><a href="#numerical-integration-with-smaller-dt" id="toc-numerical-integration-with-smaller-dt" class="nav-link" data-scroll-target="#numerical-integration-with-smaller-dt"><span class="header-section-number">4.9</span> Numerical integration with smaller <span class="math inline">\(dt\)</span></a></li>
+  <li><a href="#mechanistic-model" id="toc-mechanistic-model" class="nav-link" data-scroll-target="#mechanistic-model"><span class="header-section-number">4.10</span> Mechanistic model</a></li>
+  <li><a href="#differentiation-with-data" id="toc-differentiation-with-data" class="nav-link" data-scroll-target="#differentiation-with-data"><span class="header-section-number">4.11</span> Differentiation with data</a></li>
+  <li><a href="#the-diff-of-our-simulation-output" id="toc-the-diff-of-our-simulation-output" class="nav-link" data-scroll-target="#the-diff-of-our-simulation-output"><span class="header-section-number">4.12</span> The diff of our simulation output</a></li>
+  <li><a href="#nd-derivative-change-of-change" id="toc-nd-derivative-change-of-change" class="nav-link" data-scroll-target="#nd-derivative-change-of-change"><span class="header-section-number">4.13</span> 2nd derivative: Change of change</a></li>
+  <li><a href="#interpretation-in-si-model" id="toc-interpretation-in-si-model" class="nav-link" data-scroll-target="#interpretation-in-si-model"><span class="header-section-number">4.14</span> Interpretation in SI-model</a></li>
+  <li><a href="#integration" id="toc-integration" class="nav-link" data-scroll-target="#integration"><span class="header-section-number">4.15</span> Integration</a></li>
+  <li><a href="#the-fundamental-theorem-of-calculus" id="toc-the-fundamental-theorem-of-calculus" class="nav-link" data-scroll-target="#the-fundamental-theorem-of-calculus"><span class="header-section-number">4.16</span> The fundamental theorem of calculus</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="W06.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">W#06: Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jan Lorenz </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="preliminaries" class="level2" data-number="0.1">
+<h2 data-number="0.1" class="anchored" data-anchor-id="preliminaries"><span class="header-section-number">0.1</span> Preliminaries</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'palmerpenguins'
+
+The following objects are masked from 'package:datasets':
+
+    penguins, penguins_raw</code></pre>
+</div>
+</div>
+</section>
+<section id="principal-component-analysis-pca" class="level1 page-columns page-full" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Principal component analysis (PCA)</h1>
+<p>A typical part of Exploratory Data Analysis.</p>
+<section id="pca-description" class="level2 smaller" data-number="1.1">
+<h2 class="smaller anchored" data-number="1.1" data-anchor-id="pca-description"><span class="header-section-number">1.1</span> PCA Description</h2>
+<p>Principle component analysis</p>
+<ul>
+<li>is a <strong>dimensionality-reduction</strong> technique, that means it can be used to reduce the number of variables</li>
+<li>computes new variables which represent the data in a different way</li>
+<li>transforms the data <strong>linearly</strong> to a new coordinate system where most of the variation in the data can be described with fewer variables than the original data</li>
+</ul>
+<p><strong>Today:</strong> Quick walk through how to use and interpret it.</p>
+</section>
+<section id="example-numerical-variables-of-penguins" class="level2 smaller" data-number="1.2">
+<h2 class="smaller anchored" data-number="1.2" data-anchor-id="example-numerical-variables-of-penguins"><span class="header-section-number">1.2</span> Example: Numerical variables of penguins</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  penguins <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    species,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    bill_length_mm,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    bill_depth_mm,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    flipper_length_mm,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    body_mass_g</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>peng <span class="sc">|&gt;</span> <span class="fu">count</span>(species)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  species       n
+  &lt;fct&gt;     &lt;int&gt;
+1 Adelie      151
+2 Chinstrap    68
+3 Gentoo      123</code></pre>
+</div>
+</div>
+<p>We have 342 penguins and 4 numeric variables.</p>
+</section>
+<section id="two-variables" class="level2 smaller page-columns page-full" data-number="1.3">
+<h2 class="smaller anchored" data-number="1.3" data-anchor-id="two-variables"><span class="header-section-number">1.3</span> Two Variables</h2>
+<p>Example for the new axes.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pca1 <span class="ot">&lt;-</span> peng <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flipper_length_mm, bill_length_mm) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prcomp</span>(<span class="sc">~</span>., <span class="at">data =</span> _, <span class="at">scale =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>pca_vec <span class="ot">&lt;-</span> <span class="fu">t</span>(pca1<span class="sc">$</span>rotation) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>() <span class="co"># Vectors with x = flipper_length, y = bill_length</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peng) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> bill_length_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> pca_vec,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">mean</span>(peng<span class="sc">$</span>flipper_length_mm),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">mean</span>(peng<span class="sc">$</span>bill_length_mm),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">xend =</span> <span class="fu">c</span>(pca1<span class="sc">$</span>sdev) <span class="sc">*</span> flipper_length_mm <span class="sc">+</span> <span class="fu">mean</span>(peng<span class="sc">$</span>flipper_length_mm),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">yend =</span> <span class="fu">c</span>(pca1<span class="sc">$</span>sdev) <span class="sc">*</span> bill_length_mm <span class="sc">+</span> <span class="fu">mean</span>(peng<span class="sc">$</span>bill_length_mm)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"cm"</span>))</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>The two arrows show the two eigenvectors of the covariance matrix of the two variables scaled by the square root of the corresponding eigenvalues, and shifted so their origins are at the means of both variables.</p>
+</div></div></section>
+<section id="computation-in-r" class="level2 smaller" data-number="1.4">
+<h2 class="smaller anchored" data-number="1.4" data-anchor-id="computation-in-r"><span class="header-section-number">1.4</span> Computation in R</h2>
+<p>The basic function is base-R’s <code>prcomp</code> (there is an older <code>princomp</code> which is not advisable to use).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># prcomp can take a data frame with all numerical vectors as 1st argument</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> peng <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flipper_length_mm, bill_length_mm) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prcomp</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>The base output</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>P</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard deviations (1, .., p=2):
+[1] 14.549388  3.981729
+
+Rotation (n x k) = (2 x 2):
+                        PC1        PC2
+flipper_length_mm 0.9637169 -0.2669266
+bill_length_mm    0.2669266  0.9637169</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p>The summary output</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(P)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                           PC1     PC2
+Standard deviation     14.5494 3.98173
+Proportion of Variance  0.9303 0.06968
+Cumulative Proportion   0.9303 1.00000</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-prcomp-object" class="level2 smaller" data-number="1.5">
+<h2 class="smaller anchored" data-number="1.5" data-anchor-id="the-prcomp-object"><span class="header-section-number">1.5</span> The <code>prcomp</code> object</h2>
+<p>Includes 4 different related entities.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>The <strong>standard deviations</strong> related to each principal component.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>P<span class="sc">$</span>sdev</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14.549388  3.981729</code></pre>
+</div>
+</div>
+<p>The matrix of variable <strong>loadings</strong>. (It is also the matrix which rotates the original data vectors.)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>P<span class="sc">$</span>rotation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        PC1        PC2
+flipper_length_mm 0.9637169 -0.2669266
+bill_length_mm    0.2669266  0.9637169</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p>The means for each original variable.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>P<span class="sc">$</span>center</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>flipper_length_mm    bill_length_mm 
+        200.91520          43.92193 </code></pre>
+</div>
+</div>
+<p>Note, there are also standard deviations of original variables in <code>$scale</code> when this is set to be used.</p>
+<p>The centered (scaled, if set) and rotated data.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>P<span class="sc">$</span>x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               PC1         PC2
+  [1,] -20.4797199  0.66892267
+  [2,] -15.5543649 -0.28022355
+  [3,]  -6.6673719 -1.91158941
+  [4,]  -9.5557414 -4.84711693
+  [5,] -11.7528828 -1.54067330
+  [6,] -20.5331052  0.47617930
+  [7,]  -6.9609911 -2.97167796
+  [8,] -10.2497505 -7.35278078
+  [9,] -11.0321810  1.06136223
+ [10,] -16.0081402 -1.91854222
+ [11,] -21.7904413 -0.31698266
+ [12,] -18.9821498  2.32942980
+ [13,] -10.9760146 -2.48220170
+ [14,]  -5.2977029 -8.20555532
+ [15,] -17.2921689 -2.80807586
+ [16,]  -7.0944544 -3.45353639
+ [17,]  -4.1526997 -0.32526550
+ [18,] -18.8431243 -4.66132637
+ [19,]  -6.1096072  3.84852331
+ [20,] -27.5727425  1.28457691
+ [21,] -21.8171340 -0.41335434
+ [22,] -13.6241501 -4.55038405
+ [23,] -16.8650864 -1.26612888
+ [24,] -21.5235147  0.64673421
+ [25,] -15.7117398 -4.59476098
+ [26,] -18.1518963  1.58064478
+ [27,] -14.3237215  0.41656672
+ [28,] -29.4734836  1.91480178
+ [29,] -21.0697395  2.28505287
+ [30,] -23.2640999  1.85518920
+ [31,] -23.8780310 -0.36135959
+ [32,] -13.6269312 -0.81407674
+ [33,] -17.1081014  1.60283324
+ [34,]  -7.7083856 -5.67008518
+ [35,]  -5.9972743 -3.23860456
+ [36,] -11.8863461 -2.02253174
+ [37,] -20.6159643  3.92337154
+ [38,] -20.8801098 -0.77665262
+ [39,] -17.4017207  0.54274469
+ [40,] -20.2100122 -2.10366777
+ [41,]  -6.5339086 -1.42973098
+ [42,] -16.4886080 -3.65323258
+ [43,]  -4.6893340  1.48360808
+ [44,] -17.1853983 -2.42258912
+ [45,] -11.6728048 -1.25155824
+ [46,] -18.9821498  2.32942980
+ [47,] -22.8342362 -0.33917112
+ [48,] -12.6337406 -4.72093895
+ [49,]  -9.9883862  1.08355069
+ [50,] -15.5276723 -0.18385187
+ [51,] -13.4667753 -0.23584662
+ [52,] -12.9006672 -5.68465582
+ [53,]  -1.3950124 -1.60790371
+ [54,] -15.9252810 -5.36573447
+ [55,] -10.2286201  0.21620552
+ [56,] -15.6878282 -0.76208199
+ [57,]  -8.5147276 -1.08862116
+ [58,] -21.1737290 -1.83674117
+ [59,]  -8.3517906 -4.24669835
+ [60,] -17.5324029 -3.67542104
+ [61,]  -6.4004453 -0.94787255
+ [62,] -17.0252423 -1.84435900
+ [63,]  -9.3449812 -0.33983614
+ [64,] -18.3092711 -2.73389264
+ [65,]  -9.2115179  0.14202229
+ [66,]  -7.9486195 -6.53743036
+ [67,] -13.1998487  0.72787024
+ [68,] -12.6604332 -4.81731064
+ [69,]  -3.3758314 -1.26679390
+ [70,] -13.3010571 -7.13023111
+ [71,] -11.6461122 -1.15518656
+ [72,]  -5.8905036 -2.85311781
+ [73,]  -3.2718419  2.85500015
+ [74,] -12.7672039 -5.20279739
+ [75,]  -6.0000554  0.49770275
+ [76,] -10.3620834 -0.26565292
+ [77,] -18.0957298 -1.96291915
+ [78,] -15.4715058 -3.72741580
+ [79,]  -6.1869040 -0.17689906
+ [80,] -13.9711547 -5.80321597
+ [81,]  -5.0096459  0.32714784
+ [82,] -15.3380425 -3.24555737
+ [83,]  -9.9828239 -6.38906391
+ [84,] -11.3230191 -3.73503363
+ [85,]  -7.3641622 -0.68094595
+ [86,] -12.5536626 -4.43182390
+ [87,] -13.3572235 -3.58666718
+ [88,] -12.9835263 -2.23746357
+ [89,] -11.8596534 -1.92616005
+ [90,]  -1.1492162 -8.21317314
+ [91,]   3.1833380 -3.80988186
+ [92,] -17.9861781 -5.31373971
+ [93,] -15.5276723 -0.18385187
+ [94,] -15.4715058 -3.72741580
+ [95,]   5.9944106 -4.89977671
+ [96,] -12.0731947 -2.69713354
+ [97,]  -5.7036550 -2.17851601
+ [98,] -24.9724301 -4.31259873
+ [99,]  -8.7844354  1.68396928
+[100,] -10.9732334 -6.21850901
+[101,]   1.2292116 -3.37240036
+[102,] -18.9259834 -1.21413413
+[103,] -12.1532727 -2.98624860
+[104,]  -9.2354294 -3.69065670
+[105,] -17.4284133  0.44637301
+[106,]  -3.2662796 -4.61761446
+[107,] -12.0465021 -2.60076185
+[108,] -20.7466465 -0.29479419
+[109,]  -3.9658510  0.34933630
+[110,]  -4.3634598 -4.83254629
+[111,]  -9.1075284  4.26381634
+[112,]  -8.7549616 -1.95596634
+[113,]  -4.2327776 -0.61438056
+[114,] -10.7090880 -1.51848484
+[115,]  -5.0630312  0.13440447
+[116,] -13.8671651 -1.68142192
+[117,]  -3.6132842 -5.87044638
+[118,] -13.6775354 -4.74312742
+[119,] -12.2361318  0.46094364
+[120,] -15.4715058 -3.72741580
+[121,]  -4.4702304 -5.21803304
+[122,] -25.0046850  3.06364419
+[123,]   0.3722654 -2.71998702
+[124,] -16.7021493 -4.42420607
+[125,]  -2.7324265 -2.69018073
+[126,] -10.9226292 -2.28945833
+[127,]  -6.3470600 -0.75512918
+[128,] -10.8692439 -2.09671496
+[129,]   8.8027021 -2.25336424
+[130,] -11.9664241 -2.31164679
+[131,]  -3.9925437  0.25296462
+[132,]  -9.5290487 -4.75074525
+[133,]  -3.5598989 -5.67770301
+[134,] -14.9643453 -1.89635376
+[135,] -11.2724149  0.19401705
+[136,] -11.7767943 -5.37335229
+[137,]  -1.8754802 -3.34259407
+[138,] -17.1853983 -2.42258912
+[139,]  -8.7549616 -1.95596634
+[140,]  -8.6214983 -1.47410791
+[141,] -14.2970288  0.51293840
+[142,] -15.6021880 -7.94558153
+[143,] -11.3791856 -0.19146969
+[144,] -10.3593023 -4.00196022
+[145,] -16.6515451 -0.49515539
+[146,] -11.7795755 -1.63704499
+[147,] -18.2558858 -2.54114927
+[148,]  -7.8151562 -6.05557193
+[149,]  -9.2621221 -3.78702838
+[150,] -15.5248912 -3.92015917
+[151,]  -0.5647588 -2.35668874
+[152,]  10.3002722 -0.59285711
+[153,]  29.6519063 -1.90596663
+[154,]  10.0305645  2.17973333
+[155,]  18.0873039  1.29715250
+[156,]  14.5555295 -0.21498819
+[157,]   9.4433259  0.05955623
+[158,]  10.1134236 -1.26745892
+[159,]  18.1701630 -2.15003975
+[160,]   7.6254440 -2.75741114
+[161,]  14.3419882 -0.98596168
+[162,]  11.8034045 -6.40496458
+[163,]  15.8929436  0.86728882
+[164,]  13.0312668 -1.97186701
+[165,]  12.8416371  1.08983849
+[166,]   9.2564773 -0.61504558
+[167,]  16.9367385  0.88947729
+[168,]   8.2421563 -4.27716966
+[169,]  20.7649133 -0.27460078
+[170,]   8.3995311  0.03736776
+[171,]  21.5951668 -1.02338580
+[172,]  18.1406893  1.48989587
+[173,]  13.8882130 -2.62428035
+[174,]  12.3344765 -0.74122355
+[175,]  14.2085249 -1.46782012
+[176,]  13.3009745 -4.74445745
+[177,]  14.1551396 -1.66056349
+[178,]  14.6917739 -3.46943706
+[179,]  14.6089148 -0.02224482
+[180,]   9.8971012  1.69787490
+[181,]  20.0147377  0.76329931
+[182,]  21.2214696 -2.37258941
+[183,]   7.4919807 -3.23926957
+[184,]   6.1784781 -0.48886760
+[185,]  32.2144016  7.34571526
+[186,]  19.7745037 -0.10404587
+[187,]  19.5876551 -0.77864767
+[188,]  11.2934628 -4.49971932
+[189,]  17.5562319 -4.36658853
+[190,]   6.8485757 -1.81588274
+[191,]   8.1031307  2.71358652
+[192,]   6.5015712 -3.06871466
+[193,]  24.7265513 -0.95682041
+[194,]   9.1230140 -1.09690401
+[195,]  16.0530996  1.44551894
+[196,]  22.0756347  0.71130455
+[197,]  15.4152569 -4.60370884
+[198,]   9.1763994 -0.90416063
+[199,]  24.9667853 -0.08947523
+[200,]  11.9073940 -2.28317054
+[201,]  13.9149057 -2.52790867
+[202,]   9.4700186  0.15592792
+[203,]  19.6143478 -0.68227599
+[204,]   9.0696287 -1.28964738
+[205,]  24.8600146 -0.47496198
+[206,]  16.1893440 -1.80892993
+[207,]  18.6801047 -4.05528501
+[208,]   6.7951904 -2.00862611
+[209,]  18.8135680 -3.57342658
+[210,]   6.6350345 -2.58685623
+[211,]  23.9763758  0.08107968
+[212,]   7.1955803 -0.56305082
+[213,]  19.9641335 -3.16575137
+[214,]  13.0846521 -1.77912364
+[215,]  31.7634075  1.97108929
+[216,]  17.9299291 -3.01738492
+[217,]  29.5985210 -2.09871001
+[218,]  13.2181154 -1.29726521
+[219,]  28.5547261 -2.12089847
+[220,]  18.2797148 -5.50086030
+[221,]  23.0927369  0.63712133
+[222,]  15.5459390 -0.38554310
+[223,]  20.0175188 -2.97300799
+[224,]  20.4979867 -1.23831764
+[225,]  16.1893440 -1.80892993
+[226,]  15.1989345 -1.63837502
+[227,]  29.2782091 -3.25517024
+[228,]   8.7465357  1.29019969
+[229,]  20.3083569  1.82338786
+[230,]  13.9149057 -2.52790867
+[231,]  21.6246406 -4.66332142
+[232,]  12.0647688  2.03136689
+[233,]  21.6457710  2.90566487
+[234,]  11.6109936  0.39304822
+[235,]  23.8696051 -0.30440707
+[236,]  10.9436771 -2.01624394
+[237,]  27.9380138 -0.60113995
+[238,]  16.3255884 -5.06337880
+[239,]  18.4343085  2.54998442
+[240,]  11.6376863  0.48941990
+[241,]  30.2124521  0.11783878
+[242,]  17.4199874 -1.11213966
+[243,]  28.3117111  0.74806366
+[244,]  11.1038331 -1.43801382
+[245,]  23.7361418 -0.78626550
+[246,]  12.7643402 -2.93558388
+[247,]  26.0105801 -0.06728677
+[248,]  15.9997143  1.25277557
+[249,]  21.1146989 -2.75807616
+[250,]   3.2044684  3.75910443
+[251,]  25.1269412  0.48875489
+[252,]  18.6506309 -0.41534939
+[253,]  29.2993395  4.31381605
+[254,]  14.4487589 -0.60047494
+[255,]  27.4842386 -2.23945862
+[256,]  15.4391684 -0.77102985
+[257,]  14.3419882 -0.98596168
+[258,]   8.1620783 -4.56628472
+[259,]  19.9585712  4.30686324
+[260,]   6.6617271 -2.49048455
+[261,]   8.9066916  1.86842981
+[262,]  16.2933335  2.31286412
+[263,]  28.6348041 -1.83178341
+[264,]  11.5336968 -3.63237414
+[265,]  30.0522962 -0.46039134
+[266,]  16.1092660 -2.09804499
+[267,]  31.0132319  3.00898937
+[268,]  15.6554908 -3.73636366
+[269,]  21.6218595 -0.92701412
+[270,]  13.4850420 -0.33354834
+[271,]  14.3419882 -0.98596168
+[272,]  22.0489420  0.61493287
+[273,]  11.0237551 -1.72712888
+[274,]  13.2420270  2.53541378
+[275,]  -7.9035776  4.86423493
+[276,]  -3.1144671  7.16953757
+[277,]  -5.6586131  9.22314928
+[278,] -12.0520643  4.87185275
+[279,]  -1.4300484  9.50464651
+[280,]  -2.4682810  2.00984344
+[281,] -21.5023843  8.21572050
+[282,]  -1.8037456  8.15544290
+[283,]  -5.1458903  3.58159671
+[284,]  -0.8400288  7.88851631
+[285,]  -6.9131681  4.69368002
+[286,]  -4.5881256  9.34170943
+[287,] -14.5161323  7.21457952
+[288,]   2.2379704  7.76233833
+[289,]  -9.9911673  4.81985800
+[290,]   1.8375806  6.31676303
+[291,]  -2.0706722  7.19172604
+[292,] -15.4348073 18.88317139
+[293,]  -9.8577040  5.30171643
+[294,]  -4.2917252  6.66549067
+[295,] -19.5988621  3.84918832
+[296,]  -8.3334413  7.05859525
+[297,] -13.6030197  3.01860225
+[298,]  -5.8454617  8.54854747
+[299,]  -4.9590417  4.25619852
+[300,]  -1.6168970  8.83004470
+[301,]   0.8738637  6.58368963
+[302,]   0.6069371  5.61997276
+[303,]  -8.8939871  5.03478983
+[304,]   6.3063792  7.46560544
+[305,] -14.2169508  0.80205346
+[306,]   2.8252089  9.88251543
+[307,] -13.7898683  2.34400044
+[308,]   3.8984776  6.26476828
+[309,]  -4.1582619  7.14734911
+[310,]  -0.8906330  3.95946563
+[311,]  -4.7188078  5.12354369
+[312,]  10.9114222  5.35999898
+[313,]  -7.7968070  5.24972167
+[314,]   6.4932278  8.14020725
+[315,]  10.1106424  2.46884839
+[316,] -12.8022399  5.90975284
+[317,]  -2.8742331  8.03688275
+[318,]  -4.3156367  2.83281168
+[319,]  -2.8742331  8.03688275
+[320,]   1.9176585  6.60587809
+[321,]  -8.8700756  8.86746882
+[322,]  12.0380762  1.93499520
+[323,] -11.3875289 11.01745222
+[324,]  -1.2404187  6.44294101
+[325,]  -0.7304770  4.53769575
+[326,]   2.0778145  7.18410821
+[327,]  -7.1534020  3.82633484
+[328,]   3.8183996  5.97565322
+[329,] -13.7898683  2.34400044
+[330,]  -1.5635117  9.02278808
+[331,]  -9.2142990  3.87832960
+[332,]   3.4447024  4.62644961
+[333,]   2.7212194  5.76072138
+[334,]  -6.2163778  3.46303656
+[335,]   7.0298621  6.33133367
+[336,] -10.7146502  5.95412977
+[337,]  -5.2259683  3.29248165
+[338,]   9.0345927  9.82290284
+[339,]   0.9328113 -0.69618161
+[340,]  -6.1123883  7.58483061
+[341,]  10.5911103  4.20353874
+[342,]  -1.1336480  6.82842776</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="pca-as-exploratory-data-analysis" class="level2 smaller" data-number="1.6">
+<h2 class="smaller anchored" data-number="1.6" data-anchor-id="pca-as-exploratory-data-analysis"><span class="header-section-number">1.6</span> PCA as Exploratory Data Analysis</h2>
+<p>Suppose we do a PCA with all 342 penguins (rows) and all 4 numeric variables.</p>
+<ul>
+<li><em>How long will the vector of standard deviations be?</em> <span class="fragment">4</span><br>
+</li>
+<li><em>What dimensions will the rotation matrix have?</em> <span class="fragment">4 x 4</span><br>
+</li>
+<li><em>What dimensions will the rotated data frame have?</em> <span class="fragment">342 x 4</span></li>
+</ul>
+<p>. . .</p>
+<p>When we do a PCA for exploration there are 3 things to look at:</p>
+<ol type="1">
+<li>The data in PC coordinates - the centered (scaled, if set) and rotated data.<br>
+</li>
+<li>The rotation matrix - the variable loadings.</li>
+<li>The variance explained by each PC - based on the standard deviations.</li>
+</ol>
+</section>
+<section id="all-variables" class="level2 smaller" data-number="1.7">
+<h2 class="smaller anchored" data-number="1.7" data-anchor-id="all-variables"><span class="header-section-number">1.7</span> All variables</h2>
+<p>Now, with <code>scale = TRUE</code> (recommended). Data will be centered and scaled (a.k.a. standardized) first.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>peng_PCA <span class="ot">&lt;-</span> peng <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>species) <span class="sc">|&gt;</span> <span class="fu">prcomp</span>(<span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>peng_PCA</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard deviations (1, .., p=4):
+[1] 1.6594442 0.8789293 0.6043475 0.3293816
+
+Rotation (n x k) = (4 x 4):
+                         PC1          PC2        PC3        PC4
+bill_length_mm     0.4552503 -0.597031143 -0.6443012  0.1455231
+bill_depth_mm     -0.4003347 -0.797766572  0.4184272 -0.1679860
+flipper_length_mm  0.5760133 -0.002282201  0.2320840 -0.7837987
+body_mass_g        0.5483502 -0.084362920  0.5966001  0.5798821</code></pre>
+</div>
+</div>
+</section>
+<section id="explore-data-in-pc-coordinates" class="level2 smaller" data-number="1.8">
+<h2 class="smaller anchored" data-number="1.8" data-anchor-id="explore-data-in-pc-coordinates"><span class="header-section-number">1.8</span> Explore data in PC coordinates</h2>
+<div class="columns">
+<div class="column" style="width:35%;">
+<ul>
+<li>Start plotting PC1 against PC2. By default these are the most important ones. Drill deeper later.</li>
+<li>Append the original data. Here used to color by species.</li>
+</ul>
+</div><div class="column" style="width:65%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>plotdata <span class="ot">&lt;-</span> peng_PCA<span class="sc">$</span>x <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(peng)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>plotdata <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(PC1, PC2, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="variable-loadings" class="level2 smaller" data-number="1.9">
+<h2 class="smaller anchored" data-number="1.9" data-anchor-id="variable-loadings"><span class="header-section-number">1.9</span> Variable loadings</h2>
+<ul>
+<li>The columns of the rotation matrix shows how the original variables <em>load</em> on the principle components.</li>
+<li>We can interpret these loadings and give descriptive names to principal components.</li>
+<li>For plotting we bring the rotation matrix to long format with <code>PC</code> and <code>value</code> column.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>peng_PCA<span class="sc">$</span>rotation <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"variable"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">"PC"</span>), <span class="at">names_to =</span> <span class="st">"PC"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value, variable)) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>PC, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="variance-explained" class="level2 smaller" data-number="1.10">
+<h2 class="smaller anchored" data-number="1.10" data-anchor-id="variance-explained"><span class="header-section-number">1.10</span> Variance explained</h2>
+<ul>
+<li>Principle components are by default sorted by importance.</li>
+<li>The squares of the standard deviation for each component gives its variances and <strong>variances have to sum up to the sum of the variances</strong> of the original variables.
+<ul>
+<li>When original variables were standardized their original variances are all each one. Consequently, the variances of the principal components sum up to the number of original variables.</li>
+</ul></li>
+<li>A typical plot to visualize the importance of the components is to plot the percentage of the variance explained by each component.</li>
+</ul>
+<div class="cell" data-output-location="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">PC =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">sdev =</span> peng_PCA<span class="sc">$</span>sdev) <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> sdev<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(sdev<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(PC, percent)) <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_grey</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interpretations-1" class="level2 smaller" data-number="1.11">
+<h2 class="smaller anchored" data-number="1.11" data-anchor-id="interpretations-1"><span class="header-section-number">1.11</span> Interpretations (1)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">PC =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">sdev =</span> peng_PCA<span class="sc">$</span>sdev) <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent =</span> sdev<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">sum</span>(sdev<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="dv">100</span>, <span class="at">cum_percent =</span> <span class="fu">cumsum</span>(percent)) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(PC, percent)) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> cum_percent), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> cum_percent), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">20</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>The first component explains almost 70% of the variance.<br>
+</li>
+<li>The first two explain about 88% of the total variance.</li>
+</ul>
+</section>
+<section id="interpretations-2" class="level2 smaller" data-number="1.12">
+<h2 class="smaller anchored" data-number="1.12" data-anchor-id="interpretations-2"><span class="header-section-number">1.12</span> Interpretations (2)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>peng_PCA<span class="sc">$</span>rotation <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"variable"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">"PC"</span>), <span class="at">names_to =</span> <span class="st">"PC"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value, variable)) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>PC, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>To score high on PC1 a penguin needs to be generally large but with low bill depth.</li>
+<li>Penguins scoring high on PC2 are penguins with generally small bills.</li>
+</ol>
+</section>
+<section id="interpretations-3" class="level2 smaller" data-number="1.13">
+<h2 class="smaller anchored" data-number="1.13" data-anchor-id="interpretations-3"><span class="header-section-number">1.13</span> Interpretations (3)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> plotdata <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(PC1, PC2, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>()</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> peng_PCA<span class="sc">$</span>rotation <span class="sc">|&gt;</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"variable"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">starts_with</span>(<span class="st">"PC"</span>), <span class="at">names_to =</span> <span class="st">"PC"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(PC <span class="sc">==</span> <span class="st">"PC2"</span> <span class="sc">|</span> PC <span class="sc">==</span> <span class="st">"PC1"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value, variable)) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>PC, <span class="at">nrow =</span> <span class="dv">1</span>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>g1 <span class="sc">+</span> g2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Hope_Bay-2016-Trinity_Peninsula%E2%80%93Ad%C3%A9lie_penguin_%28Pygoscelis_adeliae%29_04.jpg" height="120"> <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/South_Shetland-2016-Deception_Island%E2%80%93Chinstrap_penguin_%28Pygoscelis_antarctica%29_04.jpg" height="120"> <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Brown_Bluff-2016-Tabarin_Peninsula%E2%80%93Gentoo_penguin_%28Pygoscelis_papua%29_03.jpg" height="120"></p>
+</section>
+<section id="apply-pca" class="level2 smaller" data-number="1.14">
+<h2 class="smaller anchored" data-number="1.14" data-anchor-id="apply-pca"><span class="header-section-number">1.14</span> Apply PCA</h2>
+<ul>
+<li>Besides standardization, PCA may benefit from <strong>preprocessing</strong> steps of <strong>data transformation</strong> with variables with skew distributions. Use log, square-root, or Box-Cox transformation. This may result in less outliers.</li>
+<li>PCA is a often a useful step of <strong>exploratory data analysis</strong> when you have a large number of numerical variables to show the empirical <em>dimensionality</em> of the data and its structure.</li>
+<li>It is related to the correlation-matrix and can “summarize” its structure.</li>
+<li>Limitation: PCA is only sensitive for linear relation ships (no U-shaped) or the like</li>
+<li>The principal components can be used <strong>as predictors</strong> in a model instead of the raw variables.</li>
+</ul>
+</section>
+<section id="properties-of-pca" class="level2 smaller" data-number="1.15">
+<h2 class="smaller anchored" data-number="1.15" data-anchor-id="properties-of-pca"><span class="header-section-number">1.15</span> Properties of PCA</h2>
+<div class="incremental">
+<ul class="incremental">
+<li>The principal components (the columns of the rotation matrix) are maximally <em>uncorrelated</em> (actually they are even <em>orthogonal</em>).</li>
+<li>This also holds for the columns of the rotated data.</li>
+<li>The total variances of all prinicipal components sum up to the number of variables (when variables are standardized)</li>
+<li>The PCA is unique. All principle components together are a complete representation of the data. (Unlike other technique of dimensionality reduction which may rely on starting values, random factors, or tuning parameters)
+<ul class="incremental">
+<li>To be precise: It is unique modulo the sign of the PCs. When <span class="math inline">\(x\)</span> is a PC, then <span class="math inline">\(-x\)</span> is as well and can replace it.<br>
+</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="relations-of-pca" class="level2 smaller" data-number="1.16">
+<h2 class="smaller anchored" data-number="1.16" data-anchor-id="relations-of-pca"><span class="header-section-number">1.16</span> Relations of PCA</h2>
+<div class="incremental">
+<ul class="incremental">
+<li>A technique similar in spirit is <em>factor analysis</em> (e.g.&nbsp;<code>factanal</code>). It is more theory based as it requires to specify to the theoriezed number of factors up front.</li>
+<li>PCA is an example of the importance of linear algebra (“matrixology”) in data science techniques.</li>
+</ul>
+</div>
+<p>. . .</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>PCA is based on the <strong>eigenvalue decomposition</strong> of the covariance matrix (or correlation matrix in the standardized case) of the data.</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img src="https://imgs.xkcd.com/comics/machine_learning.png" height="350"><a href="https://xkcd.com/1838/" class="uri">https://xkcd.com/1838/</a></p>
+</div>
+</div>
+</section>
+</section>
+<section id="math-exponentiations-and-logarithms" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Math: Exponentiations and Logarithms</h1>
+<section id="rules-for-exponentiation" class="level2 smaller" data-background-color="aquamarine" data-number="2.1">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="2.1" data-anchor-id="rules-for-exponentiation"><span class="header-section-number">2.1</span> Rules for Exponentiation</h2>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><span class="math inline">\(x^0\)</span></p>
+<p><span class="math inline">\(0^x\)</span></p>
+<p><span class="math inline">\(0^0\)</span></p>
+<p><span class="math inline">\((x\cdot y)^a\)</span></p>
+<p><span class="math inline">\(x^{-a}\)</span>, <span class="math inline">\(x^{-1}\)</span></p>
+<p><span class="math inline">\(x^\frac{a}{b}\)</span>, <span class="math inline">\(x^\frac{1}{2}\)</span></p>
+<p><span class="math inline">\((x^a)^b\)</span></p>
+</div><div class="column">
+<div class="fragment" data-fragment-index="1">
+<p><span class="math inline">\(x^0 = 1\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="2">
+<p><span class="math inline">\(0^x = 0\)</span> for <span class="math inline">\(x\neq 0\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="3">
+<p><span class="math inline">\(0^0 = 1\)</span> (discontinuity in <span class="math inline">\(0^x\)</span>)</p>
+</div>
+<div class="fragment" data-fragment-index="4">
+<p><span class="math inline">\((x\cdot y)^a = x^a\cdot x^b\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="5">
+<p><span class="math inline">\(x^{-a} = \frac{1}{x^a}\)</span>, <span class="math inline">\(x^{-1} = \frac{1}{x}\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="6">
+<p><span class="math inline">\(x^\frac{a}{b} = \sqrt[b]{x^a} = (\sqrt[b]{x})^a,\ x^\frac{1}{2} = \sqrt{x}\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="7">
+<p><span class="math inline">\((x^a)^b = x^{a\cdot b} = (x^b)^a \neq x^{a^b} = x^{(a^b)}\)</span><br>
+Example: <span class="math inline">\((4^3)^2 = 64^2 = 4096 \qquad 4^{3^2} = 4^9 = 262144\)</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="more-rules-for-exponentiation" class="level2 smaller" data-background-color="aquamarine" data-number="2.2">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="2.2" data-anchor-id="more-rules-for-exponentiation"><span class="header-section-number">2.2</span> More rules for exponentiation</h2>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><span class="math inline">\(x^a\cdot x^b\)</span></p>
+</div><div class="column" style="width:79%;">
+<div class="fragment">
+<p><span class="math inline">\(x^a\cdot x^b = x^{a+b}\)</span> Multiplication of powers (with same base <span class="math inline">\(x\)</span>) becomes addition of exponents.</p>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><span class="math inline">\((x+y)^a\)</span></p>
+</div><div class="column" style="width:79%;">
+<div class="fragment">
+<p>No “simple” form! For <span class="math inline">\(a\)</span> integer use <em>binomial expansion</em>. <span class="math inline">\((x+y)^2 = x^2 + 2xy + y^2\)</span><br>
+<span class="math inline">\((x+y)^3 = x^3 + 3x^2y + 3xy^2 + y^3\)</span><br>
+<span class="math inline">\((x+y)^n = \sum_{k=0}^n {n \choose k} x^{n-k}y^k\)</span></p>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<p><strong>Pascal’s triangle</strong></p>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif" height="200" class="figure-img"></p>
+<figcaption>From wikipedia</figcaption>
+</figure>
+</div>
+</div><div class="column">
+<p>We meet it again in <strong>Probability</strong>:<br>
+A row represents a <em>binomial distribution</em><br>
+Which tends to mimics the <em>normal distribution</em> more and more<br>
+and is related to the <em>central limit theorem</em></p>
+</div>
+</div>
+</section>
+<section id="logarithms" class="level2 smaller" data-background-color="aquamarine" data-number="2.3">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="2.3" data-anchor-id="logarithms"><span class="header-section-number">2.3</span> Logarithms</h2>
+<p><strong>Definition:</strong> A <em>logarithm</em> of <span class="math inline">\(a\)</span> for some base <span class="math inline">\(b\)</span> is the value of the exponent which brings <span class="math inline">\(b\)</span> to <span class="math inline">\(a\)</span>: <span class="math inline">\(\log_b(a) = x\)</span> means that <span class="math inline">\(b^x =a\)</span></p>
+<p><strong>Most common:</strong></p>
+<ul>
+<li><span class="math inline">\(\log_{10}\)</span> useful for plotting data in logarithmic scales because the numbers can be interpreted easiest (number of decimals of the original values)</li>
+<li><span class="math inline">\(\log_{e}\)</span> <em>natural logarithm</em> (also <span class="math inline">\(\log\)</span> or <span class="math inline">\(\ln\)</span>) useful in calculus and statistics because of nice mathematical properties</li>
+</ul>
+<p>. . .</p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><span class="math inline">\(\log_{10}(100) =\)</span></p>
+</div><div class="column">
+<div class="fragment">
+<p><span class="math inline">\(2\)</span></p>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><span class="math inline">\(\log_{10}(1) =\)</span></p>
+</div><div class="column">
+<div class="fragment">
+<p><span class="math inline">\(0\)</span></p>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><span class="math inline">\(\log_{10}(6590) =\)</span></p>
+</div><div class="column">
+<div class="fragment">
+<p><span class="math inline">\(3.818885\)</span></p>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><span class="math inline">\(\log_{10}(0.02) =\)</span></p>
+</div><div class="column">
+<div class="fragment">
+<p><span class="math inline">\(-1.69897\)</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="rules-for-logarithms" class="level2 smaller" data-background-color="aquamarine" data-number="2.4">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="2.4" data-anchor-id="rules-for-logarithms"><span class="header-section-number">2.4</span> Rules for logarithms</h2>
+<p>Usually only one base is used in the same context, because changing base is easy:</p>
+<p><span class="math inline">\(\log_c(x) = \frac{\log_b(x)}{\log_b(c)} = \frac{\log(x)}{\log(c)}\)</span></p>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><span class="math inline">\(\log(x\cdot y)\)</span></p>
+</div><div class="column" style="width:79%;">
+<div class="fragment">
+<p><span class="math inline">\(= \log(x) + \log(y)\)</span> Multiplication <span class="math inline">\(\to\)</span> addition.</p>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><span class="math inline">\(\log(x^y)\)</span></p>
+</div><div class="column" style="width:75%;">
+<div class="fragment">
+<p><span class="math inline">\(= y\cdot\log(x)\)</span></p>
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:20%;">
+<p><span class="math inline">\(\log(x+y)\)</span></p>
+</div><div class="column" style="width:75%;">
+<div class="fragment">
+<p>complicated!</p>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<p>Also changing bases for powers is easy: <span class="math inline">\(x^y = (e^{\log(x)})^y = e^{y\cdot\log(x)}\)</span></p>
+</section>
+</section>
+<section id="epidemic-modeling" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Epidemic Modeling</h1>
+<p>An example for <strong>modeling</strong> the <strong>data generating process</strong></p>
+<section id="sir-model" class="level2 smaller" data-background-color="khaki" data-number="3.1">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.1" data-anchor-id="sir-model"><span class="header-section-number">3.1</span> SIR model</h2>
+<ul>
+<li>Assume a population of <span class="math inline">\(N\)</span> individuals.<br>
+</li>
+<li>Individuals can have different states, e.g.: <strong>S</strong>usceptible, <strong>I</strong>nfectious, <strong>R</strong>ecovered, …</li>
+<li>The population divides into compartments of these states which change over time, e.g.: <span class="math inline">\(S(t), I(t), R(t)\)</span> <em>number of susceptible, infectious, recovered</em> individuals</li>
+</ul>
+<p>Now we define dynamics like</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Diagram_of_SIR_epidemic_model_states_and_transition_rates.svg" class="img-fluid"></p>
+<p>where the numbers on the arrows represent transition probabilities.</p>
+</section>
+<section id="agent-based-simulation" class="level2 smaller" data-background-color="khaki" data-number="3.2">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.2" data-anchor-id="agent-based-simulation"><span class="header-section-number">3.2</span> Agent-based Simulation</h2>
+<p><strong>Agent-based model</strong>: Individual agents are simulated and interact with each other.<br>
+Explore and analyze with <strong>computer simulations</strong>.</p>
+<p>A tool: <strong>NetLogo</strong> <a href="https://ccl.northwestern.edu/netlogo/" class="uri">https://ccl.northwestern.edu/netlogo/</a></p>
+<p><img src="http://netlogoweb.org/assets/images/desktopicon.png" class="img-fluid"></p>
+<p>We look at the model <strong>“Virus on a Network”</strong> from the model library.</p>
+<p>Direct Link to <a href="https://www.netlogoweb.org/launch#https://www.netlogoweb.org/assets/modelslib/Sample%20Models/Networks/Virus%20on%20a%20Network.nlogo">Virus on a Network in NetLogoWeb</a></p>
+</section>
+<section id="virus-on-a-network-6-links-initial" class="level2 smaller" data-background-color="khaki" data-number="3.3">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.3" data-anchor-id="virus-on-a-network-6-links-initial"><span class="header-section-number">3.3</span> Virus on a Network: 6 links, initial</h2>
+<p>Agents connected in a <strong>network</strong> with on average 6 links per agent. 3 are infected initially.</p>
+<p><img src="img/netlogo_SIR_6links_init.png" class="img-fluid"></p>
+</section>
+<section id="virus-on-a-network-6-links-final" class="level2 smaller" data-background-color="khaki" data-number="3.4">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.4" data-anchor-id="virus-on-a-network-6-links-final"><span class="header-section-number">3.4</span> Virus on a Network: 6 links, final</h2>
+<p>The outbreak dies out after some time.</p>
+<p><img src="img/netlogo_SIR_6links_final.png" class="img-fluid"></p>
+</section>
+<section id="virus-on-a-network-15-links-initial" class="level2 smaller" data-background-color="khaki" data-number="3.5">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.5" data-anchor-id="virus-on-a-network-15-links-initial"><span class="header-section-number">3.5</span> Virus on a Network: 15 links, initial</h2>
+<p>Repeat the simulation with 15 links per agent. 3 are infected initially. <img src="img/netlogo_SIR_15links_init.png" class="img-fluid"></p>
+</section>
+<section id="virus-on-a-network-15-links-final" class="level2 smaller" data-background-color="khaki" data-number="3.6">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.6" data-anchor-id="virus-on-a-network-15-links-final"><span class="header-section-number">3.6</span> Virus on a Network: 15 links, final</h2>
+<p>The outbreak had infected most agents.</p>
+<p><img src="img/netlogo_SIR_15links_final.png" class="img-fluid"></p>
+</section>
+<section id="si-model" class="level2 smaller" data-background-color="khaki" data-number="3.7">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.7" data-anchor-id="si-model"><span class="header-section-number">3.7</span> SI model</h2>
+<p>Now, we only treat the SI part of the model. We ignore recovery.</p>
+<ul>
+<li>People who are susceptible can become infected through contact with infectious</li>
+<li>People who are infectious stay infectious</li>
+</ul>
+<p>The parameter <span class="math inline">\(\beta\)</span> is the average number of contacts per unit time multiplied with the probability that an infection happens during such a contact.</p>
+</section>
+<section id="si-model-simulation-in-r" class="level2 smaller" data-background-color="khaki" data-number="3.8">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.8" data-anchor-id="si-model-simulation-in-r"><span class="header-section-number">3.8</span> SI-model: Simulation in R</h2>
+<ul>
+<li>We produce a vector of length <span class="math inline">\(N\)</span> with entries representing the state of each individual as <code>"S"</code> or <code>"I"</code>.</li>
+<li>We model the random infection process in each step of unit time</li>
+</ul>
+<p><strong>Setup</strong></p>
+<p>Parameters: <span class="math inline">\(N=150, \beta=0.3\)</span>, a function to produce randomly infect individuals</p>
+<div class="cell" data-output-location="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">150</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>randomly_infect <span class="ot">&lt;-</span> <span class="cf">function</span>(N, prob) { </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">runif</span>(N) <span class="sc">&lt;</span> prob </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a> <span class="co"># Gives a logical vector of length N</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a> <span class="co"># where TRUE appears with probability beta</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Test</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">randomly_infect</span>(N, beta) <span class="sc">|&gt;</span> <span class="fu">head</span>() <span class="co"># First 6</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+</div>
+</div>
+<div class="cell" data-output-location="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>init <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"S"</span>,N) <span class="co"># All susceptible</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>init[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"I"</span> <span class="co"># Infect one individual</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>init <span class="sc">|&gt;</span> <span class="fu">head</span>() <span class="co"># First 6</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "I" "S" "S" "S" "S" "S"</code></pre>
+</div>
+</div>
+</section>
+<section id="si-model-simulation-in-r-1" class="level2 smaller" data-background-color="khaki" data-number="3.9">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.9" data-anchor-id="si-model-simulation-in-r-1"><span class="header-section-number">3.9</span> SI-model: Simulation in R</h2>
+<p>Iteration over 75 time steps.</p>
+<div class="cell" data-output-location="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>tmax <span class="ot">&lt;-</span> <span class="dv">75</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>sim_run <span class="ot">&lt;-</span> <span class="fu">list</span>(init) <span class="co"># list with one element</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This list will collect the states of </span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># all individuals over tmax time steps </span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>tmax) {</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a> <span class="co"># Every agents has a contact with a random other</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a> contacts <span class="ot">&lt;-</span> <span class="fu">sample</span>(sim_run[[i<span class="dv">-1</span>]], <span class="at">size =</span> N)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a> sim_run[[i]] <span class="ot">&lt;-</span> <span class="fu">if_else</span>( <span class="co"># vectorised ifelse</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># conditions vector: contact is infected</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># and a random infection happens</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  contacts <span class="sc">==</span> <span class="st">"I"</span> <span class="sc">&amp;</span> <span class="fu">randomly_infect</span>(N, beta), </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">true =</span> <span class="st">"I"</span>, </span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">false =</span> sim_run[[i<span class="dv">-1</span>]]</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="co"># otherwise state stays the same</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>sim_output <span class="ot">&lt;-</span> <span class="fu">tibble</span>( <span class="co"># create tibble for ggplot</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a> <span class="co"># Compute a vector with length tmax </span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a> <span class="co"># with the count of "I" in sim_run list</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a> <span class="at">t =</span> <span class="dv">0</span><span class="sc">:</span>(tmax<span class="dv">-1</span>), <span class="co"># times steps</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a> <span class="co"># count of infected and output a vector</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a> <span class="at">infected =</span> sim_run <span class="sc">|&gt;</span> <span class="fu">map_dbl</span>(\(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="st">"I"</span>))) </span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>sim_output <span class="sc">|&gt;</span> </span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(<span class="fu">aes</span>(t,infected)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="si-model-simulation-in-r-2" class="level2 smaller" data-background-color="khaki" data-number="3.10">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="3.10" data-anchor-id="si-model-simulation-in-r-2"><span class="header-section-number">3.10</span> SI-model: Simulation in R</h2>
+<p>Run with <span class="math inline">\(N = 10000\)</span></p>
+<div class="cell" data-output-location="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>init <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"S"</span>,N) <span class="co"># All susceptible</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>init[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"I"</span> <span class="co"># Infect one individual</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>tmax <span class="ot">&lt;-</span> <span class="dv">75</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>sim_run <span class="ot">&lt;-</span> <span class="fu">list</span>(init) <span class="co"># list with one element</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co"># This list will collect the states of </span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># all individuals over tmax time steps </span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>tmax) {</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a> <span class="co"># Every agents has a contact with a random other</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a> contacts <span class="ot">&lt;-</span> <span class="fu">sample</span>(sim_run[[i<span class="dv">-1</span>]], <span class="at">size =</span> N)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a> sim_run[[i]] <span class="ot">&lt;-</span> <span class="fu">if_else</span>( <span class="co"># vectorised ifelse</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># conditions vector: contact is infected</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># and a random infection happens</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  contacts <span class="sc">==</span> <span class="st">"I"</span> <span class="sc">&amp;</span> <span class="fu">randomly_infect</span>(N, beta), </span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">true =</span> <span class="st">"I"</span>, </span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">false =</span> sim_run[[i<span class="dv">-1</span>]]</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="co"># otherwise state stays the same</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>sim_output <span class="ot">&lt;-</span> <span class="fu">tibble</span>( <span class="co"># create tibble for ggplot</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a> <span class="co"># Compute a vector with length tmax </span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a> <span class="co"># with the count of "I" in sim_run list</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a> <span class="at">t =</span> <span class="dv">0</span><span class="sc">:</span>(tmax<span class="dv">-1</span>), <span class="co"># times steps</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a> <span class="co"># count of infected, notice map_dbl</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a> <span class="at">infected =</span> <span class="fu">map_dbl</span>(sim_run, \(x) <span class="fu">sum</span>(x <span class="sc">==</span> <span class="st">"I"</span>))) </span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>sim_output <span class="sc">|&gt;</span> </span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(<span class="fu">aes</span>(t,infected)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="new-programming-concepts" class="level2 smaller" data-number="3.11">
+<h2 class="smaller anchored" data-number="3.11" data-anchor-id="new-programming-concepts"><span class="header-section-number">3.11</span> New programming concepts</h2>
+<p>From base R:</p>
+<p><code>runif</code> random numbers from uniform distribution<br>
+<code>sample</code> random sampling from a vector<br>
+<code>for</code> loop over commands with index (<code>i</code>) taking values of a vector (<code>2:tmax</code>) one by one <code>if_else</code> vectorized version of conditional statements</p>
+</section>
+</section>
+<section id="calculus" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Calculus</h1>
+<p>The mathematics of the <strong>change</strong> and the <strong>accumulation</strong> of quantities</p>
+<section id="motivation-si-model-with-population-compartments" class="level2" data-background-color="khaki" data-number="4.1">
+<h2 data-background-color="khaki" data-number="4.1" class="anchored" data-anchor-id="motivation-si-model-with-population-compartments"><span class="header-section-number">4.1</span> Motivation: SI model with <br> population compartments</h2>
+<p>Two compartments:<br>
+<span class="math inline">\(S(t)\)</span> is the number of susceptible people at time <span class="math inline">\(t\)</span>.<br>
+<span class="math inline">\(I(t)\)</span> is the number of infected people at time <span class="math inline">\(t\)</span>.</p>
+<p>It always holds <span class="math inline">\(S(t) + I(t) = N\)</span>. (The total population is constant.)</p>
+</section>
+<section id="how-many-infections-per-time" class="level2 smaller" data-background-color="khaki" data-number="4.2">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="4.2" data-anchor-id="how-many-infections-per-time"><span class="header-section-number">4.2</span> How many infections per time?</h2>
+<p>The <strong>change</strong> of the number of infectious</p>
+<p><span class="math display">\[\frac{dI}{dt} = \underbrace{\beta}_\text{infection prob.} \cdot \underbrace{\frac{S}{N}}_\text{frac. of $S$ still there} \cdot \underbrace{\frac{I}{N}}_\text{frac. $I$ to meet} \cdot N = \frac{\beta\cdot S\cdot I}{N}\]</span></p>
+<p>where <span class="math inline">\(dI\)</span> is the <em>change</em> of <span class="math inline">\(I\)</span> (the newly infected here) and <span class="math inline">\(dt\)</span> the time interval.</p>
+<p>. . .</p>
+<p><strong>Interpretation:</strong> The newly infected are from the fraction of susceptible <em>times</em> the probability that they meet an infected <em>times</em> the infection probability <em>times</em> the total number of individuals.<br>
+<span style="color:red;">Same logic as our Simulation in R!</span></p>
+<p>. . .</p>
+<p>Using <span class="math inline">\(S = N - I\)</span> we rewrite</p>
+<p><span class="math display">\[\frac{dI}{dt} = \frac{\beta (N-I)I}{N}\]</span></p>
+</section>
+<section id="ordinary-differential-equation" class="level2" data-background-color="aquamarine" data-number="4.3">
+<h2 data-background-color="aquamarine" data-number="4.3" class="anchored" data-anchor-id="ordinary-differential-equation"><span class="header-section-number">4.3</span> Ordinary differential equation</h2>
+<p>We interpret <span class="math inline">\(I(t)\)</span> as a function of time which gives us the number of infectious at each point in time. The change function is now</p>
+<p><span class="math display">\[\frac{dI(t)}{dt} = \frac{\beta (N-I(t))I(t)}{N}\]</span></p>
+<p>and <span class="math inline">\(\frac{dI(t)}{dt}\)</span> is also called the <strong>derivative</strong> of <span class="math inline">\(I(t)\)</span>.</p>
+</section>
+<section id="derivatives" class="level2 smaller" data-background-color="aquamarine" data-number="4.4">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="4.4" data-anchor-id="derivatives"><span class="header-section-number">4.4</span> Derivatives</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<ul>
+<li>The <em>derivative</em> of a function is also a function with the same domain.</li>
+<li>Measures the sensitivity to change of the function output when the input changes (a bit)</li>
+<li>Example from physics: The derivative of the <em>position</em> of a moving object is its <em>speed</em>. The derivative of its speed is its <em>acceleration.</em></li>
+<li>Graphically: The derivative is the <em>slope</em> of a <em>tangent line</em> of the graph of a function.</li>
+</ul>
+</div><div class="column" style="width:30%;">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Tangent_function_animation.gif" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="differentiation" class="level2 smaller" data-background-color="aquamarine" data-number="4.5">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="4.5" data-anchor-id="differentiation"><span class="header-section-number">4.5</span> Differentiation</h2>
+<p>is the process to compute the derivative. For parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> and other functions <span class="math inline">\(g\)</span> and <span class="math inline">\(h\)</span>, rules of differentiation are</p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p>Function <span class="math inline">\(f(x)\)</span></p>
+</div><div class="column" style="width:70%;">
+<p>Its derivative <span class="math inline">\(\frac{df(x)}{dx}\)</span> or <span class="math inline">\(\frac{d}{dx}f(x)\)</span> or <span class="math inline">\(f'(x)\)</span></p>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><span class="math inline">\(a\cdot x\)</span></p>
+<p><span class="math inline">\(b\)</span></p>
+<p><span class="math inline">\(x^2,\ x^{-1} = \frac{1}{x},\ x^k\)</span></p>
+<p><span class="math inline">\(g(x) + h(x)\)</span></p>
+<p><span class="math inline">\(g(x)\cdot h(x)\)</span></p>
+<p><span class="math inline">\(g(h(x))\)</span></p>
+<p><span class="math inline">\(e^x,\ 10^x  = e^{\log(10)x}\)</span></p>
+<p><span class="math inline">\(\log(x)\)</span></p>
+</div><div class="column" style="width:70%;">
+<div class="fragment" data-fragment-index="1">
+<p><span class="math inline">\(a\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="2">
+<p><span class="math inline">\(0\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="3">
+<p><span class="math inline">\(2\cdot x,\ -x^{-2} = -\frac{1}{x^2},\ k\cdot x^{k-1}\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="4">
+<p><span class="math inline">\(g'(x) + h'(x)\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="5">
+<p><span class="math inline">\(g'(x)\cdot h(x) + g(x)\cdot h'(x)\)</span> (product rule)</p>
+</div>
+<div class="fragment" data-fragment-index="6">
+<p><span class="math inline">\(g'(h(x))\cdot h'(x)\)</span> (chain rule)</p>
+</div>
+<div class="fragment" data-fragment-index="7">
+<p><span class="math inline">\(e^x,\ 10^x = \log(10)\cdot10^x\)</span></p>
+</div>
+<div class="fragment" data-fragment-index="">
+<p><span class="math inline">\(\frac{1}{x}\)</span> (A surprising relation to me at least)</p>
+</div>
+</div>
+</div>
+</section>
+<section id="differential-equation" class="level2 smaller" data-background-color="aquamarine" data-number="4.6">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="4.6" data-anchor-id="differential-equation"><span class="header-section-number">4.6</span> Differential equation</h2>
+<p>In a differential equation the <em>unknown</em> is a function!</p>
+<p>We are looking for a function which derivative is a function of the function itself.</p>
+<p><strong>Example: SI-model</strong></p>
+<p><span class="math display">\[\frac{dI(t)}{dt} = \frac{\beta (N-I(t))I(t)}{N}\]</span></p>
+<p>Which function <span class="math inline">\(I(t)\)</span> fulfills this equation?</p>
+<p>The <strong>analytical solution</strong><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p><span class="math inline">\(I(t) = \frac{N}{1 + (\frac{N}{I(0)} - 1)e^{-\beta t}}\)</span></p>
+<p>Which is called the <em>logistic equation</em>. Note, we need to specify the initial number of infectious individuals <span class="math inline">\(I(0)\)</span>.</p>
+</section>
+<section id="si-model-logistic-equation" class="level2 smaller" data-background-color="khaki" data-number="4.7">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="4.7" data-anchor-id="si-model-logistic-equation"><span class="header-section-number">4.7</span> SI-model: Logistic Equation</h2>
+<p><span class="math inline">\(I(t) = \frac{N}{1 + (\frac{N}{I(0)} - 1)e^{-\beta t}}\)</span></p>
+<p>Plot the equation for <span class="math inline">\(N = 10000\)</span>, <span class="math inline">\(I_0 = 1\)</span>, and <span class="math inline">\(\beta = 0.3\)</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>I0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_function</span>( <span class="at">fun =</span> <span class="cf">function</span>(t) N <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> (N<span class="sc">/</span>I0 <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span>beta<span class="sc">*</span>t)) ) <span class="sc">+</span> </span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="si-model-numerical-integration" class="level2 smaller" data-background-color="khaki" data-number="4.8">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="4.8" data-anchor-id="si-model-numerical-integration"><span class="header-section-number">4.8</span> SI-model: Numerical integration</h2>
+<p>Another way of solution is <strong>numerical integration</strong>, e.g.&nbsp;using <em>Euler’s method</em>.</p>
+<p>We compute the solution step-by-step using increments of, e.g.&nbsp;<span class="math inline">\(dt = 1\)</span>.</p>
+<div class="cell" data-output-location="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>I0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>dI <span class="ot">&lt;-</span> <span class="cf">function</span>(I,N,b) b<span class="sc">*</span>I<span class="sc">*</span>(N <span class="sc">-</span> I)<span class="sc">/</span>N</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># time increment, </span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co"># supposed to be infinitesimally small</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>tmax <span class="ot">&lt;-</span> <span class="dv">75</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,tmax,dt) </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the vector of timesteps</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>It <span class="ot">&lt;-</span> I0 <span class="co"># this will become the vector </span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co"># of the number infected I(t) over time</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(t)) { </span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a> <span class="co"># We iterate over the vector of time steps </span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a> <span class="co"># and incrementally compute It</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a> It[i] <span class="ot">=</span> It[i<span class="dv">-1</span>] <span class="sc">+</span> dt <span class="sc">*</span> <span class="fu">dI</span>(It[i<span class="dv">-1</span>], N, beta) </span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a> <span class="co"># This is called Euler's method</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(t, It) <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(t,It)) <span class="sc">+</span> </span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_function</span>( </span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> <span class="cf">function</span>(t) N <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> (N<span class="sc">/</span>I0 <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span>beta<span class="sc">*</span>t)), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> </span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a> <span class="co"># In blue: Analytical solution for comparison</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Why do the graphs deviate? <span class="fragment">The step size <span class="math inline">\(dt\)</span> must be “infinitely” small</span></p>
+</section>
+<section id="numerical-integration-with-smaller-dt" class="level2 smaller" data-background-color="khaki" data-number="4.9">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="4.9" data-anchor-id="numerical-integration-with-smaller-dt"><span class="header-section-number">4.9</span> Numerical integration with smaller <span class="math inline">\(dt\)</span></h2>
+<p>We compute the solution step-by-step using small increments of, e.g.&nbsp;<span class="math inline">\(dt = 0.05\)</span>.</p>
+<div class="cell" data-output-location="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>I0 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>dI <span class="ot">&lt;-</span> <span class="cf">function</span>(I,N,b) b<span class="sc">*</span>I<span class="sc">*</span>(N <span class="sc">-</span> I)<span class="sc">/</span>N</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> <span class="fl">0.05</span> <span class="co"># time increment, </span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># supposed to be infinitesimally small</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>tmax <span class="ot">&lt;-</span> <span class="dv">75</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,tmax,dt) </span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the vector of timesteps</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>It <span class="ot">&lt;-</span> I0 <span class="co"># this will become the vector </span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># of the number infected I(t) over time</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(t)) { </span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a> <span class="co"># We iterate over the vector of time steps </span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a> <span class="co"># and incrementally compute It</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a> It[i] <span class="ot">=</span> It[i<span class="dv">-1</span>] <span class="sc">+</span> dt <span class="sc">*</span> <span class="fu">dI</span>(It[i<span class="dv">-1</span>], N, beta) </span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a> <span class="co"># This is called Euler's method</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(t, It) <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(t,It)) <span class="sc">+</span> </span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_function</span>( </span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">fun =</span> <span class="cf">function</span>(t) N <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> (N<span class="sc">/</span>I0 <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span>beta<span class="sc">*</span>t)), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> </span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a> <span class="co"># In blue: Analytical solution for comparison</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="mechanistic-model" class="level2 smaller" data-background-color="khaki" data-number="4.10">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="4.10" data-anchor-id="mechanistic-model"><span class="header-section-number">4.10</span> Mechanistic model</h2>
+<p>The SI model is a potential answer to the <strong>mechanistic question</strong> <em>How do epidemics spread?</em></p>
+<p>The examples above show 3 different ways to explore the model:</p>
+<ul>
+<li><em>Agent-based simulation</em>
+<ul>
+<li>We model every individual explicitly</li>
+<li>Simulation involve random numbers! So simulation runs can be different!</li>
+</ul></li>
+</ul>
+<p>. . .</p>
+<ul>
+<li><em>Numerical integration</em> of differential equation
+<ul>
+<li>Needs a more abstract concept of <em>compartments</em></li>
+</ul></li>
+</ul>
+<p>. . .</p>
+<ul>
+<li><em>Analytical solutions</em> of differential equation
+<ul>
+<li>often not possible (therefore numerical integration is common)</li>
+</ul></li>
+</ul>
+</section>
+<section id="differentiation-with-data" class="level2 smaller" data-number="4.11">
+<h2 class="smaller anchored" data-number="4.11" data-anchor-id="differentiation-with-data"><span class="header-section-number">4.11</span> Differentiation with data</h2>
+<p><span style="color:red;"><strong>We can do calculus operations with data!</strong></span></p>
+<p>In empirical data we can compute the increase in a vector with the function <code>diff</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">0</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1  2  1  0 -2 -3</code></pre>
+</div>
+</div>
+<p>. . .</p>
+<p>More convenient in a data frame is to use <code>x - lag(x)</code> because the vector has the same length.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>x <span class="sc">-</span> <span class="fu">lag</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA  1  2  1  0 -2 -3</code></pre>
+</div>
+</div>
+</section>
+<section id="the-diff-of-our-simulation-output" class="level2 smaller" data-number="4.12">
+<h2 class="smaller anchored" data-number="4.12" data-anchor-id="the-diff-of-our-simulation-output"><span class="header-section-number">4.12</span> The diff of our simulation output</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> sim_output <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> infected))</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>g1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> sim_output <span class="sc">|&gt;</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">derivative_infected =</span> infected <span class="sc">-</span> <span class="fu">lag</span>(infected)) <span class="sc">|&gt;</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> derivative_infected))</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>g2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_line()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-27-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="nd-derivative-change-of-change" class="level2" data-number="4.13">
+<h2 data-number="4.13" class="anchored" data-anchor-id="nd-derivative-change-of-change"><span class="header-section-number">4.13</span> 2nd derivative: Change of change</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>g3 <span class="ot">&lt;-</span> sim_output <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">derivative_infected =</span> infected <span class="sc">-</span> <span class="fu">lag</span>(infected),</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">derivative2_infected =</span> derivative_infected <span class="sc">-</span> <span class="fu">lag</span>(derivative_infected)) <span class="sc">|&gt;</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> t)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> derivative2_infected))</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>g3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_line()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In empirical data: Derivatives of higher order tend to show fluctuation</p>
+</section>
+<section id="interpretation-in-si-model" class="level2 smaller" data-background-color="khaki" data-number="4.14">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="4.14" data-anchor-id="interpretation-in-si-model"><span class="header-section-number">4.14</span> Interpretation in SI-model</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="sc">+</span> g2 <span class="sc">+</span> g3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_line()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_line()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W06_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><span class="math inline">\(I(t)\)</span> total number of infected</li>
+<li><span class="math inline">\(I'(t)\)</span> number of new cases per day (time step)</li>
+<li><span class="math inline">\(I''(t)\)</span> how the number of new cases has changes compared to yesterday
+<ul>
+<li><span style="color:red;">2nd derivatives are a good early indicator for the end of a wave.</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="integration" class="level2 smaller" data-background-color="aquamarine" data-number="4.15">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="4.15" data-anchor-id="integration"><span class="header-section-number">4.15</span> Integration</h2>
+<p>The <strong>integral</strong> of the daily new cases from the beginning to day <span class="math inline">\(s\)</span> is <span class="math inline">\(\int_{-\infty}^s f(t)dt\)</span> and represents the total cases at day <span class="math inline">\(s\)</span>.</p>
+<ul>
+<li>The integral of a function <span class="math inline">\(f\)</span> up to time <span class="math inline">\(s\)</span> is also called the <strong>anti-derivative</strong> <span class="math inline">\(F(s) = \int_{-\infty}^s f(t)dt\)</span>.
+<ul>
+<li>The symbol <span class="math inline">\(\int\)</span> comes from an S and means “sum”.</li>
+</ul></li>
+<li>Compute the anti-derivative of data vector with <code>cumsum</code>.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">0</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cumsum</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1  3  7 12 17 20 20</code></pre>
+</div>
+</div>
+<ul>
+<li>Empirically: Derivatives tend to become noisy, while integrals tend to become smooth.</li>
+</ul>
+</section>
+<section id="the-fundamental-theorem-of-calculus" class="level2 smaller" data-background-color="aquamarine" data-number="4.16">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="4.16" data-anchor-id="the-fundamental-theorem-of-calculus"><span class="header-section-number">4.16</span> The fundamental theorem of calculus</h2>
+<p><strong>The integral of the derivative is the function itself.</strong></p>
+<p>This is not a proof but shows the idea:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">0</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>antiderivative <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(f)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>antiderivative</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1  3  7 12 17 20 20</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span>(<span class="fu">c</span>(<span class="dv">0</span>, antiderivative)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 4 5 5 3 0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We have to put 0 before to regain the full vector</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>derivative <span class="ot">&lt;-</span> <span class="fu">diff</span>(f)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>derivative</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  1  2  1  0 -2 -3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cumsum</span>(<span class="fu">c</span>(<span class="dv">1</span>,derivative)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 4 5 5 3 0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We have to put in the first value (here 1) </span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co"># manually because it was lost during the diff</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Can you check that this is correct? Compute <span class="math inline">\(I'(t)\)</span> (<span class="math inline">\(=\frac{dI(t)}{dt}\)</span>) and check if <span class="math inline">\(I'(t) = \frac{\beta (N-I(t))I(t)}{N}\)</span>. It is a bit of work, but try it! Let me know, if you want a solution.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

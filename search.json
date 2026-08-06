@@ -1,0 +1,589 @@
+[
+  {
+    "objectID": "material/M01.html",
+    "href": "material/M01.html",
+    "title": "W#01",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "W#01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#what-is-data-science",
+    "href": "material/M01.html#what-is-data-science",
+    "title": "W#01",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "W#01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#lecture-material",
+    "href": "material/M01.html#lecture-material",
+    "title": "W#01",
+    "section": "1 Lecture Material",
+    "text": "1 Lecture Material\nSlides: Direct Link\n\nFind the live recording in the Course’s Team’s Recording Folder.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "W#01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#additional-readings-and-material",
+    "href": "material/M01.html#additional-readings-and-material",
+    "title": "W#01",
+    "section": "2 Additional Readings and Material",
+    "text": "2 Additional Readings and Material\n\nQuarto: Watch https://www.youtube.com/watch?v=_f3latmOhew from Mine Çetinkaya-Rundel (co-developer of quarto, R for Data Science, datasciencebox).\nR: Read the following sections in R for Data Science\n\nIntroduction\nWhole Game (the outline of the part)",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "W#01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#achievements",
+    "href": "material/M01.html#achievements",
+    "title": "W#01",
+    "section": "3 Achievements",
+    "text": "3 Achievements\nYou\n\nhave read the Syllabus and understood the course organization and the relations between Data Science Concepts and Data Science Tools\nhave a running R with Positron installation on you computer and can check all marks on the Checklist Technical Setup\nhave done the git-GitHub dance and know what the tools are in principle\nhave rendered quarto documents and understood its idea\nhave made your first steps with R\nhave filled out the Data Science Profile Survey",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "W#01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#homework-projects-progress-guides",
+    "href": "material/M01.html#homework-projects-progress-guides",
+    "title": "W#01",
+    "section": "4 Homework Projects Progress Guides",
+    "text": "4 Homework Projects Progress Guides\nFind the Repositories of your Homework Projects in the Course’s GitHub-Organization’s CU-F26-MDSSB-01-Concepts-Tools &gt; Repositories.\nProject’s INSTRUCTIONS you should have completed:\nProject_NYCFlights: 1. (one successful step of the git-GitHub-dance)\n\n\n\n\n\n\nNote\n\n\n\nDon’t panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "W#01"
+    ]
+  },
+  {
+    "objectID": "literature.html",
+    "href": "literature.html",
+    "title": "Learning Resources",
+    "section": "",
+    "text": "All the materials here are freely accessible, many are community standards. The Schedule might refer to specific sections in these materials.",
+    "crumbs": [
+      "Syllabus",
+      "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "literature.html#r",
+    "href": "literature.html#r",
+    "title": "Learning Resources",
+    "section": "1 R",
+    "text": "1 R\n\nR for Data Science (2nd Edition) https://r4ds.hadley.nz// by Hadley Wickham, Garrett Grolemand, Mine Çetinkaya-Rundel and the R data science community around is our core resource for self-learning data science with R using tidyverse tools.\nTidy Modeling with R https://www.tmwr.org/ by Max Kuhn and Julia Silge is the resource for learning to work with tidymodels building upon the tidyverse tools.\nPart of the course builds on or be inspired by material in Data Science in the Box https://datasciencebox.org/ by Mine Çetinkaya-Rundel and the data science education community around. You can also use the website for accompanying self-study on selected topics.",
+    "crumbs": [
+      "Syllabus",
+      "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "literature.html#python",
+    "href": "literature.html#python",
+    "title": "Learning Resources",
+    "section": "2 python",
+    "text": "2 python\n\nPython Data Science Handbook https://jakevdp.github.io/PythonDataScienceHandbook/ by Jake VanderPlas is a core resource for data science with python. Also there is a good video playlist https://www.youtube.com/playlist?list=PLWKjhJtqVAbkmRvnFmOd4KhDdlK1oIq23 and a 4-hour “full-course” video https://youtu.be/rfscVS0vtbw.",
+    "crumbs": [
+      "Syllabus",
+      "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "literature.html#data-visualization",
+    "href": "literature.html#data-visualization",
+    "title": "Learning Resources",
+    "section": "3 Data Visualization",
+    "text": "3 Data Visualization\nggplot2: Elegant Graphics for Data Analysis https://ggplot2-book.org is a resource on understanding the logic of ggplot better.\nA great source for Graphic Design with ggplot2: https://rstudio-conf-2022.github.io/ggplot2-graphic-design/. Look at the Introduction to see what cool things are possible. Work through Concepts of the ggplot2 Package Pt. 1 and Concepts of the ggplot2 Package Pt. 2 for a full introduction to all of ggplot2.\nWebsites on how to decide for what visualization to choose:\nhttps://www.data-to-viz.com/\nhttps://datavizcatalogue.com/search.html",
+    "crumbs": [
+      "Syllabus",
+      "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "literature.html#mathematics",
+    "href": "literature.html#mathematics",
+    "title": "Learning Resources",
+    "section": "4 Mathematics",
+    "text": "4 Mathematics\nA video on how to read math https://www.youtube.com/watch?v=Kp2bYWRQylk. Essential to start reading text including math.\nAs a data scientist it is necessary to be able to delve into mathematical concepts in some depth. It is not necessary to become a mathematician and proof theorems. A lot can be learned when needed using short videos, wikipedia, and practice and play using your favorite programming environment. However, it makes sense to have an accessible text books to look up and learn some topics in a more systematic way.\nThe Open Intro project and their partner programs provide such math textbooks for free (you may need to “buy” the pdf of 0 EUR or a donation of your choice).\n\nStudy Pre-Calculus to refresh your basic math skill on functions including polynomials; root, radical, and power function, and exponential and logarithmic functions.\nGain the basic concepts of Calculus including limits, derivatives, and integrals.\nGain the basic concepts of Linear Algebra and how to read and understand matrix-language. Linear models, PCA and many other data science tools are most systematically understood using matrix language. On linear algebra this is a good video resource about the essence of linear algebra: https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab.\n\nFor Probability Theory the open textbook for the course Probability for Data Science is very useful.",
+    "crumbs": [
+      "Syllabus",
+      "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "literature.html#statistics",
+    "href": "literature.html#statistics",
+    "title": "Learning Resources",
+    "section": "5 Statistics",
+    "text": "5 Statistics\nSome statisticians say that data science is statistics. There is some truth in it. However, data science is more than statistics and statiscics has a certain view point. To get a deeper understanding of it is useful to study data science concepts through the lense of statistics.\nThe Open Intro project also provide good open and free statistics textbooks.\nMany concepts in data science can be described as statistical learning. A core and very accessible resource for it is\nAn Introduction to Statistical Learning which provides a version with code in R as well as in python.",
+    "crumbs": [
+      "Syllabus",
+      "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "literature.html#project-based-learning",
+    "href": "literature.html#project-based-learning",
+    "title": "Learning Resources",
+    "section": "6 Project-based learning",
+    "text": "6 Project-based learning\nProject-based learning (especially in programming) means to learn things by reproducing a project (or make your own project in a very similar way). This is a resource for various projects in various languages: https://github.com/practical-tutorials/project-based-learning/tree/master",
+    "crumbs": [
+      "Syllabus",
+      "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "literature.html#the-art-of-data-science",
+    "href": "literature.html#the-art-of-data-science",
+    "title": "Learning Resources",
+    "section": "7 The Art of Data Science",
+    "text": "7 The Art of Data Science\nThe Art of Data Science https://bookdown.org/rdpeng/artofdatascience/ is a great resource for learning about the process of data science and how to communicate about it.",
+    "crumbs": [
+      "Syllabus",
+      "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "final.html",
+    "href": "final.html",
+    "title": "Final Project",
+    "section": "",
+    "text": "Important\n\n\n\n\n\nProject check-in has started. Deadline: Saturday, Nov 8.\nFill the form Data Science Tools Final Project Check-In. (Ideally after you have formed a team and discussed your data source and initial questions.)\nThese are specifications and guidelines for the final Data Science Project and the Project report, the assessment for the Data Science Tools (see Syllabus): How to write it, when and how to deliver it, and how it will be graded.",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#how-to-write-a-project-report-in-a-nutshell",
+    "href": "final.html#how-to-write-a-project-report-in-a-nutshell",
+    "title": "Final Project",
+    "section": "1 How to write a project report in a nutshell",
+    "text": "1 How to write a project report in a nutshell\n\nYou find a team,\n\npick a dataset or the data source of the Homework Projects COVID19, FuelWatch, or DataScienceProfiles\ncheck-in your project in the Form Data Science Tools Final Project Check-In,\ndo some interesting question-driven data analysis with it, and\nwrite up a well-structured and nicely formatted report about the analysis in your team’s repository.",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#work-in-teams-and-register-your-project",
+    "href": "final.html#work-in-teams-and-register-your-project",
+    "title": "Final Project",
+    "section": "2 Work in Teams and Register your Project",
+    "text": "2 Work in Teams and Register your Project\nProjects should be done in teams of 3-6 students. This serves two additional learning goals:\n\nLearning to pursue and coordinate data science workflows collaboratively.\nLearning to work collaboratively on code with git and GitHub.\n\nIndividual teams are possible upon request when there are reasons for it.\n\n\n\n\n\n\nImportantThe team’s work is graded as one piece.\n\n\n\n\n\nAll members receive the same grade for it. However, the module grade can be different because of the bonus for fully complete homework. A dysfunctional team can be split anytime before submission upon request by any individual member. Write to the instructors in case you want to depart from your team.\n\n\n\nHow to form a team and register your project:\n\nForm a team on your own with fellow students.\nGo through these guidelines together.\nDecide if you want to build on one of your Homework Projects or search for your own data.\n\nFind a suitable dataset (see below).\n\nCome up with one initial question per team member. Discuss in your team how the questions are related and if and how they build on each other.\n\nFill out the Form Data Science Tools Final Project Check-In",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#delivery",
+    "href": "final.html#delivery",
+    "title": "Final Project",
+    "section": "3 Delivery",
+    "text": "3 Delivery\n\nDelivery is via GitHub in a private repository (the same way as Homework Projects).\nThe repository for the final project will be created in the CU-F26-MDSSB-01-Concepts-Tools by the instructors upon team and project approval.\nThe assessment will be done of the HTML file report.html. You write the report in Quarto Markdown (report.qmd) or Jupyter Notebook (report.ipynb) and render it to HTML.\nThe source files (report.qmd or report.ipynb) must be included.\n\nNote: In large teams it can be helpful that members work on individual files for some time to avoid to much technical coordination (e.g. analysis_NAME.qmd). This is OK. However, in the end you need to put everything together in one file report.html! Reseve some time for it as a team. Individual files (and rendered files) should be removed from the repository before delivery time.\n\nThe assessment will start after the deadline with the latest commit. Help us by calling your final commit message DELIVERY.\nAssessment will be done based on reading the HTML-file report.html. Additionally and if necessary, the Quarto Markdown File and other provided files may be looked at. Ideally, the HTML-Report is sufficient to assess the project!\n(To test if the HTML file looks good for the instructors do the following: Clone the repository anew to a temporaty directory on your computer, open the HTML file from this newly cloned directory. Check if it looks good. This is what instructors will do.)",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#deadline",
+    "href": "final.html#deadline",
+    "title": "Final Project",
+    "section": "4 Deadline",
+    "text": "4 Deadline\nSee Schedule.\nNote: The deadline is before the Winter (German Christmas) break in December. In total you have 3 attampts to pass any module. The second attempt will be with a deadline in late January 2025. The third attempt will be in the next academic year. If you feel very time pressured in December and you are still keeping up with learning. You can consider to let the first attempt pass and work furterh in January. A failed attempt does not harm your transcript.",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#grading",
+    "href": "final.html#grading",
+    "title": "Final Project",
+    "section": "5 Grading",
+    "text": "5 Grading\n\nThe reports will be graded jointly by the instructor of Data Science Tools and Data Science Concepts.\n\nThe presentation in class is informal and will not be graded.\nAll team members receive the same grade for the project report. In case of a dysfunctional team, members can leave or split the team upon prior communication with the team and the instructors.\n\nAssessment rubric\nProject reports can be quite different depending on the data used and the type of question(s) (Descriptive, Exploratory, Inferential, Predictive, Causal, Mechanistic). Therefore, there will not be a fixed rubric. We will communicate back the final percentage grade (compare Constructor University’s Grading Table. Additionally, we aim to give short textual feedback about strong and weak points.\nNevertheless, the assessment goes along some criteria with some approximate weights:\n\nIntroduction/Questions (10%)\nData Handling/Preparation (10%)\nModeling (20%)\nComprehensiveness/Visualizations (20%)\nResults/Conclusion (20%)\nProgramming style (10%)\nDocument Structure and Layout (10%)",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#advice-for-data-science-team-work-with-git",
+    "href": "final.html#advice-for-data-science-team-work-with-git",
+    "title": "Final Project",
+    "section": "6 Advice for data science team work (with git)",
+    "text": "6 Advice for data science team work (with git)\n\nSelect your language R or python!\nPut the data you need into a folder data. Very large datasets need not be committed and pushed. Document where the data can be retrieved and where it should be put to Use it with your code.\n\nAll team members need to clone the repository to their local computers.\nTry both:\n\nWorking together at the same time with realtime communction.\nWorking together remotely based on a plan who should do what. Feel free to use GitHub issues in your repository for this!\n\nEvery team member should finally have pushed some work to GitHub!\nCommit early and often! We help you when you have questions or need directions based on committed code.\nBefore you start to work as a team member: Always do git pull first to receive potentially new content!\nTry to finish an individual work session with comments on next steps and open questions. Push the files in a state such that it renders.\nConflicts in git: Git conflicts will probably occur when you work in teams while pulling and pushing. These can be solved. If you do not manage, ask for help. Sometimes git-conflicts become too confusing that Burn it all down can be the best approach to have a fresh start on your local machine by cloning again. (See also https://xkcd.com/1597/.) Check what is in the remote repo before and save relevant local work somewhere.\n\nConflicts in the team. Please communicate about tensions in your team and try to solve them. However, you are not obliged to finish your project as a dysfunctional team. To avoid being bound to the same grade in a dysfunctional team, every team member has the right to leave the team and continue independently. This can only be realized upon prior communication with team members and consequently with the instructors!",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#how-to-define-a-project",
+    "href": "final.html#how-to-define-a-project",
+    "title": "Final Project",
+    "section": "7 How to define a project?",
+    "text": "7 How to define a project?\nPart of the work is to define a good project for question-driven data analysis.\nEssentially there are two approaches to coming to a project setup:\n\nFind and select data that interests you, do some question-driven data exploration, and focus and narrow the question.\nStart with a question and search data to answer it.\n\nYou can build on topics and datasets of the Homework.",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#guidelines-for-drafting-your-project",
+    "href": "final.html#guidelines-for-drafting-your-project",
+    "title": "Final Project",
+    "section": "8 Guidelines for drafting your project",
+    "text": "8 Guidelines for drafting your project\n\nIf you do not build on a Homework Project: Find a manageable dataset. A guideline is at least 50 cases (rows), good is 10-20 variables (columns) with a mix of categorical and numerical ones. Deviations are allowed based on your interest and capability.\nGo through the visualizations, statistics, and models we had in lectures and homework and think if similar things would be interesting.\nThe goal is not an exhaustive data analysis with every method! Do not calculate every statistic and procedure you have learned for every variable, but rather show that you can ask meaningful questions and answer them with results of data analysis and proficient interpretation and presentation of the results.\nDo NOT blindly do all visualization and all statistics on all variables in the data set! You may do that in your data exploration. But not all exploratory data analysis goes into your report. At some point, you have to focus on what is needed to answer your questions. Your report is not a documentation of all your exploratory steps. Throw out what is not needed anymore, improve the remaining visualizations, and explain well in the text what you want to communicate.\nA single high-quality visualization that shows a point clearly will receive a much higher appreciation than a large number of poor-quality visualizations without an explanation of what they should communicate.",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#optional-making-your-project-public",
+    "href": "final.html#optional-making-your-project-public",
+    "title": "Final Project",
+    "section": "9 (Optional) Making your project public",
+    "text": "9 (Optional) Making your project public\nBy default, project repositories are private and only visible to team members and instructors. The repositories can be made public such that students can use it as part of their portfolio, for example for referring to it in applications for internships and student jobs. Please let the instructors know if you want to make the repository public.\nAdditionally, the HTML file can be made accessible directly as a webpage with a few tweaks from quarto using the service of GitHub Pages. See the documentation.",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "final.html#frequently-asked-questions-may-be-extended",
+    "href": "final.html#frequently-asked-questions-may-be-extended",
+    "title": "Final Project",
+    "section": "10 Frequently Asked Questions (may be extended)",
+    "text": "10 Frequently Asked Questions (may be extended)\n\nDo we need to stick to methods and visualizations treated in lectures?\nNo, you are invited to use other data analysis and visualization methods (from other courses or packages which you self-learn)! We are happy to give advice if we can.\nAre we only allowed to use one dataset?\nNo, you can also merge data from different sources. This is a more challenging project because the data wrangling work would be a bit more. If your question calls for it we encourage you to use another data source. The additional effort will be recognized.\nCan we use AI in the production or our analysis and report writing?\nIt is not forbidden to use AI tools for whatever purpose. So, any text and code can only be treated as written by the claimed author. When not properly used during analysis, AI text tends to meander around topics, not becoming specific, remaining generic, or generating a lot of not very related content. All of this is not what should be in questions-driven data analysis and will be assessed accordingly. Instructors rather want to read one interpretation sentence which shows understanding even of a basic thing than several paragraphs of AI blurb. So, this one sentence will contribute positively to the grade, the AI blurb will contribute negatively to the grade. Take this serious! Massive text harms your grade when mostly meaningless. It harms your grade more than no text at all.\nAI code also has very typical structures and patterns. If AI code is used, it should be adapted and improved to the specific analysis context. Scrutinze such code step by step to understand what is happening. Do not just rely on pleasing looking outcomes. Blindly using AI-generated code will often lead to wrong results or unprofessional coding style (too many comments, to lengthy, not up to date functions used and so on). Also remove code you do not need anymore. You know what code you need when you understand your code step by step. This is also a way to learn.\nWhat about the word count?\nPlease do not count words. Also the instructors will not count words. Anyway at least half of the work lies in code and visuals. A minimal word count needs to be in the requirements as a guideline. It will not be used as a strict criterion. Quality over quantity. Massive text which is mostly meangingless or unrelated to the data analysis is worse than no text at all.\nI did my project and it looks fine but the feedback says I submitted nothing or incomplete material. How can I test that my submission on GitHub is as it should be?\nSometimes, students forget to git add and (most importantly) git push all necessary files. This can imply that the student did everything fine b ut when instructors clone the repository it is incomplete or not even touched. How can you check? To test if the HTML file looks good for the instructors do the following:\nGo to the repository on GitHub CU-F26-MDSSB-01-Concepts-Tools. Clone your repository anew to a temporary directory on your computer, open the HTML file from this newly cloned directory. Check if it looks good. This is what instructors will do. Then you can delete the temporary directory again.\nLEARNING: What is on your computer is not always the same to what is in GitHub. This is not unusual in git workflows. Always check what is in GitHub if you are unsure! For checking the HTML file the easiest way is to make the temporary clone as described above.",
+    "crumbs": [
+      "Syllabus",
+      "Final Project"
+    ]
+  },
+  {
+    "objectID": "schedule.html",
+    "href": "schedule.html",
+    "title": "Schedule",
+    "section": "",
+    "text": "Tabular Schedule\nDate format MM-DD (month-day) (09-05 is Sep, 5)\nData Science Tools is Thursdays. First meeting: 09-04.\nData Science Concepts is Mondays. First meeting: 09-08.\n\n\n\nWeek\nDates Concepts\nConcepts Topics\nDates Tools\nTools Topic\n\n\n\n\n1\n09-01\nNo class, Academic Opening\n09-04\nR\n\n\n2\n09-08\nW#1 What is Data Science?\n09-11\nR\n\n\n3\n09-15\nW#2 Data Visualization, Data Formats\n09-18\nR\n\n\n4\n09-22\nW#3 Data Import, Data Wrangling\n09-25\nR\n\n\n5\n09-29\nRoom Change! Come to SH-229 Video Conference in South Hall from now on!  W#4 Relational Data, Math: Sets and Functions, Shift-Scale Transformation, Function Programming\n10-02\nR\n\n\n6\n10-06\nW#5 Descriptive Statistics, Exploratory Data Analysis\n10-09\nR\n\n\n7\n10-13\nW#6 Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus\n10-16\nR\n\n\n8\n10-20\nW#07 Models in Science, Linear Model, Interaction Effects, Nonlinear Models\n10-23\npython\n\n\n9\n10-27\nW#08 Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression\n10-30\npython\n\n\n10\n11-03\nW#09 Data Science Tools Final Project Check-In Prediction (Building a Spam Filter), Classification and Regression with Decision Trees\n11-06\npython\n\n\n11\n11-10\nW#10 Overfitting, Clustering Algorithms\n11-13\npython\n\n\n12\n11-17\nW#11 Collaborative Git, More Prediction Modeling, Quantifying Uncertainty, Crowd Wisdom\n11-20\npython\n\n\n13\n11-24\nW#12 Hypothesis Testing, Matrices, Probability\n11-27\npython\n\n\n14\n12-01\nNo Class Exam Preparation with a Mock Exam\n12-04\npython\n\n\nExtra\n12-08\nQ&A Session before the exam\n\n\n\n\nExam\n12-15\nThe exam takes place as an online exam in the date range marked in the academic calendar Set for 14:00-16:00\n\n\n\n\nProject\n\nDeadline for submission of the Final Project marked in the academic calendar\n\n\n\n\n\n\n2026\n\n\n\n\n2nd  Exam\n01-27\nThose who fail the exam and those who are officially excused can sit in the second exam end of January 2026.  Date range marked in the academic calendar Set for 14:00-16:00",
+    "crumbs": [
+      "Syllabus",
+      "Schedule"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "",
+    "text": "ImportantDeveloping Syllabus\n\n\n\n\n\nThis syllabus may change during the course of the semester with some additions and clarifications.\nAll substantial changes will marked here with date.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#module-names",
+    "href": "index.html#module-names",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "1 Module Names",
+    "text": "1 Module Names\nThis syllabus is for two modules which require each other.\n\nMDSSB-DSOC-02 Data Science Concepts (Core area, 5 credits)\nMDSSB-MET-01 Data Science Tools (Methods area, 5 credits)\n\nOffered in the Master program: Data Science for Society and Business (DSSB). See the module description in the DSSB Handbook.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#module-components",
+    "href": "index.html#module-components",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "2 Module Components",
+    "text": "2 Module Components\n\nData Science Concepts (5 Credits)\nData Science Tools in R and python (5 credits)\n\nAll courses offered in the Fall term and have no entry requirement.\nData Science Concepts and Data Science Tools are co-requirements.\nThe concepts treated in the lectures are applied with programming tools learned in the Tools course. Central to individual learning are homework projects.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#class-meeting-information",
+    "href": "index.html#class-meeting-information",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "3 Class Meeting Information",
+    "text": "3 Class Meeting Information\nData Science Concepts:\nMon 9:45 - 11:00\nMon 11:15 - 12:30\nLocation: SH-229 Video Conference in South Hall in-person\nVideo streaming and recording in Microsoft Teams is provided for late-arriving students: Team F26_MDSSB-DSOC-02_Data Science Concepts, General Channel\nData Science Tools:\nThu 9:45 - 11:00\nThu 11:15 - 12:30\nLocation: see campusnet in-person\nVideo streaming and recording in Microsoft Teams is provided for late-arriving students.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#instructors",
+    "href": "index.html#instructors",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "4 Instructors",
+    "text": "4 Instructors\nConcepts: Jan Lorenz\nTools: Erkan Güneş\nStudent Assistants:",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#format-and-workload",
+    "href": "index.html#format-and-workload",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "5 Format and Workload",
+    "text": "5 Format and Workload\nConcepts: Lectures, sometimes with aspects of Tutorials (35 hours in presence, total expected workload 125 hours)\nTools: Tutorials, sometimes with aspects of Lectures (35 hours in presence, total expected workload 125 hours)\nBesides homework, both modules require a decent amount of self-study.\nWorkload homework and self-study is expect to be 90/125 = 72% of the total workload.\nHomework assignments are given along the concepts treated in Concepts to be solved with the tools treated in Tools.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#intended-learning-outcomes",
+    "href": "index.html#intended-learning-outcomes",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "6 Intended Learning Outcomes",
+    "text": "6 Intended Learning Outcomes\nThe module descriptions can be found in the DSSB Handbook.\n\n6.1 From the handbook\nBy the end of the Concepts module, you will be able to:\n\nunderstand and use the mathematical foundations of statistical learning algorithms\nexplain and classify data science problems\nexplain and classify data-driven approaches\nunderstand the application of data science techniques to typical situations and tasks in business and societal research, including the search, retrieval, preparation, and statistical analysis of data\ninterpret complexity analysis and performance evaluation of data science problems and algorithms\n\nBy the end of the Tools module, you will be able to:\n\nexplain basic concepts of imperative and object-oriented programming\nwrite, test, and debug programs\nperform data handling and data manipulation tasks in R and Python\napply your knowledge to implement own functions in R and Python\neffectively use core packages and libraries of R and Python for data analysis\nknow about the typical applications of R and Python in data science\nimplement and apply advanced data mining methods with appropriate tools\nperform a full cycle of data analysis\n\n\n\n6.2 Main Learning Goal\nOur main goal to help you build a good basis for your more and more independent work in the whole study program. That means you can\n\nlearn core concepts in data science on your own, for example\n\nconcepts to explore data (import, wrangle, visualize)\nlearn and explore mathematics and statistics through the data science lens\nlearn concepts to model and draw conclusions from data (model, infer, predict)\n\ncreate and maintain a digital working environment on your computer to do data science\nlearn to program in the data science languages R and python, and become able to learn new skills in these independently\ndo a data science project of your own interest",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#examination-and-assessment",
+    "href": "index.html#examination-and-assessment",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "7 Examination and Assessment",
+    "text": "7 Examination and Assessment\n\n\n\n\n\n\nWarningFor students of DSSB (online)\n\n\n\n\n\nThese information does NOT apply for you, check your handbook.\n\n\n\n\n7.1 Concepts Module\nAssessment Type: Written Examination\nDuration: 120 min\nWeight: 100%\nScope: All intended learning outcomes of the module.\nCompletion: to pass this module, the examination has to be passed with at least 45%\nAn exam will take place after all lectures in December. The date will be published by the university adminstration later. The date range is in the Academic Calendar.\nThere are no additional achievements necessary and there are no bonus options.\n\n\n7.2 Tools Module\nModule achievement: 50% of the assignments correctly solved\nProgramming and analysis assignments will appear step by step during the courses as Homework Projects.\nTo pass the module you have to solve half of them by the end of the semester.\nAssessment Type: Project Report\nLength: 4000 - 5000 words (This is a guideline, not a strict rule! Content counts, we will not count words.)\nWeight: 100%\nScope: All intended learning outcomes of the module.\nMore information of project formats and grading rubric: Final Projects\nBonus option: Students receive 0.33 points grade improvements on their project grade on the numerical grade as specified in the Grading Table when all assignments are solved by the end of the semester. (Note, the bonus is not necessary to reach the best grade in the module.)\nAll assignments and the final project must be delivered in personalized repositories in the GitHub organization.\n\n\n\n\n\n\nImportantHomework Specification for Passing and Bonus\n\n\n\n\n\nBy the end of the semester, all Homework repositories will be assessed as\n\n“Just Passed” when half of the tasks are solved meaningfully,\n“Passed” when almost all tasks are solved (some shortcomings are acceptable),\n“Bonus” when the solutions are great, or\n“Fail” when none of this has been achieved.\n\nTo pass the module (50% Module Achievement such that the student can be assessed on the final project) a student needs to have all Homework Projects at least as “Just Passed” (no “Fail”). However, a “Fail” in one Homework can be compensated by a another Homework being “Passed” or “Bonus”.\nTo receive the bonus for the module assessments a student needs to have more than half of the Homework Projects at “Bonus” and all others at “Passed” (no “Fail” or “Just Passed”).",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#module-policies",
+    "href": "index.html#module-policies",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "8 Module Policies",
+    "text": "8 Module Policies\nThere are no formal requirement about attendance and active participation. However, we rely on your engagement in a many-facted way including:\n\nPreparation (looking at readings and material before and after class, being informed about syllabus and course material)\nFocus (avoid distraction during in class and self-learning activities)\nPresence (listening and responding during group activities)\nAsking questions (in class, out of class, online, offline, when you get stuck conclude by writing a question)\nSpecificity (being as specific as possible when describing your problem or question)\nSynthesizing (making connections between concepts from reading and discussion)\nPersistence (you don’t need to understand everything immediately, but stay engaged, try again, confusion shows that you pay attention)",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#academic-integrity",
+    "href": "index.html#academic-integrity",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "9 Academic Integrity",
+    "text": "9 Academic Integrity\nAll involved parties (professors and lecturers, instructors and students) are expected to abide by the word and spirit of the “Code of Academic Integrity”. Violations of the Code might be brought to the attention of the Academic Integrity Committee.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#artifical-intelligence-ai-use-policy",
+    "href": "index.html#artifical-intelligence-ai-use-policy",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "10 Artifical Intelligence (AI) Use Policy",
+    "text": "10 Artifical Intelligence (AI) Use Policy\nThis policy covers any generative AI tool, such as ChatGPT, Elicit, Gemini, Claude, CoPilot, etc. This includes text, code, slides, artwork/graphics/video/audio and other products.\nWe instructors encourage exploring AI tools for these purposes:\n\nLearning by dialog with a chatbot. AI chatbots can be helpful to explain you concepts on your desired level and get a feeling about how topics are treated. You can ask for an easier or more detailed explanation or focus on certain aspects. Note: The capabilities are limited and you likely receive also false information! An AI chat can be a good entry point to learn about a specific topic but the more specific it gets the more likely it is that AI will start to deliver useless or wrong answers. Using chatbots should remain a small part of your learning process. Rule of thumb: Spend not more than 25% of the learning time with chatting with AI. There is no way around reading textbooks, reading software documentation, learning and understanding concepts, searching for help online, asking instructors or fellow students.\nHave code snippets written. Tools like GitHub Copilot can be a great help in coding! Try them, many coders do it. Maybe the GitHub Copilot is stil free to use for students and teachers who join GitHub Education), they can be integrated in your programming IDE like RStudio and VSCode. Copilots can speed up writing. However, they may deliver bad code. There is no way around understanding yourself what code is doing! Do not spend endless hours asking for new code with new prompts, spend time understanding a language and the functions and objects you are using! AI chatbots and Copilots can also help you to understand code. Copilots can be a great help to get a skeleton of code and an idea how your solution might look. They rarely deliver the complete code. Expect that the code does not work, expect that the code seems to works but the results are wrong! You are 100% accountable for the code you produce, with or without the help of a copilot! When a task in a Homework project can be well solved by Copilot we are happy if you drop us a note, same when it is totally off, it is interesting to explore what AI can do well and what not.\nHave a draft text snippet written. I do not recommend to use AI for writing. Writing is to a large extent thinking and this is important. It is not “forbidden” to use AI for writing. However, you are 100% accountable for the text you deliver. You are expected to know what your text is about and to be able to answer questions about what your text means! With text generated purely by chatbots, it is often evident for us that students do not understand. We consider such cases worse than incomplete but sensible self-written text. Text written by chatbots is often very generic and not specific. In general, we value more specific text higher than generic text. Generic text is considered worse than specific self-written text.\n\nNote: Philosophical and legal questions around the training and use of chatbots and code copilots are controversially contested and re-examined constantly! We encourage to engage with such questions and become aware of arguments and debates.\nIf any part of this AI policy is confusing or uncertain, please reach out to us for a conversation before submitting your work.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#schedule-and-homework",
+    "href": "index.html#schedule-and-homework",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "11 Schedule and Homework",
+    "text": "11 Schedule and Homework\nThe Schedule is on an extra page and will be updated continuously with\n\nLinks to slides\nWhat homework you are expected to do\nSome questions which you should be able to answer after each week.\n\nRead about the concepts of our Homework Projects.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "index.html#feedback-from-students",
+    "href": "index.html#feedback-from-students",
+    "title": "Data Science Concepts / Data Science Tools",
+    "section": "12 Feedback from Students",
+    "text": "12 Feedback from Students\nWe are eager to constantly improve the quality of our teaching. We would be glad to obtain your feedback at any time of the course to improve your learning experience.",
+    "crumbs": [
+      "Syllabus"
+    ]
+  },
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Checklist Technical Setup",
+    "section": "",
+    "text": "I have made a GitHub account and submitted it\nI have installed R\nI have installed git\nI have installed positron\nI have tested that R runs in positron\nI have installed the tidyverse package in R\nIf any of this does not work, read the details below and try to solve it. Many problems will depend on specific things of your operating system. Many problems may be easy once you got what the problem is. Some maybe harder. If it does not work, write to the instructors or assistants (Teams chat or email) describing exactly what you have done and where you get stuck. A clear and specific description of the problem is essential for getting help!",
+    "crumbs": [
+      "Syllabus",
+      "Checklist Technical Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#details",
+    "href": "setup.html#details",
+    "title": "Checklist Technical Setup",
+    "section": "Details",
+    "text": "Details\nYou need a GitHub account and become member of the GitHub Organization: CU-F26-MDSSB-01-Concepts-Tools of the course. Follow the instructions on the linked page of the organization. - You need a computer with Windows, MacOS, or Linux (maybe also other exotic operating systems). A tablet, phone or Chromebook is probably not sufficient. - You need to install software on your computer. Here is what you need including links where to download and find instructions for you operating system: - Statistical Programming Language: R, later we will alos use python. Instructions will come in class. - Version Control System: Git - Integrated Development Environments (IDE): The instructors uses positron. All instructions will be based on this. In the past the instructors used RStudio. Positron is developed by the same people and is somehow its modern version.\nWhen R, Git, positron are installed, open positron and test that everything works together:\n\nIs R running? On the top right you should see the R-symbol and its version numbers. That should be your current session. If not click on it, maybe it lists a python session or Start Session. Then a Select Interpreter Session dialog should pop up and you can start a new one and find R. If R is not offered solve this first by finding out how Positron can find the R installation. Usually it is detected automatically.\nAnother check: Go the CONSOLE tab (usually at the bottom). Scroll to the beginning. It should start with something like R 4.5.1 started. At the end of the console you should see a &gt;-prompt. Type version and hit ENTER. You should see the version of printed.\nDo you have access to the tidyverse? In R, you will use packages in the package family tidyverse. You can install it by running install.packages(\"tidyverse\") in the CONSOLE.\nDo git and quarto run from the TERMINAL? Go to the TERMINAL tab besides the CONSOLE. Type git --version and hit ENTER. You should see the version of git printed. Then type quarto --version and hit ENTER. You should see the version of quarto printed.\nNote: You can also write R and hit ENTER. You start an R session in the Terminal. We do not need it, so type q() and ENTER to leave R again. (No need to save the workspace, just hit ENTER again if asked.)\n\nLearning: Understand the difference between the CONSOLE and the TERMINAL! Both are command line interfaces (CLI).\n\nThe CONSOLE is for R commands in the current session in positron.\nThe TERMINAL is for system commands. It is also called SHELL (or also Console …, but that is confusing here). It also works outside of positron. You can control your whole computer using the TERMINAL. It does not start with a simple &gt; but first with a name of your machine and then with the current working directory. Working directory means where in your file system the computer will operate your next command. We the command line tools mainly for git and quarto. For both we will also use short cuts and convenient click and point interfaces in positron. But it is important to understand what happens in the background and that you can always use the TERMINAL directly for all the things of git and quarto.",
+    "crumbs": [
+      "Syllabus",
+      "Checklist Technical Setup"
+    ]
+  },
+  {
+    "objectID": "homework.html",
+    "href": "homework.html",
+    "title": "Homework Projects",
+    "section": "",
+    "text": "ImportantHomework Projects are essential for mastering the Data Science Concets and Tools courses!\n\n\n\nRead the following to understand its purpose, format, workflow, and its role in the assessment. Start right a way to work on homework projects! That’s doing data science.",
+    "crumbs": [
+      "Syllabus",
+      "Homework Projects"
+    ]
+  },
+  {
+    "objectID": "homework.html#homework-projects-list",
+    "href": "homework.html#homework-projects-list",
+    "title": "Homework Projects",
+    "section": "1 Homework Projects List",
+    "text": "1 Homework Projects List\nAs a registered student, you will find personalized repositories for your Homework Projects in the GitHub-Organization. These projects will appear here once they are deployed:\n\nProject_NYCFlights\nProject_COVID19\nProject_DataScienceProfiles\nProject_FuelWatch\n\nPlease read the next sections.",
+    "crumbs": [
+      "Syllabus",
+      "Homework Projects"
+    ]
+  },
+  {
+    "objectID": "homework.html#purpose",
+    "href": "homework.html#purpose",
+    "title": "Homework Projects",
+    "section": "2 Purpose",
+    "text": "2 Purpose\nYou learn to\n\nunderstand and answer data science questions\napply data science concepts and use the basic data science skills\n\nimporting data\ntidying data\ntransforming data\nvisualizing data\napplying models for different purposes like\n\ndescribing, exploring, and predicting data\nunderstanding the data generating process\ninferring insights about the world from data\n\n\ndelve into a certain domain with each project\ndevelop, ask, and answer your own data science questions\ncommunicate your results and insights in a reproducible way with quarto\ncreate a professionally looking Project Report for each Homework Project\nget into the basics of version control with git and GitHub",
+    "crumbs": [
+      "Syllabus",
+      "Homework Projects"
+    ]
+  },
+  {
+    "objectID": "homework.html#format",
+    "href": "homework.html#format",
+    "title": "Homework Projects",
+    "section": "3 Format",
+    "text": "3 Format\nA Homework Project is a mix of a simple Homework Assignment to apply what you just learned and a fully fledged Data Science Project.\nYou work on projects towards milestones. All projects require some data import, some tidying of data, some exploratory data analysis with visualizations and computations of summary statistics. You will start with basic things as first milestones in more than one project. You do not need to finish one project after the other but you pick up work on some projects again when you learned new methods. Homework Projects and Milestones will be provided along the course. Finally, a Homework Project develop towards a readable Project Report on a certain topic.\nTask of the Homework can range from\n\nguided tasks to learn basic things, over\ntasks to answer a particular data science question (where you choose analysis, visualization and other output yourself), to\nopen tasks where you formulate data science questions yourself.",
+    "crumbs": [
+      "Syllabus",
+      "Homework Projects"
+    ]
+  },
+  {
+    "objectID": "homework.html#technical-setup-the-data-science-process-in-practice",
+    "href": "homework.html#technical-setup-the-data-science-process-in-practice",
+    "title": "Homework Projects",
+    "section": "4 Technical Setup: The data science process in practice!",
+    "text": "4 Technical Setup: The data science process in practice!\n\n\n\n\n\n\nImportantNeeded infrastructure\n\n\n\n\n\nOn your computer:\n\nA terminal as Command Line Interface (CLI) where you can run git, quarto, R, and python3\nIntegrated Development Environments (IDE): For R and python we use positron, for python you may also use VS Code. When well configured, you have a termin and can run git and quarto within the IDE.\n\nIn the cloud:\n\nBe registered in Data Science Concepts and Data Science Tools at Constructor University\nHave a GitHub account\nHave your GitHub user registered as a member of the GitHub-Organization\n\n\n\n\n\nHomework Projects are git-repositories hosted on GitHub in the GitHub-Organization of the courses.\n\nEvery registered student receives one individual repository for each project. Only the student and the instructors can see these repositories. You need to become a member of the GitHub-Organization!\nThe Tasks and Questions for the project are written in the README.md file in each project repository.\nWorkflow for each project repository:\n\ngit clone the Project Repository to your local computer\nWork and the Project’s main quarto markdown document (.qmd-file)\nWhat does working on the project document mean?\n\nYou structure the markdown document with headlines\nYou draft plain markdown text to explain what you analyze or report your results\nYou write code chunks either for loading packages, importing data and computations, or for producing visualizations and tables in the output document\nWhile you do this you work a lot using the programming console in which you execute part of your written code to test it or modify it to explore other options until you develop something which goes into your file\n\n(Sometimes/Optionally) Create an additional script-file, for example for downloading data, or performing lengthy calculation and creating intermediate datasets.\nquarto render the main Project’s quarto markdown document and create a HTML-file with your Project Report (Guide for postitron)\nYou repeat step 2.-4. and repeatedly check if your (local) HTML-output looks good. You repeat until you are done for the session. Ideally, you leave the document such that it renders well and with a short list of problems to solve and next steps to do.\n\ngit add your (intermediate) markdown file, your additional scripts, the HTML-file, and (if necessary) all additional automatically created files or directories necessary to view the report properly to the git staging area of your repository on your computer\nCreate a git commit of the (intermediate) state of your project and\ngit push the commit to the remote repository at http://github.com/ such that it can be viewed by the instructors\nRepeat steps 2.-8. until your Project Report reaches a Milestone or is final and end with a commit with commit message “Milestone 1” (or other number), or “Final”.\n\n\nOrganization Advise: Create a folder for all projects on your computer. In this folder you will have all the subfolders created by the cloning of the project repositories.",
+    "crumbs": [
+      "Syllabus",
+      "Homework Projects"
+    ]
+  },
+  {
+    "objectID": "homework.html#assessment",
+    "href": "homework.html#assessment",
+    "title": "Homework Projects",
+    "section": "5 Assessment",
+    "text": "5 Assessment\nHomework Projects are mostly for your learning! Use them as that.\nNevertheless, they also play a role in the assessment of the Module “Data Science Tools” in the following forms:\n\nSome tasks are requirements. You need to have solved more than 50% of these required tasks correctly to be eligible to pass the module! The percentage does not affect the grade, it is a requirement.\nWhen you solve 100% of the required tasks you can receive a bonus of 0.33 for your grade.\n\nThe grade of the Module “Data Science Tools” is made for your final project. This can depart and build on topics and data of Homework Projects.\nWhatever the data and topic for your final project will be, it is assumed to have the same format as a Homework Project: A private repository provided by the instructors.\nThe Module “Data Science Concepts” is assessed with an exam. It does not rely on the Homework Projects. However, some examples in the exam maybe relate to content of Homework Projects, so familiarity with Homework content will be of help.",
+    "crumbs": [
+      "Syllabus",
+      "Homework Projects"
+    ]
+  },
+  {
+    "objectID": "homework.html#feedback",
+    "href": "homework.html#feedback",
+    "title": "Homework Projects",
+    "section": "6 Feedback",
+    "text": "6 Feedback\nTogether with teaching assistant the instructors will try to give feedback on your work.\nThe preferred way is via GitHub Issues. An Issues-Section is part of every repository. They are used to organize collaborative work and organize user interaction. You can also use issues for yourself as a project-specific To-Do-List.\nInstructors and Teaching Assistants may use Issues to give you some feedback on the current state of your work in the project.\nIf you require feedback:\n\nFile an issue and describe on what you need feedback or help as specific as possible.\nPoint the instructors to your issue.",
+    "crumbs": [
+      "Syllabus",
+      "Homework Projects"
+    ]
+  },
+  {
+    "objectID": "homework.html#making-a-homework-project-repository-public",
+    "href": "homework.html#making-a-homework-project-repository-public",
+    "title": "Homework Projects",
+    "section": "7 Making a Homework Project repository public",
+    "text": "7 Making a Homework Project repository public\nYou may want to use your Homework Projects in your portfolio. The repositories can be made public from where they are. If you want to do so, please inform the instructors. In the case of publication, the README should tell in a “License” how I think it should be done in line with Academic Integrity.",
+    "crumbs": [
+      "Syllabus",
+      "Homework Projects"
+    ]
+  },
+  {
+    "objectID": "help.html",
+    "href": "help.html",
+    "title": "Need help for Homework?",
+    "section": "",
+    "text": "Go through the Checklist Technical Setup and make sure everything works.",
+    "crumbs": [
+      "Syllabus",
+      "Need help for Homework?"
+    ]
+  },
+  {
+    "objectID": "help.html#setting-up-the-basic-toolkit",
+    "href": "help.html#setting-up-the-basic-toolkit",
+    "title": "Need help for Homework?",
+    "section": "",
+    "text": "Go through the Checklist Technical Setup and make sure everything works.",
+    "crumbs": [
+      "Syllabus",
+      "Need help for Homework?"
+    ]
+  },
+  {
+    "objectID": "help.html#good-practices",
+    "href": "help.html#good-practices",
+    "title": "Need help for Homework?",
+    "section": "2 Good practices",
+    "text": "2 Good practices\n\nDo homework together with other students. Working together is encouraged!\nCommit and push your intermediate results often, instructors may check your code directly.\nRead error messages carefully! Often they are informative or even tell you what to do! (Hint: Uninformative error messages are also common. Maybe you get at least a hint where the problem lies. You will become more advanced on this, error messages which are not helpful now may become helpful in the future.)\nDo the homework before the next Data Science Tools Session and prepare questions to ask in class.",
+    "crumbs": [
+      "Syllabus",
+      "Need help for Homework?"
+    ]
+  },
+  {
+    "objectID": "help.html#good-ways-to-ask-for-help",
+    "href": "help.html#good-ways-to-ask-for-help",
+    "title": "Need help for Homework?",
+    "section": "3 Good ways to ask for help",
+    "text": "3 Good ways to ask for help\n\nAsk your fellow students, but show willingness to learn by being prepared. Do not “abuse” your students to fix your computer problems.\n\nIt is absolutely OK to ask instructors for help outside of class. We try to care, if we are not too busy with other things. If you do, please do first: Document and describe where you get stuck as precise as possible. Try to find out why as much as possible. Use Teams chat (or email)!",
+    "crumbs": [
+      "Syllabus",
+      "Need help for Homework?"
+    ]
+  },
+  {
+    "objectID": "help.html#problems-with-the-git-github-dance",
+    "href": "help.html#problems-with-the-git-github-dance",
+    "title": "Need help for Homework?",
+    "section": "4 Problems with the git-GitHub-dance",
+    "text": "4 Problems with the git-GitHub-dance\nHappy Git with R is a great resource for helping you practically and for learning the version control concepts better. The site is well suited for our purpose of data science! Git was developed for software development and a lot of the advice and good practices you find by searching the internet are targeted for software engineering. Whenever you consult Happy Git with R for solutions for a problem, try to learn a bit about the basics. Git is not something to learn in one course but step by step while doing.\nProblems with getting started are likely related to the installation of software and connecting git and GitHub. Reading in Sections 4 - 14.\n\nAfter installing git, you need to Introduce yourself to Git (Use the email associated with your GitHub account.)\nThen you have to make the communication with GitHub possible as outlined by the introduction Can you here me now?. The default is to communicate via HTTPS (instead of SSH).\n\nIn the past you could authenticate via your GitHub-user password, now you need a personal access token which is something like a password created by GitHub which you can see and copy only once. (No worries, if loose the connection you can create a new one.)\nThese are the instructions for Personal access token for HTTPS. Ideally it works following the instructions in “TL;DR”. (Install the packages usethis and gitcreds in R.)\nNow, you should be able to clone the Homework repos analog to Connect RStudio to Git and GitHub.\nSometimes you have git installed but RStudio does not find it. Usually it works out of the box. If not, read Detect Git from RStudio\nFinally there is a page for problems which appear sometimes which you can scroll through looking if it is related to your problem: https://happygitwithr.com/troubleshooting\n\n\nFor problems appearing after your first successful git-GitHub-dance operations helpful sections are for example:\n\nYou want to bring your new versions to GitHub but when you push it does not work: Dealing with push rejection\nYou need to pull (to synchronize remote and local) but you made changes locally and get warnings: Pull, but you have local work\nIf you can not properly push and pull anymore and there are conflicts all over the place: Consider Burn it all down (Meaning to start again by cloning again …)",
+    "crumbs": [
+      "Syllabus",
+      "Need help for Homework?"
+    ]
+  }
+]

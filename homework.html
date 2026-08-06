@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Homework Projects – Data Science Concepts / Data Science Tools</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-16b4b51782fe9067b751a2cdf7d3de3a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Data Science Concepts / Data Science Tools</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text">CU-F26-MDSSB-01-Concepts-Tools</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./homework.html">Homework Projects</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+  <div id="quarto-announcement" data-announcement-id="bec1cb5919f34fbe3bd1d0052a384052" class="alert alert-warning hidden"><i class="bi bi-fast-forward quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p><strong>New here?</strong> Priority 1: <strong>Become member of GitHub-Organization</strong> <a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools">CU-F26-MDSSB-01-Concepts-Tools</a>, Priority 2: Get your computer’s <a href="./setup.html"><strong>Technical Setup</strong></a> ready!</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./schedule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schedule</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./material/M01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#01</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Checklist Technical Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./literature.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning Resources</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./homework.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Homework Projects</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Need help for Homework?</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#homework-projects-list" id="toc-homework-projects-list" class="nav-link active" data-scroll-target="#homework-projects-list"><span class="header-section-number">1</span> Homework Projects List</a></li>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link" data-scroll-target="#purpose"><span class="header-section-number">2</span> Purpose</a></li>
+  <li><a href="#format" id="toc-format" class="nav-link" data-scroll-target="#format"><span class="header-section-number">3</span> Format</a></li>
+  <li><a href="#technical-setup-the-data-science-process-in-practice" id="toc-technical-setup-the-data-science-process-in-practice" class="nav-link" data-scroll-target="#technical-setup-the-data-science-process-in-practice"><span class="header-section-number">4</span> Technical Setup: The data science process in practice!</a></li>
+  <li><a href="#assessment" id="toc-assessment" class="nav-link" data-scroll-target="#assessment"><span class="header-section-number">5</span> Assessment</a></li>
+  <li><a href="#feedback" id="toc-feedback" class="nav-link" data-scroll-target="#feedback"><span class="header-section-number">6</span> Feedback</a></li>
+  <li><a href="#making-a-homework-project-repository-public" id="toc-making-a-homework-project-repository-public" class="nav-link" data-scroll-target="#making-a-homework-project-repository-public"><span class="header-section-number">7</span> Making a Homework Project repository public</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Homework Projects</h1>
+<p class="subtitle lead">Do data science by working on Homework Projects!</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Homework Projects are essential for mastering the Data Science Concets and Tools courses!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read the following to understand its purpose, format, workflow, and its role in the assessment. Start right a way to work on homework projects! That’s doing data science.</p>
+</div>
+</div>
+<section id="homework-projects-list" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="homework-projects-list"><span class="header-section-number">1</span> Homework Projects List</h2>
+<p>As a registered student, you will find personalized repositories for your Homework Projects in the <a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools">GitHub-Organization</a>. These projects will appear here once they are deployed:</p>
+<ol type="1">
+<li>Project_NYCFlights</li>
+<li>Project_COVID19</li>
+<li>Project_DataScienceProfiles</li>
+<li>Project_FuelWatch</li>
+</ol>
+<p>Please read the next sections.</p>
+</section>
+<section id="purpose" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="purpose"><span class="header-section-number">2</span> Purpose</h2>
+<p>You learn to</p>
+<ul>
+<li>understand and answer <strong>data science questions</strong></li>
+<li>apply <strong>data science concepts</strong> and use the <strong>basic data science skills</strong>
+<ul>
+<li>importing data</li>
+<li>tidying data</li>
+<li>transforming data</li>
+<li>visualizing data</li>
+<li>applying models for different purposes like
+<ul>
+<li>describing, exploring, and predicting data</li>
+<li>understanding the data generating process</li>
+<li>inferring insights about the world from data</li>
+</ul></li>
+</ul></li>
+<li>delve into a certain <strong>domain</strong> with each project</li>
+<li>develop, ask, and answer your own data science questions</li>
+<li><strong>communicate</strong> your results and insights in a reproducible way with <code>quarto</code></li>
+<li>create a professionally looking <strong>Project Report</strong> for each Homework Project</li>
+<li>get into the basics of version control with <code>git</code> and <a href="http://github.com">GitHub</a></li>
+</ul>
+</section>
+<section id="format" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="format"><span class="header-section-number">3</span> Format</h2>
+<p>A Homework Project is a mix of a <em>simple Homework Assignment</em> to apply what you just learned and a <em>fully fledged Data Science Project</em>.</p>
+<p>You work on projects towards <em>milestones</em>. All projects require some data import, some tidying of data, some exploratory data analysis with visualizations and computations of summary statistics. You will start with basic things as first milestones in more than one project. You do not need to finish one project after the other but you pick up work on some projects again when you learned new methods. Homework Projects and Milestones will be provided along the course. Finally, a Homework Project develop towards a readable Project Report on a certain topic.</p>
+<p>Task of the Homework can range from</p>
+<ol type="1">
+<li>guided tasks to learn basic things, over</li>
+<li>tasks to answer a particular data science question (where you choose analysis, visualization and other output yourself), to</li>
+<li>open tasks where you formulate data science questions yourself.</li>
+</ol>
+</section>
+<section id="technical-setup-the-data-science-process-in-practice" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="technical-setup-the-data-science-process-in-practice"><span class="header-section-number">4</span> Technical Setup: The data science process in practice!</h2>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Needed infrastructure
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>On your computer:</p>
+<ul>
+<li>A terminal as <em>Command Line Interface</em> (CLI) where you can run <code>git</code>, <code>quarto</code>, <code>R</code>, and <code>python3</code></li>
+<li><em>Integrated Development Environments</em> (IDE): For R and python we use positron, for python you may also use VS Code. When well configured, you have a termin and can run <code>git</code> and <code>quarto</code> within the IDE.</li>
+</ul>
+<p>In the cloud:</p>
+<ul>
+<li>Be registered in Data Science Concepts and Data Science Tools at Constructor University</li>
+<li>Have a GitHub account</li>
+<li>Have your GitHub user registered as a member of the <a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools">GitHub-Organization</a></li>
+</ul>
+</div>
+</div>
+</div>
+<ul>
+<li>Homework Projects are git-repositories hosted on GitHub in the <a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools">GitHub-Organization</a> of the courses.<br>
+</li>
+<li>Every registered student receives one individual repository for each project. Only the student and the instructors can see these repositories. <strong>You need to become a member of the <a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools">GitHub-Organization</a>!</strong></li>
+<li>The <strong>Tasks and Questions</strong> for the project are written in the <code>README.md</code> file in each project repository.</li>
+<li><strong>Workflow</strong> for each project repository:
+<ol type="1">
+<li><code>git clone</code> the Project Repository to your local computer</li>
+<li>Work and the Project’s main quarto markdown document (<code>.qmd</code>-file)<br>
+What does <em>working on the project document</em> mean?
+<ul>
+<li>You structure the markdown document with headlines</li>
+<li>You draft plain markdown text to explain what you analyze or report your results</li>
+<li>You write code chunks either for loading packages, importing data and computations, or for producing visualizations and tables in the output document</li>
+<li>While you do this you work a lot using the programming console in which you execute part of your written code to test it or modify it to explore other options until you develop something which goes into your file</li>
+</ul></li>
+<li>(Sometimes/Optionally) Create an additional script-file, for example for downloading data, or performing lengthy calculation and creating intermediate datasets.</li>
+<li><code>quarto render</code> the main Project’s quarto markdown document and create a HTML-file with your Project Report (<a href="https://quarto.org/docs/get-started/hello/positron.html">Guide for postitron</a>)</li>
+<li>You repeat step 2.-4. and repeatedly check if your (local) HTML-output looks good. You repeat until you are done for the session. Ideally, you leave the document such that it renders well and with a short list of problems to solve and next steps to do.<br>
+</li>
+<li><code>git add</code> your (intermediate) markdown file, your additional scripts, the HTML-file, and (if necessary) all additional automatically created files or directories necessary to view the report properly to the <code>git</code> staging area of your repository on your computer</li>
+<li>Create a <code>git commit</code> of the (intermediate) state of your project and</li>
+<li><code>git push</code> the commit to the remote repository at http://github.com/ such that it can be viewed by the instructors</li>
+<li>Repeat steps 2.-8. until your Project Report reaches a Milestone or is final and end with a commit with commit message “Milestone 1” (or other number), or “Final”.</li>
+</ol></li>
+</ul>
+<p>Organization Advise: Create a folder for all projects on your computer. In this folder you will have all the subfolders created by the cloning of the project repositories.</p>
+</section>
+<section id="assessment" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="assessment"><span class="header-section-number">5</span> Assessment</h2>
+<p><strong>Homework Projects are mostly for your learning!</strong> Use them as that.</p>
+<p>Nevertheless, they also play a role in the assessment of the <strong>Module “Data Science Tools”</strong> in the following forms:</p>
+<ol type="1">
+<li>Some tasks are requirements. You need to have solved more than 50% of these required tasks correctly to be eligible to pass the module! The percentage does not affect the grade, it is a <em>requirement</em>.</li>
+<li>When you solve 100% of the required tasks you can receive a bonus of 0.33 for your grade.</li>
+</ol>
+<p>The grade of the Module “Data Science Tools” is made for your final project. This can depart and build on topics and data of Homework Projects.</p>
+<p>Whatever the data and topic for your final project will be, it is assumed to have the same format as a Homework Project: A private repository provided by the instructors.</p>
+<p>The <strong>Module “Data Science Concepts”</strong> is assessed with an exam. It does not rely on the Homework Projects. However, some examples in the exam maybe relate to content of Homework Projects, so familiarity with Homework content will be of help.</p>
+</section>
+<section id="feedback" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="feedback"><span class="header-section-number">6</span> Feedback</h2>
+<p>Together with teaching assistant the instructors will try to give feedback on your work.</p>
+<p>The preferred way is via <strong><a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues">GitHub Issues</a></strong>. An <em>Issues</em>-Section is part of every repository. They are used to organize collaborative work and organize user interaction. You can also use issues for yourself as a project-specific To-Do-List.</p>
+<p>Instructors and Teaching Assistants may use Issues to give you some feedback on the current state of your work in the project.</p>
+<p>If you require feedback:</p>
+<ul>
+<li>File an issue and describe on what you need feedback or help as specific as possible.</li>
+<li>Point the instructors to your issue.</li>
+</ul>
+</section>
+<section id="making-a-homework-project-repository-public" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="making-a-homework-project-repository-public"><span class="header-section-number">7</span> Making a Homework Project repository public</h2>
+<p>You may want to use your Homework Projects in your portfolio. The repositories can be made public from where they are. If you want to do so, please inform the instructors. In the case of publication, the README should tell in a “License” how I think it should be done in line with Academic Integrity.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

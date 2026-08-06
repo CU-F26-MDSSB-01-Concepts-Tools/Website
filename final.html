@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Final Project – Data Science Concepts / Data Science Tools</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-16b4b51782fe9067b751a2cdf7d3de3a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Data Science Concepts / Data Science Tools</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text">CU-F26-MDSSB-01-Concepts-Tools</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./final.html">Final Project</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+  <div id="quarto-announcement" data-announcement-id="bec1cb5919f34fbe3bd1d0052a384052" class="alert alert-warning hidden"><i class="bi bi-fast-forward quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p><strong>New here?</strong> Priority 1: <strong>Become member of GitHub-Organization</strong> <a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools">CU-F26-MDSSB-01-Concepts-Tools</a>, Priority 2: Get your computer’s <a href="./setup.html"><strong>Technical Setup</strong></a> ready!</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./schedule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schedule</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./material/M01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#01</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Checklist Technical Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./literature.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning Resources</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./homework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework Projects</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./final.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Final Project</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Need help for Homework?</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#how-to-write-a-project-report-in-a-nutshell" id="toc-how-to-write-a-project-report-in-a-nutshell" class="nav-link active" data-scroll-target="#how-to-write-a-project-report-in-a-nutshell"><span class="header-section-number">1</span> How to write a project report in a nutshell</a></li>
+  <li><a href="#work-in-teams-and-register-your-project" id="toc-work-in-teams-and-register-your-project" class="nav-link" data-scroll-target="#work-in-teams-and-register-your-project"><span class="header-section-number">2</span> Work in Teams and Register your Project</a></li>
+  <li><a href="#delivery" id="toc-delivery" class="nav-link" data-scroll-target="#delivery"><span class="header-section-number">3</span> Delivery</a></li>
+  <li><a href="#deadline" id="toc-deadline" class="nav-link" data-scroll-target="#deadline"><span class="header-section-number">4</span> Deadline</a></li>
+  <li><a href="#grading" id="toc-grading" class="nav-link" data-scroll-target="#grading"><span class="header-section-number">5</span> Grading</a></li>
+  <li><a href="#advice-for-data-science-team-work-with-git" id="toc-advice-for-data-science-team-work-with-git" class="nav-link" data-scroll-target="#advice-for-data-science-team-work-with-git"><span class="header-section-number">6</span> Advice for data science team work (with git)</a></li>
+  <li><a href="#how-to-define-a-project" id="toc-how-to-define-a-project" class="nav-link" data-scroll-target="#how-to-define-a-project"><span class="header-section-number">7</span> How to define a project?</a></li>
+  <li><a href="#guidelines-for-drafting-your-project" id="toc-guidelines-for-drafting-your-project" class="nav-link" data-scroll-target="#guidelines-for-drafting-your-project"><span class="header-section-number">8</span> Guidelines for drafting your project</a></li>
+  <li><a href="#optional-making-your-project-public" id="toc-optional-making-your-project-public" class="nav-link" data-scroll-target="#optional-making-your-project-public"><span class="header-section-number">9</span> (Optional) Making your project public</a></li>
+  <li><a href="#frequently-asked-questions-may-be-extended" id="toc-frequently-asked-questions-may-be-extended" class="nav-link" data-scroll-target="#frequently-asked-questions-may-be-extended"><span class="header-section-number">10</span> Frequently Asked Questions <em>(may be extended)</em></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Final Project</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Project check-in has started. Deadline: Saturday, Nov 8.<br>
+Fill the form <a href="https://forms.office.com/e/75qEdyZbim">Data Science Tools Final Project Check-In</a>. (Ideally after you have formed a team and discussed your data source and initial questions.)</p>
+</div>
+</div>
+</div>
+<p>These are specifications and guidelines for the final <strong>Data Science Project</strong> and the <strong>Project report</strong>, the assessment for the <em>Data Science Tools</em> (see <a href="./index.html">Syllabus</a>): How to write it, when and how to deliver it, and how it will be graded.</p>
+<section id="how-to-write-a-project-report-in-a-nutshell" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="how-to-write-a-project-report-in-a-nutshell"><span class="header-section-number">1</span> How to write a project report in a nutshell</h2>
+<ul>
+<li>You find a team,<br>
+</li>
+<li>pick a dataset or the data source of the Homework Projects COVID19, FuelWatch, or DataScienceProfiles</li>
+<li>check-in your project in the Form <a href="https://forms.office.com/e/75qEdyZbim">Data Science Tools Final Project Check-In</a>,</li>
+<li>do some interesting question-driven data analysis with it, and</li>
+<li>write up a well-structured and nicely formatted report about the analysis in your team’s repository.</li>
+</ul>
+</section>
+<section id="work-in-teams-and-register-your-project" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="work-in-teams-and-register-your-project"><span class="header-section-number">2</span> Work in Teams and Register your Project</h2>
+<p>Projects should be done in <strong>teams of 3-6 students</strong>. This serves two additional learning goals:</p>
+<ol type="1">
+<li>Learning to pursue and coordinate data science workflows collaboratively.</li>
+<li>Learning to work collaboratively on code with <code>git</code> and <a href="http://GitHub.com">GitHub</a>.</li>
+</ol>
+<p><strong>Individual teams</strong> are possible upon request when there are reasons for it.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>The team’s work is graded as one piece.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>All members receive the same grade for it. However, the module grade can be different because of the bonus for fully complete homework. <strong>A dysfunctional team can be split anytime before submission upon request by any individual member.</strong> Write to the instructors in case you want to depart from your team.</p>
+</div>
+</div>
+</div>
+<p><strong>How to form a team and register your project:</strong></p>
+<ol type="1">
+<li>Form a team on your own with fellow students.</li>
+<li>Go through these guidelines together.</li>
+<li>Decide if you want to build on one of your Homework Projects or search for your own data.
+<ol type="a">
+<li>Find a suitable dataset (see below).</li>
+</ol></li>
+<li>Come up with <strong>one initial question per team member</strong>. Discuss in your team how the questions are related and if and how they build on each other.<br>
+</li>
+<li>Fill out the Form <a href="https://forms.office.com/e/75qEdyZbim">Data Science Tools Final Project Check-In</a></li>
+</ol>
+</section>
+<section id="delivery" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="delivery"><span class="header-section-number">3</span> Delivery</h2>
+<ul>
+<li>Delivery is via GitHub in a private repository (the same way as Homework Projects).</li>
+<li>The repository for the final project will be created in the <a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools">CU-F26-MDSSB-01-Concepts-Tools</a> by the instructors <strong>upon team and project approval</strong>.</li>
+<li><strong>The assessment will be done of the HTML file <code>report.html</code>.</strong> You write the report in Quarto Markdown (<code>report.qmd</code>) or Jupyter Notebook (<code>report.ipynb</code>) and render it to HTML.</li>
+<li>The source files (<code>report.qmd</code> or <code>report.ipynb</code>) must be included.
+<ul>
+<li>Note: In large teams it can be helpful that members work on individual files for some time to avoid to much technical coordination (e.g.&nbsp;<code>analysis_NAME.qmd</code>). This is OK. However, in the end you need to put everything together in one file <code>report.html</code>! Reseve some time for it as a team. Individual files (and rendered files) should be removed from the repository before delivery time.</li>
+</ul></li>
+<li>The assessment will start after the deadline with the latest commit. Help us by calling your final commit message <code>DELIVERY</code>.</li>
+<li>Assessment will be done based on reading the HTML-file <code>report.html</code>. Additionally and if necessary, the Quarto Markdown File and other provided files may be looked at. Ideally, the HTML-Report is sufficient to assess the project!<br>
+(To test if the HTML file looks good for the instructors do the following: Clone the repository anew to a temporaty directory on your computer, open the HTML file from this newly cloned directory. Check if it looks good. This is what instructors will do.)</li>
+</ul>
+</section>
+<section id="deadline" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="deadline"><span class="header-section-number">4</span> Deadline</h2>
+<p>See <a href="./schedule.html">Schedule</a>.</p>
+<p>Note: The deadline is before the Winter (German Christmas) break in December. In total you have 3 attampts to pass any module. The second attempt will be with a deadline in late January 2025. The third attempt will be in the next academic year. If you feel very time pressured in December and you are still keeping up with learning. You can consider to let the first attempt pass and work furterh in January. A failed attempt does not harm your transcript.</p>
+</section>
+<section id="grading" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="grading"><span class="header-section-number">5</span> Grading</h2>
+<ul>
+<li>The reports will be graded jointly by the instructor of Data Science Tools and Data Science Concepts.<br>
+</li>
+<li>The presentation in class is informal and will not be graded.</li>
+<li>All team members receive the same grade for the project report. In case of a dysfunctional team, members can leave or split the team upon prior communication with the team and the instructors.</li>
+</ul>
+<p><strong>Assessment rubric</strong></p>
+<p>Project reports can be quite different depending on the data used and the type of question(s) (Descriptive, Exploratory, Inferential, Predictive, Causal, Mechanistic). Therefore, there will not be a fixed rubric. We will communicate back the final percentage grade (compare <a href="https://constructor.university/sites/default/files/2023-02/Grading_Table_2023.pdf">Constructor University’s Grading Table</a>. Additionally, we aim to give short textual feedback about strong and weak points.</p>
+<p>Nevertheless, the assessment goes along some criteria with some approximate weights:</p>
+<ul>
+<li>Introduction/Questions (10%)</li>
+<li>Data Handling/Preparation (10%)</li>
+<li>Modeling (20%)</li>
+<li>Comprehensiveness/Visualizations (20%)</li>
+<li>Results/Conclusion (20%)</li>
+<li>Programming style (10%)</li>
+<li>Document Structure and Layout (10%)</li>
+</ul>
+</section>
+<section id="advice-for-data-science-team-work-with-git" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="advice-for-data-science-team-work-with-git"><span class="header-section-number">6</span> Advice for data science team work (with git)</h2>
+<ul>
+<li>Select your language R or python!</li>
+<li>Put the data you need into a folder <code>data</code>. Very large datasets need not be committed and pushed. Document where the data can be retrieved and where it should be put to Use it with your code.<br>
+</li>
+<li>All team members need to clone the repository to their local computers.</li>
+<li>Try both:
+<ul>
+<li>Working together at the same time with realtime communction.</li>
+<li>Working together remotely based on a plan who should do what. Feel free to use GitHub issues in your repository for this!</li>
+</ul></li>
+<li>Every team member should finally have pushed some work to GitHub!</li>
+<li>Commit early and often! We help you when you have questions or need directions based on committed code.</li>
+<li>Before you start to work as a team member: Always do <code>git pull</code> first to receive potentially new content!</li>
+<li>Try to finish an individual work session with comments on next steps and open questions. Push the files in a state such that it renders.</li>
+<li><strong>Conflicts in git:</strong> Git conflicts will probably occur when you work in teams while pulling and pushing. These can be solved. If you do not manage, ask for help. Sometimes git-conflicts become too confusing that <a href="https://happygitwithr.com/burn">Burn it all down</a> can be the best approach to have a fresh start on your local machine by cloning again. (See also <a href="https://xkcd.com/1597/" class="uri">https://xkcd.com/1597/</a>.) Check what is in the remote repo before and save relevant local work somewhere.<br>
+</li>
+<li><strong>Conflicts in the team.</strong> Please communicate about tensions in your team and try to solve them. However, you are not obliged to finish your project as a dysfunctional team. To avoid being bound to the same grade in a dysfunctional team, every team member has the right to leave the team and continue independently. This can only be realized upon prior communication with team members and consequently with the instructors!</li>
+</ul>
+</section>
+<section id="how-to-define-a-project" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="how-to-define-a-project"><span class="header-section-number">7</span> How to define a project?</h2>
+<p>Part of the work is to define a good project for question-driven data analysis.</p>
+<p>Essentially there are two approaches to coming to a project setup:</p>
+<ul>
+<li>Find and select data that interests you, do some question-driven data exploration, and focus and narrow the question.</li>
+<li>Start with a question and search data to answer it.</li>
+</ul>
+<p><strong>You can build on topics and datasets of the Homework.</strong></p>
+</section>
+<section id="guidelines-for-drafting-your-project" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="guidelines-for-drafting-your-project"><span class="header-section-number">8</span> Guidelines for drafting your project</h2>
+<ul>
+<li>If you do not build on a Homework Project: Find a manageable dataset. A guideline is at least 50 cases (rows), good is 10-20 variables (columns) with a mix of categorical and numerical ones. Deviations are allowed based on your interest and capability.</li>
+<li>Go through the visualizations, statistics, and models we had in lectures and homework and think if similar things would be interesting.</li>
+<li>The goal is not an exhaustive data analysis with every method! Do not calculate every statistic and procedure you have learned for every variable, but rather show that you can ask meaningful questions and answer them with results of data analysis and proficient interpretation and presentation of the results.</li>
+<li>Do NOT blindly do all visualization and all statistics on all variables in the data set! You may do that in your data exploration. But not all exploratory data analysis goes into your report. At some point, you have to focus on what is needed to answer your questions. Your report is not a documentation of all your exploratory steps. Throw out what is not needed anymore, improve the remaining visualizations, and explain well in the text what you want to communicate.</li>
+<li>A single high-quality visualization that shows a point clearly will receive a much higher appreciation than a large number of poor-quality visualizations without an explanation of what they should communicate.</li>
+</ul>
+</section>
+<section id="optional-making-your-project-public" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="optional-making-your-project-public"><span class="header-section-number">9</span> (Optional) Making your project public</h2>
+<p>By default, project repositories are <em>private</em> and only visible to team members and instructors. The repositories can be made <em>public</em> such that students can use it as part of their portfolio, for example for referring to it in applications for internships and student jobs. Please let the instructors know if you want to make the repository public.</p>
+<p>Additionally, the HTML file can be made accessible directly as a webpage with a few tweaks from quarto using the service of <em>GitHub Pages</em>. See the <a href="https://quarto.org/docs/publishing/github-pages.html">documentation</a>.</p>
+</section>
+<section id="frequently-asked-questions-may-be-extended" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="frequently-asked-questions-may-be-extended"><span class="header-section-number">10</span> Frequently Asked Questions <em>(may be extended)</em></h2>
+<ol type="1">
+<li><p><strong>Do we need to stick to methods and visualizations treated in lectures?</strong></p>
+<p>No, you are invited to use other data analysis and visualization methods (from other courses or packages which you self-learn)! We are happy to give advice if we can.</p></li>
+<li><p><strong>Are we only allowed to use one dataset?</strong></p>
+<p>No, you can also merge data from different sources. This is a more challenging project because the data wrangling work would be a bit more. If your question calls for it we encourage you to use another data source. The additional effort will be recognized.</p></li>
+<li><p><strong>Can we use AI in the production or our analysis and report writing?</strong></p>
+<p>It is not forbidden to use AI tools for whatever purpose. So, any text and code can only be treated as written by the claimed author. When not properly used during analysis, AI text tends to meander around topics, not becoming specific, remaining generic, or generating a lot of not very related content. All of this is not what should be in questions-driven data analysis and will be assessed accordingly. Instructors rather want to read one interpretation sentence which shows understanding even of a basic thing than several paragraphs of AI blurb. So, this one sentence will contribute positively to the grade, the AI blurb will contribute negatively to the grade. Take this serious! Massive text harms your grade when mostly meaningless. It harms your grade more than no text at all.</p>
+<p>AI code also has very typical structures and patterns. If AI code is used, it should be adapted and improved to the specific analysis context. Scrutinze such code step by step to understand what is happening. Do not just rely on pleasing looking outcomes. Blindly using AI-generated code will often lead to wrong results or unprofessional coding style (too many comments, to lengthy, not up to date functions used and so on). Also remove code you do not need anymore. You know what code you need when you understand your code step by step. This is also a way to learn.</p></li>
+<li><p><strong>What about the word count?</strong></p>
+<p>Please do not count words. Also the instructors will not count words. Anyway at least half of the work lies in code and visuals. A minimal word count needs to be in the requirements as a guideline. It will not be used as a strict criterion. Quality over quantity. Massive text which is mostly meangingless or unrelated to the data analysis is worse than no text at all.</p></li>
+<li><p><strong>I did my project and it looks fine but the feedback says I submitted nothing or incomplete material. How can I test that my submission on GitHub is as it should be?</strong></p>
+<p>Sometimes, students forget to <code>git add</code> and (most importantly) <code>git push</code> all necessary files. This can imply that the student did everything fine b ut when instructors clone the repository it is incomplete or not even touched. How can you check? To test if the HTML file looks good for the instructors do the following:</p>
+<p>Go to the repository on GitHub <a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools">CU-F26-MDSSB-01-Concepts-Tools</a>. Clone your repository anew to a temporary directory on your computer, open the HTML file from this newly cloned directory. Check if it looks good. This is what instructors will do. Then you can delete the temporary directory again.</p>
+<p>LEARNING: What is on your computer is not always the same to what is in GitHub. This is not unusual in git workflows. Always check what is in GitHub if you are unsure! For checking the HTML file the easiest way is to make the temporary clone as described above.</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

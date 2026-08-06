@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jan Lorenz">
+
+<title>W#08: Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression – Data Science Concepts / Data Science Tools</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-16b4b51782fe9067b751a2cdf7d3de3a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Data Science Concepts / Data Science Tools</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/CU-F25-MDSSB-01-Concepts-Tools"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text">CU-F25-MDSSB-01-Concepts-Tools</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">W#08: Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+  <div id="quarto-announcement" data-announcement-id="0f8f92da8bb6fd80db00a7a45d195a06" class="alert alert-warning hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p><a href="https://forms.office.com/e/75qEdyZbim"><strong>Data Science Tools Final Project Check-In</strong></a> open! Deadline Sat, Nov 8.</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../schedule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schedule</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#01</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#02</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#03</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#04</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#05</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#06</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#07</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#08</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#09</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#10</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#11</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../material/M12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">W#12</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Checklist Technical Setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../literature.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning Resources</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../homework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework Projects</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Project</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Need help for Homework?</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#preliminaries" id="toc-preliminaries" class="nav-link active" data-scroll-target="#preliminaries"><span class="header-section-number">0.1</span> Preliminaries</a></li>
+  <li><a href="#recap-linear-model" id="toc-recap-linear-model" class="nav-link" data-scroll-target="#recap-linear-model"><span class="header-section-number">0.2</span> Recap: Linear Model</a></li>
+  <li><a href="#linear-models-with-categorical-variables-as-predictors" id="toc-linear-models-with-categorical-variables-as-predictors" class="nav-link" data-scroll-target="#linear-models-with-categorical-variables-as-predictors"><span class="header-section-number">1</span> Linear Models with Categorical Variables as Predictors</a>
+  <ul class="collapse">
+  <li><a href="#categorical-variables-as-predictors" id="toc-categorical-variables-as-predictors" class="nav-link" data-scroll-target="#categorical-variables-as-predictors"><span class="header-section-number">1.1</span> Categorical variables as predictors?</a></li>
+  <li><a href="#how-do-dummy-variables-look" id="toc-how-do-dummy-variables-look" class="nav-link" data-scroll-target="#how-do-dummy-variables-look"><span class="header-section-number">1.2</span> How do dummy variables look?</a></li>
+  <li><a href="#check-create-dummies-ourselves" id="toc-check-create-dummies-ourselves" class="nav-link" data-scroll-target="#check-create-dummies-ourselves"><span class="header-section-number">1.3</span> Check: Create Dummies ourselves</a></li>
+  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation"><span class="header-section-number">1.4</span> Interpretation</a></li>
+  <li><a href="#compare-to-a-visualization" id="toc-compare-to-a-visualization" class="nav-link" data-scroll-target="#compare-to-a-visualization"><span class="header-section-number">1.5</span> Compare to a visualization</a></li>
+  </ul></li>
+  <li><a href="#linear-models-and-r-squared" id="toc-linear-models-and-r-squared" class="nav-link" data-scroll-target="#linear-models-and-r-squared"><span class="header-section-number">2</span> Linear models and R-squared</a>
+  <ul class="collapse">
+  <li><a href="#quality-of-different-linear-models" id="toc-quality-of-different-linear-models" class="nav-link" data-scroll-target="#quality-of-different-linear-models"><span class="header-section-number">2.1</span> Quality of different linear models?</a></li>
+  <li><a href="#r-squared-of-a-fitted-model" id="toc-r-squared-of-a-fitted-model" class="nav-link" data-scroll-target="#r-squared-of-a-fitted-model"><span class="header-section-number">2.2</span> R-squared of a fitted model</a></li>
+  <li><a href="#linear-model-r-squared" id="toc-linear-model-r-squared" class="nav-link" data-scroll-target="#linear-model-r-squared"><span class="header-section-number">2.3</span> Linear model R-squared</a></li>
+  <li><a href="#r-squared-and-correlation" id="toc-r-squared-and-correlation" class="nav-link" data-scroll-target="#r-squared-and-correlation"><span class="header-section-number">2.4</span> R-squared and correlation</a></li>
+  </ul></li>
+  <li><a href="#linear-models-with-more-predictors" id="toc-linear-models-with-more-predictors" class="nav-link" data-scroll-target="#linear-models-with-more-predictors"><span class="header-section-number">3</span> Linear models with more predictors</a>
+  <ul class="collapse">
+  <li><a href="#add-predictors-to-more-coefficients" id="toc-add-predictors-to-more-coefficients" class="nav-link" data-scroll-target="#add-predictors-to-more-coefficients"><span class="header-section-number">3.1</span> Add predictors <span class="math inline">\(\to\)</span> More coefficients</a></li>
+  <li><a href="#more-predictors-glance-r-squared" id="toc-more-predictors-glance-r-squared" class="nav-link" data-scroll-target="#more-predictors-glance-r-squared"><span class="header-section-number">3.2</span> More predictors: <code>glance</code> R-squared</a></li>
+  <li><a href="#more-predictors-equations" id="toc-more-predictors-equations" class="nav-link" data-scroll-target="#more-predictors-equations"><span class="header-section-number">3.3</span> More predictors: Equations</a></li>
+  </ul></li>
+  <li><a href="#interaction-effects" id="toc-interaction-effects" class="nav-link" data-scroll-target="#interaction-effects"><span class="header-section-number">4</span> Interaction Effects</a>
+  <ul class="collapse">
+  <li><a href="#categorical-variable-as-main-effect" id="toc-categorical-variable-as-main-effect" class="nav-link" data-scroll-target="#categorical-variable-as-main-effect"><span class="header-section-number">4.1</span> Categorical variable as main effect</a></li>
+  <li><a href="#adding-as-interaction-effect" id="toc-adding-as-interaction-effect" class="nav-link" data-scroll-target="#adding-as-interaction-effect"><span class="header-section-number">4.2</span> Adding as interaction effect</a></li>
+  <li><a href="#regression-lines-by-species" id="toc-regression-lines-by-species" class="nav-link" data-scroll-target="#regression-lines-by-species"><span class="header-section-number">4.3</span> Regression lines by species</a></li>
+  <li><a href="#different-equations-for-each-species" id="toc-different-equations-for-each-species" class="nav-link" data-scroll-target="#different-equations-for-each-species"><span class="header-section-number">4.4</span> Different equations for each species!</a></li>
+  <li><a href="#improvement-of-interaction-effects-is-small-here" id="toc-improvement-of-interaction-effects-is-small-here" class="nav-link" data-scroll-target="#improvement-of-interaction-effects-is-small-here"><span class="header-section-number">4.5</span> Improvement of interaction effects is small here</a></li>
+  <li><a href="#interaction-effects-of-two-categoricals" id="toc-interaction-effects-of-two-categoricals" class="nav-link" data-scroll-target="#interaction-effects-of-two-categoricals"><span class="header-section-number">4.6</span> Interaction effects of two categoricals</a></li>
+  </ul></li>
+  <li><a href="#predicting-categorical-data" id="toc-predicting-categorical-data" class="nav-link" data-scroll-target="#predicting-categorical-data"><span class="header-section-number">5</span> Predicting Categorical Data</a>
+  <ul class="collapse">
+  <li><a href="#what-if-response-is-binary" id="toc-what-if-response-is-binary" class="nav-link" data-scroll-target="#what-if-response-is-binary"><span class="header-section-number">5.1</span> What if response is binary?</a></li>
+  <li><a href="#multinomial-response-variable" id="toc-multinomial-response-variable" class="nav-link" data-scroll-target="#multinomial-response-variable"><span class="header-section-number">5.2</span> Multinomial response variable?</a></li>
+  <li><a href="#email-example-variables" id="toc-email-example-variables" class="nav-link" data-scroll-target="#email-example-variables"><span class="header-section-number">5.3</span> Email Example: Variables</a></li>
+  <li><a href="#email-example-data-exploration" id="toc-email-example-data-exploration" class="nav-link" data-scroll-target="#email-example-data-exploration"><span class="header-section-number">5.4</span> Email Example: Data exploration</a></li>
+  <li><a href="#linear-models" id="toc-linear-models" class="nav-link" data-scroll-target="#linear-models"><span class="header-section-number">5.5</span> Linear models?</a></li>
+  <li><a href="#a-penguins-example---predict-sex" id="toc-a-penguins-example---predict-sex" class="nav-link" data-scroll-target="#a-penguins-example---predict-sex"><span class="header-section-number">5.6</span> A penguins example - predict sex</a></li>
+  <li><a href="#a-probabilistic-concept" id="toc-a-probabilistic-concept" class="nav-link" data-scroll-target="#a-probabilistic-concept"><span class="header-section-number">5.7</span> A probabilistic concept</a></li>
+  </ul></li>
+  <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models"><span class="header-section-number">6</span> Generalized linear models</a>
+  <ul class="collapse">
+  <li><a href="#characterising-glms" id="toc-characterising-glms" class="nav-link" data-scroll-target="#characterising-glms"><span class="header-section-number">6.1</span> Characterising GLMs</a></li>
+  </ul></li>
+  <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression"><span class="header-section-number">7</span> Logistic regression</a>
+  <ul class="collapse">
+  <li><a href="#logistic-regression-1" id="toc-logistic-regression-1" class="nav-link" data-scroll-target="#logistic-regression-1"><span class="header-section-number">7.1</span> Logistic regression</a></li>
+  <li><a href="#properties-of-the-logit" id="toc-properties-of-the-logit" class="nav-link" data-scroll-target="#properties-of-the-logit"><span class="header-section-number">7.2</span> Properties of the logit</a></li>
+  <li><a href="#logit-and-logistic-function" id="toc-logit-and-logistic-function" class="nav-link" data-scroll-target="#logit-and-logistic-function"><span class="header-section-number">7.3</span> Logit and <span style="color:red;">logistic</span> function</a></li>
+  <li><a href="#the-logistic-regression-model" id="toc-the-logistic-regression-model" class="nav-link" data-scroll-target="#the-logistic-regression-model"><span class="header-section-number">7.4</span> The logistic regression model</a></li>
+  <li><a href="#modeling-spam" id="toc-modeling-spam" class="nav-link" data-scroll-target="#modeling-spam"><span class="header-section-number">7.5</span> Modeling spam</a></li>
+  <li><a href="#spam-model" id="toc-spam-model" class="nav-link" data-scroll-target="#spam-model"><span class="header-section-number">7.6</span> Spam model</a></li>
+  <li><a href="#predicted-probability-examples" id="toc-predicted-probability-examples" class="nav-link" data-scroll-target="#predicted-probability-examples"><span class="header-section-number">7.7</span> Predicted probability: Examples</a></li>
+  <li><a href="#predicted-probability" id="toc-predicted-probability" class="nav-link" data-scroll-target="#predicted-probability"><span class="header-section-number">7.8</span> Predicted probability</a></li>
+  <li><a href="#interpretation-of-coefficients" id="toc-interpretation-of-coefficients" class="nav-link" data-scroll-target="#interpretation-of-coefficients"><span class="header-section-number">7.9</span> Interpretation of coefficients</a></li>
+  <li><a href="#penguins-example" id="toc-penguins-example" class="nav-link" data-scroll-target="#penguins-example"><span class="header-section-number">7.10</span> Penguins example</a></li>
+  <li><a href="#summarizing-the-idea-of-logistic-regression" id="toc-summarizing-the-idea-of-logistic-regression" class="nav-link" data-scroll-target="#summarizing-the-idea-of-logistic-regression"><span class="header-section-number">7.11</span> Summarizing the Idea of Logistic Regression</a></li>
+  </ul></li>
+  <li><a href="#sensitivity-and-specificity" id="toc-sensitivity-and-specificity" class="nav-link" data-scroll-target="#sensitivity-and-specificity"><span class="header-section-number">8</span> Sensitivity and specificity</a>
+  <ul class="collapse">
+  <li><a href="#false-positive-and-negative" id="toc-false-positive-and-negative" class="nav-link" data-scroll-target="#false-positive-and-negative"><span class="header-section-number">8.1</span> False positive and negative</a></li>
+  <li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix"><span class="header-section-number">8.2</span> Confusion matrix</a></li>
+  <li><a href="#sensitivity-and-specificity-1" id="toc-sensitivity-and-specificity-1" class="nav-link" data-scroll-target="#sensitivity-and-specificity-1"><span class="header-section-number">8.3</span> Sensitivity and specificity</a></li>
+  <li><a href="#covid-19-tests" id="toc-covid-19-tests" class="nav-link" data-scroll-target="#covid-19-tests"><span class="header-section-number">8.4</span> COVID-19 tests</a></li>
+  <li><a href="#another-view" id="toc-another-view" class="nav-link" data-scroll-target="#another-view"><span class="header-section-number">8.5</span> Another view</a></li>
+  </ul></li>
+  <li><a href="#prediction" id="toc-prediction" class="nav-link" data-scroll-target="#prediction"><span class="header-section-number">9</span> Prediction</a>
+  <ul class="collapse">
+  <li><a href="#prediction-vs.-explanation" id="toc-prediction-vs.-explanation" class="nav-link" data-scroll-target="#prediction-vs.-explanation"><span class="header-section-number">9.1</span> Prediction vs.&nbsp;Explanation</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="W08.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">W#08: Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jan Lorenz </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="preliminaries" class="level2" data-number="0.1">
+<h2 data-number="0.1" class="anchored" data-anchor-id="preliminaries"><span class="header-section-number">0.1</span> Preliminaries</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'palmerpenguins'
+
+The following objects are masked from 'package:datasets':
+
+    penguins, penguins_raw</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ────────────────────────────────────── tidymodels 1.5.0 ──
+✔ broom        1.0.13     ✔ rsample      1.3.2 
+✔ dials        1.4.4      ✔ tailor       0.1.0 
+✔ infer        1.1.0      ✔ tune         2.1.0 
+✔ modeldata    1.5.1      ✔ workflows    1.3.0 
+✔ parsnip      1.6.0      ✔ workflowsets 1.1.1 
+✔ recipes      1.3.3      ✔ yardstick    1.4.0 
+── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+✖ scales::discard() masks purrr::discard()
+✖ dplyr::filter()   masks stats::filter()
+✖ recipes::fixed()  masks stringr::fixed()
+✖ dplyr::lag()      masks stats::lag()
+✖ yardstick::spec() masks readr::spec()
+✖ recipes::step()   masks stats::step()</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openintro)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: airports
+Loading required package: cherryblossom
+Loading required package: usdata
+
+Attaching package: 'openintro'
+
+The following object is masked from 'package:modeldata':
+
+    ames</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="co"># For pasting ggplots together</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="recap-linear-model" class="level2 smaller" data-background-color="aquamarine" data-number="0.2">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="0.2" data-anchor-id="recap-linear-model"><span class="header-section-number">0.2</span> Recap: Linear Model</h2>
+<p>We fit a linear model predicting <code>flipper_length_mm</code> from <code>body_mass_g</code> using least squares regression. In R:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = flipper_length_mm ~ body_mass_g, data = penguins)
+
+Coefficients:
+(Intercept)  body_mass_g  
+  136.72956      0.01528  </code></pre>
+</div>
+</div>
+<p>As equation: average <code>flipper_length_mm</code> <span class="math inline">\(= 137 + 0.0153\cdot\)</span> <code>body_mass_g</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pengmod <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(pengmod, penguins)) <span class="sc">|&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(body_mass_g, flipper_length_mm)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> body_mass_g,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> flipper_length_mm,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">xend =</span> body_mass_g,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">yend =</span> .pred</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"gray"</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> .pred), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">mean</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> T),</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">mean</span>(penguins<span class="sc">$</span>flipper_length_mm, <span class="at">na.rm =</span> T)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">mapping =</span> <span class="fu">aes</span>(x, y),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"green"</span>,</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">5</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_segment()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).
+Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-models-with-categorical-variables-as-predictors" class="level1 page-columns page-full" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Linear Models with Categorical Variables as Predictors</h1>
+<section id="categorical-variables-as-predictors" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="categorical-variables-as-predictors"><span class="header-section-number">1.1</span> Categorical variables as predictors?</h2>
+<p>When a variable has categories the entries are not numbers. Can we use it as predictors?</p>
+<p>. . .</p>
+<p>Let’s explore and just try what happens with <code>species</code> as explanatory variable:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  term             estimate std.error statistic   p.value
+  &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)        190.       0.540    351.   0        
+2 speciesChinstrap     5.87     0.970      6.05 3.79e-  9
+3 speciesGentoo       27.2      0.807     33.8  1.84e-110</code></pre>
+</div>
+</div>
+<p>Remember, we have three species: Adelie, Chinstrap, Gentoo. What happened?</p>
+<p>. . .</p>
+<p>Two of the three species categories appear as variables now.</p>
+<ul>
+<li>Categorical variables are automatically encoded as <strong>dummy variables</strong></li>
+<li>Each coefficient describes the expected difference between flipper length of that particular species compared to the baseline level</li>
+<li>What is the baseline level? <span class="fragment"><span style="color:red;">The first category!</span> (Here alphabetically <code>"Adelie"</code>)</span></li>
+</ul>
+</section>
+<section id="how-do-dummy-variables-look" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="how-do-dummy-variables-look"><span class="header-section-number">1.2</span> How do dummy variables look?</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>species</th>
+<th>speciesChinstrap</th>
+<th>speciesGentoo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Adelie</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Adelie</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Chinstrap</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Gentoo</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Gentoo</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Gentoo</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Adelie</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Chinstrap</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Then the fitting of the linear model is as before using variables which just have 0’s and 1’s as entries. (In machine learning called <em>one-hot encoding</em>)</p>
+</section>
+<section id="check-create-dummies-ourselves" class="level2 page-columns page-full" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="check-create-dummies-ourselves"><span class="header-section-number">1.3</span> Check: Create Dummies ourselves</h2>
+<div class="columns">
+<div class="column">
+<p>Create dummy variables with <code>if_else</code> and show three example rows, one for each species:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>penguins_with_dummies <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">speciesChinstrap =</span> <span class="fu">if_else</span>(species <span class="sc">==</span> <span class="st">"Chinstrap"</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">speciesGentoo =</span> <span class="fu">if_else</span>(species <span class="sc">==</span> <span class="st">"Gentoo"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(flipper_length_mm, speciesChinstrap, speciesGentoo)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>penguins_with_dummies <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span>, <span class="dv">200</span>, <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  flipper_length_mm speciesChinstrap speciesGentoo
+              &lt;int&gt;            &lt;dbl&gt;         &lt;dbl&gt;
+1               181                0             0
+2               225                0             1
+3               193                1             0</code></pre>
+</div>
+</div>
+</div><div class="column">
+<p>Fit the model manually:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>penguins_with_dummies <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(flipper_length_mm <span class="sc">~</span> speciesChinstrap <span class="sc">+</span> speciesGentoo, <span class="at">data =</span> _)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = flipper_length_mm ~ speciesChinstrap + speciesGentoo, 
+    data = penguins_with_dummies)
+
+Coefficients:
+     (Intercept)  speciesChinstrap     speciesGentoo  
+          189.95              5.87             27.23  </code></pre>
+</div>
+</div>
+</div>
+</div>
+<p>Equation:<br>
+average <code>flipper_length_mm</code> <span class="math inline">\(= \beta_0 + \beta_1\cdot\)</span> <code>speciesChinstrap</code> <span class="math inline">\(+ \beta_2\cdot\)</span> <code>speciesGentoo</code><br>
+With fitted parameters <span class="math inline">\(\beta_0 \approx 190, \beta_1 \approx 5.87\)</span> and <span class="math inline">\(\beta_2 = 27.2\)</span></p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>Coding notes: With <code>lm</code> we use the linear model engine directly without the tidymodels pipeline. With <code>data = _</code> we use the data that is piped in. The <code>_</code> is a placeholder for the piped data. We need it because <code>lm</code> does not have a <code>data</code> argument in the first position. (<code>lm</code> is older than the tidyverse and does not support piping directly.)</p>
+</div></div></section>
+<section id="interpretation" class="level2 smaller" data-background-color="khaki" data-number="1.4">
+<h2 class="smaller anchored" data-background-color="khaki" data-number="1.4" data-anchor-id="interpretation"><span class="header-section-number">1.4</span> Interpretation</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  term             estimate std.error statistic   p.value
+  &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)        190.       0.540    351.   0        
+2 speciesChinstrap     5.87     0.970      6.05 3.79e-  9
+3 speciesGentoo       27.2      0.807     33.8  1.84e-110</code></pre>
+</div>
+</div>
+<ul>
+<li>Flipper length of the baseline species is the intercept.
+<ul>
+<li>Average flipper length of Adelie is 190 mm</li>
+</ul></li>
+<li>Flipper length of the two other species add their coefficient
+<ul>
+<li>Average flipper length of Chinstrap is 190 + 5.87 mm</li>
+<li>Average flipper length of Gentoo is 190 + 27.2 mm</li>
+</ul></li>
+</ul>
+</section>
+<section id="compare-to-a-visualization" class="level2 smaller" data-number="1.5">
+<h2 class="smaller anchored" data-number="1.5" data-anchor-id="compare-to-a-visualization"><span class="header-section-number">1.5</span> Compare to a visualization</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  term             estimate std.error statistic   p.value
+  &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)        190.       0.540    351.   0        
+2 speciesChinstrap     5.87     0.970      6.05 3.79e-  9
+3 speciesGentoo       27.2      0.807     33.8  1.84e-110</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>jitterplots <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(species, flipper_length_mm)) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.y =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `fun.y` argument of `stat_summary()` is deprecated as of ggplot2 3.3.0.
+ℹ Please use the `fun` argument instead.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>boxplots <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(species, flipper_length_mm)) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.y =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"red"</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>jitterplots <span class="sc">+</span> boxplots</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The red dots are the mean values for species.</p>
+</section>
+</section>
+<section id="linear-models-and-r-squared" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Linear models and R-squared</h1>
+<section id="quality-of-different-linear-models" class="level2 smaller" data-number="2.1">
+<h2 class="smaller anchored" data-number="2.1" data-anchor-id="quality-of-different-linear-models"><span class="header-section-number">2.1</span> Quality of different linear models?</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic   p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept) 137.      2.00          68.5 5.71e-201
+2 body_mass_g   0.0153  0.000467      32.7 4.37e-107</code></pre>
+</div>
+</div>
+<p>average <code>flipper_length_mm</code> <span class="math inline">\(= 137 + 0.0153\cdot\)</span> <code>body_mass_g</code></p>
+<p>. . .</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(bill_depth_mm <span class="sc">~</span> bill_length_mm, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term           estimate std.error statistic  p.value
+  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)     20.9       0.844      24.7  4.72e-78
+2 bill_length_mm  -0.0850    0.0191     -4.46 1.12e- 5</code></pre>
+</div>
+</div>
+<p>average <code>bill_depth_mm</code> <span class="math inline">\(= 20.9 -0.085\cdot\)</span> <code>bill_length_mm</code></p>
+<p>. . .</p>
+<p><strong>Technical:</strong> The idea of the <code>tidy()</code> function is to turn an object into a tidy tibble. Here, it extracts the coefficients of the linear model (and more statistical information).</p>
+</section>
+<section id="r-squared-of-a-fitted-model" class="level2 smaller" data-background-color="aquamarine" data-number="2.2">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="2.2" data-anchor-id="r-squared-of-a-fitted-model"><span class="header-section-number">2.2</span> R-squared of a fitted model</h2>
+<p><span class="math inline">\(R^2\)</span> is the percentage of variability in the response explained by the regression model.</p>
+<p>R-squared is also called <strong>coefficient of determination</strong>.</p>
+<p><strong>Definition</strong>:</p>
+<p><span class="math inline">\(R^2 = 1 - \frac{SS_\text{res}}{SS_\text{tot}}\)</span></p>
+<p>where <span class="math inline">\(SS_\text{res} = \sum_i(y_i - f_i)^2 = \sum_i e_i^2\)</span> is the <em>sum of the squared residuals</em>, and<br>
+<span class="math inline">\(SS_\text{tot} = \sum_i(y_i - \bar y)^2\)</span> the <em>total sum of squares</em> which is proportional to the variance of <span class="math inline">\(y\)</span>. (<span class="math inline">\(\bar y\)</span> is the mean of <span class="math inline">\(y\)</span>.)</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Coefficient_of_Determination.svg" class="img-fluid"></p>
+</section>
+<section id="linear-model-r-squared" class="level2 smaller" data-number="2.3">
+<h2 class="smaller anchored" data-number="2.3" data-anchor-id="linear-model-r-squared"><span class="header-section-number">2.3</span> Linear model R-squared</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.759         0.758  6.91     1071. 4.37e-107     1 -1146. 2297. 2309.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>The command <code>glance</code> shows summary statistics of model fits in a single row.</p>
+<p><strong>Interpretation R-squared?</strong> 75.9% of the variance of flipper length can be explained by a linear relation with body mass. <span class="fragment" style="color:red;">Warning: “Explain” <span class="math inline">\(\neq\)</span> causal claim!</span></p>
+<p>. . .</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(bill_depth_mm <span class="sc">~</span> bill_length_mm, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1    0.0552        0.0525  1.92      19.9 0.0000112     1  -708. 1422. 1433.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>5.52% of the variance of bill depth can be explained by a linear relation with bill length.</p>
+</section>
+<section id="r-squared-and-correlation" class="level2 smaller" data-number="2.4">
+<h2 class="smaller anchored" data-number="2.4" data-anchor-id="r-squared-and-correlation"><span class="header-section-number">2.4</span> R-squared and correlation</h2>
+<p>For a linear model with one predictor, the square of the correlation coefficient is the same as the R-squared of the model. Hence, the name <span class="math inline">\(R^2\)</span>! Check with code:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.759         0.758  6.91     1071. 4.37e-107     1 -1146. 2297. 2309.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>flipper_length_mm,</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>body_mass_g,</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8712018</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>flipper_length_mm,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>body_mass_g,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>)<span class="sc">^</span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7589925</code></pre>
+</div>
+</div>
+<p>. . .</p>
+</section>
+</section>
+<section id="linear-models-with-more-predictors" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Linear models with more predictors</h1>
+<ul>
+<li>Hey, we had already two predictors created all of a sudden when we were using a categorical variable with 3 categories</li>
+<li>We can also add more numerical predictors</li>
+</ul>
+<section id="add-predictors-to-more-coefficients" class="level2 smaller" data-number="3.1">
+<h2 class="smaller anchored" data-number="3.1" data-anchor-id="add-predictors-to-more-coefficients"><span class="header-section-number">3.1</span> Add predictors <span class="math inline">\(\to\)</span> More coefficients</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic   p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept) 137.      2.00          68.5 5.71e-201
+2 body_mass_g   0.0153  0.000467      32.7 4.37e-107</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">+</span> bill_length_mm, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  term           estimate std.error statistic   p.value
+  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    122.      2.86         42.7  1.70e-138
+2 body_mass_g      0.0131  0.000545     23.9  7.56e- 75
+3 bill_length_mm   0.549   0.0801        6.86 3.31e- 11</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">+</span> bill_length_mm <span class="sc">+</span> bill_depth_mm,</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> penguins</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  term           estimate std.error statistic   p.value
+  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)    158.      4.63         34.1  1.80e-111
+2 body_mass_g      0.0109  0.000538     20.3  1.93e- 60
+3 bill_length_mm   0.592   0.0717        8.26 3.42e- 15
+4 bill_depth_mm   -1.68    0.181        -9.29 1.99e- 18</code></pre>
+</div>
+</div>
+</section>
+<section id="more-predictors-glance-r-squared" class="level2 smaller" data-number="3.2">
+<h2 class="smaller anchored" data-number="3.2" data-anchor-id="more-predictors-glance-r-squared"><span class="header-section-number">3.2</span> More predictors: <code>glance</code> R-squared</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.759         0.758  6.91     1071. 4.37e-107     1 -1146. 2297. 2309.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">+</span> bill_length_mm, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.788         0.787  6.49      631. 4.88e-115     2 -1123. 2255. 2270.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">+</span> bill_length_mm <span class="sc">+</span> bill_depth_mm,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> penguins</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.831         0.830  5.80      556. 2.99e-130     3 -1084. 2179. 2198.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="more-predictors-equations" class="level2 smaller" data-number="3.3">
+<h2 class="smaller anchored" data-number="3.3" data-anchor-id="more-predictors-equations"><span class="header-section-number">3.3</span> More predictors: Equations</h2>
+<p>average <code>flipper_length_mm</code> <span class="math inline">\(= 137 + 0.0153\cdot\)</span> <code>body_mass_g</code><br>
+75.9% explained variance</p>
+<p>average <code>flipper_length_mm</code> <span class="math inline">\(= 122 + 0.0131\cdot\)</span> <code>body_mass_g</code> <span class="math inline">\(+ 0.549\cdot\)</span> <code>bill_length_mm</code><br>
+78.8% explained variance</p>
+<p>average <code>flipper_length_mm</code> <span class="math inline">\(= 158 + 0.0109\cdot\)</span> <code>body_mass_g</code> <span class="math inline">\(+ 0.592\cdot\)</span> <code>bill_length_mm</code> <span class="math inline">\(- 1.68\cdot\)</span> <code>bill_length_mm</code><br>
+83.1% explained variance</p>
+<p>Often more predictors bring higher R-squared. However, doing it blindly makes interpretation complicated and can lead to <strong>overfitting</strong>! (Treated later.)</p>
+</section>
+</section>
+<section id="interaction-effects" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Interaction Effects</h1>
+<p>Adding products of variables as new variable.</p>
+<section id="categorical-variable-as-main-effect" class="level2 smaller" data-number="4.1">
+<h2 class="smaller anchored" data-number="4.1" data-anchor-id="categorical-variable-as-main-effect"><span class="header-section-number">4.1</span> Categorical variable as main effect</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">+</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+  term              estimate std.error statistic   p.value
+  &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)      159.       2.39         66.6  2.45e-196
+2 body_mass_g        0.00840  0.000634     13.3  1.40e- 32
+3 speciesChinstrap   5.60     0.788         7.10 7.33e- 12
+4 speciesGentoo     15.7      1.09         14.4  6.80e- 37</code></pre>
+</div>
+</div>
+<p>A <strong>main effect</strong> by categorical dummy variables allows for different intercepts per species. (However, the slopes are the same.)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">+</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.854         0.853  5.40      659. 7.42e-141     3 -1060. 2129. 2149.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>Adding species increases R-squared better than adding bill length and bill depth together!</p>
+</section>
+<section id="adding-as-interaction-effect" class="level2 smaller" data-number="4.2">
+<h2 class="smaller anchored" data-number="4.2" data-anchor-id="adding-as-interaction-effect"><span class="header-section-number">4.2</span> Adding as interaction effect</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">*</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  term                          estimate std.error statistic   p.value
+  &lt;chr&gt;                            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)                  165.       3.55         46.5  1.56e-148
+2 body_mass_g                    0.00668  0.000952      7.01 1.30e- 11
+3 speciesChinstrap             -13.9      7.30         -1.90 5.84e-  2
+4 speciesGentoo                  6.06     6.05          1.00 3.17e-  1
+5 body_mass_g:speciesChinstrap   0.00523  0.00195       2.68 7.66e-  3
+6 body_mass_g:speciesGentoo      0.00236  0.00135       1.75 8.16e-  2</code></pre>
+</div>
+</div>
+<ul>
+<li>Note the <code>*</code> for interaction effect!</li>
+<li>Also main effects for both variables are in as coefficients.</li>
+<li>Adelie is the baseline species (because it is first in the alphabet).</li>
+<li>An <strong>interaction effect</strong> allows for different slopes for each species!</li>
+</ul>
+</section>
+<section id="regression-lines-by-species" class="level2 smaller" data-number="4.3">
+<h2 class="smaller anchored" data-number="4.3" data-anchor-id="regression-lines-by-species"><span class="header-section-number">4.3</span> Regression lines by species</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> body_mass_g, <span class="at">y =</span> flipper_length_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Compare the slopes to the regression output on the slides before!</p>
+</section>
+<section id="different-equations-for-each-species" class="level2 smaller" data-number="4.4">
+<h2 class="smaller anchored" data-number="4.4" data-anchor-id="different-equations-for-each-species"><span class="header-section-number">4.4</span> Different equations for each species!</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">*</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  term                          estimate std.error statistic   p.value
+  &lt;chr&gt;                            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)                  165.       3.55         46.5  1.56e-148
+2 body_mass_g                    0.00668  0.000952      7.01 1.30e- 11
+3 speciesChinstrap             -13.9      7.30         -1.90 5.84e-  2
+4 speciesGentoo                  6.06     6.05          1.00 3.17e-  1
+5 body_mass_g:speciesChinstrap   0.00523  0.00195       2.68 7.66e-  3
+6 body_mass_g:speciesGentoo      0.00236  0.00135       1.75 8.16e-  2</code></pre>
+</div>
+</div>
+<p>Adelie:<br>
+average <code>flipper_length_mm</code> <span class="math inline">\(= 165 + 0.00668\cdot\)</span> <code>body_mass_g</code></p>
+<p>Chinstrap:<br>
+average <code>flipper_length_mm</code> <span class="math inline">\(= 165 - 13.6 + (0.00668 + 0.00523)\cdot\)</span> <code>body_mass_g</code></p>
+<p>Gentoo:<br>
+average <code>flipper_length_mm</code> <span class="math inline">\(= 165 + 6.06 + (0.00668 + 0.00236)\cdot\)</span> <code>body_mass_g</code></p>
+</section>
+<section id="improvement-of-interaction-effects-is-small-here" class="level2 smaller" data-number="4.5">
+<h2 class="smaller anchored" data-number="4.5" data-anchor-id="improvement-of-interaction-effects-is-small-here"><span class="header-section-number">4.5</span> Improvement of interaction effects is small here</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">+</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.854         0.853  5.40      659. 7.42e-141     3 -1060. 2129. 2149.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g <span class="sc">*</span> species, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glance</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+  r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.857         0.855  5.35      404. 9.60e-140     5 -1056. 2125. 2152.
+# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="interaction-effects-of-two-categoricals" class="level2 smaller" data-number="4.6">
+<h2 class="smaller anchored" data-number="4.6" data-anchor-id="interaction-effects-of-two-categoricals"><span class="header-section-number">4.6</span> Interaction effects of two categoricals</h2>
+<p>Assume <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> are categorical variables. We add their product in the linear model as a <em>new variable</em>: <span class="math inline">\(y_i = \beta_0 + \beta_1x_1  + \beta_2x_2 + \beta_{3}x_1x_2 + \dots\)</span>.</p>
+<p><strong>Example:</strong> <span class="math inline">\(x_1\)</span> is <em>gender female</em> and <span class="math inline">\(x_2\)</span> <em>having kids</em></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">gender_female =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">has_kids =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gender_female_x_has_kids =</span> gender_female <span class="sc">*</span> has_kids) <span class="sc">|&gt;</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">gender_female</th>
+<th style="text-align: right;">has_kids</th>
+<th style="text-align: right;">gender_female_x_has_kids</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>What is the baseline? <span class="fragment"><em>Being male without kids.</em></span></li>
+<li>Thought experiment: When we estimate a model explaining life satisfaction with these. How would we see if being a mother increases life satisfaction more than being a father? <span class="fragment"><em>positive coefficient for <code>gender_female_x_has_kids</code></em></span></li>
+</ul>
+</section>
+</section>
+<section id="predicting-categorical-data" class="level1 page-columns page-full" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Predicting Categorical Data</h1>
+<p>Large part of the content adapted from <a href="http://datasciencebox.org" class="uri">http://datasciencebox.org</a>.</p>
+<section id="what-if-response-is-binary" class="level2 smaller" data-number="5.1">
+<h2 class="smaller anchored" data-number="5.1" data-anchor-id="what-if-response-is-binary"><span class="header-section-number">5.1</span> What if response is binary?</h2>
+<ul>
+<li>Example: <strong>Spam filter</strong> for emails</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(email) <span class="co"># Part of the openintro data package</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3,921
+Columns: 21
+$ spam         &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ to_multiple  &lt;fct&gt; 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ from         &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ cc           &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 2, 1, 0, 2, 0, …
+$ sent_email   &lt;fct&gt; 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, …
+$ time         &lt;dttm&gt; 2012-01-01 07:16:41, 2012-01-01 08:03:59, 2012-01-01 17:…
+$ image        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ attach       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ dollar       &lt;dbl&gt; 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 5, 0, 0, …
+$ winner       &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, n…
+$ inherit      &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ viagra       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ password     &lt;dbl&gt; 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, …
+$ num_char     &lt;dbl&gt; 11.370, 10.504, 7.773, 13.256, 1.231, 1.091, 4.837, 7.421…
+$ line_breaks  &lt;int&gt; 202, 202, 192, 255, 29, 25, 193, 237, 69, 68, 25, 79, 191…
+$ format       &lt;fct&gt; 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, …
+$ re_subj      &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, …
+$ exclaim_subj &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, …
+$ urgent_subj  &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ exclaim_mess &lt;dbl&gt; 0, 1, 6, 48, 1, 1, 1, 18, 1, 0, 2, 1, 0, 10, 4, 10, 20, 0…
+$ number       &lt;fct&gt; big, small, small, small, none, none, big, small, small, …</code></pre>
+</div>
+</div>
+</section>
+<section id="multinomial-response-variable" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="multinomial-response-variable"><span class="header-section-number">5.2</span> Multinomial response variable?</h2>
+<ul>
+<li>We will not cover other categorical variables than binary ones here.</li>
+<li>However, many of the probabilistic concepts transfer.</li>
+</ul>
+</section>
+<section id="email-example-variables" class="level2 smaller page-columns page-full" data-number="5.3">
+<h2 class="smaller anchored" data-number="5.3" data-anchor-id="email-example-variables"><span class="header-section-number">5.3</span> Email Example: Variables</h2>
+<p><code>?email</code> shows all variable descriptions. For example:</p>
+<ul>
+<li><code>spam</code> Indicator for whether the email was spam.</li>
+<li><code>from</code> Whether the message was listed as from anyone (this is usually set by default for regular outgoing email).</li>
+<li><code>cc</code> Number of people cc’ed.</li>
+<li><code>time</code> Time at which email was sent.</li>
+<li><code>attach</code> The number of attached files.</li>
+<li><code>dollar</code> The number of times a dollar sign or the word “dollar” appeared in the email.</li>
+<li><code>num_char</code> The number of characters in the email, in thousands.</li>
+<li><code>re_subj</code> Whether the subject started with “Re:”, “RE:”, “re:”, or “rE:”</li>
+</ul>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>The development, extraction, or discovery of such variables is called <strong>feature engineering</strong>, <strong>feature extraction</strong> or <strong>feature discovery</strong>. Usually, a combination of <em>domain knowledge</em> and <em>data science</em> skill is needed to do this.</p>
+</div></div></section>
+<section id="email-example-data-exploration" class="level2 smaller" data-number="5.4">
+<h2 class="smaller anchored" data-number="5.4" data-anchor-id="email-example-data-exploration"><span class="header-section-number">5.4</span> Email Example: Data exploration</h2>
+<p>Would you expect spam to be longer or shorter?</p>
+<p>. . .</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>email <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> num_char, <span class="at">y =</span> spam)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>. . .</p>
+<p>Would you expect spam subject to start with “Re:” or the like?</p>
+<p>. . .</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>email <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> re_subj, <span class="at">fill =</span> spam)) <span class="sc">+</span> <span class="fu">geom_bar</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-models" class="level2 smaller page-columns page-full" data-number="5.5">
+<h2 class="smaller anchored" data-number="5.5" data-anchor-id="linear-models"><span class="header-section-number">5.5</span> Linear models?</h2>
+<p>Both seem to give some signal. <strong>How can we model the relationship?</strong></p>
+<p>We focus first on just <code>num_char</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>email <span class="sc">|&gt;</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> num_char, <span class="at">y =</span> <span class="fu">as.numeric</span>(spam) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We would like to have a better concept!</p>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>Why do we need <code>y = as.numeric(spam)-1</code> instead of just <code>y = spam</code>?? Answer: <code>spam</code> is a factor although it looks like a numeric variable. The underlying integers for the two categories <code>"0"</code> and <code>"1"</code> are <code>1</code> and <code>2</code>. The strange form transforms the factor into a numerical variables with the values <code>0</code> and <code>1</code> as we need it for a target variable in a linear model.</p>
+</div></div></section>
+<section id="a-penguins-example---predict-sex" class="level2 smaller" data-number="5.6">
+<h2 class="smaller anchored" data-number="5.6" data-anchor-id="a-penguins-example---predict-sex"><span class="header-section-number">5.6</span> A penguins example - predict sex</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">|&gt;</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> body_mass_g, <span class="at">y =</span> <span class="fu">as.numeric</span>(sex) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span style="color:red;">It does not make much sense to predict 0-1-values with a linear model.</span></p>
+</section>
+<section id="a-probabilistic-concept" class="level2 smaller" data-background-color="aquamarine" data-number="5.7">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="5.7" data-anchor-id="a-probabilistic-concept"><span class="header-section-number">5.7</span> A probabilistic concept</h2>
+<ul>
+<li>We treat each outcome (spam and not) as successes and failures arising from separate Bernoulli trials
+<ul>
+<li><strong>Bernoulli trial:</strong> a random experiment with exactly two possible outcomes, <em>success</em> and <em>failure</em>, in which the <em>probability of success</em> is the same every time the experiment is conducted</li>
+</ul></li>
+</ul>
+<p>. . .</p>
+<ul>
+<li>Each email is treated as Bernoulli trial with separate probability of success</li>
+</ul>
+<p><span class="math display">\[ y_i ∼ \text{Bernoulli}(p_i) \]</span></p>
+<p>. . .</p>
+<ul>
+<li>We use the predictor variables to model the Bernoulli parameter <span class="math inline">\(p_i\)</span></li>
+</ul>
+<p>. . .</p>
+<ul>
+<li>Now we conceptualized a continuous response, but still a linear model does not fit perfectly for <span class="math inline">\(p_i\)</span> (since a probability is between 0 and 1).</li>
+<li>However, we can transform the linear model to have the appropriate range.</li>
+</ul>
+</section>
+</section>
+<section id="generalized-linear-models" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Generalized linear models</h1>
+<section id="characterising-glms" class="level2 smaller" data-background-color="aquamarine" data-number="6.1">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="6.1" data-anchor-id="characterising-glms"><span class="header-section-number">6.1</span> Characterising GLMs</h2>
+<ul>
+<li><strong>Generalized linear models (GLMs)</strong> are a way of addressing many problems in regression</li>
+<li>Logistic regression is one example</li>
+</ul>
+<p>All GLMs have the following three characteristics:</p>
+<ol type="1">
+<li>A <strong>probability distribution</strong> as a generative model for the outcome variable <span class="math inline">\(y_i \sim \text{Distribution}(\text{parameter})\)</span></li>
+</ol>
+<p>. . .</p>
+<ol start="2" type="1">
+<li>A <strong>linear model</strong> <span class="math inline">\(\eta = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k\)</span><br>
+where <span class="math inline">\(\eta\)</span> is related to a mean parameter of the distribution by the …</li>
+</ol>
+<p>. . .</p>
+<ol start="3" type="1">
+<li><strong>Link function</strong> that relates the linear model to the parameter of the outcome distribution.</li>
+</ol>
+</section>
+</section>
+<section id="logistic-regression" class="level1 page-columns page-full" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Logistic regression</h1>
+<section id="logistic-regression-1" class="level2 smaller" data-background-color="aquamarine" data-number="7.1">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="7.1" data-anchor-id="logistic-regression-1"><span class="header-section-number">7.1</span> Logistic regression</h2>
+<ul>
+<li><strong>Logistic regression</strong> is a GLM used to model a binary categorical outcome using numerical and categorical predictors.</li>
+<li>The <em>distribution</em> is the Bernoulli distribution with parameter <span class="math inline">\(p\)</span> (success probability).</li>
+<li>As <em>link function</em> connecting <span class="math inline">\(\eta_i\)</span> to <span class="math inline">\(p_i\)</span> we use the <strong>logit function</strong>.</li>
+</ul>
+<p>. . .</p>
+<ul>
+<li><strong>Logit function:</strong> <span class="math inline">\(\text{logit}: [0,1] \to \mathbb{R}\)</span></li>
+</ul>
+<p><span class="math display">\[\text{logit}(p) = \log\left(\frac{p}{1-p}\right)\]</span></p>
+<ul>
+<li><span class="math inline">\(\frac{p}{1-p}\)</span> is called the <strong>odds</strong> of a success which happens with probability <span class="math inline">\(p\)</span>.<br>
+Example: Roll a six with a die has <span class="math inline">\(p=1/6\)</span>. Thus, the odds are <span class="math inline">\(\frac{1/6}{5/6} = 1/5\)</span>. Sometimes written as 1:5. <em>“The odds of success are one to five.”</em></li>
+</ul>
+</section>
+<section id="properties-of-the-logit" class="level2 smaller page-columns page-full" data-background-color="aquamarine" data-number="7.2">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="7.2" data-anchor-id="properties-of-the-logit"><span class="header-section-number">7.2</span> Properties of the logit</h2>
+<ul>
+<li>Logit takes values between 0 and 1 and returns values between <span class="math inline">\(-\infty\)</span> and <span class="math inline">\(\infty\)</span></li>
+<li>The inverse of the logit function if the <strong>logistic function</strong> (mapping values from <span class="math inline">\(-\infty\)</span> and <span class="math inline">\(\infty\)</span> to values between 0 and 1): <span class="math display">\[\text{logit}^{-1}(x) = \text{logistic}(x) = \frac{e^x}{1+e^x} = \frac{1}{1+e^{-x}}\]</span></li>
+<li>Logit can be interpreted as the log odds of a success – more on this later.</li>
+</ul>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<ul>
+<li>The logistic function is the solution of the differential equation <span class="math inline">\(\frac{d}{dx}f(x) = f(x)(1-f(x))\)</span> which also appears in the SI-model of epidemics (and other models of exponential growth with saturation).</li>
+<li>Good exercises to check your math skills:
+<ol type="1">
+<li>Show that <span class="math inline">\(\text{logit}^{-1}(x) = \text{logistic}(x)\)</span> or the other way round.</li>
+<li>Transform <span class="math inline">\(\frac{e^x}{1+e^x}\)</span> into <span class="math inline">\(\frac{1}{1+e^{-x}}\)</span>.</li>
+<li>Check that <span class="math inline">\(\text{logistic}(x)\)</span> is a solution to <span class="math inline">\(\frac{d}{dx}f(x) = f(x)(1-f(x))\)</span>.</li>
+</ol></li>
+<li>You can request hints from me when you get stuck.</li>
+</ul>
+</div></div></section>
+<section id="logit-and-logistic-function" class="level2 smaller" data-background-color="aquamarine" data-number="7.3">
+<h2 class="smaller anchored" data-background-color="aquamarine" data-number="7.3" data-anchor-id="logit-and-logistic-function"><span class="header-section-number">7.3</span> Logit and <span style="color:red;">logistic</span> function</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_function</span>(</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">log</span>(x <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> x)),</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.999</span>),</span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="dv">500</span></span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>x)), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb85-11"><a href="#cb85-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>) <span class="sc">+</span></span>
+<span id="cb85-12"><a href="#cb85-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"x"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 6 rows containing missing values or values outside the scale range
+(`geom_function()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-logistic-regression-model" class="level2" data-background-color="aquamarine" data-number="7.4">
+<h2 data-background-color="aquamarine" data-number="7.4" class="anchored" data-anchor-id="the-logistic-regression-model"><span class="header-section-number">7.4</span> The logistic regression model</h2>
+<ul>
+<li>Based on the three GLM criteria we have
+<ul>
+<li><span class="math inline">\(y_i \sim \text{Bernoulli}(p_i)\)</span></li>
+<li><span class="math inline">\(\eta_i = \beta_0+\beta_1 x_{1,i} + \cdots + \beta_n x_{n,i}\)</span></li>
+<li><span class="math inline">\(\text{logit}(p_i) = \eta_i\)</span></li>
+</ul></li>
+</ul>
+<p>. . .</p>
+<ul>
+<li>From which we get</li>
+</ul>
+<p><span class="math display">\[p_i = \frac{e^{\beta_0+\beta_1 x_{1,i} + \cdots + \beta_k x_{k,i}}}{1 + e^{\beta_0+\beta_1 x_{1,i} + \cdots + \beta_k x_{k,i}}}\]</span></p>
+</section>
+<section id="modeling-spam" class="level2 smaller page-columns page-full" data-number="7.5">
+<h2 class="smaller anchored" data-number="7.5" data-anchor-id="modeling-spam"><span class="header-section-number">7.5</span> Modeling spam</h2>
+<p>With <code>tidymodels</code> we fit a GLM in the same way as a linear model except we</p>
+<ul>
+<li>specify the model with <code>logistic_reg()</code></li>
+<li>use <code>"glm"</code> instead of <code>"lm"</code> as the engine</li>
+<li>define <code>family = "binomial"</code> for the link function to be used in the model</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>spam_fit <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(spam <span class="sc">~</span> num_char, <span class="at">data =</span> email, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(spam_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic   p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)  -1.80     0.0716     -25.1  2.04e-139
+2 num_char     -0.0621   0.00801     -7.75 9.50e- 15</code></pre>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<ul>
+<li>The family is <em>binomial</em> because the Bernoulli distribution is a special case of the binomial distribution <span class="math inline">\(\text{Binomial}(n,p)\)</span> with <span class="math inline">\(n=1\)</span>.</li>
+<li>The binomial distribution specifies the probability to have <span class="math inline">\(k\)</span> successes in <span class="math inline">\(n\)</span> Bernoulli trials with the same success probability <span class="math inline">\(p\)</span>.</li>
+</ul>
+</div></div></section>
+<section id="spam-model" class="level2 smaller" data-number="7.6">
+<h2 class="smaller anchored" data-number="7.6" data-anchor-id="spam-model"><span class="header-section-number">7.6</span> Spam model</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(spam_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic   p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)  -1.80     0.0716     -25.1  2.04e-139
+2 num_char     -0.0621   0.00801     -7.75 9.50e- 15</code></pre>
+</div>
+</div>
+<p>Model: <span class="math display">\[\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot \text{num_char}\]</span></p>
+</section>
+<section id="predicted-probability-examples" class="level2 smaller" data-number="7.7">
+<h2 class="smaller anchored" data-number="7.7" data-anchor-id="predicted-probability-examples"><span class="header-section-number">7.7</span> Predicted probability: Examples</h2>
+<p>We can compute the <strong>predicted probability</strong> that an email with 2000 character is spam as follows:</p>
+<p><span class="math display">\[\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot 2 = -1.9242\]</span></p>
+<p>(Note: <code>num_char</code> is in thousands.)</p>
+<p><span class="math display">\[\frac{p}{1-p} = e^{-1.9242} = 0.15 \Rightarrow p = 0.15 \cdot (1 - p)\]</span></p>
+<p><span class="math display">\[p = 0.15 - 0.15\cdot p \Rightarrow 1.15\cdot p = 0.15\]</span></p>
+<p><span class="math display">\[p = 0.15 / 1.15 = 0.13\]</span></p>
+</section>
+<section id="predicted-probability" class="level2 smaller" data-number="7.8">
+<h2 class="smaller anchored" data-number="7.8" data-anchor-id="predicted-probability"><span class="header-section-number">7.8</span> Predicted probability</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>logistic <span class="ot">&lt;-</span> <span class="cf">function</span>(t) <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>t))</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">15</span>, <span class="dv">40</span>), <span class="at">y =</span> <span class="fu">logistic</span>(<span class="sc">-</span><span class="fl">1.80</span> <span class="sc">-</span> <span class="fl">0.0621</span> <span class="sc">*</span> x))</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>email <span class="sc">|&gt;</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> num_char, <span class="at">y =</span> <span class="fu">as.numeric</span>(spam) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">logistic</span>(<span class="sc">-</span><span class="fl">1.80</span> <span class="sc">-</span> <span class="fl">0.0621</span> <span class="sc">*</span> x), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> preds, <span class="at">mapping =</span> <span class="fu">aes</span>(x, y), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Spam probability 2,000 characters: 0.1273939<br>
+Spam probability 15,000 characters: 0.06114<br>
+Spam probability 40,000 characters: 0.0135999</p>
+</section>
+<section id="interpretation-of-coefficients" class="level2 smaller" data-number="7.9">
+<h2 class="smaller anchored" data-number="7.9" data-anchor-id="interpretation-of-coefficients"><span class="header-section-number">7.9</span> Interpretation of coefficients</h2>
+<p><span class="math display">\[\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot \text{num_char}\]</span></p>
+<p>What does an increase by thousand characters (<code>num_char + 1</code>) imply?</p>
+<p>. . .</p>
+<p>Let us assume the predicted probability of an email is <span class="math inline">\(p_0\)</span>. Then an increase of <code>num_char</code> by one implied that the log-odds become</p>
+<p><span class="math display">\[\log\left(\frac{p_0}{1-p_0}\right) - 0.0621 = \log\left(\frac{p_0}{1-p_0}\right) - \log(e^{0.0621})\]</span></p>
+<p><span class="math display">\[ = \log\left(\frac{p_0}{1-p_0}\right) + \log(\frac{1}{e^{0.0621}}) = \log\left(\frac{p_0}{1-p_0} \frac{1}{e^{0.0621}}\right) = \log\left(\frac{p_0}{1-p_0} 0.94\right)\]</span></p>
+<p>That means the odds of being spam decrease by 6%.</p>
+</section>
+<section id="penguins-example" class="level2 smaller" data-number="7.10">
+<h2 class="smaller anchored" data-number="7.10" data-anchor-id="penguins-example"><span class="header-section-number">7.10</span> Penguins example</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>sex_fit <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(sex <span class="sc">~</span> body_mass_g, <span class="at">data =</span> <span class="fu">na.omit</span>(penguins), <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(sex_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept) -5.16     0.724        -7.13 1.03e-12
+2 body_mass_g  0.00124  0.000173      7.18 7.10e-13</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">na.omit</span>(penguins) <span class="sc">|&gt;</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> body_mass_g, <span class="at">y =</span> sex)) <span class="sc">+</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_function</span>(</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">logistic</span>(<span class="sc">-</span><span class="fl">5.16</span> <span class="sc">+</span> <span class="fl">0.00124</span> <span class="sc">*</span> x) <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"red"</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">7000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Multiple drawing groups in `geom_function()`
+ℹ Did you use the correct group, colour, or fill aesthetics?</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="W08_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="summarizing-the-idea-of-logistic-regression" class="level2 smaller" data-number="7.11">
+<h2 class="smaller anchored" data-number="7.11" data-anchor-id="summarizing-the-idea-of-logistic-regression"><span class="header-section-number">7.11</span> Summarizing the Idea of Logistic Regression</h2>
+<ul>
+<li>We want to explain/predict a binary response variable.</li>
+<li>We want to use the concept of linear models.</li>
+<li>To that end we first interprete each outcome as the outcome of a probabilisitic event happening with probability <span class="math inline">\(p_i\)</span>. That way we transform the problem from modeling a binary outcome to a numerical outcome.</li>
+<li>However, probabilities are bounded between 0 and 1.</li>
+<li>We use the logit function to map probabilities to the real line. That means we predict the log-odds of the probability.</li>
+<li>We model the log-odds with a linear model.</li>
+</ul>
+</section>
+</section>
+<section id="sensitivity-and-specificity" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Sensitivity and specificity</h1>
+<ul>
+<li>Two performance measures for a prediction model with binary outcome.</li>
+<li>Also called a “binary classifier.</li>
+<li>Today, just the idea.</li>
+</ul>
+<section id="false-positive-and-negative" class="level2 smaller" data-number="8.1">
+<h2 class="smaller anchored" data-number="8.1" data-anchor-id="false-positive-and-negative"><span class="header-section-number">8.1</span> False positive and negative</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 35%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Email labelled spam</th>
+<th>Email labelled not spam</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Email is spam</strong></td>
+<td>True positive</td>
+<td>False negative (Type 2 error)</td>
+</tr>
+<tr class="even">
+<td><strong>Email is not spam</strong></td>
+<td>False positive (Type 1 error)</td>
+<td>True negative</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="confusion-matrix" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="confusion-matrix"><span class="header-section-number">8.2</span> Confusion matrix</h2>
+<p>More general: <a href="https://en.wikipedia.org/wiki/Confusion_matrix"><strong>Confusion matrix</strong></a> of statistical classification:</p>
+<p><img src="img/confusion_small.png" class="img-fluid"></p>
+</section>
+<section id="sensitivity-and-specificity-1" class="level2 smaller" data-number="8.3">
+<h2 class="smaller anchored" data-number="8.3" data-anchor-id="sensitivity-and-specificity-1"><span class="header-section-number">8.3</span> Sensitivity and specificity</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img src="img/confusion_small.png" class="img-fluid"></p>
+</div><div class="column" style="width:60%;">
+<p><strong>Sensitivity</strong> is the <em>true positive rate</em>: TP / (TP + FN)<br>
+<strong>Specificity</strong> is the <em>true negative rate</em>: TN / (TN + FP)</p>
+</div>
+</div>
+<p>For spam a <em>positive</em> case is an email labelled as <em>spam</em>:</p>
+<p><strong>Sensitivity:</strong> Fraction of emails <em>labelled as</em> spam among all emails which <em>are</em> spam.<br>
+Low sensitivity <span class="math inline">\(\to\)</span> More false negatives <span class="math inline">\(\to\)</span> More spam in you inbox!</p>
+<p><strong>Specificity:</strong> Fraction of emails <em>labelled as not</em> spam among all emails which <em>are not</em> spam.<br>
+Low specificity <span class="math inline">\(\to\)</span> More false positives <span class="math inline">\(\to\)</span> More relevant emails in spam folder!</p>
+<p>. . .</p>
+<p>If you were designing a spam filter, would you want sensitivity and specificity to be high or low? What are the trade-offs associated with each decision?</p>
+</section>
+<section id="covid-19-tests" class="level2 smaller" data-number="8.4">
+<h2 class="smaller anchored" data-number="8.4" data-anchor-id="covid-19-tests"><span class="header-section-number">8.4</span> COVID-19 tests</h2>
+<p>A COVID-19 test is called <em>positive</em> when it indicates the presence of the virus.</p>
+<p><em>What is the sensitivity of a test?</em></p>
+<p>. . .</p>
+<p>Probability the test is positive when the tested person has COVID-19. (The true positive rate.)</p>
+<p>. . .</p>
+<p><em>What is the specificity of a test?</em></p>
+<p>. . .</p>
+<p>Probability the test is negative when the tested person does not have COVID-19. (The true negative rate.)</p>
+<p>Often the sensitivity is around 90% and the specificity is around 99%. What does that mean?</p>
+<p>. . .</p>
+<ul>
+<li>When you do not have COVID the test is more likely to be correct, than when you do have COVID. However, specificity and sensitivity do not tell something about the probability to have COVID when the test is positive, or to not have COVID when the test is negative.</li>
+</ul>
+</section>
+<section id="another-view" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="another-view"><span class="header-section-number">8.5</span> Another view</h2>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Sensitivity_and_specificity_1.01.svg" class="img-fluid"></p>
+</section>
+</section>
+<section id="prediction" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Prediction</h1>
+<section id="prediction-vs.-explanation" class="level2 smaller" data-number="9.1">
+<h2 class="smaller anchored" data-number="9.1" data-anchor-id="prediction-vs.-explanation"><span class="header-section-number">9.1</span> Prediction vs.&nbsp;Explanation</h2>
+<p><strong>Explanation</strong> and <strong>Prediction</strong> are different <strong>Modelling Mindsets</strong><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<ul>
+<li>With an <em>Explanatory Mindset</em> we want to understand the relationship between the predictors and the outcome.
+<ul>
+<li>We interpret coefficients</li>
+<li>We ask what variance can be explained by a linear model or a PCA</li>
+</ul></li>
+<li>With a <em>Predictive Mindset</em> we want to predict the outcome for new observations.
+<ul>
+<li>We use the model to predict the outcome for new observations</li>
+<li>We ask how well we can predict the outcome for new observations</li>
+<li>We may ignore why the model works</li>
+</ul></li>
+</ul>
+<p>Important: The mindsets are very different but they may use the same models!</p>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>From Molnar, C. (2022). Modeling mindsets: The many cultures of learning from data. Christoph Molnar c/o Mucbook Clubhouse.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
