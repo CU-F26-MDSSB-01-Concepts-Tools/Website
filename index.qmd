@@ -2,23 +2,11 @@
 title: "Data Science Concepts / Data Science Tools"
 ---
 
-:::{.callout-warning collapse=true appearance='default' icon=true}
-## Note for students of **Master program: Data Science for Society and Business (online)**
 
-This is NOT the official syllabus of the [Master program: Data Science for Society and Business (online)](https://constructor.university/programs/online-programs/data-science-for-society-and-business)! 
-
-You have modules with the same names in your program and also the instructors are the same, but the Modules are different! Look it up in your [DSSB (online) handbook]({{< var link.handbook_online >}}). Most importantly, your course will give you more ECTS, so do NOT count on the information here. 
-
-You are free to also use the material provided here, but look in the handbook and the learning platform for the official information!
-:::
-
-
-:::{.callout-important collapse=false appearance='default' icon=true}
+:::{.callout-important collapse=true appearance='default' icon=true}
 ## Developing Syllabus
 This syllabus may change during the course of the semester with some additions and clarifications.   
 All substantial changes will marked here with date. 
-
-2025-10-18: List all [Homework](homework.qmd) Projects to come. Specify requirement information about passing and bonus for *Tools* module. 
 :::
 
 ## Module Names
@@ -34,13 +22,12 @@ Offered in the [Master program: Data Science for Society and Business (DSSB)]({{
 ## Module Components
 
 - Data Science Concepts (5 Credits)
-- Data Science Tools in R (2.5 credits)
-- Data Science Tools in python (2.5 credits)
+- Data Science Tools in R and python (5 credits)
 
-All are courses offered in the Fall term and have no entry requirement.   
+All courses offered in the Fall term and have no entry requirement.   
 Data Science Concepts and Data Science Tools are co-requirements. 
 
-The Concepts treated in the lectures are applied in exercises and homework in the Tools course.
+The *concepts* treated in the lectures are applied with programming *tools* learned in the Tools course. Central to individual learning are *homework projects*.
 
 ## Class Meeting Information
 
@@ -55,24 +42,15 @@ Team **{{< var teams.concepts.name >}}**, [General Channel]({{< var teams.concep
 {{< var session1.tools >}}    
 {{< var session2.tools >}}       
 Location: **see campusnet** in-person     
-*Video streaming and recording* in Microsoft Teams is provided for late-arriving students. Coordinates tba, you should also find them in Teams
-
-Note: The R and python courses are provided in the same time slot. Details in the schedule. 
+*Video streaming and recording* in Microsoft Teams is provided for late-arriving students. 
 
 ## Instructors
 
-Concepts: 
-[**Jan Lorenz**](http://janlo.de) Email: <jlorenz@constructor.univeristy>
+Concepts: {{< var instructor.concepts >}}
 
-Tools in R:   
-**Armin Müller** Email: <armmueller@constructor.university>
-
-Tools in python:   
-**Aiman Alam** Email: <aalam@constructor.university>
+Tools: {{< var instructor.tools >}}
 
 Student Assistants:    
-**Matvei Trifanov** Email: <mtrifanov@constructor.university>  
-**Mustafa Ansari** Email: <muansari@constructor.university>
 
 
 ## Format and Workload

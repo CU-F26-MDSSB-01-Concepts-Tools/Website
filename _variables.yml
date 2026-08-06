@@ -1,21 +1,21 @@
 org:
-  link: "https://github.com/CU-F25-MDSSB-01-Concepts-Tools"
-  name: CU-F25-MDSSB-01-Concepts-Tools
-  link-org-repo: https://github.com/CU-F25-MSDSSB-01-Concepts-Tools/Course-Organization-Resources
+  link: "https://github.com/CU-F26-MDSSB-01-Concepts-Tools"
+  name: CU-F26-MDSSB-01-Concepts-Tools
+  link-org-repo: https://github.com/CU-F26-MSDSSB-01-Concepts-Tools/Course-Organization-Resources
   
 link: 
-  academic-calendar: https://constructor.university/student-life/academic-calendar/academic-calendar-2025
+  academic-calendar: https://constructor.university/student-life/academic-calendar/academic-calendar-2026
   program_onsite: https://constructor.university/programs/graduate-education/data-science-for-society-business
   handbook_onsite: "https://constructor.university/sites/default/files/2025-08/2025-DSSB-MSc.pdf"
-  handbook_online: "https://constructor.university/sites/default/files/2024-12/DSSB_MSc_handbook_online_2024.pdf.pdf"
+  registrar_services: https://constructor.university/student-life/student-services/registrar-services
   grading: https://constructor.university/sites/default/files/2023-02/Grading_Table_2023.pdf
 teams:
   concepts: 
-    link: https://teams.microsoft.com/l/channel/19%3AFTugJeuNUGHKyuzX4jD0RIcQUQAx0upN2ss556C05XM1%40thread.tacv2/General?groupId=e433aa5a-f5c2-47c1-ad50-220ac81e9455&tenantId=f78e973e-5c0b-4ab8-bbd7-9887c95a8ebd
-    recording_folder_link: https://constructoruniversity.sharepoint.com/:f:/s/f25_mdssbdsoc02_datascienceconcepts/EsR-fgW1oalGoOE_26PasggBVVRg-siJqnhCcDO6oePRqw?e=9HoMoI
-    name: F25_MDSSB-DSOC-02_Data Science Concepts
+    link: #https://teams.microsoft.com/l/channel/19%3AFTugJeuNUGHKyuzX4jD0RIcQUQAx0upN2ss556C05XM1%40thread.tacv2/General?groupId=e433aa5a-f5c2-47c1-ad50-220ac81e9455&tenantId=f78e973e-5c0b-4ab8-bbd7-9887c95a8ebd
+    recording_folder_link: #https://constructoruniversity.sharepoint.com/:f:/s/f26_mdssbdsoc02_datascienceconcepts/EsR-fgW1oalGoOE_26PasggBVVRg-siJqnhCcDO6oePRqw?e=9HoMoI
+    name: F26_MDSSB-DSOC-02_Data Science Concepts
 room: 
-  concepts: "[**Room Change!** SH-229 Video Conference in South Hall from Sep 29 on!]{.red}"
+  concepts: "SH-229 Video Conference in South Hall"
 session1:
   concepts: "Mon 9:45 - 11:00"
   tools: "Thu 9:45 - 11:00"
@@ -24,7 +24,7 @@ session2:
   tools: "Thu 11:15 - 12:30"
   
 instructor:
-  concepts: "[Jan Lorenz](mailto:jlorenz@constructor.university)"
-  tools: "[Armin Müller](mailto:armmueller@constructor.university)"
+  concepts: "[**Jan Lorenz**](mailto:jlorenz@constructor.university)"
+  tools: "[**Erkan Güneş**](mailto:eguenes@constructor.university)"
   
 instructors: "{{< var instructor.concepts >}} and {{< var instructor.tools >}}"

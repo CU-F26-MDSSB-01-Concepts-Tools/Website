@@ -60,3 +60,4 @@ air.toml
 
 # No additional files of html rendering
 *_files/
+**/*.quarto_ipynb
