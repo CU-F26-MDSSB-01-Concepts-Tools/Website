@@ -1,5 +1,33 @@
 [
   {
+    "objectID": "lectures/W01.html#what-is-data-science",
+    "href": "lectures/W01.html#what-is-data-science",
+    "title": "W#01 What is Data Science?",
+    "section": "What is Data Science????",
+    "text": "What is Data Science????\nhttps://x.com/kareem_carr/status/2092630820640976999?s=20\nhttps://x.com/kareem_carr/status/2093730567443402774?s=20"
+  },
+  {
+    "objectID": "lectures/W01.html#use-conversational-ai-in-class",
+    "href": "lectures/W01.html#use-conversational-ai-in-class",
+    "title": "W#01 What is Data Science?",
+    "section": "Use conversational AI in class?",
+    "text": "Use conversational AI in class?\n\nConversational AI is great for learning\n\nExplain concepts even simpler\nExplain concepts from different perspective\nGo deeper with follow up questions\nExplain code\n\n… and it is bad for learning!\n\nCognitive offloading\nWould you bring a forklift to the gym?\n\n\n\n Source: Gemini prompted by me (several iterations and restarts)\n\n\n Source: Facebook\n\n\n\nCan you claim work done by AI as yours?\n\n\n\n Source: Twonks"
+  },
+  {
+    "objectID": "lectures/W01.html#cognitive-offloading",
+    "href": "lectures/W01.html#cognitive-offloading",
+    "title": "W#01 What is Data Science?",
+    "section": "Cognitive offloading",
+    "text": "Cognitive offloading\n\nUsing a calculator you do not learn better mental arithmetic skills\n\nDo you learn when you use AI to do your homework\n\nDo you need mental arithmetic skills? (Answer for yourself)\n\nResearch shows, that cognitive offloading massively prevents learning!\n\n\nStromberg, D., Lei, V., & Wu, Y. (2026, June 2). The Generative AI Learning Penalty: Evidence from Chinese Secondary Education (SSRN Scholarly Paper No. 6868618). https://doi.org/10.2139/ssrn.6868618 (Pre-published)"
+  },
+  {
+    "objectID": "lectures/W01.html#learning-with-ai",
+    "href": "lectures/W01.html#learning-with-ai",
+    "title": "W#01 What is Data Science?",
+    "section": "Learning with AI",
+    "text": "Learning with AI\n\nLearn how to use AI in a way that you also learn yourself\nHow can you assess that it is happening? Some indicators:\n\nYou feel your questions become more competent\nYou can explain what AI did in every step\nYou question AIs answers when you find implausible things\nYou write a summary of your understanding back to AI and understand the response\n\n\n\n\nCash, T. N., Kelly, M. O., Macnamara, B. N., & Risko, E. F. (2026). Is AI making us stupid? Trends in Cognitive Sciences, 30(8), 673–675. https://doi.org/10.1016/j.tics.2026.06.004"
+  },
+  {
     "objectID": "help.html",
     "href": "help.html",
     "title": "Need help for Homework?",
@@ -512,6 +540,78 @@
     "crumbs": [
       "Syllabus",
       "Learning Resources"
+    ]
+  },
+  {
+    "objectID": "material/M01.html",
+    "href": "material/M01.html",
+    "title": "W#01",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check if you reached the Achievements.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#what-is-data-science",
+    "href": "material/M01.html#what-is-data-science",
+    "title": "W#01",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check if you reached the Achievements.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#lecture-material",
+    "href": "material/M01.html#lecture-material",
+    "title": "W#01",
+    "section": "1 Lecture Material",
+    "text": "1 Lecture Material\nSlides: Direct Link\n\nFind the live recording in the Course’s Team’s Recording Folder.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#additional-readings-and-material",
+    "href": "material/M01.html#additional-readings-and-material",
+    "title": "W#01",
+    "section": "2 Additional Readings and Material",
+    "text": "2 Additional Readings and Material\n\nQuarto: Watch https://www.youtube.com/watch?v=_f3latmOhew from Mine Çetinkaya-Rundel (co-developer of quarto, R for Data Science, datasciencebox).\nR: Read the following sections in R for Data Science\n\nIntroduction\nWhole Game (the outline of the part)",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#achievements",
+    "href": "material/M01.html#achievements",
+    "title": "W#01",
+    "section": "3 Achievements",
+    "text": "3 Achievements\nYou\n\nare enrolled in the partner course Data Science Tools\nhave read the Syllabus and understood the course organization and the relations between Data Science Concepts and Data Science Tools\nhave a running R installation which you can access with Positron on you computer and can check all marks on the Checklist Technical Setup\nhave signed up at GitHub and have submitted your GitHub username in the GitHub username Form\nhave done the git-GitHub dance and know what the tools do\nhave rendered quarto documents and understood the ideas of literate programming and reproducible research\nhave made your first steps with R\nhave filled out the Data Science Profile Survey",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W01"
+    ]
+  },
+  {
+    "objectID": "material/M01.html#homework-projects-progress-guides",
+    "href": "material/M01.html#homework-projects-progress-guides",
+    "title": "W#01",
+    "section": "4 Homework Projects Progress Guides",
+    "text": "4 Homework Projects Progress Guides\nFind the Repositories of your Homework Projects in the Course’s GitHub-Organization’s CU-F26-MDSSB-01-Concepts-Tools &gt; Repositories.\nProject’s INSTRUCTIONS you should have completed:\nProject_NYCFlights: 1. (one successful step of the git-GitHub-dance)\n\n\n\n\n\n\nNote\n\n\n\nDon’t panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W01"
     ]
   }
 ]
