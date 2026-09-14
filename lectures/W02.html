@@ -221,7 +221,9 @@ Jan Lorenz
 <li><a href="#/a-short-tour-through-examples-of-data-visualization" id="/toc-a-short-tour-through-examples-of-data-visualization">A short tour through examples of data visualization</a></li>
 <li><a href="#/grammar-of-graphics" id="/toc-grammar-of-graphics">Grammar of Graphics</a></li>
 <li><a href="#/ggplot-workflow" id="/toc-ggplot-workflow"><code>ggplot</code> workflow</a></li>
-<li><a href="#/data-types-and-tidy-data" id="/toc-data-types-and-tidy-data">Data Types and Tidy Data</a></li>
+<li><a href="#/data-types" id="/toc-data-types">Data Types</a></li>
+<li><a href="#/tidy-data" id="/toc-tidy-data">Tidy Data</a></li>
+<li><a href="#/the-pipe" id="/toc-the-pipe">The pipe <code>|&gt;</code></a></li>
 </ul>
 </nav>
 </section>
@@ -699,9 +701,50 @@ The graphic information is stored in the object <code>our_plot</code>.</p>
 </div>
 <img data-src="W02_files/figure-revealjs/unnamed-chunk-27-1.png" width="960" class="r-stretch"></section></section>
 <section>
-<section id="data-types-and-tidy-data" class="title-slide slide level1 center">
-<h1>Data Types and Tidy Data</h1>
-<p>Introduction on external <a href="https://docs.google.com/presentation/d/e/2PACX-1vSUztQChBhc2kUX2GknQ7PfXa12xdCPTV6R-Qe1bP-T5lEmBBJcIVJF3BaChn5kw-mZNXusESZrUr2Z/pub?start=false&amp;loop=false&amp;delayms=3000">Presentation</a></p>
+<section id="data-types" class="title-slide slide level1 center">
+<h1>Data Types</h1>
+
+</section>
+<section id="tabular-data" class="slide level2">
+<h2>Tabular Data</h2>
+<p>For analysis we need <strong>well structured data</strong>. Often <span class="text-red"><strong>tabular form</strong></span>. Like a spreadsheet:</p>
+
+<img data-src="img/tabulardata.png" class="r-stretch"><p>Dimension of a table: Always count the rows first! <span class="text-red"><strong>m-by-n table</strong></span><br>
+Example: cell <strong>(4,3)</strong> is in <strong>row 4</strong> and <strong>column 3</strong>.</p>
+<p>Warning: Spreadsheet cell labelling differs. Columns have letter-labels and go first.<br>
+<strong>Cell (4,3) is C4</strong></p>
+</section>
+<section id="basic-data-types-in-r-atomic-vectors" class="slide level2">
+<h2>Basic Data types in R, atomic vectors</h2>
+<p><span class="text-red"><strong>character:</strong></span> <code>"a"</code>, <code>"swc"</code><br>
+<span class="text-red"><strong>double:</strong></span> <code>2</code>, <code>15.5</code> (double precision floating point numbers)<br>
+<strong>integer:</strong> <code>2L</code> (L tells R to store as integer)<br>
+<span class="red"><strong>logical:</strong></span> <code>TRUE</code>, <code>FALSE</code><br>
+<strong>complex:</strong> <code>1+4i</code> (complex number with real and imaginary parts)<br>
+These exist in similar ways in other programming languages.</p>
+<p><span class="text-red"><strong>Atomic vectors</strong></span> are <strong><em>ordered</em></strong> <em>collections</em> of values of the same data type.<br>
+<strong>Construction in R:</strong> <code>c(2,3,4)</code> or <code>c(TRUE, FALSE)</code> or <code>c("A","B")</code><br>
+<strong>Properties:</strong> <code>typeof()</code> and <code>length()</code></p>
+
+<aside><div>
+<p>For historic reasons, <em>double</em> and <em>integer</em> are both of the R class <strong><em>numeric</em></strong>. Another rare data type <em>raw</em> which stores bytes. Check the type of an object <code>x</code> with <code>typeof(x)</code>.</p>
+</div></aside></section>
+<section id="type-coercion" class="slide level2">
+<h2>Type Coercion</h2>
+<p><strong>What happens when values of different data type are combined?</strong><br>
+(in R and python or other <em>dynamically typed</em> programming languages)</p>
+<p>Combined could mean for example for <code>x</code> and <code>y</code></p>
+<ul>
+<li>Put together in a vector <code>c(x,y)</code></li>
+<li>Added (e.g.&nbsp;with <code>x + y</code>)</li>
+<li>Compared (e.g.&nbsp;with <code>x == y</code>)</li>
+</ul>
+<div class="fragment">
+<p><span class="tex-red"><strong>Coercion!</strong></span></p>
+<p>logical + integer -&gt; integer (TRUE is 1, FALSE is 0)<br>
+integer + double -&gt; double<br>
+double + character -&gt; character</p>
+</div>
 </section>
 <section id="let-us-test-coercion" class="slide level2">
 <h2>Let us test coercion</h2>
@@ -833,12 +876,140 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoieCA8LSBUUlVFXG55IDwtIDJM
 <p>Aha, the difference is about <span class="math inline">\(2.8 \times 10^{-17}\)</span> (The <code>e</code> stands for <a href="https://en.wikipedia.org/wiki/Scientific_notation">scientific notation</a>, learn to read it!) Such problems can happen when subtracting and comparing floating point numbers!</p>
 </div>
 </section>
-<section id="tidying" class="slide level2">
-<h2>Tidying</h2>
-<p>What is tidy depends to some extent on the purpose you want to use the data for.</p>
-<p>Let us practice the two important commands</p>
-<p><code>pivot_longer</code></p>
-<p><code>pivot_wider</code></p>
+<section id="lists-dataframes-tibbles" class="slide level2">
+<h2>Lists, Dataframes (=Tibbles)</h2>
+<div class="columns">
+<div class="column">
+<p><span class="text-red"><strong>List</strong></span> <code>list()</code></p>
+<ul>
+<li>act as container</li>
+<li>contents of a list are not restricted to a single type</li>
+<li>lists can contain further lists (and so on …)</li>
+<li>the basic data type for building and storing complex data structures</li>
+<li>in R syntax the “$” is important for constructing and accessing</li>
+</ul>
+</div><div class="column fragment">
+<p><span class="text-red"><strong>Dataframe</strong></span></p>
+<ul>
+<li>the way to store tabular data</li>
+<li>it can be seen as a <strong>list of atomic vectors which all have the same length</strong></li>
+</ul>
+<p><span class="text-red"><strong>Tibble</strong></span></p>
+<ul>
+<li>An advanced type of data frame invented in the tidyverse</li>
+<li>Behaves a bit nicer in daily routines</li>
+<li>Largely identical in behavior and easy to convert</li>
+</ul>
+</div></div>
+</section>
+<section id="tibble-and-data." class="slide level2">
+<h2>tibble and data.</h2>
+<div class="cell">
+<div>
+<div id="webr-3" class="exercise-cell">
+
+</div>
+<script type="webr-3-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoibXBnXG5hc190aWJibGUobXBnKSJ9
+</script>
+</div>
+</div>
+</section>
+<section id="data-types-summary" class="slide level2">
+<h2>Data Types Summary</h2>
+<div class="columns">
+<div class="column">
+<p>The most important basic data types:</p>
+<ul>
+<li>character</li>
+<li>logical</li>
+<li>double</li>
+</ul>
+<p>These can be combined to atomic vectors: an indexed list of n values</p>
+<ul>
+<li>character vector</li>
+<li>logical vector</li>
+<li>double vector</li>
+</ul>
+</div><div class="column">
+<p><strong>Lists</strong> are similar to vectors (and indexed list of n values) but every element can be anything, an atomic vector of any type and length or even another list.</p>
+<p><strong>Dataframes</strong> (and <strong>Tibbles</strong>) are a special type of lists: A list of atomic vectors (the columns) of the same length. Additional to the numerical index 1 to n, the list elements also have names (the variable names).</p>
+</div></div>
+</section></section>
+<section>
+<section id="tidy-data" class="title-slide slide level1 center">
+<h1>Tidy Data</h1>
+
+</section>
+<section id="definition-of-tidy" class="slide level2">
+<h2>Definition of tidy</h2>
+<p><img data-src="img/tidydata.png"></p>
+<p>There are three interrelated rules which make a dataset tidy:</p>
+<ul>
+<li>Each variable must have its own column.</li>
+<li>Each observation must have its own row.</li>
+<li>Each value must have its own cell.</li>
+</ul>
+
+<aside><div>
+<p>The name of the concept <em>tidy data</em> is promoted in the tidyverse (who could have guessed…)</p>
+</div></aside></section>
+<section id="example-tidy-data" class="slide level2">
+<h2>Example Tidy Data</h2>
+<p>Which data is tidy?</p>
+<div class="absolute fragment" style="">
+<p><img data-src="img/tidyexample1.png"></p>
+</div>
+<div class="absolute fragment" style="">
+<p><img data-src="img/tidyexample2.png"></p>
+</div>
+<div class="absolute fragment" style="">
+<p><img data-src="img/tidyexample3.png"></p>
+</div>
+</section>
+<section id="characteristics-of-tidy-data" class="slide level2">
+<h2>Characteristics of tidy data</h2>
+<p><strong>Tidy data</strong></p>
+<ul>
+<li>Each column is a meaningful variable</li>
+<li>Each row is a meaningful observation</li>
+</ul>
+<p>Additionally</p>
+<ul>
+<li>Each type of observational unit forms another table (see the nycflights13 data for a collection of connected tables)</li>
+</ul>
+<div class="fragment">
+<p><strong>Untidy data</strong></p>
+</div>
+<div class="fragment">
+<p>… can be anything</p>
+</div>
+</section>
+<section id="pivoting" class="slide level2">
+<h2>Pivoting</h2>
+<p>Functions from the <code>tidyverse</code> package <code>tidyr</code></p>
+<div class="columns">
+<div class="column">
+<p>The most important functions are</p>
+<p><strong><code>pivot_longer()</code></strong><br>
+<code>pivot_wider()</code></p>
+<p>Pivoting to longer means that we collect variable names in a new variable</p>
+</div><div class="column">
+<p><img data-src="img/pivot_longer.png"></p>
+</div></div>
+</section>
+<section id="pivoting-to-wider" class="slide level2">
+<h2>Pivoting to wider</h2>
+<div class="columns">
+<div class="column">
+<p>When observation is scattered across multiple rows. Typically you have</p>
+<ul>
+<li>A key-variable which makes the new column names</li>
+<li>A value-variable which makes the values in the cells of the new variables</li>
+</ul>
+</div><div class="column">
+<p><img data-src="img/pivot_wider.png"></p>
+</div></div>
 </section>
 <section id="pivot_longer" class="slide level2">
 <h2><code>pivot_longer</code></h2>
@@ -878,9 +1049,14 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoieCA8LSBUUlVFXG55IDwtIDJM
 6     3 height_2024    172</code></pre>
 </div>
 </div>
+</section></section>
+<section>
+<section id="the-pipe" class="title-slide slide level1 center">
+<h1>The pipe <code>|&gt;</code></h1>
+
 </section>
-<section id="input-the-pipe" class="slide level2">
-<h2>Input: The pipe <code>|&gt;</code></h2>
+<section id="section" class="slide level2">
+<h2><code>|&gt;</code></h2>
 <p>In data wrangling it is common to do various data manipulations one after the other.<br>
 A common tool is to use the pipe to give it an ordered structure in the writing.</p>
 <p>The basic idea is:<br>
@@ -1012,7 +1188,7 @@ Do I need to learn it again for python?? <span class="fragment"><span style="col
 eyJvcHRpb25zIjp7ImJhc2VVcmwiOiJodHRwczovL3dlYnIuci13YXNtLm9yZy92MC42LjAvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsiZXZhbHVhdGUiLCJrbml0ciIsImh0bWx0b29scyIsInRpZHlyIiwiZHBseXIiLCJnZ3Bsb3QyIl0sInJlcG9zIjpbXX0sInJlbmRlcl9kZiI6ImRlZmF1bHQifQ==
 </script>
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0yIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV8yO1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzIgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici0yLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHdlYnItMi1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fd2Vicl92YWx1ZV8yID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8yLCB7fSk7XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMTtcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl8xID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMS1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKHsgaWQ6IGB3ZWJyLTEtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuXG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxuX3dlYnJfdmFsdWVfMSA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMSwge30pO1xuIn0seyJjZWxsTmFtZSI6IndlYnItcHJlbHVkZSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IndlYlJPanMgPSB7XG4gIGNvbnN0IHsgV2ViUiwgQ2hhbm5lbFR5cGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWUuV2ViUjtcbiAgY29uc3Qge1xuICAgIFdlYlJFdmFsdWF0b3IsXG4gICAgV2ViUkVudmlyb25tZW50TWFuYWdlcixcbiAgICBzZXR1cFIsXG4gICAgYjY0RGVjb2RlLFxuICAgIGNvbGxhcHNlUGF0aFxuICB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcblxuICBjb25zdCBzdGF0dXNDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctc3RhdHVzXCIpO1xuICBjb25zdCBpbmRpY2F0b3JDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpbmRpY2F0b3JDb250YWluZXIuY2xhc3NMaXN0LnJlbW92ZShcImQtbm9uZVwiKTtcblxuICBsZXQgc3RhdHVzVGV4dCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIilcbiAgc3RhdHVzVGV4dC5jbGFzc0xpc3QgPSBcImV4ZXJjaXNlLWxvYWRpbmctZGV0YWlsc1wiO1xuICBzdGF0dXNUZXh0ID0gc3RhdHVzQ29udGFpbmVyLmFwcGVuZENoaWxkKHN0YXR1c1RleHQpO1xuICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYEluaXRpYWxpc2VgO1xuXG4gIC8vIEhvaXN0IGluZGljYXRvciBvdXQgZnJvbSBmaW5hbCBzbGlkZSB3aGVuIHJ1bm5pbmcgdW5kZXIgcmV2ZWFsXG4gIGNvbnN0IHJldmVhbFN0YXR1cyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsIC5leGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaWYgKHJldmVhbFN0YXR1cykge1xuICAgIHJldmVhbFN0YXR1cy5yZW1vdmUoKTtcbiAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCA+IC5zbGlkZXNcIikuYXBwZW5kQ2hpbGQocmV2ZWFsU3RhdHVzKTtcbiAgfVxuXG4gIC8vIE1ha2UgYW55IHJldmVhbCBzbGlkZXMgd2l0aCBsaXZlIGNlbGxzIHNjcm9sbGFibGVcbiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbChcIi5yZXZlYWwgLmV4ZXJjaXNlLWNlbGxcIikuZm9yRWFjaCgoZWwpID0+IHtcbiAgICBlbC5jbG9zZXN0KCdzZWN0aW9uLnNsaWRlJykuY2xhc3NMaXN0LmFkZChcInNjcm9sbGFibGVcIik7XG4gIH0pXG5cbiAgLy8gd2ViUiBzdXBwbGVtZW50YWwgZGF0YSBhbmQgb3B0aW9uc1xuICBjb25zdCBkYXRhQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ3ZWJyLWRhdGFcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBkYXRhID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZGF0YUNvbnRlbnQpKTtcblxuICAvLyBHcmFiIGxpc3Qgb2YgcmVzb3VyY2VzIHRvIGJlIGRvd25sb2FkZWRcbiAgY29uc3QgZmlsZXNDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcInZmcy1maWxlXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZmlsZXMgPSBKU09OLnBhcnNlKGI2NERlY29kZShmaWxlc0NvbnRlbnQpKTtcblxuICAvLyBJbml0aWFsaXNlIHdlYlIgYW5kIHNldHVwIGZvciBSIGNvZGUgZXZhbHVhdGlvblxuICBsZXQgd2ViUlByb21pc2UgPSAoYXN5bmMgKHdlYlIpID0+IHtcbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHdlYlJgO1xuICAgIGF3YWl0IHdlYlIuaW5pdCgpO1xuXG4gICAgLy8gSW5zdGFsbCBwcm92aWRlZCBsaXN0IG9mIHBhY2thZ2VzXG4gICAgLy8gRW5zdXJlIHdlYlIgZGVmYXVsdCByZXBvIGlzIGluY2x1ZGVkXG4gICAgZGF0YS5wYWNrYWdlcy5yZXBvcy5wdXNoKFwiaHR0cHM6Ly9yZXBvLnItd2FzbS5vcmdcIilcbiAgICBhd2FpdCBkYXRhLnBhY2thZ2VzLnBrZ3MubWFwKChwa2cpID0+ICgpID0+IHtcbiAgICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcGFja2FnZTogJHtwa2d9YDtcbiAgICAgIHJldHVybiB3ZWJSLmV2YWxSVm9pZChgXG4gICAgICAgIHdlYnI6Omluc3RhbGwocGtnLCByZXBvcyA9IHJlcG9zKVxuICAgICAgICBsaWJyYXJ5KHBrZywgY2hhcmFjdGVyLm9ubHkgPSBUUlVFKVxuICAgICAgYCwgeyBlbnY6IHtcbiAgICAgICAgcGtnOiBwa2csXG4gICAgICAgIHJlcG9zOiBkYXRhLnBhY2thZ2VzLnJlcG9zLFxuICAgICAgfX0pO1xuICAgIH0pLnJlZHVjZSgoY3VyLCBuZXh0KSA9PiBjdXIudGhlbihuZXh0KSwgUHJvbWlzZS5yZXNvbHZlKCkpO1xuXG4gICAgLy8gRG93bmxvYWQgYW5kIGluc3RhbGwgcmVzb3VyY2VzXG4gICAgYXdhaXQgZmlsZXMubWFwKChmaWxlKSA9PiBhc3luYyAoKSA9PiB7XG4gICAgICBjb25zdCBuYW1lID0gZmlsZS5zdWJzdHJpbmcoZmlsZS5sYXN0SW5kZXhPZignLycpICsgMSk7XG4gICAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHJlc291cmNlOiAke25hbWV9YDtcbiAgICAgIGNvbnN0IHJlc3BvbnNlID0gYXdhaXQgZmV0Y2goZmlsZSk7XG4gICAgICBpZiAoIXJlc3BvbnNlLm9rKSB7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcihgQ2FuJ3QgZG93bmxvYWQgXFxgJHtmaWxlfVxcYC4gRXJyb3IgJHtyZXNwb25zZS5zdGF0dXN9OiBcIiR7cmVzcG9uc2Uuc3RhdHVzVGV4dH1cIi5gKTtcbiAgICAgIH1cbiAgICAgIGNvbnN0IGRhdGEgPSBhd2FpdCByZXNwb25zZS5hcnJheUJ1ZmZlcigpO1xuXG4gICAgICAvLyBTdG9yZSBVUkxzIGluIHRoZSBjd2Qgd2l0aG91dCBhbnkgc3ViZGlyZWN0b3J5IHN0cnVjdHVyZVxuICAgICAgaWYgKGZpbGUuaW5jbHVkZXMoXCI6Ly9cIikpIHtcbiAgICAgICAgZmlsZSA9IG5hbWU7XG4gICAgICB9XG5cbiAgICAgIC8vIENvbGxhcHNlIGhpZ2hlciBkaXJlY3Rvcnkgc3RydWN0dXJlXG4gICAgICBmaWxlID0gY29sbGFwc2VQYXRoKGZpbGUpO1xuXG4gICAgICAvLyBDcmVhdGUgZGlyZWN0b3J5IHRyZWUsIGlnbm9yaW5nIFwiZGlyZWN0b3J5IGV4aXN0c1wiIFZGUyBlcnJvcnNcbiAgICAgIGNvbnN0IHBhcnRzID0gZmlsZS5zcGxpdCgnLycpLnNsaWNlKDAsIC0xKTtcbiAgICAgIGxldCBwYXRoID0gJyc7XG4gICAgICB3aGlsZSAocGFydHMubGVuZ3RoID4gMCkge1xuICAgICAgICBwYXRoICs9IHBhcnRzLnNoaWZ0KCkgKyAnLyc7XG4gICAgICAgIGNvbnN0IGFuYWx5c2lzID0gYXdhaXQgd2ViUi5GUy5hbmFseXplUGF0aChwYXRoKTtcbiAgICAgICAgaWYgKCFhbmFseXNpcy5leGlzdHMpIHtcbiAgICAgICAgICB0cnkge1xuICAgICAgICAgICAgYXdhaXQgd2ViUi5GUy5ta2RpcihwYXRoKTtcbiAgICAgICAgICB9IGNhdGNoIChlKSB7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYEZpbGVzeXN0ZW0gRXJyb3I6IFwiJHtlLm1lc3NhZ2V9XCIuYCk7XG4gICAgICAgICAgfVxuICAgICAgICB9XG4gICAgICB9XG5cbiAgICAgIC8vIFdyaXRlIHRoaXMgZmlsZSB0byB0aGUgVkZTXG4gICAgICByZXR1cm4gYXdhaXQgd2ViUi5GUy53cml0ZUZpbGUoZmlsZSwgbmV3IFVpbnQ4QXJyYXkoZGF0YSkpO1xuICAgIH0pLnJlZHVjZSgoY3VyLCBuZXh0KSA9PiBjdXIudGhlbihuZXh0KSwgUHJvbWlzZS5yZXNvbHZlKCkpO1xuXG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBJbnN0YWxsaW5nIHdlYlIgc2hpbXNgO1xuICAgIGF3YWl0IHdlYlIuZXZhbFJWb2lkKGB3ZWJyOjpzaGltX2luc3RhbGwoKWApO1xuXG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBXZWJSIGVudmlyb25tZW50IHNldHVwYDtcbiAgICBhd2FpdCBzZXR1cFIod2ViUiwgZGF0YSk7XG5cbiAgICBzdGF0dXNUZXh0LnJlbW92ZSgpO1xuICAgIGlmIChzdGF0dXNDb250YWluZXIuY2hpbGRyZW4ubGVuZ3RoID09IDApIHtcbiAgICAgIHN0YXR1c0NvbnRhaW5lci5wYXJlbnROb2RlLnJlbW92ZSgpO1xuICAgIH1cbiAgICByZXR1cm4gd2ViUjtcbiAgfSkobmV3IFdlYlIoZGF0YS5vcHRpb25zKSk7XG5cbiAgLy8gS2VlcCB0cmFjayBvZiBpbml0aWFsIE9KUyBibG9jayByZW5kZXJcbiAgY29uc3QgcmVuZGVyZWRPanMgPSB7fTtcblxuICBjb25zdCBwcm9jZXNzID0gYXN5bmMgKGNvbnRleHQsIGlucHV0cykgPT4ge1xuICAgIGNvbnN0IHdlYlIgPSBhd2FpdCB3ZWJSUHJvbWlzZTtcbiAgICBjb25zdCBldmFsdWF0b3IgPSBuZXcgV2ViUkV2YWx1YXRvcih3ZWJSLCBjb250ZXh0KVxuICAgIGF3YWl0IGV2YWx1YXRvci5wcm9jZXNzKGlucHV0cyk7XG4gICAgcmV0dXJuIGV2YWx1YXRvci5jb250YWluZXI7XG4gIH1cblxuICByZXR1cm4ge1xuICAgIHByb2Nlc3MsXG4gICAgd2ViUlByb21pc2UsXG4gICAgcmVuZGVyZWRPanMsXG4gIH07XG59XG4ifV19
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0zIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV8zO1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItMyIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzMgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici0zLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHdlYnItMy1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fd2Vicl92YWx1ZV8zID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8zLCB7fSk7XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjtcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTIiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl8yID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMi1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKHsgaWQ6IGB3ZWJyLTItY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuXG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxuX3dlYnJfdmFsdWVfMiA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMiwge30pO1xuIn0seyJjZWxsTmFtZSI6IndlYnItd2lkZ2V0LTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIC8vIFdhaXQgZm9yIG91dHB1dCB0byBiZSB3cml0dGVuIHRvIHRoZSBET00sIHRoZW4gdHJpZ2dlciB3aWRnZXQgcmVuZGVyaW5nXG4gIGF3YWl0IF93ZWJyX3ZhbHVlXzE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0xIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfd2Vicl9lZGl0b3JfMSA9IHtcbiAgY29uc3QgeyBXZWJSRXhlcmNpc2VFZGl0b3IsIGI2NERlY29kZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ3ZWJyLTEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbih7IGlkOiBgd2Vici0xLWNvbnRlbnRzYCB9LCBibG9jay5hdHRyKTtcbiAgY29uc3QgZWRpdG9yID0gbmV3IFdlYlJFeGVyY2lzZUVkaXRvcih3ZWJST2pzLndlYlJQcm9taXNlLCBibG9jay5jb2RlLCBvcHRpb25zKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl93ZWJyX3ZhbHVlXzEgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzEsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXByZWx1ZGUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ3ZWJST2pzID0ge1xuICBjb25zdCB7IFdlYlIsIENoYW5uZWxUeXBlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lLldlYlI7XG4gIGNvbnN0IHtcbiAgICBXZWJSRXZhbHVhdG9yLFxuICAgIFdlYlJFbnZpcm9ubWVudE1hbmFnZXIsXG4gICAgc2V0dXBSLFxuICAgIGI2NERlY29kZSxcbiAgICBjb2xsYXBzZVBhdGhcbiAgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc3RhdHVzQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJleGVyY2lzZS1sb2FkaW5nLXN0YXR1c1wiKTtcbiAgY29uc3QgaW5kaWNhdG9yQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJleGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaW5kaWNhdG9yQ29udGFpbmVyLmNsYXNzTGlzdC5yZW1vdmUoXCJkLW5vbmVcIik7XG5cbiAgbGV0IHN0YXR1c1RleHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwiZGl2XCIpXG4gIHN0YXR1c1RleHQuY2xhc3NMaXN0ID0gXCJleGVyY2lzZS1sb2FkaW5nLWRldGFpbHNcIjtcbiAgc3RhdHVzVGV4dCA9IHN0YXR1c0NvbnRhaW5lci5hcHBlbmRDaGlsZChzdGF0dXNUZXh0KTtcbiAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBJbml0aWFsaXNlYDtcblxuICAvLyBIb2lzdCBpbmRpY2F0b3Igb3V0IGZyb20gZmluYWwgc2xpZGUgd2hlbiBydW5uaW5nIHVuZGVyIHJldmVhbFxuICBjb25zdCByZXZlYWxTdGF0dXMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCAuZXhlcmNpc2UtbG9hZGluZy1pbmRpY2F0b3JcIik7XG4gIGlmIChyZXZlYWxTdGF0dXMpIHtcbiAgICByZXZlYWxTdGF0dXMucmVtb3ZlKCk7XG4gICAgZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5yZXZlYWwgPiAuc2xpZGVzXCIpLmFwcGVuZENoaWxkKHJldmVhbFN0YXR1cyk7XG4gIH1cblxuICAvLyBNYWtlIGFueSByZXZlYWwgc2xpZGVzIHdpdGggbGl2ZSBjZWxscyBzY3JvbGxhYmxlXG4gIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoXCIucmV2ZWFsIC5leGVyY2lzZS1jZWxsXCIpLmZvckVhY2goKGVsKSA9PiB7XG4gICAgZWwuY2xvc2VzdCgnc2VjdGlvbi5zbGlkZScpLmNsYXNzTGlzdC5hZGQoXCJzY3JvbGxhYmxlXCIpO1xuICB9KVxuXG4gIC8vIHdlYlIgc3VwcGxlbWVudGFsIGRhdGEgYW5kIG9wdGlvbnNcbiAgY29uc3QgZGF0YUNvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici1kYXRhXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZGF0YSA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKGRhdGFDb250ZW50KSk7XG5cbiAgLy8gR3JhYiBsaXN0IG9mIHJlc291cmNlcyB0byBiZSBkb3dubG9hZGVkXG4gIGNvbnN0IGZpbGVzQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ2ZnMtZmlsZVxcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGZpbGVzID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZmlsZXNDb250ZW50KSk7XG5cbiAgLy8gSW5pdGlhbGlzZSB3ZWJSIGFuZCBzZXR1cCBmb3IgUiBjb2RlIGV2YWx1YXRpb25cbiAgbGV0IHdlYlJQcm9taXNlID0gKGFzeW5jICh3ZWJSKSA9PiB7XG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyB3ZWJSYDtcbiAgICBhd2FpdCB3ZWJSLmluaXQoKTtcblxuICAgIC8vIEluc3RhbGwgcHJvdmlkZWQgbGlzdCBvZiBwYWNrYWdlc1xuICAgIC8vIEVuc3VyZSB3ZWJSIGRlZmF1bHQgcmVwbyBpcyBpbmNsdWRlZFxuICAgIGRhdGEucGFja2FnZXMucmVwb3MucHVzaChcImh0dHBzOi8vcmVwby5yLXdhc20ub3JnXCIpXG4gICAgYXdhaXQgZGF0YS5wYWNrYWdlcy5wa2dzLm1hcCgocGtnKSA9PiAoKSA9PiB7XG4gICAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHBhY2thZ2U6ICR7cGtnfWA7XG4gICAgICByZXR1cm4gd2ViUi5ldmFsUlZvaWQoYFxuICAgICAgICB3ZWJyOjppbnN0YWxsKHBrZywgcmVwb3MgPSByZXBvcylcbiAgICAgICAgbGlicmFyeShwa2csIGNoYXJhY3Rlci5vbmx5ID0gVFJVRSlcbiAgICAgIGAsIHsgZW52OiB7XG4gICAgICAgIHBrZzogcGtnLFxuICAgICAgICByZXBvczogZGF0YS5wYWNrYWdlcy5yZXBvcyxcbiAgICAgIH19KTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcblxuICAgIC8vIERvd25sb2FkIGFuZCBpbnN0YWxsIHJlc291cmNlc1xuICAgIGF3YWl0IGZpbGVzLm1hcCgoZmlsZSkgPT4gYXN5bmMgKCkgPT4ge1xuICAgICAgY29uc3QgbmFtZSA9IGZpbGUuc3Vic3RyaW5nKGZpbGUubGFzdEluZGV4T2YoJy8nKSArIDEpO1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyByZXNvdXJjZTogJHtuYW1lfWA7XG4gICAgICBjb25zdCByZXNwb25zZSA9IGF3YWl0IGZldGNoKGZpbGUpO1xuICAgICAgaWYgKCFyZXNwb25zZS5vaykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYENhbid0IGRvd25sb2FkIFxcYCR7ZmlsZX1cXGAuIEVycm9yICR7cmVzcG9uc2Uuc3RhdHVzfTogXCIke3Jlc3BvbnNlLnN0YXR1c1RleHR9XCIuYCk7XG4gICAgICB9XG4gICAgICBjb25zdCBkYXRhID0gYXdhaXQgcmVzcG9uc2UuYXJyYXlCdWZmZXIoKTtcblxuICAgICAgLy8gU3RvcmUgVVJMcyBpbiB0aGUgY3dkIHdpdGhvdXQgYW55IHN1YmRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGlmIChmaWxlLmluY2x1ZGVzKFwiOi8vXCIpKSB7XG4gICAgICAgIGZpbGUgPSBuYW1lO1xuICAgICAgfVxuXG4gICAgICAvLyBDb2xsYXBzZSBoaWdoZXIgZGlyZWN0b3J5IHN0cnVjdHVyZVxuICAgICAgZmlsZSA9IGNvbGxhcHNlUGF0aChmaWxlKTtcblxuICAgICAgLy8gQ3JlYXRlIGRpcmVjdG9yeSB0cmVlLCBpZ25vcmluZyBcImRpcmVjdG9yeSBleGlzdHNcIiBWRlMgZXJyb3JzXG4gICAgICBjb25zdCBwYXJ0cyA9IGZpbGUuc3BsaXQoJy8nKS5zbGljZSgwLCAtMSk7XG4gICAgICBsZXQgcGF0aCA9ICcnO1xuICAgICAgd2hpbGUgKHBhcnRzLmxlbmd0aCA+IDApIHtcbiAgICAgICAgcGF0aCArPSBwYXJ0cy5zaGlmdCgpICsgJy8nO1xuICAgICAgICBjb25zdCBhbmFseXNpcyA9IGF3YWl0IHdlYlIuRlMuYW5hbHl6ZVBhdGgocGF0aCk7XG4gICAgICAgIGlmICghYW5hbHlzaXMuZXhpc3RzKSB7XG4gICAgICAgICAgdHJ5IHtcbiAgICAgICAgICAgIGF3YWl0IHdlYlIuRlMubWtkaXIocGF0aCk7XG4gICAgICAgICAgfSBjYXRjaCAoZSkge1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBGaWxlc3lzdGVtIEVycm9yOiBcIiR7ZS5tZXNzYWdlfVwiLmApO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuXG4gICAgICAvLyBXcml0ZSB0aGlzIGZpbGUgdG8gdGhlIFZGU1xuICAgICAgcmV0dXJuIGF3YWl0IHdlYlIuRlMud3JpdGVGaWxlKGZpbGUsIG5ldyBVaW50OEFycmF5KGRhdGEpKTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgSW5zdGFsbGluZyB3ZWJSIHNoaW1zYDtcbiAgICBhd2FpdCB3ZWJSLmV2YWxSVm9pZChgd2Vicjo6c2hpbV9pbnN0YWxsKClgKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgV2ViUiBlbnZpcm9ubWVudCBzZXR1cGA7XG4gICAgYXdhaXQgc2V0dXBSKHdlYlIsIGRhdGEpO1xuXG4gICAgc3RhdHVzVGV4dC5yZW1vdmUoKTtcbiAgICBpZiAoc3RhdHVzQ29udGFpbmVyLmNoaWxkcmVuLmxlbmd0aCA9PSAwKSB7XG4gICAgICBzdGF0dXNDb250YWluZXIucGFyZW50Tm9kZS5yZW1vdmUoKTtcbiAgICB9XG4gICAgcmV0dXJuIHdlYlI7XG4gIH0pKG5ldyBXZWJSKGRhdGEub3B0aW9ucykpO1xuXG4gIC8vIEtlZXAgdHJhY2sgb2YgaW5pdGlhbCBPSlMgYmxvY2sgcmVuZGVyXG4gIGNvbnN0IHJlbmRlcmVkT2pzID0ge307XG5cbiAgY29uc3QgcHJvY2VzcyA9IGFzeW5jIChjb250ZXh0LCBpbnB1dHMpID0+IHtcbiAgICBjb25zdCB3ZWJSID0gYXdhaXQgd2ViUlByb21pc2U7XG4gICAgY29uc3QgZXZhbHVhdG9yID0gbmV3IFdlYlJFdmFsdWF0b3Iod2ViUiwgY29udGV4dClcbiAgICBhd2FpdCBldmFsdWF0b3IucHJvY2VzcyhpbnB1dHMpO1xuICAgIHJldHVybiBldmFsdWF0b3IuY29udGFpbmVyO1xuICB9XG5cbiAgcmV0dXJuIHtcbiAgICBwcm9jZXNzLFxuICAgIHdlYlJQcm9taXNlLFxuICAgIHJlbmRlcmVkT2pzLFxuICB9O1xufVxuIn1dfQ==
 </script>
 <div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
 <div id="exercise-loading-status" class="d-flex gap-2">
