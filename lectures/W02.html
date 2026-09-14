@@ -12,7 +12,7 @@
   <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="Jan Lorenz">
-  <title>Data Science Concepts / Data Science Tools – W#02 Data Visualization, Data Formats</title>
+  <title>Data Science Concepts / Data Science Tools – W#02 Data Visualization, Data Formats, Tidy</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -203,7 +203,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">W#02 Data Visualization, Data Formats</h1>
+  <h1 class="title">W#02 Data Visualization, Data Formats, Tidy</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -719,7 +719,7 @@ Example: cell <strong>(4,3)</strong> is in <strong>row 4</strong> and <strong>co
 <p><span class="text-red"><strong>character:</strong></span> <code>"a"</code>, <code>"swc"</code><br>
 <span class="text-red"><strong>double:</strong></span> <code>2</code>, <code>15.5</code> (double precision floating point numbers)<br>
 <strong>integer:</strong> <code>2L</code> (L tells R to store as integer)<br>
-<span class="red"><strong>logical:</strong></span> <code>TRUE</code>, <code>FALSE</code><br>
+<span class="text-red"><strong>logical:</strong></span> <code>TRUE</code>, <code>FALSE</code><br>
 <strong>complex:</strong> <code>1+4i</code> (complex number with real and imaginary parts)<br>
 These exist in similar ways in other programming languages.</p>
 <p><span class="text-red"><strong>Atomic vectors</strong></span> are <strong><em>ordered</em></strong> <em>collections</em> of values of the same data type.<br>
@@ -741,9 +741,9 @@ These exist in similar ways in other programming languages.</p>
 </ul>
 <div class="fragment">
 <p><span class="tex-red"><strong>Coercion!</strong></span></p>
-<p>logical + integer -&gt; integer (TRUE is 1, FALSE is 0)<br>
-integer + double -&gt; double<br>
-double + character -&gt; character</p>
+<p>logical and integer -&gt; integer (TRUE is 1, FALSE is 0)<br>
+integer and double -&gt; double<br>
+double and character -&gt; character</p>
 </div>
 </section>
 <section id="let-us-test-coercion" class="slide level2">
@@ -1062,17 +1062,14 @@ A common tool is to use the pipe to give it an ordered structure in the writing.
 <p>The basic idea is:<br>
 <strong>Put what is before the pipe <code>|&gt;</code> as the first argument of the function coming after.</strong></p>
 <p>When <code>do_this</code> is a function and <code>to_this</code> is an object like a dataframe then</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">do_this</span>(to_this)</span>
-<span id="cb63-2"><a></a><span class="st">```</span><span class="at">R</span></span>
-<span id="cb63-3"><a></a></span>
-<span id="cb63-4"><a></a><span class="at">is the same as </span></span>
-<span id="cb63-5"><a></a><span class="st">```</span>R</span>
-<span id="cb63-6"><a></a>to_this <span class="sc">|&gt;</span> <span class="fu">do_this</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">do_this</span>(to_this)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>is the same as</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>to_this <span class="sc">|&gt;</span> <span class="fu">do_this</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="fragment">
 <p>It also works for longer nested functions:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">function3</span>(<span class="fu">function2</span>(<span class="fu">function1</span>(data)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">function3</span>(<span class="fu">function2</span>(<span class="fu">function1</span>(data)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>is the same as</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a>data <span class="sc">|&gt;</span> <span class="fu">function1</span>() <span class="sc">|&gt;</span> <span class="fu">function2</span>() <span class="sc">|&gt;</span> <span class="fu">function3</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>data <span class="sc">|&gt;</span> <span class="fu">function1</span>() <span class="sc">|&gt;</span> <span class="fu">function2</span>() <span class="sc">|&gt;</span> <span class="fu">function3</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="with-the-pipe" class="slide level2">
@@ -1096,9 +1093,9 @@ A common tool is to use the pipe to give it an ordered structure in the writing.
 <div class="fragment">
 <p>Let’s do a string mutate:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>data_longer <span class="ot">&lt;-</span> data_longer <span class="sc">|&gt;</span></span>
-<span id="cb67-2"><a></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_remove</span>(year, <span class="st">"height_"</span>))</span>
-<span id="cb67-3"><a></a>data_longer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a>data_longer <span class="ot">&lt;-</span> data_longer <span class="sc">|&gt;</span></span>
+<span id="cb68-2"><a></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">str_remove</span>(year, <span class="st">"height_"</span>))</span>
+<span id="cb68-3"><a></a>data_longer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
      id year  height
@@ -1117,9 +1114,9 @@ A common tool is to use the pipe to give it an ordered structure in the writing.
 <h2>But <code>year</code> still a character variable!</h2>
 <p>We mutate further:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a>data_longer <span class="ot">&lt;-</span> data_longer <span class="sc">|&gt;</span></span>
-<span id="cb69-2"><a></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(year))</span>
-<span id="cb69-3"><a></a>data_longer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a>data_longer <span class="ot">&lt;-</span> data_longer <span class="sc">|&gt;</span></span>
+<span id="cb70-2"><a></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(year))</span>
+<span id="cb70-3"><a></a>data_longer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
      id  year height
@@ -1137,8 +1134,8 @@ A common tool is to use the pipe to give it an ordered structure in the writing.
 <section id="back-to-wide-pivot_wider" class="slide level2">
 <h2>Back to wide: <code>pivot_wider</code></h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>data_longer <span class="sc">|&gt;</span></span>
-<span id="cb71-2"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> height)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a>data_longer <span class="sc">|&gt;</span></span>
+<span id="cb72-2"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> height)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
      id `2023` `2024`
@@ -1153,8 +1150,8 @@ A common tool is to use the pipe to give it an ordered structure in the writing.
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a>data_longer <span class="sc">|&gt;</span></span>
-<span id="cb73-2"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> height, <span class="at">names_prefix =</span> <span class="st">"height_"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a>data_longer <span class="sc">|&gt;</span></span>
+<span id="cb74-2"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> height, <span class="at">names_prefix =</span> <span class="st">"height_"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
      id height_2023 height_2024
@@ -1169,7 +1166,7 @@ A common tool is to use the pipe to give it an ordered structure in the writing.
 <section id="summary-piping-and-tidying" class="slide level2">
 <h2>Summary piping and tidying</h2>
 <p>A small data science task often boils down to one line of code using pipes like</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>data <span class="sc">|&gt;</span> <span class="fu">wrangling_functions</span>(<span class="sc">*</span>specifications<span class="sc">*</span>) <span class="sc">|&gt;</span> <span class="fu">tidying</span>(<span class="sc">*</span>to_bring_in_shape<span class="sc">*</span>) <span class="sc">|&gt;</span> <span class="fu">ggpplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a>data <span class="sc">|&gt;</span> <span class="fu">wrangling_functions</span>(<span class="sc">*</span>specifications<span class="sc">*</span>) <span class="sc">|&gt;</span> <span class="fu">tidying</span>(<span class="sc">*</span>to_bring_in_shape<span class="sc">*</span>) <span class="sc">|&gt;</span> <span class="fu">ggpplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>(For R it is one line, but we may break it into several for a better overview.)</p>
 <ul>
 <li>Piping is a natural way of thinking in data science, so we also program that way.</li>

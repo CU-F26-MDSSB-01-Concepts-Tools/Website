@@ -2,371 +2,371 @@
   {
     "objectID": "lectures/W02.html#visualization-in-the-data-science-process",
     "href": "lectures/W02.html#visualization-in-the-data-science-process",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Visualization in the Data Science Process",
     "text": "Visualization in the Data Science Process"
   },
   {
     "objectID": "lectures/W02.html#visualization-for-exploring-data",
     "href": "lectures/W02.html#visualization-for-exploring-data",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Visualization for exploring data",
     "text": "Visualization for exploring data\n\n\nExploring =\nTransforming + Visualizing Data\n(we omit Modeling for now.)\nPackages: dplyr + ggplot\n\n\n\n\n\n\nWrangling = \nImport + Tidying + Transforming\nreadr + tidyr + dplyr\n\n\n\n\n\nBefore Data Exploration comes Data Wrangling, but we focus on exploring first!"
   },
   {
     "objectID": "lectures/W02.html#the-grammar-of-graphics",
     "href": "lectures/W02.html#the-grammar-of-graphics",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "The Grammar of Graphics",
     "text": "The Grammar of Graphics\nLeland Wilkinson’s wrote the Grammar of Graphics: A general scheme for data visualization which breaks up graphs into semantic components such as scales and layers.\n\n\n\nInspired Hadley Wickham to develop the R-package ggplot (Grammar of Graphics Plot).\n\n\n\n\n\n\nWilkinson, L. (2005). The Grammar of Graphics. Springer-Verlag.\nWickham, H. (2010). A Layered Grammar of Graphics. Journal of Computational and Graphical Statistics, 19(1), 3–28."
   },
   {
     "objectID": "lectures/W02.html#grammar-of-graphics-basics",
     "href": "lectures/W02.html#grammar-of-graphics-basics",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Grammar of Graphics: Basics",
     "text": "Grammar of Graphics: Basics\n\n\n\n\n\n\n\nFrom the ggplot Cheatsheet https://rstudio.github.io/cheatsheets/data-visualization.pdf"
   },
   {
     "objectID": "lectures/W02.html#aesthetics-in-gglot",
     "href": "lectures/W02.html#aesthetics-in-gglot",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Aesthetics in gglot",
     "text": "Aesthetics in gglot\nDefinition Aesthetic: Visual property of plot elements that can be mapped to variables in the dataset.\n\nThe main 8 aesthetics in ggplot:\n\nx: The x-axis position.\ny: The y-axis position.\ncolor (or colour): The color of points, lines, or borders around shapes.\nfill: The fill color of shapes (like bars in a bar plot).\nsize: The size of points or thickness of lines.\nshape: The shape of points.\nlinetype: The type of line (solid, dashed, dotted, etc.).\nalpha: The transparency level of points or shapes."
   },
   {
     "objectID": "lectures/W02.html#geom-geometric-object",
     "href": "lectures/W02.html#geom-geometric-object",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "geom = Geometric object",
     "text": "geom = Geometric object\nDefinition: A geom defines the type of visual elements used to represent data in a plot, like points, lines, bars, or boxes. Geoms dictate how variable values mapped to aesthetics are displayed\n\n\n\n3 Core geoms\n\ngeom_point() uses aesthetics like x, y, color, and size to create a scatter plot.\ngeom_line() connects data points using lines, with aesthetics like x, y, and linetype.\ngeom_col() creates bar charts using aesthetics like x, y, and fill.\n\n\nSome geoms also aggregate data\n\ngeom_bar() first counts observations and uses the counts for x or y before making a bar chart.\ngeom_histogram() groups numbers in equally sized bins and counts values in bins before making a bar chart.\ngeom_smooth() creates a line through a scattered set of data points in the x-y plane."
   },
   {
     "objectID": "lectures/W02.html#let-us-walk-through-the-workflow",
     "href": "lectures/W02.html#let-us-walk-through-the-workflow",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Let us walk through the workflow",
     "text": "Let us walk through the workflow\nWe need the tidyverse packages\n\nlibrary(tidyverse)\n\nWe use the mpg dataset which is in the ggplot library. Let’s take a look:\n\nglimpse(mpg)\n\nRows: 234\nColumns: 11\n$ manufacturer &lt;chr&gt; \"audi\", \"audi\", \"audi\", \"audi\", \"audi\", \"audi\", \"audi\", \"…\n$ model        &lt;chr&gt; \"a4\", \"a4\", \"a4\", \"a4\", \"a4\", \"a4\", \"a4\", \"a4 quattro\", \"…\n$ displ        &lt;dbl&gt; 1.8, 1.8, 2.0, 2.0, 2.8, 2.8, 3.1, 1.8, 1.8, 2.0, 2.0, 2.…\n$ year         &lt;int&gt; 1999, 1999, 2008, 2008, 1999, 1999, 2008, 1999, 1999, 200…\n$ cyl          &lt;int&gt; 4, 4, 4, 4, 6, 6, 6, 4, 4, 4, 4, 6, 6, 6, 6, 6, 6, 8, 8, …\n$ trans        &lt;chr&gt; \"auto(l5)\", \"manual(m5)\", \"manual(m6)\", \"auto(av)\", \"auto…\n$ drv          &lt;chr&gt; \"f\", \"f\", \"f\", \"f\", \"f\", \"f\", \"f\", \"4\", \"4\", \"4\", \"4\", \"4…\n$ cty          &lt;int&gt; 18, 21, 20, 21, 16, 18, 18, 18, 16, 20, 19, 15, 17, 17, 1…\n$ hwy          &lt;int&gt; 29, 29, 31, 30, 26, 26, 27, 26, 25, 28, 27, 25, 25, 25, 2…\n$ fl           &lt;chr&gt; \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p\", \"p…\n$ class        &lt;chr&gt; \"compact\", \"compact\", \"compact\", \"compact\", \"compact\", \"c…"
   },
   {
     "objectID": "lectures/W02.html#use-mpg-for-more-information-about-mpg-dataset",
     "href": "lectures/W02.html#use-mpg-for-more-information-about-mpg-dataset",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Use ?mpg for more information about mpg dataset",
     "text": "Use ?mpg for more information about mpg dataset\n?mpg\nmpg                  package:ggplot2                   R Documentation\n\nFuel economy data from 1999 to 2008 for 38 popular models of cars\n\nDescription:\n\n     This dataset contains a subset of the fuel economy data that the\n     EPA makes available on &lt;https://fueleconomy.gov/&gt;. It contains\n     only models which had a new release every year between 1999 and\n     2008 - this was used as a proxy for the popularity of the car.\n\nUsage:\n\n     mpg\n     \nFormat:\n\n     A data frame with 234 rows and 11 variables:\n\n     manufacturer manufacturer name\n\n     model model name\n\n     displ engine displacement, in litres\n\n     year year of manufacture\n\n     cyl number of cylinders\n\n     trans type of transmission\n\n     drv the type of drive train, where f = front-wheel drive, r = rear\n          wheel drive, 4 = 4wd\n\n     cty city miles per gallon\n\n     hwy highway miles per gallon\n\n     fl fuel type\n\n     class \"type\" of car\n\n\nFor best learning, go through these slides and test the code!"
   },
   {
     "objectID": "lectures/W02.html#first-plot-in-a-basic-specification",
     "href": "lectures/W02.html#first-plot-in-a-basic-specification",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "First plot in a basic specification",
     "text": "First plot in a basic specification\nWe take cty = “city miles per gallon” as x and hwy = “highway miles per gallon” as y\n\nggplot(data = mpg) + geom_point(mapping = aes(x = cty, y = hwy))\n\n\nCompare to “The complete template” from the cheat sheet\nIt has all the required elements: We specify the data in the ggplot command, and the aesthetics (what variable is x and what variable is y) as mapping in the geom-function."
   },
   {
     "objectID": "lectures/W02.html#data-and-mapping-where",
     "href": "lectures/W02.html#data-and-mapping-where",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "data and mapping where?",
     "text": "data and mapping where?\nLooking at ?ggplot and ?geom_point we find that both need to specify data and mapping.\nWhy do we have it only once here?\nggplot(data = mpg) + geom_point(mapping = aes(x = cty, y = hwy))\n\n\nThe “+” in ggplot specifies that specifications will be taken from the object defined before the +.\nTechnically ggplot() creates an ggplot object (the graphic) and +geom_point() adds more information to it.\nSo, data was taken from the ggplot call, and mapping from geom_point"
   },
   {
     "objectID": "lectures/W02.html#it-also-works-this-way",
     "href": "lectures/W02.html#it-also-works-this-way",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "It also works this way",
     "text": "It also works this way\n\nggplot() + geom_point(data = mpg, mapping = aes(x = cty, y = hwy)) # Same output as before ...\n\n\n\nIn principle, we can specify new data and aesthetics in each geom-function in the same ggplot! Usually, we only have one dataset and one specification of aesthetics"
   },
   {
     "objectID": "lectures/W02.html#and-also-this-way",
     "href": "lectures/W02.html#and-also-this-way",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "And also this way",
     "text": "And also this way\n\nggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + geom_point() # Same output as before ...\n\n\n\n\n\n\n\n\n\n\nThis is arguably the most common way."
   },
   {
     "objectID": "lectures/W02.html#even-shorter",
     "href": "lectures/W02.html#even-shorter",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Even shorter",
     "text": "Even shorter\nAs common practice we can shorten the code and remove the data = and the mapping = because the first argument will be taken as data (if not specified otherwise) and the second as mapping (if not specified otherwise). See function documentation ?ggplot\n\nggplot(mpg, aes(x = cty, y = hwy)) + geom_point() # Same output as before ..."
   },
   {
     "objectID": "lectures/W02.html#the-shortest",
     "href": "lectures/W02.html#the-shortest",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "The shortest",
     "text": "The shortest\nWe can even remove the “x =” and “y =” if we look at the specification of aes() in ?aes\n\nggplot(mpg, aes(cty, hwy)) + geom_point() # Same output as before ..."
   },
   {
     "objectID": "lectures/W02.html#testing-do-the-following-lines-work",
     "href": "lectures/W02.html#testing-do-the-following-lines-work",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "TESTING: Do the following lines work?",
     "text": "TESTING: Do the following lines work?\nIf not, why not? If yes, why?\nggplot(aes(x = cty, y = hwy), mpg) + geom_point()\nggplot(aes(x = cty, y = hwy), data = mpg) + geom_point()\nggplot(mapping = aes(x = cty, y = hwy)) + geom_point(mpg)\nggplot(aes(x = cty, y = hwy)) + geom_point(data = mpg)\nggplot(mpg,aes(hwy, x = cty)) + geom_point() \nggplot(mapping = aes(y = hwy, x = cty)) + geom_point(mpg) \n\n\n\n\n\n\n\n\n\nSolutions:\n1 No, data must be first\n2 Yes, with named argument data = works also as second argument\n3 No, data is missing\n4 No, aes() is take wrongly as data in ggplot\n5 Yes, x is specified with named argument, so the unnamed first argument is take as the second default argument\n6 No, in geom_point the first argument is mapping, so it must be aes()"
   },
   {
     "objectID": "lectures/W02.html#more-aesthetics",
     "href": "lectures/W02.html#more-aesthetics",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "More aesthetics",
     "text": "More aesthetics\ncolor, shape, size, fill …\nThese need to be specified by name and cannot be left out.\nLet us color the manufacturer, and make size by cylinders\n\nggplot(mpg, aes(cty, hwy, color = manufacturer, size = cyl)) + geom_point()"
   },
   {
     "objectID": "lectures/W02.html#do-you-like-the-plot",
     "href": "lectures/W02.html#do-you-like-the-plot",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Do you like the plot?",
     "text": "Do you like the plot?\nSome critique:\n\nToo many colors\nLooks like several points are in the same place but we do not see it.\nSizes look “unproportional” (4 is too small)"
   },
   {
     "objectID": "lectures/W02.html#effective-visualization-is-your-task",
     "href": "lectures/W02.html#effective-visualization-is-your-task",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Effective visualization is your task!",
     "text": "Effective visualization is your task!\n\nThe three problems are not technical problems of ggplot.\n\nThe grammar of graphics works fine.\nFinding effective visualization is a core skill for a data scientist.\nIt develops naturally with practice.\nIt needs programming skills, but the essence of it is not programming!"
   },
   {
     "objectID": "lectures/W02.html#work-with-scale_...-to-modify-aesthetics-look",
     "href": "lectures/W02.html#work-with-scale_...-to-modify-aesthetics-look",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Work with scale_... to modify aesthetic’s look",
     "text": "Work with scale_... to modify aesthetic’s look\nExample: Scale the size differently\n\nggplot(mpg, aes(cty, hwy, color = manufacturer, size = cyl)) +\n  geom_point() +\n  scale_size_area()"
   },
   {
     "objectID": "lectures/W02.html#check-overplotting-with-a-jitter",
     "href": "lectures/W02.html#check-overplotting-with-a-jitter",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Check overplotting with a jitter",
     "text": "Check overplotting with a jitter\n\nggplot(mpg, aes(cty, hwy)) + geom_point() + geom_jitter(color = \"green\")\n\n\nHere, we do two new things:\n\nWe added another geom-function to an existing one. That is a core idea of the grammar of graphics. (However, for a final version, we would probably not do geom_point together with geom_jitter.)\nWe specify the color by a word. Important: This is not within an aes() command!"
   },
   {
     "objectID": "lectures/W02.html#another-example-for-two-geoms",
     "href": "lectures/W02.html#another-example-for-two-geoms",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Another example for two geoms",
     "text": "Another example for two geoms\nAdd a smooth line as summary statistic\n\nggplot(mpg, aes(cty, hwy)) + geom_point() + geom_smooth()"
   },
   {
     "objectID": "lectures/W02.html#puzzle",
     "href": "lectures/W02.html#puzzle",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "PUZZLE",
     "text": "PUZZLE\nWhat happens here? Why does green become red???\n\nggplot(mpg, aes(cty, hwy, color = \"green\")) + geom_point() # Shows dots supposed to be \"green\" in red?\n\n\n\nThis is because “green” is taken here as a variable (with only one value for all data points).\nSo, “green” is not a color but a string and ggplot chooses color automatically.\n\n\nThis makes green points:\nggplot(mpg, aes(cty, hwy), color = \"green\") + geom_point()"
   },
   {
     "objectID": "lectures/W02.html#ggplot-objects",
     "href": "lectures/W02.html#ggplot-objects",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "ggplot-Objects",
     "text": "ggplot-Objects\n\nour_plot &lt;- ggplot(mpg, aes(cty, hwy)) + geom_point(aes(color = manufacturer))\n\nThis creates no output!\nThe graphic information is stored in the object our_plot."
   },
   {
     "objectID": "lectures/W02.html#call-the-object",
     "href": "lectures/W02.html#call-the-object",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Call the object",
     "text": "Call the object\nAs with other objects, when we write it in the console as such it provides an answer. In the case of ggplot-objects the answer is not some printed text in the console but a graphic output.\n\nour_plot"
   },
   {
     "objectID": "lectures/W02.html#ggplot-objects-altered-by-more",
     "href": "lectures/W02.html#ggplot-objects-altered-by-more",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "ggplot-Objects altered by more “+…”",
     "text": "ggplot-Objects altered by more “+…”\nExample\n\nour_plot + geom_smooth()"
   },
   {
     "objectID": "lectures/W02.html#coordinate-system-specification",
     "href": "lectures/W02.html#coordinate-system-specification",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Coordinate system specification",
     "text": "Coordinate system specification\nExample\n\nour_plot + coord_flip() # flip x and y"
   },
   {
     "objectID": "lectures/W02.html#coordinate-system-specification-1",
     "href": "lectures/W02.html#coordinate-system-specification-1",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Coordinate system specification",
     "text": "Coordinate system specification\nExample\n\nour_plot + coord_polar() # weird here but useful for some things"
   },
   {
     "objectID": "lectures/W02.html#faceting-based-on-another-variable",
     "href": "lectures/W02.html#faceting-based-on-another-variable",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Faceting based on another variable",
     "text": "Faceting based on another variable\nExample\n\nour_plot + facet_wrap(\"manufacturer\")"
   },
   {
     "objectID": "lectures/W02.html#faceting-based-on-two-other-variables",
     "href": "lectures/W02.html#faceting-based-on-two-other-variables",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Faceting based on two other variables",
     "text": "Faceting based on two other variables\nExample\n\nour_plot + facet_grid(cyl ~ fl) # fl is the fuel type"
   },
   {
     "objectID": "lectures/W02.html#scaling",
     "href": "lectures/W02.html#scaling",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Scaling",
     "text": "Scaling\nExample\n\nour_plot +\n  scale_x_log10() +\n  scale_y_reverse() +\n  scale_colour_hue(l = 70, c = 30)"
   },
   {
     "objectID": "lectures/W02.html#axis-limits-and-labels",
     "href": "lectures/W02.html#axis-limits-and-labels",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Axis limits and labels",
     "text": "Axis limits and labels\nExample\n\nour_plot +\n  xlim(c(0, 40)) +\n  xlab(\"City miles per gallon\") +\n  ylab(\"Highway miles per gallon\")"
   },
   {
     "objectID": "lectures/W02.html#themes",
     "href": "lectures/W02.html#themes",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Themes",
     "text": "Themes\nExample\n\nour_plot + theme_bw()"
   },
   {
     "objectID": "lectures/W02.html#themes-1",
     "href": "lectures/W02.html#themes-1",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Themes",
     "text": "Themes\nExample\n\nour_plot + theme_void()"
   },
   {
     "objectID": "lectures/W02.html#themes-2",
     "href": "lectures/W02.html#themes-2",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Themes",
     "text": "Themes\nExample\n\nour_plot + theme_dark()"
   },
   {
     "objectID": "lectures/W02.html#tabular-data",
     "href": "lectures/W02.html#tabular-data",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Tabular Data",
     "text": "Tabular Data\nFor analysis we need well structured data. Often tabular form. Like a spreadsheet:\n\nDimension of a table: Always count the rows first! m-by-n table\nExample: cell (4,3) is in row 4 and column 3.\nWarning: Spreadsheet cell labelling differs. Columns have letter-labels and go first.\nCell (4,3) is C4"
   },
   {
     "objectID": "lectures/W02.html#basic-data-types-in-r-atomic-vectors",
     "href": "lectures/W02.html#basic-data-types-in-r-atomic-vectors",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Basic Data types in R, atomic vectors",
     "text": "Basic Data types in R, atomic vectors\ncharacter: \"a\", \"swc\"\ndouble: 2, 15.5 (double precision floating point numbers)\ninteger: 2L (L tells R to store as integer)\nlogical: TRUE, FALSE\ncomplex: 1+4i (complex number with real and imaginary parts)\nThese exist in similar ways in other programming languages.\nAtomic vectors are ordered collections of values of the same data type.\nConstruction in R: c(2,3,4) or c(TRUE, FALSE) or c(\"A\",\"B\")\nProperties: typeof() and length()\n\n\nFor historic reasons, double and integer are both of the R class numeric. Another rare data type raw which stores bytes. Check the type of an object x with typeof(x)."
   },
   {
     "objectID": "lectures/W02.html#type-coercion",
     "href": "lectures/W02.html#type-coercion",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Type Coercion",
-    "text": "Type Coercion\nWhat happens when values of different data type are combined?\n(in R and python or other dynamically typed programming languages)\nCombined could mean for example for x and y\n\nPut together in a vector c(x,y)\nAdded (e.g. with x + y)\nCompared (e.g. with x == y)\n\n\nCoercion!\nlogical + integer -&gt; integer (TRUE is 1, FALSE is 0)\ninteger + double -&gt; double\ndouble + character -&gt; character"
+    "text": "Type Coercion\nWhat happens when values of different data type are combined?\n(in R and python or other dynamically typed programming languages)\nCombined could mean for example for x and y\n\nPut together in a vector c(x,y)\nAdded (e.g. with x + y)\nCompared (e.g. with x == y)\n\n\nCoercion!\nlogical and integer -&gt; integer (TRUE is 1, FALSE is 0)\ninteger and double -&gt; double\ndouble and character -&gt; character"
   },
   {
     "objectID": "lectures/W02.html#let-us-test-coercion",
     "href": "lectures/W02.html#let-us-test-coercion",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Let us test coercion",
     "text": "Let us test coercion\n\nx &lt;- TRUE\ny &lt;- 2L\nz &lt;- 3\na &lt;- \"4\"\n\n\n\nc(x, y)\n\n\n[1] 1 2\n\n\n\n\nc(y, z) |&gt; typeof()\n\n\n[1] \"double\"\n\n\n\n\nc(z, a)\n\n\n[1] \"3\" \"4\"\n\n\n\n\nc(x, a)\n\n\n[1] \"TRUE\" \"4\"   \n\n\n\n\nc(c(x, y), a)\n\n\n[1] \"1\" \"2\" \"4\"\n\n\n\n\nx + y\n\n\n[1] 3\n\n\n\n\nas.numeric(a)\n\n\n[1] 4\n\n\n\n\nx == 1\n\n\n[1] TRUE\n\n\n\n\nas.character(y)\n\n\n[1] \"2\"\n\n\nWhat about\nz + a\n\nNot possible, because stings cannot be added."
   },
   {
     "objectID": "lectures/W02.html#danger-floating-point-numbers",
     "href": "lectures/W02.html#danger-floating-point-numbers",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Danger! Floating point numbers",
     "text": "Danger! Floating point numbers\nWe define a and b such that their are both 0.1 mathematically.\n\na &lt;- 0.1 + 0.2 - 0.2\na\n\n[1] 0.1\n\n\n\nb &lt;- 0.1\nb\n\n[1] 0.1\n\n\nBut why is this false?\n\n(a - b) == 0\n\n[1] FALSE\n\n\n\n\na - b\n\n[1] 2.775558e-17\n\n\nAha, the difference is about \\(2.8 \\times 10^{-17}\\) (The e stands for scientific notation, learn to read it!) Such problems can happen when subtracting and comparing floating point numbers!"
   },
   {
     "objectID": "lectures/W02.html#lists-dataframes-tibbles",
     "href": "lectures/W02.html#lists-dataframes-tibbles",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Lists, Dataframes (=Tibbles)",
     "text": "Lists, Dataframes (=Tibbles)\n\n\nList list()\n\nact as container\ncontents of a list are not restricted to a single type\nlists can contain further lists (and so on …)\nthe basic data type for building and storing complex data structures\nin R syntax the “$” is important for constructing and accessing\n\n\nDataframe\n\nthe way to store tabular data\nit can be seen as a list of atomic vectors which all have the same length\n\nTibble\n\nAn advanced type of data frame invented in the tidyverse\nBehaves a bit nicer in daily routines\nLargely identical in behavior and easy to convert"
   },
   {
     "objectID": "lectures/W02.html#tibble-and-data.",
     "href": "lectures/W02.html#tibble-and-data.",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "tibble and data.",
     "text": "tibble and data."
   },
   {
     "objectID": "lectures/W02.html#data-types-summary",
     "href": "lectures/W02.html#data-types-summary",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Data Types Summary",
     "text": "Data Types Summary\n\n\nThe most important basic data types:\n\ncharacter\nlogical\ndouble\n\nThese can be combined to atomic vectors: an indexed list of n values\n\ncharacter vector\nlogical vector\ndouble vector\n\n\nLists are similar to vectors (and indexed list of n values) but every element can be anything, an atomic vector of any type and length or even another list.\nDataframes (and Tibbles) are a special type of lists: A list of atomic vectors (the columns) of the same length. Additional to the numerical index 1 to n, the list elements also have names (the variable names)."
   },
   {
     "objectID": "lectures/W02.html#definition-of-tidy",
     "href": "lectures/W02.html#definition-of-tidy",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Definition of tidy",
     "text": "Definition of tidy\n\nThere are three interrelated rules which make a dataset tidy:\n\nEach variable must have its own column.\nEach observation must have its own row.\nEach value must have its own cell.\n\n\n\nThe name of the concept tidy data is promoted in the tidyverse (who could have guessed…)"
   },
   {
     "objectID": "lectures/W02.html#example-tidy-data",
     "href": "lectures/W02.html#example-tidy-data",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Example Tidy Data",
     "text": "Example Tidy Data\nWhich data is tidy?"
   },
   {
     "objectID": "lectures/W02.html#characteristics-of-tidy-data",
     "href": "lectures/W02.html#characteristics-of-tidy-data",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Characteristics of tidy data",
     "text": "Characteristics of tidy data\nTidy data\n\nEach column is a meaningful variable\nEach row is a meaningful observation\n\nAdditionally\n\nEach type of observational unit forms another table (see the nycflights13 data for a collection of connected tables)\n\n\nUntidy data\n\n\n… can be anything"
   },
   {
     "objectID": "lectures/W02.html#pivoting",
     "href": "lectures/W02.html#pivoting",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Pivoting",
     "text": "Pivoting\nFunctions from the tidyverse package tidyr\n\n\nThe most important functions are\npivot_longer()\npivot_wider()\nPivoting to longer means that we collect variable names in a new variable"
   },
   {
     "objectID": "lectures/W02.html#pivoting-to-wider",
     "href": "lectures/W02.html#pivoting-to-wider",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Pivoting to wider",
     "text": "Pivoting to wider\n\n\nWhen observation is scattered across multiple rows. Typically you have\n\nA key-variable which makes the new column names\nA value-variable which makes the values in the cells of the new variables"
   },
   {
     "objectID": "lectures/W02.html#pivot_longer",
     "href": "lectures/W02.html#pivot_longer",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "pivot_longer",
     "text": "pivot_longer\n\ndata_wide &lt;- tibble(\n  id = 1:3,\n  height_2023 = c(150, 160, 170),\n  height_2024 = c(152, 162, 172)\n)\ndata_wide\n\n# A tibble: 3 × 3\n     id height_2023 height_2024\n  &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;\n1     1         150         152\n2     2         160         162\n3     3         170         172\n\n\n\ndata_longer &lt;- pivot_longer(\n  data = data_wide,\n  cols = c(height_2023, height_2024),\n  names_to = \"year\",\n  values_to = \"height\"\n)\ndata_longer\n\n# A tibble: 6 × 3\n     id year        height\n  &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;\n1     1 height_2023    150\n2     1 height_2024    152\n3     2 height_2023    160\n4     2 height_2024    162\n5     3 height_2023    170\n6     3 height_2024    172"
   },
   {
     "objectID": "lectures/W02.html#section",
     "href": "lectures/W02.html#section",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "|>",
-    "text": "|&gt;\nIn data wrangling it is common to do various data manipulations one after the other.\nA common tool is to use the pipe to give it an ordered structure in the writing.\nThe basic idea is:\nPut what is before the pipe |&gt; as the first argument of the function coming after.\nWhen do_this is a function and to_this is an object like a dataframe then\ndo_this(to_this)\n```R\n\nis the same as \n```R\nto_this |&gt; do_this()\n\nIt also works for longer nested functions:\nfunction3(function2(function1(data)))\nis the same as\ndata |&gt; function1() |&gt; function2() |&gt; function3()"
+    "text": "|&gt;\nIn data wrangling it is common to do various data manipulations one after the other.\nA common tool is to use the pipe to give it an ordered structure in the writing.\nThe basic idea is:\nPut what is before the pipe |&gt; as the first argument of the function coming after.\nWhen do_this is a function and to_this is an object like a dataframe then\ndo_this(to_this)\nis the same as\nto_this |&gt; do_this()\n\nIt also works for longer nested functions:\nfunction3(function2(function1(data)))\nis the same as\ndata |&gt; function1() |&gt; function2() |&gt; function3()"
   },
   {
     "objectID": "lectures/W02.html#with-the-pipe",
     "href": "lectures/W02.html#with-the-pipe",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "With the pipe",
     "text": "With the pipe\n\n\n# A tibble: 6 × 3\n     id year        height\n  &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;\n1     1 height_2023    150\n2     1 height_2024    152\n3     2 height_2023    160\n4     2 height_2024    162\n5     3 height_2023    170\n6     3 height_2024    172\n\n\n\nyear does not look good! We want numbers.\n\n\nLet’s do a string mutate:\n\ndata_longer &lt;- data_longer |&gt;\n  mutate(year = str_remove(year, \"height_\"))\ndata_longer\n\n# A tibble: 6 × 3\n     id year  height\n  &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt;\n1     1 2023     150\n2     1 2024     152\n3     2 2023     160\n4     2 2024     162\n5     3 2023     170\n6     3 2024     172"
   },
   {
     "objectID": "lectures/W02.html#but-year-still-a-character-variable",
     "href": "lectures/W02.html#but-year-still-a-character-variable",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "But year still a character variable!",
     "text": "But year still a character variable!\nWe mutate further:\n\ndata_longer &lt;- data_longer |&gt;\n  mutate(year = as.numeric(year))\ndata_longer\n\n# A tibble: 6 × 3\n     id  year height\n  &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;\n1     1  2023    150\n2     1  2024    152\n3     2  2023    160\n4     2  2024    162\n5     3  2023    170\n6     3  2024    172\n\n\nThat is fine."
   },
   {
     "objectID": "lectures/W02.html#back-to-wide-pivot_wider",
     "href": "lectures/W02.html#back-to-wide-pivot_wider",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Back to wide: pivot_wider",
     "text": "Back to wide: pivot_wider\n\ndata_longer |&gt;\n  pivot_wider(names_from = year, values_from = height)\n\n# A tibble: 3 × 3\n     id `2023` `2024`\n  &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;\n1     1    150    152\n2     2    160    162\n3     3    170    172\n\n\n\nOK, but now we have just numbers as variable names. Can we get height_ prefix back?\n\n\n\ndata_longer |&gt;\n  pivot_wider(names_from = year, values_from = height, names_prefix = \"height_\")\n\n# A tibble: 3 × 3\n     id height_2023 height_2024\n  &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;\n1     1         150         152\n2     2         160         162\n3     3         170         172"
   },
   {
     "objectID": "lectures/W02.html#summary-piping-and-tidying",
     "href": "lectures/W02.html#summary-piping-and-tidying",
-    "title": "W#02 Data Visualization, Data Formats",
+    "title": "W#02 Data Visualization, Data Formats, Tidy",
     "section": "Summary piping and tidying",
     "text": "Summary piping and tidying\nA small data science task often boils down to one line of code using pipes like\ndata |&gt; wrangling_functions(*specifications*) |&gt; tidying(*to_bring_in_shape*) |&gt; ggpplot()\n(For R it is one line, but we may break it into several for a better overview.)\n\nPiping is a natural way of thinking in data science, so we also program that way.\nTidying (for example pivot_longer) is often needed directly before a ggplot command.\nTidying often require some string manipulations making new variables and variable names nice.\n\n\nHow can I learn all this? Practice, practice, practice, …\nDo I need to learn it again for python?? Yes, but it is easier knowing the concept!\n\n\nWhen learning, learn the concept not just get the code done!"
   },
@@ -1014,7 +1014,7 @@
     "href": "material/M02.html#lecture-material",
     "title": "W#02",
     "section": "1 Lecture Material",
-    "text": "1 Lecture Material\n\nSlides: Direct Link\n\nFind the live recording in Teams: Recording Data Science Concepts Recording Data Science Tools.",
+    "text": "1 Lecture Material\nSlides: Direct Link Direkt link “A short tour through examples of data visualization”\n\nFind the live recording in Teams: Recording Data Science Concepts Recording Data Science Tools.",
     "crumbs": [
       "Syllabus",
       "Schedule",
