@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/lectures/W04.html</loc>
+    <lastmod>2026-09-27T22:46:59.195Z</lastmod>
+  </url>
+  <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/lectures/W03.html</loc>
     <lastmod>2026-09-21T07:34:39.157Z</lastmod>
   </url>
@@ -14,42 +18,46 @@
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/help.html</loc>
-    <lastmod>2026-08-06T10:42:47.246Z</lastmod>
+    <lastmod>2026-09-27T23:02:27.074Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/homework.html</loc>
-    <lastmod>2026-08-26T10:30:06.459Z</lastmod>
+    <lastmod>2026-09-27T23:04:34.059Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/setup.html</loc>
-    <lastmod>2026-08-28T10:03:18.340Z</lastmod>
+    <lastmod>2026-09-27T23:05:40.778Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/index.html</loc>
-    <lastmod>2026-09-20T15:15:23.926Z</lastmod>
+    <lastmod>2026-09-27T23:07:33.440Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/schedule.html</loc>
-    <lastmod>2026-09-20T16:35:29.364Z</lastmod>
+    <lastmod>2026-09-27T23:04:36.826Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/final.html</loc>
-    <lastmod>2026-08-26T10:29:58.642Z</lastmod>
+    <lastmod>2026-09-27T23:07:17.549Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/literature.html</loc>
-    <lastmod>2026-08-06T10:42:47.327Z</lastmod>
+    <lastmod>2026-09-27T23:04:35.686Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/material/M01.html</loc>
-    <lastmod>2026-09-06T20:53:21.536Z</lastmod>
+    <lastmod>2026-09-27T23:05:53.268Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/material/M02.html</loc>
-    <lastmod>2026-09-14T10:40:32.340Z</lastmod>
+    <lastmod>2026-09-27T23:05:57.148Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/material/M03.html</loc>
-    <lastmod>2026-09-21T07:35:14.365Z</lastmod>
+    <lastmod>2026-09-27T23:06:02.012Z</lastmod>
+  </url>
+  <url>
+    <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/material/M04.html</loc>
+    <lastmod>2026-09-27T23:06:06.228Z</lastmod>
   </url>
 </urlset>

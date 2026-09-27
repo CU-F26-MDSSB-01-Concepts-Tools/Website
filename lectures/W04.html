@@ -1,0 +1,2699 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
+
+  <meta name="author" content="Jan Lorenz">
+  <title>Data Science Concepts / Data Science Tools – W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="slidestyles.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+  <link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Jan Lorenz 
+</div>
+</div>
+</div>
+
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Table of contents</h2>
+<ul>
+<li><a href="#/strings-and-special-values" id="/toc-strings-and-special-values">Strings and Special Values</a></li>
+<li><a href="#/special-values-for-no-data" id="/toc-special-values-for-no-data">Special Values for “No Data”</a></li>
+<li><a href="#/relational-data" id="/toc-relational-data">Relational Data</a></li>
+<li><a href="#/joining-data-to-dataframes" id="/toc-joining-data-to-dataframes">Joining data to dataframes</a></li>
+<li><a href="#/math-sets-and-vectors" id="/toc-math-sets-and-vectors">Math: Sets and vectors</a></li>
+<li><a href="#/math-functions" id="/toc-math-functions">Math: Functions</a></li>
+<li><a href="#/important-functions" id="/toc-important-functions">Important Functions</a></li>
+<li><a href="#/functions-in-programming-and-programming-functions" id="/toc-functions-in-programming-and-programming-functions">Functions in Programming and Programming Functions</a></li>
+<li><a href="#/think-and-program-vectorized" id="/toc-think-and-program-vectorized">Think and program vectorized!</a></li>
+<li><a href="#/conditional-statements-if-and-iteration-map" id="/toc-conditional-statements-if-and-iteration-map">Conditional Statements (<code>if</code>) and Iteration (<code>map</code>)</a></li>
+<li><a href="#/summary-r-tools" id="/toc-summary-r-tools">Summary R tools</a></li>
+</ul>
+</nav>
+</section>
+<section id="preliminaries" class="slide level2 smaller">
+<h2>Preliminaries</h2>
+<p>In this lectures we will use these packages.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(nycflights13)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The datasets used can be downloaded from:<br>
+<a href="https://github.com/CU-F26-MDSSB-01-Concepts-Tools/Website/tree/main/lectures" class="uri">https://github.com/CU-F26-MDSSB-01-Concepts-Tools/Website/tree/main/lectures</a></p>
+</section>
+<section>
+<section id="strings-and-special-values" class="title-slide slide level1 center">
+<h1>Strings and Special Values</h1>
+
+</section>
+<section id="string-modification" class="slide level2 smaller">
+<h2>String modification</h2>
+<p>We modify strings with the <a href="https://stringr.tidyverse.org/"><code>stringr</code></a> package from the tidyverse core. All functions from <code>stringr</code> start with <code>str_</code>.</p>
+<p>A few examples:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "x" "y"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">str_c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "xy"</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">str_c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>, <span class="at">sep =</span> <span class="st">","</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "x,y,z"</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">length</span>(<span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">str_length</span>(<span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 1 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">str_length</span>(<span class="fu">c</span>(<span class="st">"This is a string."</span>, <span class="st">"z"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17  1</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="string-wrangling-with-variable-names" class="slide level2 smaller">
+<h2>String wrangling with variable names</h2>
+<p>This is a typical use case. We have data like this:</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb14-2"><a></a>  <span class="at">Name =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
+<span id="cb14-3"><a></a>  <span class="at">Age_2020 =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>),</span>
+<span id="cb14-4"><a></a>  <span class="at">Age_2021 =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">31</span>, <span class="dv">41</span>),</span>
+<span id="cb14-5"><a></a>  <span class="at">Age_2022 =</span> <span class="fu">c</span>(<span class="dv">22</span>, <span class="dv">32</span>, <span class="dv">42</span>)</span>
+<span id="cb14-6"><a></a>)</span>
+<span id="cb14-7"><a></a>data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  Name  Age_2020 Age_2021 Age_2022
+  &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 A           20       21       22
+2 B           30       31       32
+3 C           40       41       42</code></pre>
+</div>
+</div></div>
+<p>We tidy that data set by creating a year variable.</p>
+<div class="fragment">
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>data <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb16-3"><a></a>    <span class="fu">c</span>(<span class="st">"Age_2020"</span>, <span class="st">"Age_2021"</span>, <span class="st">"Age_2022"</span>),</span>
+<span id="cb16-4"><a></a>    <span class="at">names_to =</span> <span class="st">"Year"</span>,</span>
+<span id="cb16-5"><a></a>    <span class="at">values_to =</span> <span class="st">"Age"</span></span>
+<span id="cb16-6"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+  Name  Year       Age
+  &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;
+1 A     Age_2020    20
+2 A     Age_2021    21
+3 A     Age_2022    22
+4 B     Age_2020    30
+5 B     Age_2021    31
+6 B     Age_2022    32
+7 C     Age_2020    40
+8 C     Age_2021    41
+9 C     Age_2022    42</code></pre>
+</div>
+</div></div>
+</div>
+<div class="fragment">
+<p>OK, but the year variable is a string but we want numbers.</p>
+</div>
+</section>
+<section id="use-word" class="slide level2 smaller">
+<h2>Use <code>word</code></h2>
+<p><code>word</code> extracts words from a sentence. (One <code>stringr</code> function <em>not</em> starting with <code>str_</code>!)</p>
+<ul>
+<li>You can specify the words from <code>start</code> to <code>end</code>. Use numbers. (Negative numbers to count from the last word.)</li>
+<li>The word separator need not be <code>" "</code> but can be any character.</li>
+</ul>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">word</span>(<span class="st">"This is a string."</span>, <span class="at">start =</span> <span class="dv">2</span>, <span class="at">end =</span> <span class="sc">-</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "is a"</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">word</span>(<span class="st">"Age_2022"</span>, <span class="at">start =</span> <span class="dv">2</span>, <span class="at">sep =</span> <span class="st">"_"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2022"</code></pre>
+</div>
+</div></div>
+<div class="fragment">
+<p>It also works vectorized.</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>data <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb22-3"><a></a>    <span class="fu">c</span>(<span class="st">"Age_2020"</span>, <span class="st">"Age_2021"</span>, <span class="st">"Age_2022"</span>),</span>
+<span id="cb22-4"><a></a>    <span class="at">names_to =</span> <span class="st">"Year"</span>,</span>
+<span id="cb22-5"><a></a>    <span class="at">values_to =</span> <span class="st">"Age"</span></span>
+<span id="cb22-6"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb22-7"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-8"><a></a>    <span class="at">Year =</span> <span class="fu">word</span>(Year, <span class="at">start =</span> <span class="dv">2</span>, <span class="at">sep =</span> <span class="st">"_"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-9"><a></a>      <span class="fu">as.numeric</span>()</span>
+<span id="cb22-10"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+  Name   Year   Age
+  &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 A      2020    20
+2 A      2021    21
+3 A      2022    22
+4 B      2020    30
+5 B      2021    31
+6 B      2022    32
+7 C      2020    40
+8 C      2021    41
+9 C      2022    42</code></pre>
+</div>
+</div></div>
+</div>
+</section>
+<section id="string-detection-regular-expressions" class="slide level2 smaller">
+<h2>String Detection / Regular Expressions</h2>
+<p>Many <code>stringr</code> function follow the structure <code>(string, pattern)</code>.<br>
+<code>string</code> is in our data, <code>pattern</code> is a string interpreted as a <a href="https://en.wikipedia.org/wiki/Regular_expression"><strong>Regular Expression</strong></a></p>
+<p>A few examples show its power:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>fruits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"apple"</span>, <span class="st">"pineapple"</span>, <span class="st">"Pear"</span>, <span class="st">"orange"</span>, <span class="st">"peach"</span>, <span class="st">"banana"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">str_detect</span>(fruits, <span class="st">"apple"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE  TRUE FALSE FALSE FALSE FALSE</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">str_extract</span>(fruits, <span class="st">"apple"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "apple" "apple" NA      NA      NA      NA     </code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">str_extract</span>(fruits, <span class="st">"[Pp][a-z]"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "pp" "pi" "Pe" NA   "pe" NA  </code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">str_extract</span>(fruits, <span class="st">"^[Pp][a-z]"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA   "pi" "Pe" NA   "pe" NA  </code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">str_extract</span>(fruits, <span class="st">"^[Pp][a-z]{3}"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA     "pine" "Pear" NA     "peac" NA    </code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">str_extract</span>(fruits, <span class="st">"^[Pp][a-z]+"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA          "pineapple" "Pear"      NA          "peach"     NA         </code></pre>
+</div>
+</div></div>
+<p>Test other words, like <code>str_extract("Pizza Napoli","^[Pp][a-z]+")</code>:</p>
+<div>
+<div id="webr-1" class="exercise-cell">
+
+</div>
+<script type="webr-1-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIn0=
+</script>
+</div>
+</section>
+<section id="regular-expressions" class="slide level2 smaller">
+<h2>Regular Expressions</h2>
+<p><strong>Regular expressions</strong> (<em>regexp</em> or <em>regex</em>): Character-Sequences specifying <em>match patterns</em>.</p>
+<ul>
+<li><p>Useful when strings contain unstructured or semi-structured data.</p></li>
+<li><p>When you first look at a regexp, you’ll think a cat walked across your keyboard, but as your understanding improves they will start to make sense. (Or you ask an AI chatbot to give you what you need 🙂)</p></li>
+</ul>
+<p><strong>Guess what this regexp’s are to match?</strong></p>
+<p><code>"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"</code><br>
+<code>"^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"</code><br>
+<code>"^[[:alnum:].-_]+@[[:alnum:].-]+$"</code></p>
+<div>
+<div id="webr-2" class="exercise-cell">
+
+</div>
+<script type="webr-2-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIn0=
+</script>
+</div>
+<div class="fragment">
+<p>Email addresses! However, this is not the perfect solution. Dig deeper: Read the discussion and see the example in <a href="https://stackoverflow.com/questions/201323/how-can-i-validate-an-email-address-using-a-regular-expression">How can I validate an email address using a regular expression?</a> at stackoverflow.</p>
+</div>
+</section></section>
+<section>
+<section id="special-values-for-no-data" class="title-slide slide level1 center">
+<h1>Special Values for “No Data”</h1>
+
+</section>
+<section id="special-values" class="slide level2 smaller">
+<h2>Special values</h2>
+<p>You should know the differences of these <em>special values</em>:</p>
+<ul>
+<li><code>NA</code>: Not available (string, number, or whatever vector entry)</li>
+<li><code>NULL</code>: Null object, the undefined object, e.g.&nbsp;an empty list or an empty list element</li>
+<li><code>NaN</code>: For numbers: Meaning “Not a Number” (when math cannot solve what you want)</li>
+<li><code>Inf</code>: For numbers: Positive infinity</li>
+<li><code>-Inf</code>: For numbers: Negative infinity</li>
+</ul>
+<p>Check some math:</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] Inf</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="sc">-</span><span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -Inf</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="dv">0</span> <span class="sc">/</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NaN</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] Inf</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span> <span class="sc">-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NaN</code></pre>
+</div>
+</div></div>
+</section>
+<section id="nas" class="slide level2 smaller">
+<h2><code>NA</code>s</h2>
+<p><code>NaN</code> is “not a number”, but <code>NA</code> stands for genuinely unknown values.<br>
+It can also appear in vectors of <code>character</code> and <code>logical</code> data types.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="cn">NA</span>)</span>
+<span id="cb47-2"><a></a><span class="fu">mean</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">summary</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   1.00    1.75    2.50    2.50    3.25    4.00       1 </code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>The type of <code>NA</code> is logical.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">typeof</span>(<span class="cn">NA</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "logical"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">typeof</span>(<span class="cn">NaN</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "double"</code></pre>
+</div>
+</div>
+<p>Does it make sense? Let us look at <code>NA</code>’s in logical operations.</p>
+</div>
+</section>
+<section id="nas-in-logical-operations" class="slide level2">
+<h2><code>NA</code>s in logical operations</h2>
+<p><code>NA</code> can be TRUE or FALSE.</p>
+<p>Usually operations including <code>NA</code> results again in <code>NA</code>, but some not!</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a><span class="cn">NA</span> <span class="sc">&amp;</span> <span class="cn">TRUE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="cn">NA</span> <span class="sc">|</span> <span class="cn">TRUE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="cn">NA</span> <span class="sc">&amp;</span> <span class="cn">FALSE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="cn">NA</span> <span class="sc">|</span> <span class="cn">FALSE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div></div>
+<p>Understanding logical operations is important!</p>
+</section>
+<section id="null-is-the-null-object" class="slide level2 smaller">
+<h2><code>NULL</code> is the null object</h2>
+<ul>
+<li>used to represent lists with zero length</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb65-2"><a></a><span class="fu">attributes</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+</div>
+<ul>
+<li>used as a placeholder for missing values in lists and dataframes</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>L <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>)</span>
+<span id="cb67-2"><a></a>L[[<span class="dv">3</span>]] <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb67-3"><a></a>L</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$a
+[1] 1
+
+[[2]]
+NULL
+
+[[3]]
+[1] 5</code></pre>
+</div>
+</div>
+</section>
+<section id="missing-values" class="slide level2" data-background-color="khaki">
+<h2>Missing values</h2>
+<p>Many datasets from the real world have <em>some</em> or <em>many</em> <code>NA</code>s in <em>some</em> or <em>many</em> of the variables. These are called <strong>missing values</strong>.</p>
+<p>What to do with missing values?</p>
+<div class="fragment">
+<ul>
+<li>Usually, there is no perfect solution for this!</li>
+<li>The relevant question is: <strong>Why is the data missing?</strong><br>
+
+<ul>
+<li>You can not answer it purely by analyzing the data. You need to think about the <strong>data-generating process</strong>.</li>
+</ul></li>
+<li>Three ways:
+<ul>
+<li><strong>Impute</strong> values. There are many concepts, but all rely on assumptions and have consequences which you have to be aware of.</li>
+<li><strong>Drop</strong> the <strong>cases</strong> with <code>NA</code>s. (e.g.&nbsp;<code>na.omit()</code>)</li>
+<li><strong>Drop</strong> the variables with <code>NA</code>s.</li>
+</ul></li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="relational-data" class="title-slide slide level1 center">
+<h1>Relational Data</h1>
+
+</section>
+<section id="working-with-more-dataframes" class="slide level2 smaller" data-background-color="khaki">
+<h2>Working with more dataframes</h2>
+<ul>
+<li>Data can be distributed in several dataframes which have relations which each other.</li>
+<li>For example, they share variables as the five dataframes in <code>nycflights13</code>.</li>
+</ul>
+<p><img data-src="img/nycflights13_data.png" height="300"></p>
+
+<aside><div>
+<p>Often variables in different dataframe have the same name, but that need not be the case! See the variable <code>faa</code> in <code>airports</code> matches <code>origin</code> and <code>dest</code> in <code>flights</code>.</p>
+</div></aside></section>
+<section id="networks-special-relational-data" class="slide level2" data-background-color="khaki">
+<h2>Networks: Special relational data</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Most datasets describe <strong>attributes</strong> (variables) between <strong>individual units</strong>.</li>
+<li>Network data <em>additionally</em> describes <strong>relations</strong> between individual units.</li>
+<li>In the example we have individual <em>pupils</em> and relations explaining a wish to sit besides another pupil.</li>
+</ul>
+<p>Dealing with Network Data and Models is a whole scientifi field: Network Science.</p>
+</div><div class="column">
+<p><img data-src="img/network_school.png"></p>
+</div></div>
+
+<aside><div>
+<p>Visualization from <a href="http://www.martingrandjean.ch/social-network-analysis-visualization-morenos-sociograms-revisited/" class="uri">http://www.martingrandjean.ch/social-network-analysis-visualization-morenos-sociograms-revisited/</a></p>
+</div></aside></section></section>
+<section>
+<section id="joining-data-to-dataframes" class="title-slide slide level1 center">
+<h1>Joining data to dataframes</h1>
+
+</section>
+<section id="data-women-in-science" class="slide level2 smaller">
+<h2>Data: Women in science</h2>
+<p>10 women in science who changed the world:</p>
+<p>Ada Lovelace, Marie Curie, Janaki Ammal, Chien-Shiung Wu, Katherine Johnson, Rosalind Franklin, Vera Rubin, Gladys West, Flossie Wong-Staal, Jennifer Doudna</p>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Professions</a></li><li><a href="#tabset-1-2">Dates</a></li><li><a href="#tabset-1-3">Works</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a>professions <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"professions.csv"</span>)</span>
+<span id="cb69-2"><a></a>professions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   name               profession                        
+   &lt;chr&gt;              &lt;chr&gt;                             
+ 1 Ada Lovelace       Mathematician                     
+ 2 Marie Curie        Physicist and Chemist             
+ 3 Janaki Ammal       Botanist                          
+ 4 Chien-Shiung Wu    Physicist                         
+ 5 Katherine Johnson  Mathematician                     
+ 6 Rosalind Franklin  Chemist                           
+ 7 Vera Rubin         Astronomer                        
+ 8 Gladys West        Mathematician                     
+ 9 Flossie Wong-Staal Virologist and Molecular Biologist
+10 Jennifer Doudna    Biochemist                        </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>dates <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dates.csv"</span>)</span>
+<span id="cb71-2"><a></a>dates</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 3
+  name               birth_year death_year
+  &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt;
+1 Janaki Ammal             1897       1984
+2 Chien-Shiung Wu          1912       1997
+3 Katherine Johnson        1918       2020
+4 Rosalind Franklin        1920       1958
+5 Vera Rubin               1928       2016
+6 Gladys West              1930         NA
+7 Flossie Wong-Staal       1947         NA
+8 Jennifer Doudna          1964         NA</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-3">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a>works <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"works.csv"</span>)</span>
+<span id="cb73-2"><a></a>works</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 2
+  name               known_for                                                  
+  &lt;chr&gt;              &lt;chr&gt;                                                      
+1 Ada Lovelace       first computer algorithm                                   
+2 Marie Curie        theory of radioactivity,  discovery of elements polonium a…
+3 Janaki Ammal       hybrid species, biodiversity protection                    
+4 Chien-Shiung Wu    confim and refine theory of radioactive beta decy, Wu expe…
+5 Katherine Johnson  calculations of orbital mechanics critical to sending the …
+6 Vera Rubin         existence of dark matter                                   
+7 Gladys West        mathematical modeling of the shape of the Earth which serv…
+8 Flossie Wong-Staal first scientist to clone HIV and create a map of its genes…
+9 Jennifer Doudna    one of the primary developers of CRISPR, a ground-breaking…</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<aside><div>
+<p>Source: <a href="https://www.discovermagazine.com/the-sciences/meet-10-women-in-science-who-changed-the-world">Discover Magazine</a>. The data can be downloaded: <a href="https://raw.githubusercontent.com/rstudio-education/datascience-box/main/course-materials/_slides/u2-d08-multi-df/data/scientists/professions.csv">professions.csv</a>, <a href="https://raw.githubusercontent.com/rstudio-education/datascience-box/main/course-materials/_slides/u2-d08-multi-df/data/scientists/dates.csv">dates.csv</a>, <a href="https://raw.githubusercontent.com/rstudio-education/datascience-box/main/course-materials/_slides/u2-d08-multi-df/data/scientists/works.csv">works.csv</a></p>
+</div></aside></section>
+<section id="we-want-this-dataframe" class="slide level2 smaller">
+<h2>We want this dataframe</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 5
+   name               profession                 birth_year death_year known_for
+   &lt;chr&gt;              &lt;chr&gt;                           &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;    
+ 1 Ada Lovelace       Mathematician                      NA         NA first co…
+ 2 Marie Curie        Physicist and Chemist              NA         NA theory o…
+ 3 Janaki Ammal       Botanist                         1897       1984 hybrid s…
+ 4 Chien-Shiung Wu    Physicist                        1912       1997 confim a…
+ 5 Katherine Johnson  Mathematician                    1918       2020 calculat…
+ 6 Rosalind Franklin  Chemist                          1920       1958 &lt;NA&gt;     
+ 7 Vera Rubin         Astronomer                       1928       2016 existenc…
+ 8 Gladys West        Mathematician                    1930         NA mathemat…
+ 9 Flossie Wong-Staal Virologist and Molecular …       1947         NA first sc…
+10 Jennifer Doudna    Biochemist                       1964         NA one of t…</code></pre>
+</div>
+</div>
+</section>
+<section id="joining-dataframes" class="slide level2 smaller">
+<h2>Joining dataframes</h2>
+<p><code>something_join(x, y)</code><sup>1</sup> for dataframes <code>x</code> and <code>y</code> which have a <em>relation</em></p>
+<ul>
+<li><code>left_join()</code>: all rows from x must remain</li>
+<li><code>right_join()</code>: all rows from y must remain</li>
+<li><code>full_join()</code>: all rows from both x and y must remain</li>
+<li><code>inner_join()</code>: all rows from x where there are matching values in y remain</li>
+<li>… (more exist see <a href="https://rstudio.github.io/cheatsheets/data-transformation.pdf"><code>dplyr</code> cheatsheet</a>)</li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>The notion <em>join</em> comes from SQL database. In other data manipulation frameworks joining is called <em>merging</em>.</p></li></ol></aside></section>
+<section id="simple-setup-for-x-and-y" class="slide level2 smaller">
+<h2>Simple setup for <code>x</code> and <code>y</code></h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a>x <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb76-2"><a></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb76-3"><a></a>  <span class="at">value_x =</span> <span class="fu">c</span>(<span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>)</span>
+<span id="cb76-4"><a></a>)</span>
+<span id="cb76-5"><a></a>y <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb76-6"><a></a>  <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>),</span>
+<span id="cb76-7"><a></a>  <span class="at">value_y =</span> <span class="fu">c</span>(<span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y4"</span>)</span>
+<span id="cb76-8"><a></a>)</span>
+<span id="cb76-9"><a></a>x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+     id value_x
+  &lt;dbl&gt; &lt;chr&gt;  
+1     1 x1     
+2     2 x2     
+3     3 x3     </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>y</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+     id value_y
+  &lt;dbl&gt; &lt;chr&gt;  
+1     1 y1     
+2     2 y2     
+3     4 y4     </code></pre>
+</div>
+</div>
+</section>
+<section id="left_join" class="slide level2">
+<h2><code>left_join()</code></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="img/left-join.gif"></p>
+</div><div class="column">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">left_join</span>(x, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+     id value_x value_y
+  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+1     1 x1      y1     
+2     2 x2      y2     
+3     3 x3      &lt;NA&gt;   </code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="right_join" class="slide level2">
+<h2><code>right_join()</code></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="img/right-join.gif"></p>
+</div><div class="column">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a><span class="fu">right_join</span>(x, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+     id value_x value_y
+  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+1     1 x1      y1     
+2     2 x2      y2     
+3     4 &lt;NA&gt;    y4     </code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="full_join" class="slide level2">
+<h2><code>full_join()</code></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="img/full-join.gif"></p>
+</div><div class="column">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a><span class="fu">full_join</span>(x, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+     id value_x value_y
+  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+1     1 x1      y1     
+2     2 x2      y2     
+3     3 x3      &lt;NA&gt;   
+4     4 &lt;NA&gt;    y4     </code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="inner_join" class="slide level2">
+<h2><code>inner_join()</code></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="img/inner-join.gif"></p>
+</div><div class="column">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="fu">inner_join</span>(x, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+     id value_x value_y
+  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+1     1 x1      y1     
+2     2 x2      y2     </code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="women-in-science" class="slide level2 smaller">
+<h2>Women in science</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1"><code>left_join()</code></a></li><li><a href="#tabset-2-2"><code>right_join</code></a></li><li><a href="#tabset-2-3"><code>full_join</code></a></li><li><a href="#tabset-2-4"><code>inner_join</code></a></li><li><a href="#tabset-2-5">Final</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a>professions <span class="sc">|&gt;</span> <span class="fu">left_join</span>(works)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   name               profession                         known_for              
+   &lt;chr&gt;              &lt;chr&gt;                              &lt;chr&gt;                  
+ 1 Ada Lovelace       Mathematician                      first computer algorit…
+ 2 Marie Curie        Physicist and Chemist              theory of radioactivit…
+ 3 Janaki Ammal       Botanist                           hybrid species, biodiv…
+ 4 Chien-Shiung Wu    Physicist                          confim and refine theo…
+ 5 Katherine Johnson  Mathematician                      calculations of orbita…
+ 6 Rosalind Franklin  Chemist                            &lt;NA&gt;                   
+ 7 Vera Rubin         Astronomer                         existence of dark matt…
+ 8 Gladys West        Mathematician                      mathematical modeling …
+ 9 Flossie Wong-Staal Virologist and Molecular Biologist first scientist to clo…
+10 Jennifer Doudna    Biochemist                         one of the primary dev…</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-2">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>professions <span class="sc">|&gt;</span> <span class="fu">right_join</span>(works)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 3
+  name               profession                         known_for               
+  &lt;chr&gt;              &lt;chr&gt;                              &lt;chr&gt;                   
+1 Ada Lovelace       Mathematician                      first computer algorithm
+2 Marie Curie        Physicist and Chemist              theory of radioactivity…
+3 Janaki Ammal       Botanist                           hybrid species, biodive…
+4 Chien-Shiung Wu    Physicist                          confim and refine theor…
+5 Katherine Johnson  Mathematician                      calculations of orbital…
+6 Vera Rubin         Astronomer                         existence of dark matter
+7 Gladys West        Mathematician                      mathematical modeling o…
+8 Flossie Wong-Staal Virologist and Molecular Biologist first scientist to clon…
+9 Jennifer Doudna    Biochemist                         one of the primary deve…</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-3">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>dates <span class="sc">|&gt;</span> <span class="fu">full_join</span>(works)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+   name               birth_year death_year known_for                           
+   &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;                               
+ 1 Janaki Ammal             1897       1984 hybrid species, biodiversity protec…
+ 2 Chien-Shiung Wu          1912       1997 confim and refine theory of radioac…
+ 3 Katherine Johnson        1918       2020 calculations of orbital mechanics c…
+ 4 Rosalind Franklin        1920       1958 &lt;NA&gt;                                
+ 5 Vera Rubin               1928       2016 existence of dark matter            
+ 6 Gladys West              1930         NA mathematical modeling of the shape …
+ 7 Flossie Wong-Staal       1947         NA first scientist to clone HIV and cr…
+ 8 Jennifer Doudna          1964         NA one of the primary developers of CR…
+ 9 Ada Lovelace               NA         NA first computer algorithm            
+10 Marie Curie                NA         NA theory of radioactivity,  discovery…</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-4">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a>dates <span class="sc">|&gt;</span> <span class="fu">inner_join</span>(works)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+  name               birth_year death_year known_for                            
+  &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;                                
+1 Janaki Ammal             1897       1984 hybrid species, biodiversity protect…
+2 Chien-Shiung Wu          1912       1997 confim and refine theory of radioact…
+3 Katherine Johnson        1918       2020 calculations of orbital mechanics cr…
+4 Vera Rubin               1928       2016 existence of dark matter             
+5 Gladys West              1930         NA mathematical modeling of the shape o…
+6 Flossie Wong-Staal       1947         NA first scientist to clone HIV and cre…
+7 Jennifer Doudna          1964         NA one of the primary developers of CRI…</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-5">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a>professions <span class="sc">|&gt;</span> <span class="fu">left_join</span>(dates) <span class="sc">|&gt;</span> <span class="fu">left_join</span>(works)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 5
+   name               profession                 birth_year death_year known_for
+   &lt;chr&gt;              &lt;chr&gt;                           &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;    
+ 1 Ada Lovelace       Mathematician                      NA         NA first co…
+ 2 Marie Curie        Physicist and Chemist              NA         NA theory o…
+ 3 Janaki Ammal       Botanist                         1897       1984 hybrid s…
+ 4 Chien-Shiung Wu    Physicist                        1912       1997 confim a…
+ 5 Katherine Johnson  Mathematician                    1918       2020 calculat…
+ 6 Rosalind Franklin  Chemist                          1920       1958 &lt;NA&gt;     
+ 7 Vera Rubin         Astronomer                       1928       2016 existenc…
+ 8 Gladys West        Mathematician                    1930         NA mathemat…
+ 9 Flossie Wong-Staal Virologist and Molecular …       1947         NA first sc…
+10 Jennifer Doudna    Biochemist                       1964         NA one of t…</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="keys" class="slide level2 smaller">
+<h2>Keys</h2>
+<ul>
+<li>A <strong>key</strong> is a variable or a set of variables which uniquely identifies observations</li>
+<li>What was the key in the dataframe of women in science? <span class="fragment"><code>name</code></span></li>
+</ul>
+<div class="fragment">
+<p>Switching back to <code>nycflights13</code> as example</p>
+<ul>
+<li>In simple cases, a single variable is sufficient to identify an observation, e.g.&nbsp;each plane in <code>planes</code> is identified by <code>tailnum</code>.</li>
+<li>Sometimes, multiple variables are needed; e.g.&nbsp;to identify an observation in <code>weather</code> you need five variables: <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, and <code>origin</code></li>
+</ul>
+</div>
+</section>
+<section id="how-to-check-if-a-variable-is-a-key" class="slide level2 smaller scrollable">
+<h2>How to check if a variable is a key?</h2>
+<p>Counting observation and filter those more than one</p>
+<div>
+<div id="webr-3" class="exercise-cell">
+
+</div>
+<script type="webr-3-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoicGxhbmVzIHw+IGNvdW50KHRhaWxudW0pIn0=
+</script>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a>planes <span class="sc">|&gt;</span> <span class="fu">count</span>(tailnum) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 2
+# ℹ 2 variables: tailnum &lt;chr&gt;, n &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a></a>weather <span class="sc">|&gt;</span> <span class="fu">count</span>(year, month, day, hour, origin) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+   year month   day  hour origin     n
+  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;int&gt;
+1  2013    11     3     1 EWR        2
+2  2013    11     3     1 JFK        2
+3  2013    11     3     1 LGA        2</code></pre>
+</div>
+</div>
+<p>OK, here 3 observations are twice, one for each airport. Probably this is related to <a href="https://en.wikipedia.org/wiki/Daylight_saving_time">Daylight saving time</a> in the US. In Fall clocks are turned back 1 hour. So this hour appears twice.</p>
+</div>
+<div class="fragment">
+<p>Example: Without hour it is not a key</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a></a>weather <span class="sc">|&gt;</span> <span class="fu">count</span>(year, month, day, origin) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,092 × 5
+    year month   day origin     n
+   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;int&gt;
+ 1  2013     1     1 EWR       22
+ 2  2013     1     1 JFK       22
+ 3  2013     1     1 LGA       23
+ 4  2013     1     2 EWR       24
+ 5  2013     1     2 JFK       24
+ 6  2013     1     2 LGA       24
+ 7  2013     1     3 EWR       24
+ 8  2013     1     3 JFK       24
+ 9  2013     1     3 LGA       24
+10  2013     1     4 EWR       24
+# ℹ 1,082 more rows</code></pre>
+</div>
+</div>
+<p>Why do we have only 22 and 23 on day 1 of month 1? No idea. Dig deeper yourself!</p>
+</div>
+</section>
+<section id="primary-and-foreign-keys" class="slide level2 smaller">
+<h2>Primary and foreign keys</h2>
+<ul>
+<li><p>A <strong>primary key</strong> uniquely identifies an observation in its own table. E.g, <code>planes$tailnum</code> in <code>planes</code>.</p></li>
+<li><p>A <strong>foreign key</strong> uniquely identifies an observation in another dataframe E.g. <code>flights$tailnum</code> is a foreign key in <code>flights</code> because it matches each flight to a unique plane in <code>planes</code>.</p></li>
+<li><p>A primary key and a foreign key form a relation.</p>
+<ul>
+<li>Often a <em>1-to-many</em> relation. Each plane has many flights.
+<ul>
+<li>Implication: Joining <code>flights</code> with <code>planes</code> duplicates the rows of <code>planes</code> for each flight of that plane.</li>
+</ul></li>
+</ul></li>
+<li><p>Relations can also be many-to-many. Airlines can fly to many airports; airport can host many airplanes.</p></li>
+</ul>
+</section>
+<section id="joining-when-key-names-differ" class="slide level2 smaller scrollable">
+<h2>Joining when key names differ?</h2>
+<p>We have to specify the key relation with a named vector in the <code>by</code> argument.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a></a><span class="fu">dim</span>(flights)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 336776     19</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a></a>flights <span class="sc">|&gt;</span> <span class="fu">left_join</span>(airports, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"dest"</span> <span class="ot">=</span> <span class="st">"faa"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 26
+    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+ 1  2013     1     1      517            515         2      830            819
+ 2  2013     1     1      533            529         4      850            830
+ 3  2013     1     1      542            540         2      923            850
+ 4  2013     1     1      544            545        -1     1004           1022
+ 5  2013     1     1      554            600        -6      812            837
+ 6  2013     1     1      554            558        -4      740            728
+ 7  2013     1     1      555            600        -5      913            854
+ 8  2013     1     1      557            600        -3      709            723
+ 9  2013     1     1      557            600        -3      838            846
+10  2013     1     1      558            600        -2      753            745
+# ℹ 336,766 more rows
+# ℹ 18 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+#   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;, lat &lt;dbl&gt;,
+#   lon &lt;dbl&gt;, alt &lt;dbl&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>The alternative (new default) version is to use the <code>join_by</code> function using the comparison sign <code>==</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a>flights <span class="sc">|&gt;</span> <span class="fu">left_join</span>(airports, <span class="fu">join_by</span>(<span class="st">"dest"</span> <span class="sc">==</span> <span class="st">"faa"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 26
+    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+ 1  2013     1     1      517            515         2      830            819
+ 2  2013     1     1      533            529         4      850            830
+ 3  2013     1     1      542            540         2      923            850
+ 4  2013     1     1      544            545        -1     1004           1022
+ 5  2013     1     1      554            600        -6      812            837
+ 6  2013     1     1      554            558        -4      740            728
+ 7  2013     1     1      555            600        -5      913            854
+ 8  2013     1     1      557            600        -3      709            723
+ 9  2013     1     1      557            600        -3      838            846
+10  2013     1     1      558            600        -2      753            745
+# ℹ 336,766 more rows
+# ℹ 18 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+#   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;, lat &lt;dbl&gt;,
+#   lon &lt;dbl&gt;, alt &lt;dbl&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p><strong>Why does the number of rows stays the same after joining?</strong></p>
+<div class="fragment">
+<p><code>faa</code> is a primary key in <code>airports</code>. It is matched with <code>dest</code> as the foreign key in <code>flights</code>.</p>
+</div>
+</section></section>
+<section>
+<section id="math-sets-and-vectors" class="title-slide slide level1 center">
+<h1>Math: Sets and vectors</h1>
+
+</section>
+<section id="definition-sets-and-vectors" class="slide level2" data-background-color="aquamarine">
+<h2>Definition: Sets and vectors</h2>
+<p>A <strong>set</strong> is mathematical model for the <em>unordered</em> collection of <em>different</em> things (<strong>elements</strong>).</p>
+<p>Examples</p>
+<ul>
+<li><span class="math inline">\(\{3, \text{Hi}, 😀, 🖖 \}\)</span></li>
+<li><span class="math inline">\(\{1,3,5\}\)</span></li>
+<li>The natural numbers <span class="math inline">\(\mathbb{N} = \{1, 2, 3, \dots\}\)</span> (infinite!)</li>
+<li><span class="math inline">\(\{\mathtt{"EWR"}, \mathtt{"LGA"}, \mathtt{"JFK"}\}\)</span><br>
+these are <code>origin</code> airports in <code>flights</code></li>
+</ul>
+</section>
+<section id="math-sets-and-vectors-1" class="slide level2" data-background-color="aquamarine">
+<h2>Math: Sets and vectors</h2>
+<p>A <strong>vector</strong> is an ordered collection of things (<strong>components</strong>) of the same type.</p>
+<p>In a set, each thing can only be once and the order does not matter!</p>
+<div class="fragment">
+<p><span class="math inline">\(\{1,3,5\} = \{3,5,1\} = \{1,1,1,3,5,5\}\)</span></p>
+<p>For vectors:</p>
+<p><span class="math inline">\([1\ 3\ 5] \neq [3\ 5\ 1]\)</span> because we compare component-wise, so we cannot even compare with those with the vector <span class="math inline">\([1\ 1\ 1\ 3\ 5\ 5]\)</span></p>
+</div>
+</section>
+<section id="math-set-operations" class="slide level2" data-background-color="aquamarine">
+<h2>Math: Set operations</h2>
+<p>Sets <span class="math inline">\(A = \{🐺, 🦊, 🐶\}\)</span> and <span class="math inline">\(B = \{🐶, 🐷, 🐹\}\)</span>, <span class="math inline">\(C = \{🐶, 🐷\}\)</span>:</p>
+<ul>
+<li class="fragment">Set <strong>union</strong> <span class="math inline">\(A \cup B\)</span> = {🐺, 🦊, 🐶, 🐷, 🐹}<br>
+<span class="math inline">\(x \in A \cup B\)</span> when <span class="math inline">\(x \in A\)</span> <code>|</code> (or) <span class="math inline">\(x\in B\)</span></li>
+<li class="fragment">Set <strong>intersection</strong> <span class="math inline">\(A \cap B\)</span> = {🐶}<br>
+<span class="math inline">\(x \in A \cap B\)</span> when <span class="math inline">\(x \in A\)</span> <code>&amp;</code> (and) <span class="math inline">\(x\in B\)</span></li>
+<li class="fragment">Set <strong>difference</strong> <span class="math inline">\(A \setminus B = \{🐺, 🦊\}\)</span>, <span class="math inline">\(B \setminus A\)</span> = {🐷, 🐹}</li>
+<li class="fragment"><strong>Subset</strong>: <span class="math inline">\(C \subset B\)</span> but <span class="math inline">\(C \not\subset A\)</span></li>
+</ul>
+<div class="fragment">
+<p>See the analogy of set operations and logical operations.</p>
+</div>
+</section>
+<section id="set-operations-in-r" class="slide level2 smaller">
+<h2>Set operations in R</h2>
+<p><code>unique</code> shows the set of elements in a vector</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a><span class="fu">unique</span>(flights<span class="sc">$</span>origin)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "EWR" "LGA" "JFK"</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p><code>setequal</code> tests for set equality</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a><span class="fu">setequal</span>(<span class="fu">c</span>(<span class="st">"EWR"</span>, <span class="st">"LGA"</span>, <span class="st">"JFK"</span>), <span class="fu">c</span>(<span class="st">"EWR"</span>, <span class="st">"EWR"</span>, <span class="st">"LGA"</span>, <span class="st">"JFK"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><code>union</code>, <code>intersect</code>, <code>setdiff</code> treat vectors as sets and operate as expected</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a></a><span class="fu">union</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4 5 6 7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a></a><span class="fu">intersect</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3 4 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a></a><span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2</code></pre>
+</div>
+</div>
+<p>Relations to <code>joins</code>: <code>full_join()</code> is like the <em>union</em>, <code>inner_join()</code> is like the <em>intersection</em>.</p>
+</div>
+</section>
+<section id="sets-take-away" class="slide level2">
+<h2>Sets: Take-away</h2>
+<ul>
+<li>Set operations are not a daily business in data science</li>
+<li>However, they are useful for data exploration!</li>
+<li>Knowing set operations is key to understand <strong>probability</strong>:
+<ul>
+<li>A <em>sample space</em> is the <em>set of all atomic events</em>.</li>
+<li>An <em>event</em> is a <em>subset of the sample space</em></li>
+<li>A <em>probability function</em> assigns probabilities to all events.</li>
+</ul></li>
+</ul>
+</section></section>
+<section>
+<section id="math-functions" class="title-slide slide level1 center">
+<h1>Math: Functions</h1>
+
+</section>
+<section id="functions-mathematically" class="slide level2" data-background-color="aquamarine">
+<h2>Functions mathematically</h2>
+<p>Consider two sets: The <em>domain</em> <span class="math inline">\(X\)</span> and the <em>codomain</em> <span class="math inline">\(Y\)</span>.</p>
+<p>A <em>function</em> <span class="math inline">\(f\)</span> assigns each element of <span class="math inline">\(X\)</span> to exactly one element of <span class="math inline">\(Y\)</span>.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>We write <span class="math inline">\(f : X \to  Y\)</span><br>
+<span style="color:blue;">“<span class="math inline">\(f\)</span> maps from <span class="math inline">\(X\)</span> to <span class="math inline">\(Y\)</span>”</span></p>
+<p>and <span class="math inline">\(x \mapsto f(x)\)</span><br>
+<span style="color:blue;">“<span class="math inline">\(x\)</span> maps to <span class="math inline">\(f(x)\)</span>”</span></p>
+<p>The yellow set is called the <em>image</em> of <span class="math inline">\(f\)</span>.</p>
+</div><div class="column">
+<p><img data-src="img/Domain_Codomain.svg"></p>
+</div></div>
+
+<aside><div>
+<p>Picture from wikipedia.</p>
+</div></aside></section>
+<section id="conventions-in-mathematical-text" class="slide level2 smaller" data-background-color="aquamarine">
+<h2>Conventions in mathematical text</h2>
+<ul>
+<li>Sets are denoted with capital letters.</li>
+<li>Their elements with (corresponding) small letters.</li>
+<li>Functions are often called <span class="math inline">\(f\)</span>, <span class="math inline">\(g\)</span>, or <span class="math inline">\(h\)</span>.</li>
+<li>Other terminology can be used!</li>
+</ul>
+<div class="fragment">
+<p><strong>Important in math</strong></p>
+<ul>
+<li>When you read math:<br>
+<em>Keep track of what objects are! What are functions, what are sets, what are numbers, …</em><sup>1</sup></li>
+<li>When you write math: <em>Define what objects are.</em></li>
+</ul>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>Watch: How to read math <a href="https://www.youtube.com/watch?v=Kp2bYWRQylk" class="uri">https://www.youtube.com/watch?v=Kp2bYWRQylk</a></p></li></ol></aside></section>
+<section id="is-this-a-mathematical-function" class="slide level2 smaller">
+<h2>Is this a mathematical function?</h2>
+<p><img data-src="img/function_lionfilter_input_Jan.jpeg" height="200"> <span class="math inline">\(\ \mapsto\ \)</span> <img data-src="img/function_lionfilter_Jan.jpg" height="200"></p>
+<p><em>Input</em> from <span class="math inline">\(X = \{\text{A picture where a face can be recognized}\}\)</span>.</p>
+<p><em>Function:</em> Upload input at <a href="https://funny.pho.to/lion/" class="uri">https://funny.pho.to/lion/</a> and download output.</p>
+<p><em>Output</em> from <span class="math inline">\(Y = \{\text{Set of pictures with a specific format.}\}\)</span></p>
+<div class="fragment">
+<p>Yes, it is a function. <strong>Important: Output is the same for the same input!</strong></p>
+</div>
+</section>
+<section id="is-this-a-mathematical-function-1" class="slide level2 smaller">
+<h2>Is this a mathematical function?</h2>
+<p><em>Input</em> a text snippet. <em>Function:</em> Enter text at <a href="https://www.craiyon.com" class="uri">https://www.craiyon.com</a>. <em>Output</em> a picture.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="img/craiyon-DataScienceConcepts.png" height="430"></p>
+</div><div class="column">
+<p>Other examples:</p>
+<ul>
+<li>“Nuclear explosion broccoli”</li>
+<li>“The Eye of Sauron reading a newspaper”</li>
+<li>“The legendary attack of Hamster Godzilla wearing a tiny Sombrero”</li>
+</ul>
+<p><img data-src="img/Nuclear exposion broccoli.png" height="150"> <img data-src="img/The Eye of Sauron reading a newspaper.png" height="150"> <img data-src="img/The legendary attack of Hamster Godzilla wearing a tiny Sombrero.png" height="150"></p>
+</div></div>
+<div class="fragment">
+<p>No, it is not a function. It has nine outcomes and these change when run again. Same for answers of LLMs to the same prompt.</p>
+</div>
+</section>
+<section id="graphs-of-functions" class="slide level2 smaller" data-background-color="aquamarine">
+<h2>Graphs of functions</h2>
+<ul>
+<li>A function is characterized by the set all possible pairs <span class="math inline">\((x,f(x))\)</span>.</li>
+<li>This is called its <em>graph</em>.</li>
+<li>When domain and codomain are real numbers then the graph can be shown in a <em>Cartesian coordinate system</em>. Example <span class="math inline">\(f(x) = x^3 - x^2\)</span></li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb120-2"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb120-3"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb120-4"><a></a>  <span class="fu">xlab</span>(<span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb120-5"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="W04_files/figure-revealjs/unnamed-chunk-52-1.png" width="960" class="r-stretch"></section></section>
+<section>
+<section id="important-functions" class="title-slide slide level1 center">
+<h1>Important Functions</h1>
+<p>… and how to explore them using <code>ggplot</code></p>
+</section>
+<section id="some-functions-f-mathbbr-to-mathbbr" class="slide level2 smaller" data-background-color="aquamarine">
+<h2>Some functions <span class="math inline">\(f: \mathbb{R} \to \mathbb{R}\)</span></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span class="math inline">\(f(x) = x\)</span> <em>identity function</em><br>
+<span style="color:orange;"><span class="math inline">\(f(x) = x^2\)</span> <em>square function</em></span><br>
+<span style="color:blue;"><span class="math inline">\(f(x) = \sqrt{x}\)</span> <em>square root function</em></span><br>
+<span style="color:red;"><span class="math inline">\(f(x) = e^x\)</span> <em>exponential function</em></span><br>
+<span style="color:green;"><span class="math inline">\(f(x) = \log(x)\)</span> <em>natural logarithm</em></span></p>
+<ul>
+<li>Square and square root function are <em>inverse</em> of each other. Exponential and natural logarithm, too.</li>
+</ul>
+<p><span class="math inline">\(\sqrt[2]{x}^2 = \sqrt[2]{x^2} = x\)</span>, <span class="math inline">\(\log(e^x) = e^{\log(x)} = x\)</span></p>
+<ul>
+<li>Identity function graph as mirror axis.</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb121-2"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x) <span class="sc">+</span></span>
+<span id="cb121-3"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">exp</span>(x), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb121-4"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">log</span>(x), <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb121-5"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">2</span>, <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb121-6"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">sqrt</span>(x), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb121-7"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb121-8"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb121-9"><a></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb121-10"><a></a>  <span class="fu">xlab</span>(<span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb121-11"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-53-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+
+<aside><div>
+<p><span class="math inline">\(e\)</span> is <em>Euler’s number</em> <span class="math inline">\(2.71828\dots\)</span>. The natural logarithm is also often called <span class="math inline">\(\ln\)</span>. The square root function is <span class="math inline">\(\mathbb{R}_{\geq 0} \to \mathbb{R}\)</span>, the logarithm <span class="math inline">\(\mathbb{R}_{&gt;0} \to \mathbb{R}\)</span>.</p>
+</div></aside></section>
+<section id="shifts-and-scales" class="slide level2 smaller scrollable" data-background-color="aquamarine">
+<h2>Shifts and scales</h2>
+<p>How can we shift, stretch, or shrink a graph vertically and horizontally?</p>
+<div class="fragment">
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1"><span class="math inline">\(y\)</span>-shift</a></li><li><a href="#tabset-3-2"><span class="math inline">\(x\)</span>-shift</a></li><li><a href="#tabset-3-3"><span class="math inline">\(y\)</span>-scale</a></li><li><a href="#tabset-3-4"><span class="math inline">\(x\)</span>-scale</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Add a constant to the function.</p>
+<p><span class="math inline">\(f(x) = x^3 - x^2 \leadsto\)</span></p>
+<p><span class="math inline">\(\quad f(x) = x^3 - x^2 + a\)</span></p>
+<p>For <span class="math inline">\(a =\)</span> <span style="color:red;">-2</span>, <span style="color:darkred;">-0.5</span>, <span style="color:darkblue;">0.5</span>, <span style="color:blue;">2</span></p>
+</div><div class="column">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb122-2"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb122-3"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb122-4"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> a[<span class="dv">2</span>], <span class="at">color =</span> <span class="st">"blue4"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb122-5"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> a[<span class="dv">3</span>], <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb122-6"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> a[<span class="dv">4</span>], <span class="at">color =</span> <span class="st">"red4"</span>) <span class="sc">+</span></span>
+<span id="cb122-7"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> a[<span class="dv">5</span>], <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb122-8"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb122-9"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb122-10"><a></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb122-11"><a></a>  <span class="fu">xlab</span>(<span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb122-12"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-54-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+<div id="tabset-3-2">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Subtract</strong> a constant from all <span class="math inline">\(x\)</span> within the function definition.</p>
+<p><span class="math inline">\(f(x) = x^3 - x^2 \leadsto\)</span></p>
+<p><span class="math inline">\(\quad f(x) = (x - a)^3 - (x - a)^2\)</span></p>
+<p>For <span class="math inline">\(a =\)</span> <span style="color:red;">-2</span>, <span style="color:darkred;">-0.5</span>, <span style="color:darkblue;">0.5</span>, <span style="color:blue;">2</span></p>
+<p><strong>Attention:</strong><br>
+Shifting <span class="math inline">\(a\)</span> units to the right needs subtracting <span class="math inline">\(a\)</span>!<br>
+You can think of the <em>coordinate system being shifted</em> in direction <span class="math inline">\(a\)</span> while the graph stays.</p>
+</div><div class="column">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb123-2"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb123-3"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb123-4"><a></a>  <span class="fu">geom_function</span>(</span>
+<span id="cb123-5"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) (x <span class="sc">-</span> a[<span class="dv">2</span>])<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x <span class="sc">-</span> a[<span class="dv">2</span>])<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb123-6"><a></a>    <span class="at">color =</span> <span class="st">"blue4"</span>,</span>
+<span id="cb123-7"><a></a>    <span class="at">size =</span> <span class="dv">2</span></span>
+<span id="cb123-8"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb123-9"><a></a>  <span class="fu">geom_function</span>(</span>
+<span id="cb123-10"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) (x <span class="sc">-</span> a[<span class="dv">3</span>])<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x <span class="sc">-</span> a[<span class="dv">3</span>])<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb123-11"><a></a>    <span class="at">color =</span> <span class="st">"blue"</span>,</span>
+<span id="cb123-12"><a></a>    <span class="at">size =</span> <span class="dv">2</span></span>
+<span id="cb123-13"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb123-14"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) (x <span class="sc">-</span> a[<span class="dv">4</span>])<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x <span class="sc">-</span> a[<span class="dv">4</span>])<span class="sc">^</span><span class="dv">2</span>, <span class="at">color =</span> <span class="st">"red4"</span>) <span class="sc">+</span></span>
+<span id="cb123-15"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) (x <span class="sc">-</span> a[<span class="dv">5</span>])<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x <span class="sc">-</span> a[<span class="dv">5</span>])<span class="sc">^</span><span class="dv">2</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb123-16"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb123-17"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb123-18"><a></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb123-19"><a></a>  <span class="fu">xlab</span>(<span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb123-20"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-55-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+<div id="tabset-3-3">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Multiply</strong> a constant to all <span class="math inline">\(x\)</span> within the function definition.</p>
+<p><span class="math inline">\(f(x) = x^3 - x^2 \leadsto\)</span></p>
+<p><span class="math inline">\(\quad f(x) = a(x^3 - x^2)\)</span></p>
+<p>For <span class="math inline">\(a =\)</span> <span style="color:red;">-2</span>, <span style="color:darkred;">-0.5</span>, <span style="color:darkblue;">0.5</span>, <span style="color:blue;">2</span></p>
+<p>Negative numbers flip the graph around the <span class="math inline">\(x\)</span>-axis.</p>
+</div><div class="column">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb124-2"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb124-3"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb124-4"><a></a>  <span class="fu">geom_function</span>(</span>
+<span id="cb124-5"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) a[<span class="dv">2</span>] <span class="sc">*</span> ((x)<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x)<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb124-6"><a></a>    <span class="at">color =</span> <span class="st">"blue4"</span>,</span>
+<span id="cb124-7"><a></a>    <span class="at">size =</span> <span class="dv">2</span></span>
+<span id="cb124-8"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb124-9"><a></a>  <span class="fu">geom_function</span>(</span>
+<span id="cb124-10"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) a[<span class="dv">3</span>] <span class="sc">*</span> ((x)<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x)<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb124-11"><a></a>    <span class="at">color =</span> <span class="st">"blue"</span>,</span>
+<span id="cb124-12"><a></a>    <span class="at">size =</span> <span class="dv">2</span></span>
+<span id="cb124-13"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb124-14"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) a[<span class="dv">4</span>] <span class="sc">*</span> ((x)<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x)<span class="sc">^</span><span class="dv">2</span>), <span class="at">color =</span> <span class="st">"red4"</span>) <span class="sc">+</span></span>
+<span id="cb124-15"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) a[<span class="dv">5</span>] <span class="sc">*</span> ((x)<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x)<span class="sc">^</span><span class="dv">2</span>), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb124-16"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb124-17"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb124-18"><a></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb124-19"><a></a>  <span class="fu">xlab</span>(<span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb124-20"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-56-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+<div id="tabset-3-4">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Divide</strong> all <span class="math inline">\(x\)</span> within the function definition by a constant.</p>
+<p><span class="math inline">\(f(x) = x^3 - x^2 \leadsto\)</span></p>
+<p><span class="math inline">\(\quad f(x) = (x/a)^3 - (x/a)^2\)</span></p>
+<p>For <span class="math inline">\(a =\)</span> <span style="color:red;">-2</span>, <span style="color:darkred;">-0.5</span>, <span style="color:darkblue;">0.5</span>, <span style="color:blue;">2</span></p>
+<p>Negative numbers flip the graph around the <span class="math inline">\(y\)</span>-axis.</p>
+<p><strong>Attention:</strong> Stretching needs a division by <span class="math inline">\(a\)</span>!<br>
+You can think of the <em>coordinate system being stretched</em> multiplicatively by <span class="math inline">\(a\)</span> while the graph stays.</p>
+</div><div class="column">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb125"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb125-2"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb125-3"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb125-4"><a></a>  <span class="fu">geom_function</span>(</span>
+<span id="cb125-5"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) (x <span class="sc">/</span> a[<span class="dv">2</span>])<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x <span class="sc">/</span> a[<span class="dv">2</span>])<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb125-6"><a></a>    <span class="at">color =</span> <span class="st">"blue4"</span>,</span>
+<span id="cb125-7"><a></a>    <span class="at">size =</span> <span class="dv">2</span></span>
+<span id="cb125-8"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb125-9"><a></a>  <span class="fu">geom_function</span>(</span>
+<span id="cb125-10"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) (x <span class="sc">/</span> a[<span class="dv">3</span>])<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x <span class="sc">/</span> a[<span class="dv">3</span>])<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb125-11"><a></a>    <span class="at">color =</span> <span class="st">"blue"</span>,</span>
+<span id="cb125-12"><a></a>    <span class="at">size =</span> <span class="dv">2</span></span>
+<span id="cb125-13"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb125-14"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) (x <span class="sc">/</span> a[<span class="dv">4</span>])<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x <span class="sc">/</span> a[<span class="dv">4</span>])<span class="sc">^</span><span class="dv">2</span>, <span class="at">color =</span> <span class="st">"red4"</span>) <span class="sc">+</span></span>
+<span id="cb125-15"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) (x <span class="sc">/</span> a[<span class="dv">5</span>])<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> (x <span class="sc">/</span> a[<span class="dv">5</span>])<span class="sc">^</span><span class="dv">2</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb125-16"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb125-17"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb125-18"><a></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb125-19"><a></a>  <span class="fu">xlab</span>(<span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb125-20"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-57-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="math-polynomials-and-exponentials" class="slide level2 smaller" data-background-color="aquamarine">
+<h2>Math: Polynomials and exponentials</h2>
+<p>A <em>polynomial</em> is a function which is composed of (many) addends of the form <span class="math inline">\(ax^n\)</span> for different values of <span class="math inline">\(a\)</span> and <span class="math inline">\(n\)</span>.</p>
+<p>In an <em>exponential</em> the <span class="math inline">\(x\)</span> appears in the exponent. <span class="math inline">\(f(x) = x^2\)</span> vs.&nbsp;<span style="color:red;"><span class="math inline">\(f(x) = 2^x\)</span></span></p>
+<div class="columns">
+<div class="column">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb126-2"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb126-3"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="dv">2</span><span class="sc">^</span>x <span class="sc">-</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb126-4"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.5</span>)) <span class="sc">+</span></span>
+<span id="cb126-5"><a></a>  <span class="fu">xlab</span>(<span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb126-6"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-58-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span style="font-size: 65%;">Note: We use <span style="color:red;"><span class="math inline">\(f(x) = 2^x - 1\)</span></span> to have both functions start at (0,0).</span></p>
+</div><div class="column fragment">
+<p>Same graph but for a larger range of <span class="math inline">\(x\)</span>:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb127"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb127-2"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb127-3"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="dv">2</span><span class="sc">^</span>x <span class="sc">-</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb127-4"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb127-5"><a></a>  <span class="fu">xlab</span>(<span class="st">"x"</span>) <span class="sc">+</span></span>
+<span id="cb127-6"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-59-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div class="fragment">
+<p><strong>For <span class="math inline">\(x\to\infty\)</span>, any exponential will finally “overtake” any polynomial.</strong></p>
+</div>
+</section>
+<section id="max-and-operatornameargmax" class="slide level2" data-background-color="aquamarine">
+<h2><span class="math inline">\(\max\)</span> and <span class="math inline">\(\operatorname{argmax}\)</span></h2>
+<div class="columns">
+<div class="column">
+<p><span class="math inline">\(f(x) = -x^4 + x^2 + 0.05x\)</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb128"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a></a>fun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="sc">-</span>x<span class="sc">^</span><span class="dv">4</span> <span class="sc">+</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> x</span>
+<span id="cb128-2"><a></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>), <span class="at">y =</span> <span class="fu">fun</span>(x))</span>
+<span id="cb128-3"><a></a>df <span class="sc">|&gt;</span></span>
+<span id="cb128-4"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb128-5"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb128-6"><a></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">max</span>(df<span class="sc">$</span>y), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb128-7"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> df<span class="sc">$</span>x[<span class="fu">which.max</span>(df<span class="sc">$</span>y)], <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb128-8"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-60-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column fragment">
+<p>The domain of <span class="math inline">\(x\)</span> is the interval <span class="math inline">\([-1,+1]\)</span>.</p>
+<p><span class="math-red"><span class="math inline">\(\max\)</span></span> reports the maximal number of a <span class="math inline">\(f(x)\)</span> given the domain of <span class="math inline">\(x\)</span></p>
+<p><span class="math inline">\(\max\limits_{x\in[-1,+1]} f(x) = 0.2849\)</span></p>
+<p><span class="math-blue"><span class="math inline">\(\operatorname*{argmax}\)</span></span> reports the value of <span class="math inline">\(x\)</span> from its domain where <span class="math inline">\(f(x)\)</span> achieves its maximal value</p>
+<p><span class="math inline">\(\operatorname*{argmax}\limits_{x\in[-1,1]} f(x) = 0.7\)</span></p>
+</div></div>
+<div class="fragment">
+<ul>
+<li>Analog concepts for the minimum <span class="math inline">\(\min\)</span></li>
+<li>Warning: The result for <span class="math inline">\(\operatorname*{argmax}\)</span> is not mathematically precise because computationally we only have <span class="math inline">\(x\)</span>-values in steps of 0.05.</li>
+</ul>
+</div>
+</section>
+<section id="computational-realization" class="slide level2">
+<h2>Computational realization</h2>
+<p>Recall vector creation functions</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb129"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb131"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a></a><span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">to =</span> <span class="fl">1.5</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] -0.5 -0.4 -0.3 -0.2 -0.1  0.0  0.1  0.2  0.3  0.4  0.5  0.6  0.7  0.8  0.9
+[16]  1.0  1.1  1.2  1.3  1.4  1.5</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a></a><span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667
+ [8] 0.7777778 0.8888889 1.0000000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a></a><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">times =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 1 2 3 1 2 3</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb137"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a></a><span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 1 1 2 2 2 3 3 3</code></pre>
+</div>
+</div>
+</section>
+<section id="computational-realization-1" class="slide level2 scrollable">
+<h2>Computational realization</h2>
+<p>Back to our example</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb139"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb139-2"><a></a>x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] -1.00 -0.95 -0.90 -0.85 -0.80 -0.75 -0.70 -0.65 -0.60 -0.55 -0.50 -0.45
+[13] -0.40 -0.35 -0.30 -0.25 -0.20 -0.15 -0.10 -0.05  0.00  0.05  0.10  0.15
+[25]  0.20  0.25  0.30  0.35  0.40  0.45  0.50  0.55  0.60  0.65  0.70  0.75
+[37]  0.80  0.85  0.90  0.95  1.00</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb141"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a></a>y <span class="ot">&lt;-</span> <span class="sc">-</span>x<span class="sc">^</span><span class="dv">4</span> <span class="sc">+</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> x</span>
+<span id="cb141-2"><a></a>y</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] -0.05000000  0.04049375  0.10890000  0.15799375  0.19040000  0.20859375
+ [7]  0.21490000  0.21149375  0.20040000  0.18349375  0.16250000  0.13899375
+[13]  0.11440000  0.08999375  0.06690000  0.04609375  0.02840000  0.01449375
+[19]  0.00490000 -0.00000625  0.00000000  0.00499375  0.01490000  0.02949375
+[25]  0.04840000  0.07109375  0.09690000  0.12499375  0.15440000  0.18399375
+[31]  0.21250000  0.23849375  0.26040000  0.27649375  0.28490000  0.28359375
+[37]  0.27040000  0.24299375  0.19890000  0.13549375  0.05000000</code></pre>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb143"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a></a><span class="fu">max</span>(y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2849</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>Logical vector and <code>which</code> (gives us the index of <code>TRUE</code> in the logical vector)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a></a>y <span class="sc">==</span> <span class="fu">max</span>(y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[13] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[25] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+[37] FALSE FALSE FALSE FALSE FALSE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb147"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a></a><span class="fu">which</span>(y <span class="sc">==</span> <span class="fu">max</span>(y))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 35</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb149"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a></a><span class="fu">which.max</span>(y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 35</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>We find <span class="math inline">\(\operatorname*{argmax}\limits_{x\in[-1,1]} f(x)\)</span> by logical indexing in <span class="math inline">\(x\)</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb151"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a></a>x[y <span class="sc">==</span> <span class="fu">max</span>(y)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7</code></pre>
+</div>
+</div>
+<p>In this form it is never mathematically precise, because we use a “grid” of <span class="math inline">\(x\)</span>-values nor every possible <span class="math inline">\(x\)</span> (these would be infinitely many).</p>
+</div>
+</section>
+<section id="optimization" class="slide level2">
+<h2>Optimization</h2>
+<ul>
+<li>The field of <strong>mathematical optimization</strong> boils <span class="math inline">\(\operatorname*{argmax}\)</span>-ing an objective function.
+<ul>
+<li>The <strong>objective function</strong> specifies what we want to have.
+<ul>
+<li>In Business, it can be <em>profit</em>. Input variables would specify how we could to allocate our resources. Often it is accompanied by <strong>constraints</strong>, like a limit for the total resources.</li>
+<li>An analog concepts is a <em>cost function</em> which shall then be minimized.</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="fragment">
+<ul>
+<li><strong>Machine learning</strong> and <strong>training AI</strong> is based on <em>approximate optimization</em> with an objective function
+<ul>
+<li>Often called <em>loss function</em> (to be as low as possible)</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="softmax" class="slide level2 scrollable">
+<h2>Softmax</h2>
+<p>$ A core concept of <em>approximate optimization</em> is using a <strong>Softmax</strong>-function</p>
+<p><span class="math inline">\(f: \mathbb{R}^K \to [0,1]^K\)</span></p>
+<p>which maps <span class="math inline">\(K\)</span> real numbers to <span class="math inline">\(K\)</span> numbers between 0 and 1.</p>
+<div class="fragment">
+<p>With <span class="math inline">\(\mathbf{x} = [x_1, \dots, x_K]\)</span> it is for the <span class="math inline">\(j\)</span>-th outcome number</p>
+<p><span class="math display">\[\sigma(\mathbf{x})_j = \frac{e^{\beta x_j}}{e^{\beta x_1} + e^{\beta x_2} + \dots + e^{\beta x_K}} = \frac{e^{\beta x_j}}{\sum_{k=1}^K  e^{\beta x_k}}\]</span></p>
+<p>where <span class="math inline">\(\beta\)</span> is a parameters specifying how <em>approximate</em> (or noisy) the optimization is.</p>
+</div>
+<div class="fragment">
+<p>Let us look at our example in code:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb153"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a></a>y <span class="ot">&lt;-</span> <span class="sc">-</span>x<span class="sc">^</span><span class="dv">4</span> <span class="sc">+</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> x</span>
+<span id="cb153-2"><a></a>y</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] -0.05000000  0.04049375  0.10890000  0.15799375  0.19040000  0.20859375
+ [7]  0.21490000  0.21149375  0.20040000  0.18349375  0.16250000  0.13899375
+[13]  0.11440000  0.08999375  0.06690000  0.04609375  0.02840000  0.01449375
+[19]  0.00490000 -0.00000625  0.00000000  0.00499375  0.01490000  0.02949375
+[25]  0.04840000  0.07109375  0.09690000  0.12499375  0.15440000  0.18399375
+[31]  0.21250000  0.23849375  0.26040000  0.27649375  0.28490000  0.28359375
+[37]  0.27040000  0.24299375  0.19890000  0.13549375  0.05000000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb155"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a></a>beta <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb155-2"><a></a><span class="fu">exp</span>(beta <span class="sc">*</span> y) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">exp</span>(beta <span class="sc">*</span> y))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 0.02028933 0.02221102 0.02378357 0.02498033 0.02580311 0.02627686
+ [7] 0.02644309 0.02635317 0.02606243 0.02562552 0.02509315 0.02451018
+[13] 0.02391474 0.02333814 0.02280535 0.02233575 0.02194403 0.02164098
+[19] 0.02143435 0.02132945 0.02132958 0.02143636 0.02164977 0.02196804
+[25] 0.02238733 0.02290119 0.02349987 0.02416943 0.02489072 0.02563834
+[31] 0.02637971 0.02707440 0.02767405 0.02812303 0.02836043 0.02832341
+[37] 0.02795217 0.02719651 0.02602337 0.02442455 0.02242317</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>The outcome softmax vector sums up to one by construction.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb157"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a></a><span class="fu">sum</span>(<span class="fu">exp</span>(beta <span class="sc">*</span> y) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">exp</span>(beta <span class="sc">*</span> y)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>So, we can interprete it as a probability distribution. We look at it again later.</p>
+</div>
+</section></section>
+<section>
+<section id="functions-in-programming-and-programming-functions" class="title-slide slide level1 center">
+<h1>Functions in Programming and Programming Functions</h1>
+
+</section>
+<section id="input-to-output" class="slide level2 smaller">
+<h2>Input <span class="math inline">\(\to\)</span> output</h2>
+<p><img data-src="img/Function_machine2.svg"></p>
+<ul>
+<li>Metaphorically, a function is a <em>machine</em> or a <em>blackbox</em> that for each input yields an output.</li>
+<li>The inputs of a function are also called <strong>arguments</strong>.</li>
+</ul>
+<div class="fragment">
+<p>Difference to math terminolgy:<br>
+<strong>The output need not be the same for the same input.</strong></p>
+
+</div>
+<aside><div>
+<p>Picture from wikipedia.</p>
+</div></aside></section>
+<section id="function-as-objects-in-r" class="slide level2 scrollable smaller">
+<h2>Function as objects in R</h2>
+<p><code>function</code> is a class of an object in R</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb159"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a></a><span class="fu">class</span>(c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "function"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb161"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb161-1"><a></a><span class="fu">class</span>(ggplot2<span class="sc">::</span>ggplot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "function"</code></pre>
+</div>
+</div>
+<p>Calling the function without brackets writes its code or some information.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb163"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a></a>sd <span class="co"># This function is written in R, and we see its code</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x, na.rm = FALSE) 
+sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), 
+    na.rm = na.rm))
+&lt;bytecode: 0x5e903cde63f8&gt;
+&lt;environment: namespace:stats&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb165"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a></a>c <span class="co"># This function is not written in R but is a R primitive</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (...)  .Primitive("c")</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb167"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a></a>ggplot2<span class="sc">::</span>ggplot <span class="co"># This function is not written solely in R</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (data = NULL, mapping = aes(), ..., environment = parent.frame()) 
+{
+    UseMethod("ggplot")
+}
+&lt;bytecode: 0x5e903d4f2de0&gt;
+&lt;environment: namespace:ggplot2&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="define-your-own-functions-in-r" class="slide level2 smaller">
+<h2>Define your own functions! (in R)</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb169"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a></a>add_one <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb169-2"><a></a>  x <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb169-3"><a></a>}</span>
+<span id="cb169-4"><a></a><span class="co"># Test it</span></span>
+<span id="cb169-5"><a></a><span class="fu">add_one</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11</code></pre>
+</div>
+</div>
+<p>The skeleton for a function definition is</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb171"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a></a>function_name <span class="ot">&lt;-</span> <span class="cf">function</span>(input){</span>
+<span id="cb171-2"><a></a>  <span class="co"># do something with the input(s)</span></span>
+<span id="cb171-3"><a></a>  <span class="co"># return something as output</span></span>
+<span id="cb171-4"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>function_name</code> should be a short but evocative verb.</li>
+<li>The <code>input</code> can be empty or one or more <code>name</code> or <code>name=expression</code> terms as arguments.</li>
+<li>The last evaluated expression is returned as output.</li>
+<li>When the body or the function is only one line <code>{}</code> can be omitted. For example<br>
+<code>add_one &lt;- function(x) x + 1</code></li>
+</ul>
+</section>
+<section id="flexibility-of-inputs-and-outputs" class="slide level2 smaller">
+<h2>Flexibility of inputs and outputs</h2>
+<ul>
+<li>Arguments can be specified by <code>name=expression</code> or just <code>expression</code> (then they are taken as the next argument)</li>
+<li>Default values for arguments can be provided. Useful when an argument is a parameter.</li>
+</ul>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb172"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a></a>mymult <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="dv">3</span>) x <span class="sc">*</span> (y <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb172-2"><a></a><span class="fu">mymult</span>(<span class="dv">3</span>, <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb174"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a></a><span class="fu">mymult</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb176"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb176-1"><a></a><span class="fu">mymult</span>(<span class="at">y =</span> <span class="dv">3</span>, <span class="at">x =</span> <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb178"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb178-1"><a></a><span class="fu">mymult</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb180"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb180-1"><a></a><span class="fu">mymult</span>(<span class="at">y =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div></div>
+<div class="fragment">
+<p>For complex output use a list</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb182"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb182-1"><a></a>mymult <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="dv">3</span>) {</span>
+<span id="cb182-2"><a></a>  <span class="fu">list</span>(<span class="at">out1 =</span> x <span class="sc">*</span> (y <span class="sc">-</span> <span class="dv">1</span>), <span class="at">out2 =</span> x <span class="sc">*</span> (y <span class="sc">-</span> <span class="dv">2</span>))</span>
+<span id="cb182-3"><a></a>}</span>
+<span id="cb182-4"><a></a><span class="fu">mymult</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>$out1
+[1] 4
+
+$out2
+[1] 2</code></pre>
+</div>
+</div></div>
+</div>
+</section></section>
+<section>
+<section id="think-and-program-vectorized" class="title-slide slide level1 center">
+<h1>Think and program vectorized!</h1>
+
+</section>
+<section id="vectorized-functions" class="slide level2 smaller">
+<h2>Vectorized functions</h2>
+<p>Mathematical functions in programming are often “vectorized”:</p>
+<ul>
+<li>Operations on a single value are applied to each component of the vector.</li>
+<li>Operations on two values are applied “component-wise” (for vectors of the same length)</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb184"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb184-1"><a></a><span class="fu">log10</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">1000</span>, <span class="dv">10000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0 1 2 3 4</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb186"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb186-1"><a></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4 2 2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb188"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb188-1"><a></a>(<span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>)<span class="sc">^</span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell fragment">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  0  1  4  9 16 25</code></pre>
+</div>
+</div>
+</section>
+<section id="plotting-and-transformation" class="slide level2 smaller">
+<h2>Plotting and transformation</h2>
+<p><strong>Vector creation and vectorized functions</strong> are key for plotting and transformation.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb190"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb190-1"><a></a>func <span class="ot">&lt;-</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">3</span> <span class="sc">-</span> x<span class="sc">^</span><span class="dv">2</span> <span class="co"># Create a vectorized function</span></span>
+<span id="cb190-2"><a></a>data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="at">by =</span> <span class="fl">0.01</span>)) <span class="sc">|&gt;</span> <span class="co"># Vector creation</span></span>
+<span id="cb190-3"><a></a>  <span class="fu">mutate</span>(<span class="at">y =</span> <span class="fu">func</span>(x)) <span class="co"># Vectorized transformation using the function</span></span>
+<span id="cb190-4"><a></a>data <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="W04_files/figure-revealjs/unnamed-chunk-84-1.png" width="960" class="r-stretch"></section>
+<section id="conveniently-ggploting-functions" class="slide level2">
+<h2>Conveniently <code>ggplot</code>ing functions</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb191"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb191-1"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb191-2"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> log) <span class="sc">+</span></span>
+<span id="cb191-3"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="dv">3</span> <span class="sc">*</span> x <span class="sc">-</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb191-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="W04_files/figure-revealjs/unnamed-chunk-85-1.png" width="480" class="r-stretch"><p>Code line 3 shows another important concept: <strong>anonymous functions</strong>. The function <code>function(x) 3*x - 4</code> is defined <em>on the fly</em> without a name.</p>
+</section>
+<section id="softmax-example" class="slide level2">
+<h2>Softmax example</h2>
+<p>Increasing <span class="math inline">\(\beta\)</span> from black to red</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb192"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb192-1"><a></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="sc">-</span>x<span class="sc">^</span><span class="dv">4</span> <span class="sc">+</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> x</span>
+<span id="cb192-2"><a></a>softmax <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">beta =</span> <span class="dv">1</span>) <span class="fu">exp</span>(beta <span class="sc">*</span> x) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">exp</span>(beta <span class="sc">*</span> x))</span>
+<span id="cb192-3"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb192-4"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">softmax</span>(<span class="fu">f</span>(x))) <span class="sc">+</span></span>
+<span id="cb192-5"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">softmax</span>(<span class="fu">f</span>(x), <span class="at">beta =</span> <span class="dv">5</span>), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb192-6"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">softmax</span>(<span class="fu">f</span>(x), <span class="at">beta =</span> <span class="dv">10</span>), <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb192-7"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">softmax</span>(<span class="fu">f</span>(x), <span class="at">beta =</span> <span class="dv">30</span>), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb192-8"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="W04_files/figure-revealjs/unnamed-chunk-86-1.png" width="960" class="r-stretch"><p>The peak around the strict <span class="math inline">\(\operatorname{argmax}\)</span> becomes more and more pronounced the larger <span class="math inline">\(\beta\)</span> is!</p>
+</section></section>
+<section>
+<section id="conditional-statements-if-and-iteration-map" class="title-slide slide level1 center">
+<h1>Conditional Statements (<code>if</code>) and Iteration (<code>map</code>)</h1>
+
+</section>
+<section id="conditional-statements" class="slide level2 smaller">
+<h2>Conditional statements</h2>
+<ul>
+<li><code>if</code> executes a code block if a condition is <code>TRUE</code></li>
+<li><code>else</code> executes a code block if the condition is <code>FALSE</code></li>
+</ul>
+<p>Skeleton</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb193"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb193-1"><a></a><span class="cf">if</span> (condition) {</span>
+<span id="cb193-2"><a></a>  <span class="co"># code block</span></span>
+<span id="cb193-3"><a></a>} <span class="cf">else</span> {</span>
+<span id="cb193-4"><a></a>  <span class="co"># code block</span></span>
+<span id="cb193-5"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Example: A piece-wise defined function</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb194"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb194-1"><a></a>piecewise <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb194-2"><a></a>  <span class="cf">if</span> (x <span class="sc">&lt;</span> <span class="dv">2</span>) {</span>
+<span id="cb194-3"><a></a>    <span class="fl">0.5</span> <span class="sc">*</span> x</span>
+<span id="cb194-4"><a></a>  } <span class="cf">else</span> {</span>
+<span id="cb194-5"><a></a>    x <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb194-6"><a></a>  }</span>
+<span id="cb194-7"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb195"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb195-1"><a></a><span class="fu">piecewise</span>(<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb197"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a></a><span class="fu">piecewise</span>(<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb199"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb199-1"><a></a><span class="fu">piecewise</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+</div></div>
+<div class="fragment">
+<p>Problem: <code>piecewise</code> is not vectorized. <code>piecewise(c(1,2,3))</code> does not work!</p>
+</div>
+</section>
+<section id="vectorized-operations-with-map" class="slide level2 smaller">
+<h2>Vectorized operations with <code>map</code></h2>
+<ul>
+<li><code>map</code> functions apply a function to each element of a vector.<sup>1</sup></li>
+<li><code>map(.x, .f, ...)</code> applies the function <code>.f</code> to each element of the vector of <code>.x</code> and returns a <em>list</em>.</li>
+<li><code>map_dbl</code> returns a double <em>vector</em> (other variants exist)</li>
+</ul>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb201"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a></a><span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), piecewise)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 0.5
+
+[[2]]
+[1] 1
+
+[[3]]
+[1] 2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb203"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb203-1"><a></a><span class="fu">map_dbl</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), piecewise)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5 1.0 2.0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb205"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb205-1"><a></a>piecewise_vectorized <span class="ot">&lt;-</span></span>
+<span id="cb205-2"><a></a>  <span class="cf">function</span>(x) <span class="fu">map_dbl</span>(x, piecewise)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb206"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb206-1"><a></a><span class="fu">piecewise_vectorized</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="at">by =</span> <span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.00 0.25 0.50 0.75 1.00 1.50 2.00</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb208"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb208-1"><a></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="at">by =</span> <span class="fl">0.5</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb208-2"><a></a>  <span class="fu">mutate</span>(<span class="at">y =</span> <span class="fu">piecewise_vectorized</span>(x)) <span class="sc">|&gt;</span></span>
+<span id="cb208-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb208-4"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb208-5"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-90-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn3"><p>In <code>tidyverse</code> they are provided in the package <code>purrr</code></p></li></ol></aside></section>
+<section id="reduce" class="slide level2 smaller">
+<h2><code>reduce</code></h2>
+<p>Instead of a list or a vector <code>reduce</code> returns a single value.<br>
+To that end it needs a function with two arguments. It applies it to the first two elements of the vector, then to the result and the third element, then the result and the fourth element, and so on.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb209"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb209-1"><a></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">|&gt;</span> <span class="fu">reduce</span>(\(x, y) x <span class="sc">+</span> y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 55</code></pre>
+</div>
+</div>
+<p>Note: <code>\(x)</code> is a short way to write an <strong>anonymous function</strong> as <code>function(x)</code>.</p>
+<div class="fragment">
+<p>Example: Reading multiple files</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Instead of</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb211"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb211-1"><a></a>a <span class="ot">&lt;-</span><span class="fu">read_csv</span>(<span class="st">"a.csv"</span>)</span>
+<span id="cb211-2"><a></a>b <span class="ot">&lt;-</span><span class="fu">read_csv</span>(<span class="st">"b.csv"</span>)</span>
+<span id="cb211-3"><a></a>c <span class="ot">&lt;-</span><span class="fu">read_csv</span>(<span class="st">"c.csv"</span>)</span>
+<span id="cb211-4"><a></a>d <span class="ot">&lt;-</span><span class="fu">read_csv</span>(<span class="st">"d.csv"</span>)</span>
+<span id="cb211-5"><a></a>e <span class="ot">&lt;-</span><span class="fu">read_csv</span>(<span class="st">"e.csv"</span>)</span>
+<span id="cb211-6"><a></a>f <span class="ot">&lt;-</span><span class="fu">read_csv</span>(<span class="st">"f.csv"</span>)</span>
+<span id="cb211-7"><a></a>g <span class="ot">&lt;-</span><span class="fu">read_csv</span>(<span class="st">"g.csv"</span>)</span>
+<span id="cb211-8"><a></a></span>
+<span id="cb211-9"><a></a><span class="fu">bind_rows</span>(a,b,c,d,e,f,g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column" style="width:50%;">
+<p>Write</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb212"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb212-1"><a></a>letter[<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>] <span class="sc">|&gt;</span> </span>
+<span id="cb212-2"><a></a> <span class="fu">map</span>(\(x) <span class="fu">read_csv</span>(<span class="fu">paste0</span>(x,<span class="st">".csv"</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb212-3"><a></a> <span class="fu">reduce</span>(bind_rows)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>That is the map-reduce idea! It is a recurring pattern in distributed big data computing.</p>
+</div></div>
+</div>
+</section>
+<section id="map-and-reduce" class="slide level2 smaller">
+<h2><code>map</code> and <code>reduce</code></h2>
+<ul>
+<li><code>map</code> applies a function to each element of a vector (or list) and returns a list (or vector if <code>map_dbl</code> or other vaeriants are used)
+<ul>
+<li>The output has the same <code>length</code> as the input</li>
+</ul></li>
+<li><code>reduce</code> applies a function taking two arguments and then summarizes the list by applying them two element 1 and 2 and then again the result with element 3 and then the result with element 4, …
+<ul>
+<li>The output is one object</li>
+</ul></li>
+<li>Remark: The problem of vectorizing a function which has an <code>if</code> and <code>else</code> statement (see the example <code>piecewise_vectorized</code>) can also be solved using the vectorized version of it:<br>
+<code>if_else(condition = *condition*, true = *value-if_TRUE*, false = *value-if_FALSE*)</code><br>
+Here every argument can be a vector!</li>
+</ul>
+</section>
+<section id="function-programming-take-away" class="slide level2">
+<h2>Function programming: Take away</h2>
+<ul>
+<li>Functions are the most important building blocks of programming.</li>
+<li>Functions can and often should be vectorized.</li>
+<li>Vectorized functions are the basis for plotting and transformation.</li>
+<li><code>map</code> functions are powerful tools for iterative tasks!<br>
+<em>Expect to not get the idea first but to love them later.</em></li>
+</ul>
+</section></section>
+<section>
+<section id="summary-r-tools" class="title-slide slide level1 center">
+<h1>Summary R tools</h1>
+<p>With this lecture we finish introducing the concepts behind the basic data science tools using R.</p>
+</section>
+<section id="master-core-tidyverse-packages" class="slide level2">
+<h2>Master core <code>tidyverse</code> packages</h2>
+<ul>
+<li><code>ggplot</code> you can do basic data visualization and improve towards the ability to produce great graphics</li>
+<li><code>readr</code> you can load data properly from text files</li>
+<li><code>tidyr</code> you can reshape a data frame into the form you need</li>
+<li><code>dplyr</code> you can wrangle data: select, filter and slice dataframes; summarize variables and create new variables using grouping; join different dataframes; …</li>
+<li><code>stringr</code> you can manipulate character variables to produce what you need</li>
+<li><code>lubridate</code> you learn how to properly work with date and time variables</li>
+<li><code>purrr</code> you learn using map, reduce, and other function to automate tasks</li>
+<li><code>forcats</code> you can handle categorical variables nicely for plotting using factors in R</li>
+</ul>
+
+
+<script type="webr-data">
+eyJvcHRpb25zIjp7ImJhc2VVcmwiOiJodHRwczovL3dlYnIuci13YXNtLm9yZy92MC42LjAvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsiZXZhbHVhdGUiLCJrbml0ciIsImh0bWx0b29scyIsInRpZHlyIiwiZHBseXIiLCJzdHJpbmdyIiwiZ2dwbG90MiIsIm55Y2ZsaWdodHMxMyJdLCJyZXBvcyI6W119LCJyZW5kZXJfZGYiOiJkZWZhdWx0In0=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJ3ZWJyLXdpZGdldC0zIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoie1xuICAvLyBXYWl0IGZvciBvdXRwdXQgdG8gYmUgd3JpdHRlbiB0byB0aGUgRE9NLCB0aGVuIHRyaWdnZXIgd2lkZ2V0IHJlbmRlcmluZ1xuICBhd2FpdCBfd2Vicl92YWx1ZV8zO1xuICBpZiAod2luZG93LkhUTUxXaWRnZXRzKSB7XG4gICAgd2luZG93LkhUTUxXaWRnZXRzLnN0YXRpY1JlbmRlcigpO1xuICB9XG4gIGlmICh3aW5kb3cuUGFnZWRUYWJsZURvYykge1xuICAgIHdpbmRvdy5QYWdlZFRhYmxlRG9jLmluaXRBbGwoKTtcbiAgfVxufVxuIn0seyJjZWxsTmFtZSI6IndlYnItMyIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3dlYnJfZWRpdG9yXzMgPSB7XG4gIGNvbnN0IHsgV2ViUkV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici0zLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHdlYnItMy1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBXZWJSRXhlcmNpc2VFZGl0b3Iod2ViUk9qcy53ZWJSUHJvbWlzZSwgYmxvY2suY29kZSwgb3B0aW9ucyk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fd2Vicl92YWx1ZV8zID0gd2ViUk9qcy5wcm9jZXNzKF93ZWJyX2VkaXRvcl8zLCB7fSk7XG4ifSx7ImNlbGxOYW1lIjoid2Vici13aWRnZXQtMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6IntcbiAgLy8gV2FpdCBmb3Igb3V0cHV0IHRvIGJlIHdyaXR0ZW4gdG8gdGhlIERPTSwgdGhlbiB0cmlnZ2VyIHdpZGdldCByZW5kZXJpbmdcbiAgYXdhaXQgX3dlYnJfdmFsdWVfMjtcbiAgaWYgKHdpbmRvdy5IVE1MV2lkZ2V0cykge1xuICAgIHdpbmRvdy5IVE1MV2lkZ2V0cy5zdGF0aWNSZW5kZXIoKTtcbiAgfVxuICBpZiAod2luZG93LlBhZ2VkVGFibGVEb2MpIHtcbiAgICB3aW5kb3cuUGFnZWRUYWJsZURvYy5pbml0QWxsKCk7XG4gIH1cbn1cbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLTIiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF93ZWJyX2VkaXRvcl8yID0ge1xuICBjb25zdCB7IFdlYlJFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuICBjb25zdCBzY3JpcHRDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcIndlYnItMi1jb250ZW50c1xcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGJsb2NrID0gSlNPTi5wYXJzZShiNjREZWNvZGUoc2NyaXB0Q29udGVudCkpO1xuXG4gIGNvbnN0IG9wdGlvbnMgPSBPYmplY3QuYXNzaWduKHsgaWQ6IGB3ZWJyLTItY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgV2ViUkV4ZXJjaXNlRWRpdG9yKHdlYlJPanMud2ViUlByb21pc2UsIGJsb2NrLmNvZGUsIG9wdGlvbnMpO1xuXG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxuX3dlYnJfdmFsdWVfMiA9IHdlYlJPanMucHJvY2Vzcyhfd2Vicl9lZGl0b3JfMiwge30pO1xuIn0seyJjZWxsTmFtZSI6IndlYnItd2lkZ2V0LTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ7XG4gIC8vIFdhaXQgZm9yIG91dHB1dCB0byBiZSB3cml0dGVuIHRvIHRoZSBET00sIHRoZW4gdHJpZ2dlciB3aWRnZXQgcmVuZGVyaW5nXG4gIGF3YWl0IF93ZWJyX3ZhbHVlXzE7XG4gIGlmICh3aW5kb3cuSFRNTFdpZGdldHMpIHtcbiAgICB3aW5kb3cuSFRNTFdpZGdldHMuc3RhdGljUmVuZGVyKCk7XG4gIH1cbiAgaWYgKHdpbmRvdy5QYWdlZFRhYmxlRG9jKSB7XG4gICAgd2luZG93LlBhZ2VkVGFibGVEb2MuaW5pdEFsbCgpO1xuICB9XG59XG4ifSx7ImNlbGxOYW1lIjoid2Vici0xIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfd2Vicl9lZGl0b3JfMSA9IHtcbiAgY29uc3QgeyBXZWJSRXhlcmNpc2VFZGl0b3IsIGI2NERlY29kZSB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ3ZWJyLTEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbih7IGlkOiBgd2Vici0xLWNvbnRlbnRzYCB9LCBibG9jay5hdHRyKTtcbiAgY29uc3QgZWRpdG9yID0gbmV3IFdlYlJFeGVyY2lzZUVkaXRvcih3ZWJST2pzLndlYlJQcm9taXNlLCBibG9jay5jb2RlLCBvcHRpb25zKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl93ZWJyX3ZhbHVlXzEgPSB3ZWJST2pzLnByb2Nlc3MoX3dlYnJfZWRpdG9yXzEsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJ3ZWJyLXByZWx1ZGUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJ3ZWJST2pzID0ge1xuICBjb25zdCB7IFdlYlIsIENoYW5uZWxUeXBlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lLldlYlI7XG4gIGNvbnN0IHtcbiAgICBXZWJSRXZhbHVhdG9yLFxuICAgIFdlYlJFbnZpcm9ubWVudE1hbmFnZXIsXG4gICAgc2V0dXBSLFxuICAgIGI2NERlY29kZSxcbiAgICBjb2xsYXBzZVBhdGhcbiAgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc3RhdHVzQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJleGVyY2lzZS1sb2FkaW5nLXN0YXR1c1wiKTtcbiAgY29uc3QgaW5kaWNhdG9yQ29udGFpbmVyID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoXCJleGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaW5kaWNhdG9yQ29udGFpbmVyLmNsYXNzTGlzdC5yZW1vdmUoXCJkLW5vbmVcIik7XG5cbiAgbGV0IHN0YXR1c1RleHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwiZGl2XCIpXG4gIHN0YXR1c1RleHQuY2xhc3NMaXN0ID0gXCJleGVyY2lzZS1sb2FkaW5nLWRldGFpbHNcIjtcbiAgc3RhdHVzVGV4dCA9IHN0YXR1c0NvbnRhaW5lci5hcHBlbmRDaGlsZChzdGF0dXNUZXh0KTtcbiAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBJbml0aWFsaXNlYDtcblxuICAvLyBIb2lzdCBpbmRpY2F0b3Igb3V0IGZyb20gZmluYWwgc2xpZGUgd2hlbiBydW5uaW5nIHVuZGVyIHJldmVhbFxuICBjb25zdCByZXZlYWxTdGF0dXMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCAuZXhlcmNpc2UtbG9hZGluZy1pbmRpY2F0b3JcIik7XG4gIGlmIChyZXZlYWxTdGF0dXMpIHtcbiAgICByZXZlYWxTdGF0dXMucmVtb3ZlKCk7XG4gICAgZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5yZXZlYWwgPiAuc2xpZGVzXCIpLmFwcGVuZENoaWxkKHJldmVhbFN0YXR1cyk7XG4gIH1cblxuICAvLyBNYWtlIGFueSByZXZlYWwgc2xpZGVzIHdpdGggbGl2ZSBjZWxscyBzY3JvbGxhYmxlXG4gIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoXCIucmV2ZWFsIC5leGVyY2lzZS1jZWxsXCIpLmZvckVhY2goKGVsKSA9PiB7XG4gICAgZWwuY2xvc2VzdCgnc2VjdGlvbi5zbGlkZScpLmNsYXNzTGlzdC5hZGQoXCJzY3JvbGxhYmxlXCIpO1xuICB9KVxuXG4gIC8vIHdlYlIgc3VwcGxlbWVudGFsIGRhdGEgYW5kIG9wdGlvbnNcbiAgY29uc3QgZGF0YUNvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwid2Vici1kYXRhXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZGF0YSA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKGRhdGFDb250ZW50KSk7XG5cbiAgLy8gR3JhYiBsaXN0IG9mIHJlc291cmNlcyB0byBiZSBkb3dubG9hZGVkXG4gIGNvbnN0IGZpbGVzQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJ2ZnMtZmlsZVxcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGZpbGVzID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZmlsZXNDb250ZW50KSk7XG5cbiAgLy8gSW5pdGlhbGlzZSB3ZWJSIGFuZCBzZXR1cCBmb3IgUiBjb2RlIGV2YWx1YXRpb25cbiAgbGV0IHdlYlJQcm9taXNlID0gKGFzeW5jICh3ZWJSKSA9PiB7XG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyB3ZWJSYDtcbiAgICBhd2FpdCB3ZWJSLmluaXQoKTtcblxuICAgIC8vIEluc3RhbGwgcHJvdmlkZWQgbGlzdCBvZiBwYWNrYWdlc1xuICAgIC8vIEVuc3VyZSB3ZWJSIGRlZmF1bHQgcmVwbyBpcyBpbmNsdWRlZFxuICAgIGRhdGEucGFja2FnZXMucmVwb3MucHVzaChcImh0dHBzOi8vcmVwby5yLXdhc20ub3JnXCIpXG4gICAgYXdhaXQgZGF0YS5wYWNrYWdlcy5wa2dzLm1hcCgocGtnKSA9PiAoKSA9PiB7XG4gICAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHBhY2thZ2U6ICR7cGtnfWA7XG4gICAgICByZXR1cm4gd2ViUi5ldmFsUlZvaWQoYFxuICAgICAgICB3ZWJyOjppbnN0YWxsKHBrZywgcmVwb3MgPSByZXBvcylcbiAgICAgICAgbGlicmFyeShwa2csIGNoYXJhY3Rlci5vbmx5ID0gVFJVRSlcbiAgICAgIGAsIHsgZW52OiB7XG4gICAgICAgIHBrZzogcGtnLFxuICAgICAgICByZXBvczogZGF0YS5wYWNrYWdlcy5yZXBvcyxcbiAgICAgIH19KTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcblxuICAgIC8vIERvd25sb2FkIGFuZCBpbnN0YWxsIHJlc291cmNlc1xuICAgIGF3YWl0IGZpbGVzLm1hcCgoZmlsZSkgPT4gYXN5bmMgKCkgPT4ge1xuICAgICAgY29uc3QgbmFtZSA9IGZpbGUuc3Vic3RyaW5nKGZpbGUubGFzdEluZGV4T2YoJy8nKSArIDEpO1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyByZXNvdXJjZTogJHtuYW1lfWA7XG4gICAgICBjb25zdCByZXNwb25zZSA9IGF3YWl0IGZldGNoKGZpbGUpO1xuICAgICAgaWYgKCFyZXNwb25zZS5vaykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYENhbid0IGRvd25sb2FkIFxcYCR7ZmlsZX1cXGAuIEVycm9yICR7cmVzcG9uc2Uuc3RhdHVzfTogXCIke3Jlc3BvbnNlLnN0YXR1c1RleHR9XCIuYCk7XG4gICAgICB9XG4gICAgICBjb25zdCBkYXRhID0gYXdhaXQgcmVzcG9uc2UuYXJyYXlCdWZmZXIoKTtcblxuICAgICAgLy8gU3RvcmUgVVJMcyBpbiB0aGUgY3dkIHdpdGhvdXQgYW55IHN1YmRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGlmIChmaWxlLmluY2x1ZGVzKFwiOi8vXCIpKSB7XG4gICAgICAgIGZpbGUgPSBuYW1lO1xuICAgICAgfVxuXG4gICAgICAvLyBDb2xsYXBzZSBoaWdoZXIgZGlyZWN0b3J5IHN0cnVjdHVyZVxuICAgICAgZmlsZSA9IGNvbGxhcHNlUGF0aChmaWxlKTtcblxuICAgICAgLy8gQ3JlYXRlIGRpcmVjdG9yeSB0cmVlLCBpZ25vcmluZyBcImRpcmVjdG9yeSBleGlzdHNcIiBWRlMgZXJyb3JzXG4gICAgICBjb25zdCBwYXJ0cyA9IGZpbGUuc3BsaXQoJy8nKS5zbGljZSgwLCAtMSk7XG4gICAgICBsZXQgcGF0aCA9ICcnO1xuICAgICAgd2hpbGUgKHBhcnRzLmxlbmd0aCA+IDApIHtcbiAgICAgICAgcGF0aCArPSBwYXJ0cy5zaGlmdCgpICsgJy8nO1xuICAgICAgICBjb25zdCBhbmFseXNpcyA9IGF3YWl0IHdlYlIuRlMuYW5hbHl6ZVBhdGgocGF0aCk7XG4gICAgICAgIGlmICghYW5hbHlzaXMuZXhpc3RzKSB7XG4gICAgICAgICAgdHJ5IHtcbiAgICAgICAgICAgIGF3YWl0IHdlYlIuRlMubWtkaXIocGF0aCk7XG4gICAgICAgICAgfSBjYXRjaCAoZSkge1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBGaWxlc3lzdGVtIEVycm9yOiBcIiR7ZS5tZXNzYWdlfVwiLmApO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuXG4gICAgICAvLyBXcml0ZSB0aGlzIGZpbGUgdG8gdGhlIFZGU1xuICAgICAgcmV0dXJuIGF3YWl0IHdlYlIuRlMud3JpdGVGaWxlKGZpbGUsIG5ldyBVaW50OEFycmF5KGRhdGEpKTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgSW5zdGFsbGluZyB3ZWJSIHNoaW1zYDtcbiAgICBhd2FpdCB3ZWJSLmV2YWxSVm9pZChgd2Vicjo6c2hpbV9pbnN0YWxsKClgKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgV2ViUiBlbnZpcm9ubWVudCBzZXR1cGA7XG4gICAgYXdhaXQgc2V0dXBSKHdlYlIsIGRhdGEpO1xuXG4gICAgc3RhdHVzVGV4dC5yZW1vdmUoKTtcbiAgICBpZiAoc3RhdHVzQ29udGFpbmVyLmNoaWxkcmVuLmxlbmd0aCA9PSAwKSB7XG4gICAgICBzdGF0dXNDb250YWluZXIucGFyZW50Tm9kZS5yZW1vdmUoKTtcbiAgICB9XG4gICAgcmV0dXJuIHdlYlI7XG4gIH0pKG5ldyBXZWJSKGRhdGEub3B0aW9ucykpO1xuXG4gIC8vIEtlZXAgdHJhY2sgb2YgaW5pdGlhbCBPSlMgYmxvY2sgcmVuZGVyXG4gIGNvbnN0IHJlbmRlcmVkT2pzID0ge307XG5cbiAgY29uc3QgcHJvY2VzcyA9IGFzeW5jIChjb250ZXh0LCBpbnB1dHMpID0+IHtcbiAgICBjb25zdCB3ZWJSID0gYXdhaXQgd2ViUlByb21pc2U7XG4gICAgY29uc3QgZXZhbHVhdG9yID0gbmV3IFdlYlJFdmFsdWF0b3Iod2ViUiwgY29udGV4dClcbiAgICBhd2FpdCBldmFsdWF0b3IucHJvY2VzcyhpbnB1dHMpO1xuICAgIHJldHVybiBldmFsdWF0b3IuY29udGFpbmVyO1xuICB9XG5cbiAgcmV0dXJuIHtcbiAgICBwcm9jZXNzLFxuICAgIHdlYlJQcm9taXNlLFxuICAgIHJlbmRlcmVkT2pzLFxuICB9O1xufVxuIn1dfQ==
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section></section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="img/ConstructorUniversity.png" class="slide-logo"></p>
+<div class="footer footer-default">
+<p>MDSSB-DSCO-02: Data Science Concepts</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': true,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: true,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script type="ojs-module-contents">
+    eyJjb250ZW50cyI6W119
+    </script>
+    <script type="module">
+    if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+    window._ojs.paths.runtimeToDoc = "../../lectures";
+    window._ojs.paths.runtimeToRoot = "../..";
+    window._ojs.paths.docToRoot = "..";
+    window._ojs.selfContained = false;
+    window._ojs.runtime.interpretFromScriptTags();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/CU-F26-MDSSB-01-Concepts-Tools\.github\.io\/Website\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
