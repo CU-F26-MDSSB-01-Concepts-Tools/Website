@@ -2,406 +2,406 @@
   {
     "objectID": "lectures/W04.html#preliminaries",
     "href": "lectures/W04.html#preliminaries",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Preliminaries",
     "text": "Preliminaries\nIn this lectures we will use these packages.\n\nlibrary(nycflights13)\nlibrary(tidyverse)\n\nThe datasets used can be downloaded from:\nhttps://github.com/CU-F26-MDSSB-01-Concepts-Tools/Website/tree/main/lectures"
   },
   {
     "objectID": "lectures/W04.html#string-modification",
     "href": "lectures/W04.html#string-modification",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "String modification",
     "text": "String modification\nWe modify strings with the stringr package from the tidyverse core. All functions from stringr start with str_.\nA few examples:\n\nc(\"x\", \"y\")\n\n[1] \"x\" \"y\"\n\nstr_c(\"x\", \"y\")\n\n[1] \"xy\"\n\n\n\n\nstr_c(\"x\", \"y\", \"z\", sep = \",\")\n\n[1] \"x,y,z\"\n\n\n\n\n\nlength(c(\"x\", \"y\", \"z\"))\n\n[1] 3\n\nstr_length(c(\"x\", \"y\", \"z\"))\n\n[1] 1 1 1\n\nstr_length(c(\"This is a string.\", \"z\"))\n\n[1] 17  1"
   },
   {
     "objectID": "lectures/W04.html#string-wrangling-with-variable-names",
     "href": "lectures/W04.html#string-wrangling-with-variable-names",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "String wrangling with variable names",
     "text": "String wrangling with variable names\nThis is a typical use case. We have data like this:\n\n\ndata &lt;- tibble(\n  Name = c(\"A\", \"B\", \"C\"),\n  Age_2020 = c(20, 30, 40),\n  Age_2021 = c(21, 31, 41),\n  Age_2022 = c(22, 32, 42)\n)\ndata\n\n\n# A tibble: 3 × 4\n  Name  Age_2020 Age_2021 Age_2022\n  &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;\n1 A           20       21       22\n2 B           30       31       32\n3 C           40       41       42\n\n\nWe tidy that data set by creating a year variable.\n\n\n\ndata |&gt;\n  pivot_longer(\n    c(\"Age_2020\", \"Age_2021\", \"Age_2022\"),\n    names_to = \"Year\",\n    values_to = \"Age\"\n  )\n\n\n# A tibble: 9 × 3\n  Name  Year       Age\n  &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;\n1 A     Age_2020    20\n2 A     Age_2021    21\n3 A     Age_2022    22\n4 B     Age_2020    30\n5 B     Age_2021    31\n6 B     Age_2022    32\n7 C     Age_2020    40\n8 C     Age_2021    41\n9 C     Age_2022    42\n\n\n\n\nOK, but the year variable is a string but we want numbers."
   },
   {
     "objectID": "lectures/W04.html#use-word",
     "href": "lectures/W04.html#use-word",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Use word",
     "text": "Use word\nword extracts words from a sentence. (One stringr function not starting with str_!)\n\nYou can specify the words from start to end. Use numbers. (Negative numbers to count from the last word.)\nThe word separator need not be \" \" but can be any character.\n\n\n\nword(\"This is a string.\", start = 2, end = -2)\n\n\n[1] \"is a\"\n\n\n\n\nword(\"Age_2022\", start = 2, sep = \"_\")\n\n\n[1] \"2022\"\n\n\n\nIt also works vectorized.\n\n\ndata |&gt;\n  pivot_longer(\n    c(\"Age_2020\", \"Age_2021\", \"Age_2022\"),\n    names_to = \"Year\",\n    values_to = \"Age\"\n  ) |&gt;\n  mutate(\n    Year = word(Year, start = 2, sep = \"_\") |&gt;\n      as.numeric()\n  )\n\n\n# A tibble: 9 × 3\n  Name   Year   Age\n  &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 A      2020    20\n2 A      2021    21\n3 A      2022    22\n4 B      2020    30\n5 B      2021    31\n6 B      2022    32\n7 C      2020    40\n8 C      2021    41\n9 C      2022    42"
   },
   {
     "objectID": "lectures/W04.html#string-detection-regular-expressions",
     "href": "lectures/W04.html#string-detection-regular-expressions",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "String Detection / Regular Expressions",
     "text": "String Detection / Regular Expressions\nMany stringr function follow the structure (string, pattern).\nstring is in our data, pattern is a string interpreted as a Regular Expression\nA few examples show its power:\n\nfruits &lt;- c(\"apple\", \"pineapple\", \"Pear\", \"orange\", \"peach\", \"banana\")\n\n\n\nstr_detect(fruits, \"apple\")\n\n\n[1]  TRUE  TRUE FALSE FALSE FALSE FALSE\n\n\n\n\nstr_extract(fruits, \"apple\")\n\n\n[1] \"apple\" \"apple\" NA      NA      NA      NA     \n\n\n\n\nstr_extract(fruits, \"[Pp][a-z]\")\n\n\n[1] \"pp\" \"pi\" \"Pe\" NA   \"pe\" NA  \n\n\n\n\nstr_extract(fruits, \"^[Pp][a-z]\")\n\n\n[1] NA   \"pi\" \"Pe\" NA   \"pe\" NA  \n\n\n\n\nstr_extract(fruits, \"^[Pp][a-z]{3}\")\n\n\n[1] NA     \"pine\" \"Pear\" NA     \"peac\" NA    \n\n\n\n\nstr_extract(fruits, \"^[Pp][a-z]+\")\n\n\n[1] NA          \"pineapple\" \"Pear\"      NA          \"peach\"     NA         \n\n\nTest other words, like str_extract(\"Pizza Napoli\",\"^[Pp][a-z]+\"):"
   },
   {
     "objectID": "lectures/W04.html#regular-expressions",
     "href": "lectures/W04.html#regular-expressions",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Regular Expressions",
     "text": "Regular Expressions\nRegular expressions (regexp or regex): Character-Sequences specifying match patterns.\n\nUseful when strings contain unstructured or semi-structured data.\nWhen you first look at a regexp, you’ll think a cat walked across your keyboard, but as your understanding improves they will start to make sense. (Or you ask an AI chatbot to give you what you need 🙂)\n\nGuess what this regexp’s are to match?\n\"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\\\.[a-zA-Z0-9-.]+$\"\n\"^[\\\\w-\\\\.]+@([\\\\w-]+\\\\.)+[\\\\w-]{2,4}$\"\n\"^[[:alnum:].-_]+@[[:alnum:].-]+$\"\n\n\n\n\n\n\n\nEmail addresses! However, this is not the perfect solution. Dig deeper: Read the discussion and see the example in How can I validate an email address using a regular expression? at stackoverflow."
   },
   {
     "objectID": "lectures/W04.html#special-values",
     "href": "lectures/W04.html#special-values",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Special values",
     "text": "Special values\nYou should know the differences of these special values:\n\nNA: Not available (string, number, or whatever vector entry)\nNULL: Null object, the undefined object, e.g. an empty list or an empty list element\nNaN: For numbers: Meaning “Not a Number” (when math cannot solve what you want)\nInf: For numbers: Positive infinity\n-Inf: For numbers: Negative infinity\n\nCheck some math:\n\n\n1 / 0\n\n\n[1] Inf\n\n\n\n\n-1 / 0\n\n\n[1] -Inf\n\n\n\n\n0 / 0\n\n\n[1] NaN\n\n\n\n\n1 / 0 + 1 / 0\n\n\n[1] Inf\n\n\n\n\n1 / 0 - 1 / 0\n\n\n[1] NaN"
   },
   {
     "objectID": "lectures/W04.html#nas",
     "href": "lectures/W04.html#nas",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "NAs",
     "text": "NAs\nNaN is “not a number”, but NA stands for genuinely unknown values.\nIt can also appear in vectors of character and logical data types.\n\nx &lt;- c(1, 2, 3, 4, NA)\nmean(x)\n\n[1] NA\n\nmean(x, na.rm = TRUE)\n\n[1] 2.5\n\nsummary(x)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs \n   1.00    1.75    2.50    2.50    3.25    4.00       1 \n\n\n\nThe type of NA is logical.\n\ntypeof(NA)\n\n[1] \"logical\"\n\ntypeof(NaN)\n\n[1] \"double\"\n\n\nDoes it make sense? Let us look at NA’s in logical operations."
   },
   {
     "objectID": "lectures/W04.html#nas-in-logical-operations",
     "href": "lectures/W04.html#nas-in-logical-operations",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "NAs in logical operations",
     "text": "NAs in logical operations\nNA can be TRUE or FALSE.\nUsually operations including NA results again in NA, but some not!\n\n\nNA & TRUE\n\n\n[1] NA\n\n\n\n\nNA | TRUE\n\n\n[1] TRUE\n\n\n\n\nNA & FALSE\n\n\n[1] FALSE\n\n\n\n\nNA | FALSE\n\n\n[1] NA\n\n\nUnderstanding logical operations is important!"
   },
   {
     "objectID": "lectures/W04.html#null-is-the-null-object",
     "href": "lectures/W04.html#null-is-the-null-object",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "NULL is the null object",
     "text": "NULL is the null object\n\nused to represent lists with zero length\n\n\nx &lt;- 1:10\nattributes(x)\n\nNULL\n\n\n\nused as a placeholder for missing values in lists and dataframes\n\n\nL &lt;- list(a = 1)\nL[[3]] &lt;- 5\nL\n\n$a\n[1] 1\n\n[[2]]\nNULL\n\n[[3]]\n[1] 5"
   },
   {
     "objectID": "lectures/W04.html#missing-values",
     "href": "lectures/W04.html#missing-values",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Missing values",
     "text": "Missing values\nMany datasets from the real world have some or many NAs in some or many of the variables. These are called missing values.\nWhat to do with missing values?\n\n\nUsually, there is no perfect solution for this!\nThe relevant question is: Why is the data missing?\n\n\nYou can not answer it purely by analyzing the data. You need to think about the data-generating process.\n\nThree ways:\n\nImpute values. There are many concepts, but all rely on assumptions and have consequences which you have to be aware of.\nDrop the cases with NAs. (e.g. na.omit())\nDrop the variables with NAs."
   },
   {
     "objectID": "lectures/W04.html#working-with-more-dataframes",
     "href": "lectures/W04.html#working-with-more-dataframes",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Working with more dataframes",
     "text": "Working with more dataframes\n\nData can be distributed in several dataframes which have relations which each other.\nFor example, they share variables as the five dataframes in nycflights13.\n\n\n\n\nOften variables in different dataframe have the same name, but that need not be the case! See the variable faa in airports matches origin and dest in flights."
   },
   {
     "objectID": "lectures/W04.html#networks-special-relational-data",
     "href": "lectures/W04.html#networks-special-relational-data",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Networks: Special relational data",
     "text": "Networks: Special relational data\n\n\n\nMost datasets describe attributes (variables) between individual units.\nNetwork data additionally describes relations between individual units.\nIn the example we have individual pupils and relations explaining a wish to sit besides another pupil.\n\nDealing with Network Data and Models is a whole scientifi field: Network Science.\n\n\n\n\n\nVisualization from http://www.martingrandjean.ch/social-network-analysis-visualization-morenos-sociograms-revisited/"
   },
   {
     "objectID": "lectures/W04.html#data-women-in-science",
     "href": "lectures/W04.html#data-women-in-science",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Data: Women in science",
     "text": "Data: Women in science\n10 women in science who changed the world:\nAda Lovelace, Marie Curie, Janaki Ammal, Chien-Shiung Wu, Katherine Johnson, Rosalind Franklin, Vera Rubin, Gladys West, Flossie Wong-Staal, Jennifer Doudna\n\nProfessionsDatesWorks\n\n\n\nprofessions &lt;- read_csv(\"professions.csv\")\nprofessions\n\n# A tibble: 10 × 2\n   name               profession                        \n   &lt;chr&gt;              &lt;chr&gt;                             \n 1 Ada Lovelace       Mathematician                     \n 2 Marie Curie        Physicist and Chemist             \n 3 Janaki Ammal       Botanist                          \n 4 Chien-Shiung Wu    Physicist                         \n 5 Katherine Johnson  Mathematician                     \n 6 Rosalind Franklin  Chemist                           \n 7 Vera Rubin         Astronomer                        \n 8 Gladys West        Mathematician                     \n 9 Flossie Wong-Staal Virologist and Molecular Biologist\n10 Jennifer Doudna    Biochemist                        \n\n\n\n\n\ndates &lt;- read_csv(\"dates.csv\")\ndates\n\n# A tibble: 8 × 3\n  name               birth_year death_year\n  &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt;\n1 Janaki Ammal             1897       1984\n2 Chien-Shiung Wu          1912       1997\n3 Katherine Johnson        1918       2020\n4 Rosalind Franklin        1920       1958\n5 Vera Rubin               1928       2016\n6 Gladys West              1930         NA\n7 Flossie Wong-Staal       1947         NA\n8 Jennifer Doudna          1964         NA\n\n\n\n\n\nworks &lt;- read_csv(\"works.csv\")\nworks\n\n# A tibble: 9 × 2\n  name               known_for                                                  \n  &lt;chr&gt;              &lt;chr&gt;                                                      \n1 Ada Lovelace       first computer algorithm                                   \n2 Marie Curie        theory of radioactivity,  discovery of elements polonium a…\n3 Janaki Ammal       hybrid species, biodiversity protection                    \n4 Chien-Shiung Wu    confim and refine theory of radioactive beta decy, Wu expe…\n5 Katherine Johnson  calculations of orbital mechanics critical to sending the …\n6 Vera Rubin         existence of dark matter                                   \n7 Gladys West        mathematical modeling of the shape of the Earth which serv…\n8 Flossie Wong-Staal first scientist to clone HIV and create a map of its genes…\n9 Jennifer Doudna    one of the primary developers of CRISPR, a ground-breaking…\n\n\n\n\n\n\n\nSource: Discover Magazine. The data can be downloaded: professions.csv, dates.csv, works.csv"
   },
   {
     "objectID": "lectures/W04.html#we-want-this-dataframe",
     "href": "lectures/W04.html#we-want-this-dataframe",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "We want this dataframe",
     "text": "We want this dataframe\n\n\n# A tibble: 10 × 5\n   name               profession                 birth_year death_year known_for\n   &lt;chr&gt;              &lt;chr&gt;                           &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;    \n 1 Ada Lovelace       Mathematician                      NA         NA first co…\n 2 Marie Curie        Physicist and Chemist              NA         NA theory o…\n 3 Janaki Ammal       Botanist                         1897       1984 hybrid s…\n 4 Chien-Shiung Wu    Physicist                        1912       1997 confim a…\n 5 Katherine Johnson  Mathematician                    1918       2020 calculat…\n 6 Rosalind Franklin  Chemist                          1920       1958 &lt;NA&gt;     \n 7 Vera Rubin         Astronomer                       1928       2016 existenc…\n 8 Gladys West        Mathematician                    1930         NA mathemat…\n 9 Flossie Wong-Staal Virologist and Molecular …       1947         NA first sc…\n10 Jennifer Doudna    Biochemist                       1964         NA one of t…"
   },
   {
     "objectID": "lectures/W04.html#joining-dataframes",
     "href": "lectures/W04.html#joining-dataframes",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Joining dataframes",
     "text": "Joining dataframes\nsomething_join(x, y)1 for dataframes x and y which have a relation\n\nleft_join(): all rows from x must remain\nright_join(): all rows from y must remain\nfull_join(): all rows from both x and y must remain\ninner_join(): all rows from x where there are matching values in y remain\n… (more exist see dplyr cheatsheet)\n\nThe notion join comes from SQL database. In other data manipulation frameworks joining is called merging."
   },
   {
     "objectID": "lectures/W04.html#simple-setup-for-x-and-y",
     "href": "lectures/W04.html#simple-setup-for-x-and-y",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Simple setup for x and y",
     "text": "Simple setup for x and y\n\nx &lt;- tibble(\n  id = c(1, 2, 3),\n  value_x = c(\"x1\", \"x2\", \"x3\")\n)\ny &lt;- tibble(\n  id = c(1, 2, 4),\n  value_y = c(\"y1\", \"y2\", \"y4\")\n)\nx\n\n# A tibble: 3 × 2\n     id value_x\n  &lt;dbl&gt; &lt;chr&gt;  \n1     1 x1     \n2     2 x2     \n3     3 x3     \n\ny\n\n# A tibble: 3 × 2\n     id value_y\n  &lt;dbl&gt; &lt;chr&gt;  \n1     1 y1     \n2     2 y2     \n3     4 y4"
   },
   {
     "objectID": "lectures/W04.html#left_join",
     "href": "lectures/W04.html#left_join",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "left_join()",
     "text": "left_join()\n\n\n\n\n\nleft_join(x, y)\n\n# A tibble: 3 × 3\n     id value_x value_y\n  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  \n1     1 x1      y1     \n2     2 x2      y2     \n3     3 x3      &lt;NA&gt;"
   },
   {
     "objectID": "lectures/W04.html#right_join",
     "href": "lectures/W04.html#right_join",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "right_join()",
     "text": "right_join()\n\n\n\n\n\nright_join(x, y)\n\n# A tibble: 3 × 3\n     id value_x value_y\n  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  \n1     1 x1      y1     \n2     2 x2      y2     \n3     4 &lt;NA&gt;    y4"
   },
   {
     "objectID": "lectures/W04.html#full_join",
     "href": "lectures/W04.html#full_join",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "full_join()",
     "text": "full_join()\n\n\n\n\n\nfull_join(x, y)\n\n# A tibble: 4 × 3\n     id value_x value_y\n  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  \n1     1 x1      y1     \n2     2 x2      y2     \n3     3 x3      &lt;NA&gt;   \n4     4 &lt;NA&gt;    y4"
   },
   {
     "objectID": "lectures/W04.html#inner_join",
     "href": "lectures/W04.html#inner_join",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "inner_join()",
     "text": "inner_join()\n\n\n\n\n\ninner_join(x, y)\n\n# A tibble: 2 × 3\n     id value_x value_y\n  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  \n1     1 x1      y1     \n2     2 x2      y2"
   },
   {
     "objectID": "lectures/W04.html#women-in-science",
     "href": "lectures/W04.html#women-in-science",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Women in science",
     "text": "Women in science\n\nleft_join()right_joinfull_joininner_joinFinal\n\n\n\nprofessions |&gt; left_join(works)\n\n# A tibble: 10 × 3\n   name               profession                         known_for              \n   &lt;chr&gt;              &lt;chr&gt;                              &lt;chr&gt;                  \n 1 Ada Lovelace       Mathematician                      first computer algorit…\n 2 Marie Curie        Physicist and Chemist              theory of radioactivit…\n 3 Janaki Ammal       Botanist                           hybrid species, biodiv…\n 4 Chien-Shiung Wu    Physicist                          confim and refine theo…\n 5 Katherine Johnson  Mathematician                      calculations of orbita…\n 6 Rosalind Franklin  Chemist                            &lt;NA&gt;                   \n 7 Vera Rubin         Astronomer                         existence of dark matt…\n 8 Gladys West        Mathematician                      mathematical modeling …\n 9 Flossie Wong-Staal Virologist and Molecular Biologist first scientist to clo…\n10 Jennifer Doudna    Biochemist                         one of the primary dev…\n\n\n\n\n\nprofessions |&gt; right_join(works)\n\n# A tibble: 9 × 3\n  name               profession                         known_for               \n  &lt;chr&gt;              &lt;chr&gt;                              &lt;chr&gt;                   \n1 Ada Lovelace       Mathematician                      first computer algorithm\n2 Marie Curie        Physicist and Chemist              theory of radioactivity…\n3 Janaki Ammal       Botanist                           hybrid species, biodive…\n4 Chien-Shiung Wu    Physicist                          confim and refine theor…\n5 Katherine Johnson  Mathematician                      calculations of orbital…\n6 Vera Rubin         Astronomer                         existence of dark matter\n7 Gladys West        Mathematician                      mathematical modeling o…\n8 Flossie Wong-Staal Virologist and Molecular Biologist first scientist to clon…\n9 Jennifer Doudna    Biochemist                         one of the primary deve…\n\n\n\n\n\ndates |&gt; full_join(works)\n\n# A tibble: 10 × 4\n   name               birth_year death_year known_for                           \n   &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;                               \n 1 Janaki Ammal             1897       1984 hybrid species, biodiversity protec…\n 2 Chien-Shiung Wu          1912       1997 confim and refine theory of radioac…\n 3 Katherine Johnson        1918       2020 calculations of orbital mechanics c…\n 4 Rosalind Franklin        1920       1958 &lt;NA&gt;                                \n 5 Vera Rubin               1928       2016 existence of dark matter            \n 6 Gladys West              1930         NA mathematical modeling of the shape …\n 7 Flossie Wong-Staal       1947         NA first scientist to clone HIV and cr…\n 8 Jennifer Doudna          1964         NA one of the primary developers of CR…\n 9 Ada Lovelace               NA         NA first computer algorithm            \n10 Marie Curie                NA         NA theory of radioactivity,  discovery…\n\n\n\n\n\ndates |&gt; inner_join(works)\n\n# A tibble: 7 × 4\n  name               birth_year death_year known_for                            \n  &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;                                \n1 Janaki Ammal             1897       1984 hybrid species, biodiversity protect…\n2 Chien-Shiung Wu          1912       1997 confim and refine theory of radioact…\n3 Katherine Johnson        1918       2020 calculations of orbital mechanics cr…\n4 Vera Rubin               1928       2016 existence of dark matter             \n5 Gladys West              1930         NA mathematical modeling of the shape o…\n6 Flossie Wong-Staal       1947         NA first scientist to clone HIV and cre…\n7 Jennifer Doudna          1964         NA one of the primary developers of CRI…\n\n\n\n\n\nprofessions |&gt; left_join(dates) |&gt; left_join(works)\n\n# A tibble: 10 × 5\n   name               profession                 birth_year death_year known_for\n   &lt;chr&gt;              &lt;chr&gt;                           &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;    \n 1 Ada Lovelace       Mathematician                      NA         NA first co…\n 2 Marie Curie        Physicist and Chemist              NA         NA theory o…\n 3 Janaki Ammal       Botanist                         1897       1984 hybrid s…\n 4 Chien-Shiung Wu    Physicist                        1912       1997 confim a…\n 5 Katherine Johnson  Mathematician                    1918       2020 calculat…\n 6 Rosalind Franklin  Chemist                          1920       1958 &lt;NA&gt;     \n 7 Vera Rubin         Astronomer                       1928       2016 existenc…\n 8 Gladys West        Mathematician                    1930         NA mathemat…\n 9 Flossie Wong-Staal Virologist and Molecular …       1947         NA first sc…\n10 Jennifer Doudna    Biochemist                       1964         NA one of t…"
   },
   {
     "objectID": "lectures/W04.html#keys",
     "href": "lectures/W04.html#keys",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Keys",
     "text": "Keys\n\nA key is a variable or a set of variables which uniquely identifies observations\nWhat was the key in the dataframe of women in science? name\n\n\nSwitching back to nycflights13 as example\n\nIn simple cases, a single variable is sufficient to identify an observation, e.g. each plane in planes is identified by tailnum.\nSometimes, multiple variables are needed; e.g. to identify an observation in weather you need five variables: year, month, day, hour, and origin"
   },
   {
     "objectID": "lectures/W04.html#how-to-check-if-a-variable-is-a-key",
     "href": "lectures/W04.html#how-to-check-if-a-variable-is-a-key",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "How to check if a variable is a key?",
     "text": "How to check if a variable is a key?\nCounting observation and filter those more than one\n\n\n\n\n\n\n\nplanes |&gt; count(tailnum) |&gt; filter(n &gt; 1)\n\n# A tibble: 0 × 2\n# ℹ 2 variables: tailnum &lt;chr&gt;, n &lt;int&gt;\n\n\n\n\nweather |&gt; count(year, month, day, hour, origin) |&gt; filter(n &gt; 1)\n\n# A tibble: 3 × 6\n   year month   day  hour origin     n\n  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;int&gt;\n1  2013    11     3     1 EWR        2\n2  2013    11     3     1 JFK        2\n3  2013    11     3     1 LGA        2\n\n\nOK, here 3 observations are twice, one for each airport. Probably this is related to Daylight saving time in the US. In Fall clocks are turned back 1 hour. So this hour appears twice.\n\n\nExample: Without hour it is not a key\n\nweather |&gt; count(year, month, day, origin) |&gt; filter(n &gt; 1)\n\n# A tibble: 1,092 × 5\n    year month   day origin     n\n   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;int&gt;\n 1  2013     1     1 EWR       22\n 2  2013     1     1 JFK       22\n 3  2013     1     1 LGA       23\n 4  2013     1     2 EWR       24\n 5  2013     1     2 JFK       24\n 6  2013     1     2 LGA       24\n 7  2013     1     3 EWR       24\n 8  2013     1     3 JFK       24\n 9  2013     1     3 LGA       24\n10  2013     1     4 EWR       24\n# ℹ 1,082 more rows\n\n\nWhy do we have only 22 and 23 on day 1 of month 1? No idea. Dig deeper yourself!"
   },
   {
     "objectID": "lectures/W04.html#primary-and-foreign-keys",
     "href": "lectures/W04.html#primary-and-foreign-keys",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Primary and foreign keys",
     "text": "Primary and foreign keys\n\nA primary key uniquely identifies an observation in its own table. E.g, planes$tailnum in planes.\nA foreign key uniquely identifies an observation in another dataframe E.g. flights$tailnum is a foreign key in flights because it matches each flight to a unique plane in planes.\nA primary key and a foreign key form a relation.\n\nOften a 1-to-many relation. Each plane has many flights.\n\nImplication: Joining flights with planes duplicates the rows of planes for each flight of that plane.\n\n\nRelations can also be many-to-many. Airlines can fly to many airports; airport can host many airplanes."
   },
   {
     "objectID": "lectures/W04.html#joining-when-key-names-differ",
     "href": "lectures/W04.html#joining-when-key-names-differ",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Joining when key names differ?",
     "text": "Joining when key names differ?\nWe have to specify the key relation with a named vector in the by argument.\n\ndim(flights)\n\n[1] 336776     19\n\nflights |&gt; left_join(airports, by = c(\"dest\" = \"faa\"))\n\n# A tibble: 336,776 × 26\n    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time\n   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;\n 1  2013     1     1      517            515         2      830            819\n 2  2013     1     1      533            529         4      850            830\n 3  2013     1     1      542            540         2      923            850\n 4  2013     1     1      544            545        -1     1004           1022\n 5  2013     1     1      554            600        -6      812            837\n 6  2013     1     1      554            558        -4      740            728\n 7  2013     1     1      555            600        -5      913            854\n 8  2013     1     1      557            600        -3      709            723\n 9  2013     1     1      557            600        -3      838            846\n10  2013     1     1      558            600        -2      753            745\n# ℹ 336,766 more rows\n# ℹ 18 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,\n#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,\n#   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;, lat &lt;dbl&gt;,\n#   lon &lt;dbl&gt;, alt &lt;dbl&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;\n\n\nThe alternative (new default) version is to use the join_by function using the comparison sign ==.\n\nflights |&gt; left_join(airports, join_by(\"dest\" == \"faa\"))\n\n# A tibble: 336,776 × 26\n    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time\n   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;\n 1  2013     1     1      517            515         2      830            819\n 2  2013     1     1      533            529         4      850            830\n 3  2013     1     1      542            540         2      923            850\n 4  2013     1     1      544            545        -1     1004           1022\n 5  2013     1     1      554            600        -6      812            837\n 6  2013     1     1      554            558        -4      740            728\n 7  2013     1     1      555            600        -5      913            854\n 8  2013     1     1      557            600        -3      709            723\n 9  2013     1     1      557            600        -3      838            846\n10  2013     1     1      558            600        -2      753            745\n# ℹ 336,766 more rows\n# ℹ 18 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,\n#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,\n#   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;, lat &lt;dbl&gt;,\n#   lon &lt;dbl&gt;, alt &lt;dbl&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;\n\n\nWhy does the number of rows stays the same after joining?\n\nfaa is a primary key in airports. It is matched with dest as the foreign key in flights."
   },
   {
     "objectID": "lectures/W04.html#definition-sets-and-vectors",
     "href": "lectures/W04.html#definition-sets-and-vectors",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Definition: Sets and vectors",
     "text": "Definition: Sets and vectors\nA set is mathematical model for the unordered collection of different things (elements).\nExamples\n\n\\(\\{3, \\text{Hi}, 😀, 🖖 \\}\\)\n\\(\\{1,3,5\\}\\)\nThe natural numbers \\(\\mathbb{N} = \\{1, 2, 3, \\dots\\}\\) (infinite!)\n\\(\\{\\mathtt{\"EWR\"}, \\mathtt{\"LGA\"}, \\mathtt{\"JFK\"}\\}\\)\nthese are origin airports in flights"
   },
   {
     "objectID": "lectures/W04.html#math-sets-and-vectors-1",
     "href": "lectures/W04.html#math-sets-and-vectors-1",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Math: Sets and vectors",
     "text": "Math: Sets and vectors\nA vector is an ordered collection of things (components) of the same type.\nIn a set, each thing can only be once and the order does not matter!\n\n\\(\\{1,3,5\\} = \\{3,5,1\\} = \\{1,1,1,3,5,5\\}\\)\nFor vectors:\n\\([1\\ 3\\ 5] \\neq [3\\ 5\\ 1]\\) because we compare component-wise, so we cannot even compare with those with the vector \\([1\\ 1\\ 1\\ 3\\ 5\\ 5]\\)"
   },
   {
     "objectID": "lectures/W04.html#math-set-operations",
     "href": "lectures/W04.html#math-set-operations",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Math: Set operations",
     "text": "Math: Set operations\nSets \\(A = \\{🐺, 🦊, 🐶\\}\\) and \\(B = \\{🐶, 🐷, 🐹\\}\\), \\(C = \\{🐶, 🐷\\}\\):\n\nSet union \\(A \\cup B\\) = {🐺, 🦊, 🐶, 🐷, 🐹}\n\\(x \\in A \\cup B\\) when \\(x \\in A\\) | (or) \\(x\\in B\\)\nSet intersection \\(A \\cap B\\) = {🐶}\n\\(x \\in A \\cap B\\) when \\(x \\in A\\) & (and) \\(x\\in B\\)\nSet difference \\(A \\setminus B = \\{🐺, 🦊\\}\\), \\(B \\setminus A\\) = {🐷, 🐹}\nSubset: \\(C \\subset B\\) but \\(C \\not\\subset A\\)\n\n\nSee the analogy of set operations and logical operations."
   },
   {
     "objectID": "lectures/W04.html#set-operations-in-r",
     "href": "lectures/W04.html#set-operations-in-r",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Set operations in R",
     "text": "Set operations in R\nunique shows the set of elements in a vector\n\nunique(flights$origin)\n\n[1] \"EWR\" \"LGA\" \"JFK\"\n\n\n\nsetequal tests for set equality\n\nsetequal(c(\"EWR\", \"LGA\", \"JFK\"), c(\"EWR\", \"EWR\", \"LGA\", \"JFK\"))\n\n[1] TRUE\n\n\n\n\nunion, intersect, setdiff treat vectors as sets and operate as expected\n\nunion(1:5, 3:7)\n\n[1] 1 2 3 4 5 6 7\n\nintersect(1:5, 3:7)\n\n[1] 3 4 5\n\nsetdiff(1:5, 3:7)\n\n[1] 1 2\n\n\nRelations to joins: full_join() is like the union, inner_join() is like the intersection."
   },
   {
     "objectID": "lectures/W04.html#sets-take-away",
     "href": "lectures/W04.html#sets-take-away",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Sets: Take-away",
     "text": "Sets: Take-away\n\nSet operations are not a daily business in data science\nHowever, they are useful for data exploration!\nKnowing set operations is key to understand probability:\n\nA sample space is the set of all atomic events.\nAn event is a subset of the sample space\nA probability function assigns probabilities to all events."
   },
   {
     "objectID": "lectures/W04.html#functions-mathematically",
     "href": "lectures/W04.html#functions-mathematically",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Functions mathematically",
     "text": "Functions mathematically\nConsider two sets: The domain \\(X\\) and the codomain \\(Y\\).\nA function \\(f\\) assigns each element of \\(X\\) to exactly one element of \\(Y\\).\n\n\nWe write \\(f : X \\to  Y\\)\n“\\(f\\) maps from \\(X\\) to \\(Y\\)”\nand \\(x \\mapsto f(x)\\)\n“\\(x\\) maps to \\(f(x)\\)”\nThe yellow set is called the image of \\(f\\).\n\n\n\n\n\nPicture from wikipedia."
   },
   {
     "objectID": "lectures/W04.html#conventions-in-mathematical-text",
     "href": "lectures/W04.html#conventions-in-mathematical-text",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Conventions in mathematical text",
     "text": "Conventions in mathematical text\n\nSets are denoted with capital letters.\nTheir elements with (corresponding) small letters.\nFunctions are often called \\(f\\), \\(g\\), or \\(h\\).\nOther terminology can be used!\n\n\nImportant in math\n\nWhen you read math:\nKeep track of what objects are! What are functions, what are sets, what are numbers, …1\nWhen you write math: Define what objects are.\n\n\nWatch: How to read math https://www.youtube.com/watch?v=Kp2bYWRQylk"
   },
   {
     "objectID": "lectures/W04.html#is-this-a-mathematical-function",
     "href": "lectures/W04.html#is-this-a-mathematical-function",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Is this a mathematical function?",
     "text": "Is this a mathematical function?\n \\(\\ \\mapsto\\ \\) \nInput from \\(X = \\{\\text{A picture where a face can be recognized}\\}\\).\nFunction: Upload input at https://funny.pho.to/lion/ and download output.\nOutput from \\(Y = \\{\\text{Set of pictures with a specific format.}\\}\\)\n\nYes, it is a function. Important: Output is the same for the same input!"
   },
   {
     "objectID": "lectures/W04.html#is-this-a-mathematical-function-1",
     "href": "lectures/W04.html#is-this-a-mathematical-function-1",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Is this a mathematical function?",
     "text": "Is this a mathematical function?\nInput a text snippet. Function: Enter text at https://www.craiyon.com. Output a picture.\n\n\n\n\nOther examples:\n\n“Nuclear explosion broccoli”\n“The Eye of Sauron reading a newspaper”\n“The legendary attack of Hamster Godzilla wearing a tiny Sombrero”\n\n  \n\n\nNo, it is not a function. It has nine outcomes and these change when run again. Same for answers of LLMs to the same prompt."
   },
   {
     "objectID": "lectures/W04.html#graphs-of-functions",
     "href": "lectures/W04.html#graphs-of-functions",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Graphs of functions",
     "text": "Graphs of functions\n\nA function is characterized by the set all possible pairs \\((x,f(x))\\).\nThis is called its graph.\nWhen domain and codomain are real numbers then the graph can be shown in a Cartesian coordinate system. Example \\(f(x) = x^3 - x^2\\)\n\n\n\nCode\nggplot() +\n  geom_function(fun = function(x) x^3 - x^2) +\n  xlim(c(-0.5, 1.5)) +\n  xlab(\"x\") +\n  theme_minimal(base_size = 20)"
   },
   {
     "objectID": "lectures/W04.html#some-functions-f-mathbbr-to-mathbbr",
     "href": "lectures/W04.html#some-functions-f-mathbbr-to-mathbbr",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Some functions \\(f: \\mathbb{R} \\to \\mathbb{R}\\)",
     "text": "Some functions \\(f: \\mathbb{R} \\to \\mathbb{R}\\)\n\n\n\\(f(x) = x\\) identity function\n\\(f(x) = x^2\\) square function\n\\(f(x) = \\sqrt{x}\\) square root function\n\\(f(x) = e^x\\) exponential function\n\\(f(x) = \\log(x)\\) natural logarithm\n\nSquare and square root function are inverse of each other. Exponential and natural logarithm, too.\n\n\\(\\sqrt[2]{x}^2 = \\sqrt[2]{x^2} = x\\), \\(\\log(e^x) = e^{\\log(x)} = x\\)\n\nIdentity function graph as mirror axis.\n\n\n\n\nCode\nggplot() +\n  geom_function(fun = function(x) x) +\n  geom_function(fun = function(x) exp(x), color = \"red\") +\n  geom_function(fun = function(x) log(x), color = \"green\") +\n  geom_function(fun = function(x) x^2, color = \"orange\") +\n  geom_function(fun = function(x) sqrt(x), color = \"blue\") +\n  coord_fixed() +\n  xlim(c(-3, 3)) +\n  ylim(c(-3, 3)) +\n  xlab(\"x\") +\n  theme_minimal(base_size = 20)\n\n\n\n\n\n\n\n\n\n\n\n\n\\(e\\) is Euler’s number \\(2.71828\\dots\\). The natural logarithm is also often called \\(\\ln\\). The square root function is \\(\\mathbb{R}_{\\geq 0} \\to \\mathbb{R}\\), the logarithm \\(\\mathbb{R}_{&gt;0} \\to \\mathbb{R}\\)."
   },
   {
     "objectID": "lectures/W04.html#shifts-and-scales",
     "href": "lectures/W04.html#shifts-and-scales",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Shifts and scales",
     "text": "Shifts and scales\nHow can we shift, stretch, or shrink a graph vertically and horizontally?\n\n\n\\(y\\)-shift\\(x\\)-shift\\(y\\)-scale\\(x\\)-scale\n\n\n\n\nAdd a constant to the function.\n\\(f(x) = x^3 - x^2 \\leadsto\\)\n\\(\\quad f(x) = x^3 - x^2 + a\\)\nFor \\(a =\\) -2, -0.5, 0.5, 2\n\n\n\nCode\na &lt;- c(1, 0.5, 2, -0.5, -2)\nggplot() +\n  geom_function(fun = function(x) x^3 - x^2, size = 2, alpha = 0.5) +\n  geom_function(fun = function(x) x^3 - x^2 + a[2], color = \"blue4\", size = 2) +\n  geom_function(fun = function(x) x^3 - x^2 + a[3], color = \"blue\", size = 2) +\n  geom_function(fun = function(x) x^3 - x^2 + a[4], color = \"red4\") +\n  geom_function(fun = function(x) x^3 - x^2 + a[5], color = \"red\") +\n  coord_fixed() +\n  xlim(c(-3, 3)) +\n  ylim(c(-3, 3)) +\n  xlab(\"x\") +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSubtract a constant from all \\(x\\) within the function definition.\n\\(f(x) = x^3 - x^2 \\leadsto\\)\n\\(\\quad f(x) = (x - a)^3 - (x - a)^2\\)\nFor \\(a =\\) -2, -0.5, 0.5, 2\nAttention:\nShifting \\(a\\) units to the right needs subtracting \\(a\\)!\nYou can think of the coordinate system being shifted in direction \\(a\\) while the graph stays.\n\n\n\nCode\na &lt;- c(1, 0.5, 2, -0.5, -2)\nggplot() +\n  geom_function(fun = function(x) x^3 - x^2, size = 2, alpha = 0.5) +\n  geom_function(\n    fun = function(x) (x - a[2])^3 - (x - a[2])^2,\n    color = \"blue4\",\n    size = 2\n  ) +\n  geom_function(\n    fun = function(x) (x - a[3])^3 - (x - a[3])^2,\n    color = \"blue\",\n    size = 2\n  ) +\n  geom_function(fun = function(x) (x - a[4])^3 - (x - a[4])^2, color = \"red4\") +\n  geom_function(fun = function(x) (x - a[5])^3 - (x - a[5])^2, color = \"red\") +\n  coord_fixed() +\n  xlim(c(-3, 3)) +\n  ylim(c(-3, 3)) +\n  xlab(\"x\") +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMultiply a constant to all \\(x\\) within the function definition.\n\\(f(x) = x^3 - x^2 \\leadsto\\)\n\\(\\quad f(x) = a(x^3 - x^2)\\)\nFor \\(a =\\) -2, -0.5, 0.5, 2\nNegative numbers flip the graph around the \\(x\\)-axis.\n\n\n\nCode\na &lt;- c(1, 0.5, 2, -0.5, -2)\nggplot() +\n  geom_function(fun = function(x) x^3 - x^2, size = 2, alpha = 0.5) +\n  geom_function(\n    fun = function(x) a[2] * ((x)^3 - (x)^2),\n    color = \"blue4\",\n    size = 2\n  ) +\n  geom_function(\n    fun = function(x) a[3] * ((x)^3 - (x)^2),\n    color = \"blue\",\n    size = 2\n  ) +\n  geom_function(fun = function(x) a[4] * ((x)^3 - (x)^2), color = \"red4\") +\n  geom_function(fun = function(x) a[5] * ((x)^3 - (x)^2), color = \"red\") +\n  coord_fixed() +\n  xlim(c(-3, 3)) +\n  ylim(c(-3, 3)) +\n  xlab(\"x\") +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDivide all \\(x\\) within the function definition by a constant.\n\\(f(x) = x^3 - x^2 \\leadsto\\)\n\\(\\quad f(x) = (x/a)^3 - (x/a)^2\\)\nFor \\(a =\\) -2, -0.5, 0.5, 2\nNegative numbers flip the graph around the \\(y\\)-axis.\nAttention: Stretching needs a division by \\(a\\)!\nYou can think of the coordinate system being stretched multiplicatively by \\(a\\) while the graph stays.\n\n\n\nCode\na &lt;- c(1, 0.5, 2, -0.5, -2)\nggplot() +\n  geom_function(fun = function(x) x^3 - x^2, size = 2, alpha = 0.5) +\n  geom_function(\n    fun = function(x) (x / a[2])^3 - (x / a[2])^2,\n    color = \"blue4\",\n    size = 2\n  ) +\n  geom_function(\n    fun = function(x) (x / a[3])^3 - (x / a[3])^2,\n    color = \"blue\",\n    size = 2\n  ) +\n  geom_function(fun = function(x) (x / a[4])^3 - (x / a[4])^2, color = \"red4\") +\n  geom_function(fun = function(x) (x / a[5])^3 - (x / a[5])^2, color = \"red\") +\n  coord_fixed() +\n  xlim(c(-3, 3)) +\n  ylim(c(-3, 3)) +\n  xlab(\"x\") +\n  theme_minimal(base_size = 24)"
   },
   {
     "objectID": "lectures/W04.html#math-polynomials-and-exponentials",
     "href": "lectures/W04.html#math-polynomials-and-exponentials",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Math: Polynomials and exponentials",
     "text": "Math: Polynomials and exponentials\nA polynomial is a function which is composed of (many) addends of the form \\(ax^n\\) for different values of \\(a\\) and \\(n\\).\nIn an exponential the \\(x\\) appears in the exponent. \\(f(x) = x^2\\) vs. \\(f(x) = 2^x\\)\n\n\n\n\nCode\nggplot() +\n  geom_function(fun = function(x) x^2) +\n  geom_function(fun = function(x) 2^x - 1, color = \"red\") +\n  xlim(c(0, 1.5)) +\n  xlab(\"x\") +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\nNote: We use \\(f(x) = 2^x - 1\\) to have both functions start at (0,0).\n\nSame graph but for a larger range of \\(x\\):\n\n\nCode\nggplot() +\n  geom_function(fun = function(x) x^2) +\n  geom_function(fun = function(x) 2^x - 1, color = \"red\") +\n  xlim(c(0, 5)) +\n  xlab(\"x\") +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\n\nFor \\(x\\to\\infty\\), any exponential will finally “overtake” any polynomial."
   },
   {
     "objectID": "lectures/W04.html#max-and-operatornameargmax",
     "href": "lectures/W04.html#max-and-operatornameargmax",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "\\(\\max\\) and \\(\\operatorname{argmax}\\)",
     "text": "\\(\\max\\) and \\(\\operatorname{argmax}\\)\n\n\n\\(f(x) = -x^4 + x^2 + 0.05x\\)\n\n\nCode\nfun &lt;- function(x) -x^4 + x^2 + 0.05 * x\ndf &lt;- tibble(x = seq(-1, 1, by = 0.05), y = fun(x))\ndf |&gt;\n  ggplot(aes(x, y)) +\n  geom_line() +\n  geom_hline(yintercept = max(df$y), color = \"red\") +\n  geom_vline(xintercept = df$x[which.max(df$y)], color = \"blue\") +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\nThe domain of \\(x\\) is the interval \\([-1,+1]\\).\n\\(\\max\\) reports the maximal number of a \\(f(x)\\) given the domain of \\(x\\)\n\\(\\max\\limits_{x\\in[-1,+1]} f(x) = 0.2849\\)\n\\(\\operatorname*{argmax}\\) reports the value of \\(x\\) from its domain where \\(f(x)\\) achieves its maximal value\n\\(\\operatorname*{argmax}\\limits_{x\\in[-1,1]} f(x) = 0.7\\)\n\n\n\nAnalog concepts for the minimum \\(\\min\\)\nWarning: The result for \\(\\operatorname*{argmax}\\) is not mathematically precise because computationally we only have \\(x\\)-values in steps of 0.05."
   },
   {
     "objectID": "lectures/W04.html#computational-realization",
     "href": "lectures/W04.html#computational-realization",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Computational realization",
     "text": "Computational realization\nRecall vector creation functions\n\n1:10\n\n\n\n [1]  1  2  3  4  5  6  7  8  9 10\n\n\n\nseq(from = -0.5, to = 1.5, by = 0.1)\n\n\n\n [1] -0.5 -0.4 -0.3 -0.2 -0.1  0.0  0.1  0.2  0.3  0.4  0.5  0.6  0.7  0.8  0.9\n[16]  1.0  1.1  1.2  1.3  1.4  1.5\n\n\n\nseq(from = 0, to = 1, length.out = 10)\n\n\n\n [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667\n [8] 0.7777778 0.8888889 1.0000000\n\n\n\nrep(1:3, times = 3)\n\n\n\n[1] 1 2 3 1 2 3 1 2 3\n\n\n\nrep(1:3, each = 3)\n\n\n\n[1] 1 1 1 2 2 2 3 3 3"
   },
   {
     "objectID": "lectures/W04.html#computational-realization-1",
     "href": "lectures/W04.html#computational-realization-1",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Computational realization",
     "text": "Computational realization\nBack to our example\n\nx &lt;- seq(-1, 1, by = 0.05)\nx\n\n [1] -1.00 -0.95 -0.90 -0.85 -0.80 -0.75 -0.70 -0.65 -0.60 -0.55 -0.50 -0.45\n[13] -0.40 -0.35 -0.30 -0.25 -0.20 -0.15 -0.10 -0.05  0.00  0.05  0.10  0.15\n[25]  0.20  0.25  0.30  0.35  0.40  0.45  0.50  0.55  0.60  0.65  0.70  0.75\n[37]  0.80  0.85  0.90  0.95  1.00\n\ny &lt;- -x^4 + x^2 + 0.05 * x\ny\n\n [1] -0.05000000  0.04049375  0.10890000  0.15799375  0.19040000  0.20859375\n [7]  0.21490000  0.21149375  0.20040000  0.18349375  0.16250000  0.13899375\n[13]  0.11440000  0.08999375  0.06690000  0.04609375  0.02840000  0.01449375\n[19]  0.00490000 -0.00000625  0.00000000  0.00499375  0.01490000  0.02949375\n[25]  0.04840000  0.07109375  0.09690000  0.12499375  0.15440000  0.18399375\n[31]  0.21250000  0.23849375  0.26040000  0.27649375  0.28490000  0.28359375\n[37]  0.27040000  0.24299375  0.19890000  0.13549375  0.05000000\n\n\n\n\nmax(y)\n\n[1] 0.2849\n\n\n\n\nLogical vector and which (gives us the index of TRUE in the logical vector)\n\ny == max(y)\n\n [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE\n[13] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE\n[25] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE\n[37] FALSE FALSE FALSE FALSE FALSE\n\nwhich(y == max(y))\n\n[1] 35\n\nwhich.max(y)\n\n[1] 35\n\n\n\n\nWe find \\(\\operatorname*{argmax}\\limits_{x\\in[-1,1]} f(x)\\) by logical indexing in \\(x\\)\n\nx[y == max(y)]\n\n[1] 0.7\n\n\nIn this form it is never mathematically precise, because we use a “grid” of \\(x\\)-values nor every possible \\(x\\) (these would be infinitely many)."
   },
   {
     "objectID": "lectures/W04.html#optimization",
     "href": "lectures/W04.html#optimization",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Optimization",
     "text": "Optimization\n\nThe field of mathematical optimization boils \\(\\operatorname*{argmax}\\)-ing an objective function.\n\nThe objective function specifies what we want to have.\n\nIn Business, it can be profit. Input variables would specify how we could to allocate our resources. Often it is accompanied by constraints, like a limit for the total resources.\nAn analog concepts is a cost function which shall then be minimized.\n\n\n\n\n\nMachine learning and training AI is based on approximate optimization with an objective function\n\nOften called loss function (to be as low as possible)"
   },
   {
     "objectID": "lectures/W04.html#softmax",
     "href": "lectures/W04.html#softmax",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Softmax",
     "text": "Softmax\n$ A core concept of approximate optimization is using a Softmax-function\n\\(f: \\mathbb{R}^K \\to [0,1]^K\\)\nwhich maps \\(K\\) real numbers to \\(K\\) numbers between 0 and 1.\n\nWith \\(\\mathbf{x} = [x_1, \\dots, x_K]\\) it is for the \\(j\\)-th outcome number\n\\[\\sigma(\\mathbf{x})_j = \\frac{e^{\\beta x_j}}{e^{\\beta x_1} + e^{\\beta x_2} + \\dots + e^{\\beta x_K}} = \\frac{e^{\\beta x_j}}{\\sum_{k=1}^K  e^{\\beta x_k}}\\]\nwhere \\(\\beta\\) is a parameters specifying how approximate (or noisy) the optimization is.\n\n\nLet us look at our example in code:\n\ny &lt;- -x^4 + x^2 + 0.05 * x\ny\n\n [1] -0.05000000  0.04049375  0.10890000  0.15799375  0.19040000  0.20859375\n [7]  0.21490000  0.21149375  0.20040000  0.18349375  0.16250000  0.13899375\n[13]  0.11440000  0.08999375  0.06690000  0.04609375  0.02840000  0.01449375\n[19]  0.00490000 -0.00000625  0.00000000  0.00499375  0.01490000  0.02949375\n[25]  0.04840000  0.07109375  0.09690000  0.12499375  0.15440000  0.18399375\n[31]  0.21250000  0.23849375  0.26040000  0.27649375  0.28490000  0.28359375\n[37]  0.27040000  0.24299375  0.19890000  0.13549375  0.05000000\n\nbeta &lt;- 1\nexp(beta * y) / sum(exp(beta * y))\n\n [1] 0.02028933 0.02221102 0.02378357 0.02498033 0.02580311 0.02627686\n [7] 0.02644309 0.02635317 0.02606243 0.02562552 0.02509315 0.02451018\n[13] 0.02391474 0.02333814 0.02280535 0.02233575 0.02194403 0.02164098\n[19] 0.02143435 0.02132945 0.02132958 0.02143636 0.02164977 0.02196804\n[25] 0.02238733 0.02290119 0.02349987 0.02416943 0.02489072 0.02563834\n[31] 0.02637971 0.02707440 0.02767405 0.02812303 0.02836043 0.02832341\n[37] 0.02795217 0.02719651 0.02602337 0.02442455 0.02242317\n\n\n\n\nThe outcome softmax vector sums up to one by construction.\n\nsum(exp(beta * y) / sum(exp(beta * y)))\n\n[1] 1\n\n\nSo, we can interprete it as a probability distribution. We look at it again later."
   },
   {
     "objectID": "lectures/W04.html#input-to-output",
     "href": "lectures/W04.html#input-to-output",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Input \\(\\to\\) output",
     "text": "Input \\(\\to\\) output\n\n\nMetaphorically, a function is a machine or a blackbox that for each input yields an output.\nThe inputs of a function are also called arguments.\n\n\nDifference to math terminolgy:\nThe output need not be the same for the same input.\n\n\n\nPicture from wikipedia."
   },
   {
     "objectID": "lectures/W04.html#function-as-objects-in-r",
     "href": "lectures/W04.html#function-as-objects-in-r",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Function as objects in R",
-    "text": "Function as objects in R\nfunction is a class of an object in R\n\nclass(c)\n\n[1] \"function\"\n\nclass(ggplot2::ggplot)\n\n[1] \"function\"\n\n\nCalling the function without brackets writes its code or some information.\n\nsd # This function is written in R, and we see its code\n\nfunction (x, na.rm = FALSE) \nsqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), \n    na.rm = na.rm))\n&lt;bytecode: 0x5e903cde63f8&gt;\n&lt;environment: namespace:stats&gt;\n\nc # This function is not written in R but is a R primitive\n\nfunction (...)  .Primitive(\"c\")\n\nggplot2::ggplot # This function is not written solely in R\n\nfunction (data = NULL, mapping = aes(), ..., environment = parent.frame()) \n{\n    UseMethod(\"ggplot\")\n}\n&lt;bytecode: 0x5e903d4f2de0&gt;\n&lt;environment: namespace:ggplot2&gt;"
+    "text": "Function as objects in R\nfunction is a class of an object in R\n\nclass(c)\n\n[1] \"function\"\n\nclass(ggplot2::ggplot)\n\n[1] \"function\"\n\n\nCalling the function without brackets writes its code or some information.\n\nsd # This function is written in R, and we see its code\n\nfunction (x, na.rm = FALSE) \nsqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), \n    na.rm = na.rm))\n&lt;bytecode: 0x57ecb6ca5a58&gt;\n&lt;environment: namespace:stats&gt;\n\nc # This function is not written in R but is a R primitive\n\nfunction (...)  .Primitive(\"c\")\n\nggplot2::ggplot # This function is not written solely in R\n\nfunction (data = NULL, mapping = aes(), ..., environment = parent.frame()) \n{\n    UseMethod(\"ggplot\")\n}\n&lt;bytecode: 0x57ecb73b2440&gt;\n&lt;environment: namespace:ggplot2&gt;"
   },
   {
     "objectID": "lectures/W04.html#define-your-own-functions-in-r",
     "href": "lectures/W04.html#define-your-own-functions-in-r",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Define your own functions! (in R)",
     "text": "Define your own functions! (in R)\n\nadd_one &lt;- function(x) {\n  x + 1\n}\n# Test it\nadd_one(10)\n\n[1] 11\n\n\nThe skeleton for a function definition is\nfunction_name &lt;- function(input){\n  # do something with the input(s)\n  # return something as output\n}\n\nfunction_name should be a short but evocative verb.\nThe input can be empty or one or more name or name=expression terms as arguments.\nThe last evaluated expression is returned as output.\nWhen the body or the function is only one line {} can be omitted. For example\nadd_one &lt;- function(x) x + 1"
   },
   {
     "objectID": "lectures/W04.html#flexibility-of-inputs-and-outputs",
     "href": "lectures/W04.html#flexibility-of-inputs-and-outputs",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Flexibility of inputs and outputs",
     "text": "Flexibility of inputs and outputs\n\nArguments can be specified by name=expression or just expression (then they are taken as the next argument)\nDefault values for arguments can be provided. Useful when an argument is a parameter.\n\n\n\nmymult &lt;- function(x = 2, y = 3) x * (y - 1)\nmymult(3, 4)\n\n\n[1] 9\n\n\n\n\nmymult()\n\n\n[1] 4\n\n\n\n\nmymult(y = 3, x = 6)\n\n\n[1] 12\n\n\n\n\nmymult(5)\n\n\n[1] 10\n\n\n\n\nmymult(y = 2)\n\n\n[1] 2\n\n\n\nFor complex output use a list\n\n\nmymult &lt;- function(x = 2, y = 3) {\n  list(out1 = x * (y - 1), out2 = x * (y - 2))\n}\nmymult()\n\n\n$out1\n[1] 4\n\n$out2\n[1] 2"
   },
   {
     "objectID": "lectures/W04.html#vectorized-functions",
     "href": "lectures/W04.html#vectorized-functions",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Vectorized functions",
     "text": "Vectorized functions\nMathematical functions in programming are often “vectorized”:\n\nOperations on a single value are applied to each component of the vector.\nOperations on two values are applied “component-wise” (for vectors of the same length)\n\n\nlog10(c(1, 10, 100, 1000, 10000))\n\n\n\n[1] 0 1 2 3 4\n\n\n\nc(1, 1, 2) + c(3, 1, 0)\n\n\n\n[1] 4 2 2\n\n\n\n(0:5)^2\n\n\n\n[1]  0  1  4  9 16 25"
   },
   {
     "objectID": "lectures/W04.html#plotting-and-transformation",
     "href": "lectures/W04.html#plotting-and-transformation",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Plotting and transformation",
     "text": "Plotting and transformation\nVector creation and vectorized functions are key for plotting and transformation.\n\nfunc &lt;- function(x) x^3 - x^2 # Create a vectorized function\ndata &lt;- tibble(x = seq(-0.5, 1.5, by = 0.01)) |&gt; # Vector creation\n  mutate(y = func(x)) # Vectorized transformation using the function\ndata |&gt; ggplot(aes(x, y)) + geom_line() + theme_minimal(base_size = 20)"
   },
   {
     "objectID": "lectures/W04.html#conveniently-ggploting-functions",
     "href": "lectures/W04.html#conveniently-ggploting-functions",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Conveniently ggploting functions",
     "text": "Conveniently ggploting functions\n\nggplot() +\n  geom_function(fun = log) +\n  geom_function(fun = function(x) 3 * x - 4, color = \"red\") +\n  theme_minimal(base_size = 20)\n\n\nCode line 3 shows another important concept: anonymous functions. The function function(x) 3*x - 4 is defined on the fly without a name."
   },
   {
     "objectID": "lectures/W04.html#softmax-example",
     "href": "lectures/W04.html#softmax-example",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Softmax example",
     "text": "Softmax example\nIncreasing \\(\\beta\\) from black to red\n\n\nCode\nf &lt;- function(x) -x^4 + x^2 + 0.05 * x\nsoftmax &lt;- function(x, beta = 1) exp(beta * x) / sum(exp(beta * x))\nggplot() +\n  geom_function(fun = function(x) softmax(f(x))) +\n  geom_function(fun = function(x) softmax(f(x), beta = 5), color = \"blue\") +\n  geom_function(fun = function(x) softmax(f(x), beta = 10), color = \"purple\") +\n  geom_function(fun = function(x) softmax(f(x), beta = 30), color = \"red\") +\n  xlim(c(-1, 1))\n\n\n\nThe peak around the strict \\(\\operatorname{argmax}\\) becomes more and more pronounced the larger \\(\\beta\\) is!"
   },
   {
     "objectID": "lectures/W04.html#conditional-statements",
     "href": "lectures/W04.html#conditional-statements",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Conditional statements",
     "text": "Conditional statements\n\nif executes a code block if a condition is TRUE\nelse executes a code block if the condition is FALSE\n\nSkeleton\nif (condition) {\n  # code block\n} else {\n  # code block\n}\nExample: A piece-wise defined function\n\n\n\npiecewise &lt;- function(x) {\n  if (x &lt; 2) {\n    0.5 * x\n  } else {\n    x - 1\n  }\n}\n\n\n\npiecewise(1)\n\n[1] 0.5\n\npiecewise(2)\n\n[1] 1\n\npiecewise(3)\n\n[1] 2\n\n\n\n\nProblem: piecewise is not vectorized. piecewise(c(1,2,3)) does not work!"
   },
   {
     "objectID": "lectures/W04.html#vectorized-operations-with-map",
     "href": "lectures/W04.html#vectorized-operations-with-map",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Vectorized operations with map",
     "text": "Vectorized operations with map\n\nmap functions apply a function to each element of a vector.1\nmap(.x, .f, ...) applies the function .f to each element of the vector of .x and returns a list.\nmap_dbl returns a double vector (other variants exist)\n\n\n\n\nmap(c(1, 2, 3), piecewise)\n\n[[1]]\n[1] 0.5\n\n[[2]]\n[1] 1\n\n[[3]]\n[1] 2\n\nmap_dbl(c(1, 2, 3), piecewise)\n\n[1] 0.5 1.0 2.0\n\npiecewise_vectorized &lt;-\n  function(x) map_dbl(x, piecewise)\n\n\n\npiecewise_vectorized(seq(0, 3, by = 0.5))\n\n[1] 0.00 0.25 0.50 0.75 1.00 1.50 2.00\n\ntibble(x = seq(0, 3, by = 0.5)) |&gt;\n  mutate(y = piecewise_vectorized(x)) |&gt;\n  ggplot(aes(x, y)) +\n  geom_line() +\n  theme_minimal(base_size = 20)\n\n\n\n\n\n\n\n\n\nIn tidyverse they are provided in the package purrr"
   },
   {
     "objectID": "lectures/W04.html#reduce",
     "href": "lectures/W04.html#reduce",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "reduce",
     "text": "reduce\nInstead of a list or a vector reduce returns a single value.\nTo that end it needs a function with two arguments. It applies it to the first two elements of the vector, then to the result and the third element, then the result and the fourth element, and so on.\n\n1:10 |&gt; reduce(\\(x, y) x + y)\n\n[1] 55\n\n\nNote: \\(x) is a short way to write an anonymous function as function(x).\n\nExample: Reading multiple files\n\n\nInstead of\na &lt;-read_csv(\"a.csv\")\nb &lt;-read_csv(\"b.csv\")\nc &lt;-read_csv(\"c.csv\")\nd &lt;-read_csv(\"d.csv\")\ne &lt;-read_csv(\"e.csv\")\nf &lt;-read_csv(\"f.csv\")\ng &lt;-read_csv(\"g.csv\")\n\nbind_rows(a,b,c,d,e,f,g)\n\nWrite\nletter[1:7] |&gt; \n map(\\(x) read_csv(paste0(x,\".csv\"))) |&gt; \n reduce(bind_rows)\nThat is the map-reduce idea! It is a recurring pattern in distributed big data computing."
   },
   {
     "objectID": "lectures/W04.html#map-and-reduce",
     "href": "lectures/W04.html#map-and-reduce",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "map and reduce",
     "text": "map and reduce\n\nmap applies a function to each element of a vector (or list) and returns a list (or vector if map_dbl or other vaeriants are used)\n\nThe output has the same length as the input\n\nreduce applies a function taking two arguments and then summarizes the list by applying them two element 1 and 2 and then again the result with element 3 and then the result with element 4, …\n\nThe output is one object\n\nRemark: The problem of vectorizing a function which has an if and else statement (see the example piecewise_vectorized) can also be solved using the vectorized version of it:\nif_else(condition = *condition*, true = *value-if_TRUE*, false = *value-if_FALSE*)\nHere every argument can be a vector!"
   },
   {
     "objectID": "lectures/W04.html#function-programming-take-away",
     "href": "lectures/W04.html#function-programming-take-away",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Function programming: Take away",
     "text": "Function programming: Take away\n\nFunctions are the most important building blocks of programming.\nFunctions can and often should be vectorized.\nVectorized functions are the basis for plotting and transformation.\nmap functions are powerful tools for iterative tasks!\nExpect to not get the idea first but to love them later."
   },
   {
     "objectID": "lectures/W04.html#master-core-tidyverse-packages",
     "href": "lectures/W04.html#master-core-tidyverse-packages",
-    "title": "W#04: Strings, Relational Data, Shift-Scale Transformation, Function Programming",
+    "title": "W#04: Strings, Relational Data, Functions",
     "section": "Master core tidyverse packages",
     "text": "Master core tidyverse packages\n\nggplot you can do basic data visualization and improve towards the ability to produce great graphics\nreadr you can load data properly from text files\ntidyr you can reshape a data frame into the form you need\ndplyr you can wrangle data: select, filter and slice dataframes; summarize variables and create new variables using grouping; join different dataframes; …\nstringr you can manipulate character variables to produce what you need\nlubridate you learn how to properly work with date and time variables\npurrr you learn using map, reduce, and other function to automate tasks\nforcats you can handle categorical variables nicely for plotting using factors in R"
   },
@@ -1475,7 +1475,7 @@
     "href": "schedule.html",
     "title": "Schedule",
     "section": "",
-    "text": "Caution\n\n\n\nThe titles are still tentative.\n\n\n\nTabular Schedule\nData Science Tools on Thursday\nData Science Concepts on Monday\nFor online participation you find all events in your Teams Calendar.\nConcepts General Channel\nTools General Channel.\n\n\n\nWeek\nDates Concepts\nTopics\nDates Tools\nTools Topic\n\n\n\n\n1\n\nOnly Tools: Hello to Data Science Tools and Concepts Technical Setup\nSep-03\nR\n\n\n2\nSep-07\nW#01 What is Data Science?\nSep-10\nR\n\n\n3\nSep-14\nW#02 Data Visualization, Data Formats, Tidy Data\nSep-17\nR\n\n\n4\nSep-21\nW#03 Data Import, Data Wrangling\nSep-24\nR\n\n\n5\nSep-28\nW#04 Strings, Relational Data, Shift-Scale Transformation, Function Programming\nOct-01\nR\n\n\n6\nOct-05\nW#05 Descriptive Statistics, Exploratory Data Analysis\nOct-08\nR\n\n\n7\nOct-12\nW#06 Principal Component Analysis, Epidemic Modeling, Calculus\nOct-15\nR\n\n\n8\nOct-19\nW#07 Models in Science, Linear Model, Nonlinear Models\nOct-22\npython\n\n\n9\nOct-26\nW#08 Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression\nOct-29\npython\n\n\n10\nNov-02\nW#09  Prediction, Classification and Regression Decision Trees  Final Project Check-In\nNov-05\npython\n\n\n11\nNov-09\nW#10 Overfitting, Clustering Algorithms\nNov-12\npython\n\n\n12\nNov-16\nW#11 Collaborative Git, More Prediction Modeling, Quantifying Uncertainty\nNov-19\npython\n\n\n13\nNov-23\nW#12 Hypothesis Testing, Matrices, Probability\nNov-26\npython\n\n\n14\nNov-30\nW#13 To be announced.\nDec-03\npython\n\n\n15\nDec-07\nOnly Concepts Exam Preparation with a Mock Exam\n\n\n\n\nExam\n\nThe exam takes place as an online exam in the date range marked in the academic calendar\n\n\n\n\nProject\n\nDeadline for submission of the Final Project marked in the academic calendar\n\n\n\n\n\n\n2026\n\n\n\n\n2nd  Exam\n\nThose who fail the exam and those who are officially excused can sit in the second exam end of January 2026.  Date range marked in the academic calendar",
+    "text": "Caution\n\n\n\nThe titles are still tentative.\n\n\n\nTabular Schedule\nData Science Tools on Thursday\nData Science Concepts on Monday\nFor online participation you find all events in your Teams Calendar.\nConcepts General Channel\nTools General Channel.\n\n\n\nWeek\nDates Concepts\nTopics\nDates Tools\nTools Topic\n\n\n\n\n1\n\nOnly Tools: Hello to Data Science Tools and Concepts Technical Setup\nSep-03\nR\n\n\n2\nSep-07\nW#01 What is Data Science?\nSep-10\nR\n\n\n3\nSep-14\nW#02 Data Visualization, Data Formats, Tidy Data\nSep-17\nR\n\n\n4\nSep-21\nW#03 Data Import, Data Wrangling\nSep-24\nR\n\n\n5\nSep-28\nW#04 Strings, Relational Data, Functions\nOct-01\nR\n\n\n6\nOct-05\nW#05 Descriptive Statistics, Exploratory Data Analysis\nOct-08\nR\n\n\n7\nOct-12\nW#06 Principal Component Analysis, Epidemic Modeling, Calculus\nOct-15\nR\n\n\n8\nOct-19\nW#07 Models in Science, Linear Model, Nonlinear Models\nOct-22\npython\n\n\n9\nOct-26\nW#08 Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression\nOct-29\npython\n\n\n10\nNov-02\nW#09  Prediction, Classification and Regression Decision Trees  Final Project Check-In\nNov-05\npython\n\n\n11\nNov-09\nW#10 Overfitting, Clustering Algorithms\nNov-12\npython\n\n\n12\nNov-16\nW#11 Collaborative Git, More Prediction Modeling, Quantifying Uncertainty\nNov-19\npython\n\n\n13\nNov-23\nW#12 Hypothesis Testing, Matrices, Probability\nNov-26\npython\n\n\n14\nNov-30\nW#13 To be announced.\nDec-03\npython\n\n\n15\nDec-07\nOnly Concepts Exam Preparation with a Mock Exam\n\n\n\n\nExam\n\nThe exam takes place as an online exam in the date range marked in the academic calendar\n\n\n\n\nProject\n\nDeadline for submission of the Final Project marked in the academic calendar\n\n\n\n\n\n\n2026\n\n\n\n\n2nd  Exam\n\nThose who fail the exam and those who are officially excused can sit in the second exam end of January 2026.  Date range marked in the academic calendar",
     "crumbs": [
       "Syllabus",
       "Schedule"
@@ -1931,8 +1931,8 @@
     ]
   },
   {
-    "objectID": "material/M04.html#strings-relational-data-shift-scale-transformation-function-programming",
-    "href": "material/M04.html#strings-relational-data-shift-scale-transformation-function-programming",
+    "objectID": "material/M04.html#strings-relational-data-functions",
+    "href": "material/M04.html#strings-relational-data-functions",
     "title": "W#04",
     "section": "",
     "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.",
