@@ -1646,7 +1646,7 @@ You can think of the <em>coordinate system being stretched</em> multiplicatively
 </div>
 </div><div class="column fragment">
 <p>The domain of <span class="math inline">\(x\)</span> is the interval <span class="math inline">\([-1,+1]\)</span>.</p>
-<p><span class="math-red"><span class="math inline">\(\max\)</span></span> reports the maximal number of a <span class="math inline">\(f(x)\)</span> given the domain of <span class="math inline">\(x\)</span></p>
+<p><span class="math-red"><span class="math inline">\(\max\)</span></span> reports the maximum of <span class="math inline">\(f(x)\)</span> given the values in the domain of <span class="math inline">\(x\)</span></p>
 <p><span class="math inline">\(\max\limits_{x\in[-1,+1]} f(x) = 0.2849\)</span></p>
 <p><span class="math-blue"><span class="math inline">\(\operatorname*{argmax}\)</span></span> reports the value of <span class="math inline">\(x\)</span> from its domain where <span class="math inline">\(f(x)\)</span> achieves its maximal value</p>
 <p><span class="math inline">\(\operatorname*{argmax}\limits_{x\in[-1,1]} f(x) = 0.7\)</span></p>
@@ -1654,7 +1654,7 @@ You can think of the <em>coordinate system being stretched</em> multiplicatively
 <div class="fragment">
 <ul>
 <li>Analog concepts for the minimum <span class="math inline">\(\min\)</span></li>
-<li>Warning: The result for <span class="math inline">\(\operatorname*{argmax}\)</span> is not mathematically precise because computationally we only have <span class="math inline">\(x\)</span>-values in steps of 0.05.</li>
+<li>Warning: The result for <span class="math inline">\(\operatorname*{argmax}\)</span> is not mathematically precise because computationally we only have <span class="math inline">\(x\)</span>-values in steps of 0.05, in this computation.</li>
 </ul>
 </div>
 </section>
@@ -1770,7 +1770,7 @@ You can think of the <em>coordinate system being stretched</em> multiplicatively
 <section id="optimization" class="slide level2">
 <h2>Optimization</h2>
 <ul>
-<li>The field of <strong>mathematical optimization</strong> boils <span class="math inline">\(\operatorname*{argmax}\)</span>-ing an objective function.
+<li>The field of <span class="text-red"><strong>mathematical optimization</strong></span> boils down to <span class="text-red"><span class="math inline">\(\operatorname*{argmax}\)</span><strong>-ing an objective function</strong></span>.
 <ul>
 <li>The <strong>objective function</strong> specifies what we want to have.
 <ul>
@@ -1790,7 +1790,7 @@ You can think of the <em>coordinate system being stretched</em> multiplicatively
 </section>
 <section id="softmax" class="slide level2 scrollable">
 <h2>Softmax</h2>
-<p>$ A core concept of <em>approximate optimization</em> is using a <strong>Softmax</strong>-function</p>
+<p>A core concept of <em>approximate optimization</em> is using a <strong>Softmax</strong>-function</p>
 <p><span class="math inline">\(f: \mathbb{R}^K \to [0,1]^K\)</span></p>
 <p>which maps <span class="math inline">\(K\)</span> real numbers to <span class="math inline">\(K\)</span> numbers between 0 and 1.</p>
 <div class="fragment">
@@ -1833,7 +1833,7 @@ You can think of the <em>coordinate system being stretched</em> multiplicatively
 <pre><code>[1] 1</code></pre>
 </div>
 </div>
-<p>So, we can interprete it as a probability distribution. We look at it again later.</p>
+<p>So, we can interprete it as a <strong>probability distribution</strong>. We look at it again later.</p>
 </div>
 </section></section>
 <section>
@@ -1869,6 +1869,7 @@ You can think of the <em>coordinate system being stretched</em> multiplicatively
 <pre><code>[1] "function"</code></pre>
 </div>
 </div>
+<div class="fragment">
 <p>Calling the function without brackets writes its code or some information.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb163"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a></a>sd <span class="co"># This function is written in R, and we see its code</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1876,21 +1877,30 @@ You can think of the <em>coordinate system being stretched</em> multiplicatively
 <pre><code>function (x, na.rm = FALSE) 
 sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x), 
     na.rm = na.rm))
-&lt;bytecode: 0x57ecb6ca5a58&gt;
+&lt;bytecode: 0x5cf6aa267e88&gt;
 &lt;environment: namespace:stats&gt;</code></pre>
 </div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb165"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a></a>c <span class="co"># This function is not written in R but is a R primitive</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>function (...)  .Primitive("c")</code></pre>
 </div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb167"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a></a>ggplot2<span class="sc">::</span>ggplot <span class="co"># This function is not written solely in R</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>function (data = NULL, mapping = aes(), ..., environment = parent.frame()) 
 {
     UseMethod("ggplot")
 }
-&lt;bytecode: 0x57ecb73b2440&gt;
+&lt;bytecode: 0x5cf6aa68b2b8&gt;
 &lt;environment: namespace:ggplot2&gt;</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1906,6 +1916,7 @@ sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x),
 <pre><code>[1] 11</code></pre>
 </div>
 </div>
+<div class="fragment">
 <p>The skeleton for a function definition is</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb171"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a></a>function_name <span class="ot">&lt;-</span> <span class="cf">function</span>(input){</span>
 <span id="cb171-2"><a></a>  <span class="co"># do something with the input(s)</span></span>
@@ -1918,6 +1929,7 @@ sqrt(var(if (is.vector(x) || is.factor(x)) x else as.double(x),
 <li>When the body or the function is only one line <code>{}</code> can be omitted. For example<br>
 <code>add_one &lt;- function(x) x + 1</code></li>
 </ul>
+</div>
 </section>
 <section id="flexibility-of-inputs-and-outputs" class="slide level2 smaller">
 <h2>Flexibility of inputs and outputs</h2>
@@ -2032,7 +2044,7 @@ $out2
 <span id="cb190-4"><a></a>data <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W04_files/figure-revealjs/unnamed-chunk-84-1.png" width="960" class="r-stretch"></section>
+<img data-src="W04_files/figure-revealjs/unnamed-chunk-86-1.png" width="960" class="r-stretch"></section>
 <section id="conveniently-ggploting-functions" class="slide level2">
 <h2>Conveniently <code>ggplot</code>ing functions</h2>
 <div class="cell">
@@ -2042,7 +2054,7 @@ $out2
 <span id="cb191-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W04_files/figure-revealjs/unnamed-chunk-85-1.png" width="480" class="r-stretch"><p>Code line 3 shows another important concept: <strong>anonymous functions</strong>. The function <code>function(x) 3*x - 4</code> is defined <em>on the fly</em> without a name.</p>
+<img data-src="W04_files/figure-revealjs/unnamed-chunk-87-1.png" width="480" class="r-stretch"><p>Code line 3 shows another important concept: <strong>anonymous functions</strong>. The function <code>function(x) 3*x - 4</code> is defined <em>on the fly</em> without a name.</p>
 </section>
 <section id="softmax-example" class="slide level2">
 <h2>Softmax example</h2>
@@ -2057,11 +2069,15 @@ $out2
 <span id="cb192-5"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">softmax</span>(<span class="fu">f</span>(x), <span class="at">beta =</span> <span class="dv">5</span>), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
 <span id="cb192-6"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">softmax</span>(<span class="fu">f</span>(x), <span class="at">beta =</span> <span class="dv">10</span>), <span class="at">color =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
 <span id="cb192-7"><a></a>  <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">softmax</span>(<span class="fu">f</span>(x), <span class="at">beta =</span> <span class="dv">30</span>), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb192-8"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb192-8"><a></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb192-9"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
-<img data-src="W04_files/figure-revealjs/unnamed-chunk-86-1.png" width="960" class="r-stretch"><p>The peak around the strict <span class="math inline">\(\operatorname{argmax}\)</span> becomes more and more pronounced the larger <span class="math inline">\(\beta\)</span> is!</p>
+<img data-src="W04_files/figure-revealjs/unnamed-chunk-88-1.png" width="960" class="r-stretch"><ul>
+<li>The peak around the strict <span class="math inline">\(\operatorname{argmax}\)</span> becomes more and more pronounced the larger <span class="math inline">\(\beta\)</span> is!</li>
+<li><em>Softmax</em> means that we select the <span class="math inline">\(\operatorname{argmax}\)</span> more likely but not for sure. <span class="math inline">\(\beta\)</span> controls how close we become to select it for sure.</li>
+</ul>
 </section></section>
 <section>
 <section id="conditional-statements-if-and-iteration-map" class="title-slide slide level1 center">
@@ -2154,7 +2170,7 @@ $out2
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-90-1.png" width="960"></p>
+<p><img data-src="W04_files/figure-revealjs/unnamed-chunk-92-1.png" width="960"></p>
 </figure>
 </div>
 </div>
