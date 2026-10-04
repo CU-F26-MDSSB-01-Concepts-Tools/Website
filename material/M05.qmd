@@ -1,6 +1,7 @@
 ---
 week: "05"
 title: "W#05"
+format: html
 ---
 
 ## Descriptive Statistics, Exploratory Data Analysis {.unnumbered}

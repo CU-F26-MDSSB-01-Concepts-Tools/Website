@@ -1,6 +1,7 @@
 ---
 week: "02"
 title: "W#02"
+format: html
 ---
 
 ## Data Visualization, Data Formats  {.unnumbered}
@@ -9,26 +10,24 @@ Reconsider the Lecture Material, consider the Additional Readings and Material, 
 
 ## Lecture Material
 
-Slides: [Direct Link Part 1](https://docs.google.com/presentation/d/e/2PACX-1vTWTV9mb8L05yOeBOmJJ3N6KZSyI5WCFYsK0Z2NrnxMJhazAZGgz8vIXseN1lnOoVPllbGLRDOHajdk/pubembed?start=false&loop=false&delayms=3000)
-
-```{=html}
-<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTWTV9mb8L05yOeBOmJJ3N6KZSyI5WCFYsK0Z2NrnxMJhazAZGgz8vIXseN1lnOoVPllbGLRDOHajdk/pubembed?start=false&loop=false&delayms=3000" frameborder="1" width="800" height="485" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
-```
-
-Slides: [Direct Link Part 2](../lectures/W{{< meta week >}}.qmd)
+Slides: [Direct Link](../lectures/W{{< meta week >}}.qmd)
+[Direkt link "A short tour through examples of data visualization"](https://docs.google.com/presentation/d/e/2PACX-1vSpRGv3OkrWRX7C7X6b3M3B-yp0MvwdaOsfwvyG-y8v_MOKod46Vt5Fzo7r8C2C-VPYuVQkJCjXi4aF/pub?start=false&loop=false&delayms=3000)
 
 ```{=html}
 <iframe src="https://{{< var org.name >}}.github.io/Website/lectures/W{{< meta week >}}.html" frameborder="0" width="800" height="550" style="border:1px solid black;" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 ```
 
+ 
 
-Find the live recording in the [Course's Team's Recording Folder]({{< var teams.concepts.recording_folder_link >}}). 
+Find the live recording in Teams: [Recording Data Science Concepts]({{< var teams.concepts.recording_folder_link >}}) [Recording Data Science Tools]({{< var teams.concepts.recording_folder_link >}}). 
 
 ## Additional Readings and Material  
 
 - ggplot: The following sections in [R for Data Science](http://r4ds.hadley.nz) 
     - [Ch 1: Data Visualization](https://r4ds.hadley.nz/data-visualize)
     - If you want to go deeper already now, chapter [Ch 9: Layers](https://r4ds.hadley.nz/layers)
+- Tidy data: The following sections in [R for Data Science](http://r4ds.hadley.nz)
+    - [Ch. 5: Data tidying](https://r4ds.hadley.nz/data-tidy.html)
 
 
 ## Achievements
@@ -40,7 +39,7 @@ You
 - [ ] have made a bar chart, a scatter plot, and a line plot with ggplot
 - [ ] know how many rows and columns an $m\times n$ data frame has
 - [ ] can explain the basic data types, in particular `character`, `logical`, and `double` 
-- [ ] know what coercion of data is (what happens when different data types are combined in a vector)
+- [ ] know what coercion of data is (**Pass the test below!**)
 - [ ] have understood the concept of the tidy data format and can argue why a certain form of data representation is more or less tidy
 - [ ] made a data frame longer and wider 
 
@@ -48,7 +47,7 @@ You
 
 Find the Repositories of your Homework Projects in the Course's GitHub-Organization's [{{< var org.name >}} > Repositories](https://github.com/orgs/{{< var org.name >}}/repositories).
 
-**Project setup:** Follow the HOW-TO in your project repositry. Also: *Watch the first part of the Recording of Data Science Concepts* to see how the process of cloning the repository, previewing the report, and committing and pushing work back to GitHub looks. 
+**Project setup:** Follow the HOW-TO in your project repository. 
 
 Project's INSTRUCTIONS you should have completed:   
 
@@ -90,7 +89,7 @@ check_question(
 c("1", FALSE)
 ``` 
 
-1. Characters `"1" "FALSE`
+1. Characters `"1" "FALSE"`
 2. Numericals `1 0`
 3. Logicals  `TRUE, FALSE`
 4. Numericals `"FALSE" "FALSE"`
@@ -98,7 +97,6 @@ c("1", FALSE)
 ```{r}
 #| echo: false
 
-library(checkdown)
 check_question(
   1,
   options = c(1, 2, 3, 4),
@@ -120,7 +118,6 @@ check_question(
 ```{r}
 #| echo: false
 
-library(checkdown)
 check_question(
   3,
   options = c(1, 2, 3, 4),
@@ -142,7 +139,6 @@ check_question(
 ```{r}
 #| echo: false
 
-library(checkdown)
 check_question(
   1,
   options = c(1, 2, 3, 4),

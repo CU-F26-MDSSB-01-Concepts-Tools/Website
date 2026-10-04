@@ -1,6 +1,7 @@
 ---
 week: "12"
 title: "W#12"
+format: html
 ---
 
 ## Hypothesis Testing, Matrices, Probability {.unnumbered}

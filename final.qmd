@@ -1,10 +1,10 @@
 ---
 title: "Final Project"
+format: html
 ---
 
 ::: {.callout-important collapse=false appearance='default' icon=true}
-Project check-in has started. Deadline: Saturday, Nov 8.   
-Fill the form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim). (Ideally after you have formed a team and discussed your data source and initial questions.)
+[**Project check-in will start in the second half of the semester!** No need to act now, but you are invited to already think about your team and project.]{.red} <!--Deadline: Saturday, Nov 8.   Fill the form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim). (Ideally after you have formed a team and discussed your data source and initial questions.) -->
 :::
 
 
@@ -15,7 +15,7 @@ These are specifications and guidelines for the final **Data Science Project** a
 
 - You find a team,  
 - pick a dataset or the data source of the Homework Projects COVID19, FuelWatch, or DataScienceProfiles
-- check-in your project in the Form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim), 
+- check-in your project <!-- in the Form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim),-->
 - do some interesting question-driven data analysis with it, and
 - write up a well-structured and nicely formatted report about the analysis in your team's repository. 
 

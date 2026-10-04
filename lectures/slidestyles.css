@@ -1,0 +1,22 @@
+.ref {
+  font-size: 0.8em;
+}
+.hidden-cite {
+  display: none;
+}
+.slide-source {
+  font-size: 0.55em;
+}
+/* css styles */
+.text-red {
+  color: darkred;
+}
+.text-green {
+  color: darkgreen;
+}
+.math-red {
+  color: red;
+}
+.math-blue {
+  color: blue;
+}

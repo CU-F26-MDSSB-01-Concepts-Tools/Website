@@ -1,5 +1,6 @@
 ---
 title: "Data Science Concepts / Data Science Tools"
+format: html
 ---
 
 
@@ -35,14 +36,15 @@ The *concepts* treated in the lectures are applied with programming *tools* lear
 {{< var session1.concepts >}}    
 {{< var session2.concepts >}}       
 Location: {{< var room.concepts >}} in-person    
-*Video streaming and recording* in Microsoft Teams is provided for late-arriving students: 
-Team **{{< var teams.concepts.name >}}**, [General Channel]({{< var teams.concepts.link >}}) 
+*Video streaming and recording* in Microsoft Teams is provided for late-arriving students:   
+Team **{{< var teams.concepts.name >}}**, [Concepts General Channel]({{< var teams.concepts.link_general >}}) 
 
 **Data Science Tools:**   
 {{< var session1.tools >}}    
 {{< var session2.tools >}}       
-Location: **see campusnet** in-person     
-*Video streaming and recording* in Microsoft Teams is provided for late-arriving students. 
+Location: {{< var room.tools >}} in-person      
+*Video streaming and recording* in Microsoft Teams is provided for late-arriving students:   
+Team **{{< var teams.tools.name >}}**, [Tools General Channel]({{< var teams.tools.link_general >}}) 
 
 ## Instructors
 
@@ -51,7 +53,12 @@ Concepts: {{< var instructor.concepts >}}
 Tools: {{< var instructor.tools >}}
 
 Student Assistants:    
-
+Mcolisi Austine Shongwe  
+Morne Jeffrey Magerman  
+Pelin Kimiz  
+Rebeccah Chepkemoi Kapsekei  
+Uyazi Dube      
+Neha Barthwal
 
 ## Format and Workload
 

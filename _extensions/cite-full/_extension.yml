@@ -1,0 +1,7 @@
+title: cite-full
+author: Jan Lorenz
+version: 1.0.0
+quarto-required: ">=1.3"
+contributes:
+  shortcodes:
+    - cite-full.lua

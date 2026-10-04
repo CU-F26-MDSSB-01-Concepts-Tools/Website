@@ -1,6 +1,7 @@
 ---
 week: "03"
 title: "W#03"
+format: html
 ---
 
 ## Data Import, Data Wrangling  {.unnumbered}

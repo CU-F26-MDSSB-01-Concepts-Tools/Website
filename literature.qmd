@@ -1,5 +1,6 @@
 ---
 title: "Learning Resources"
+format: html
 ---
 
 <!-- LITERATURE / READING LIST -->

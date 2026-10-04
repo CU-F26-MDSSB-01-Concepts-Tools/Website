@@ -1,8 +1,10 @@
 ---
 week: "07"
 title: "W#07"
+format: html
 ---
 
+## `r rmarkdown::yaml_front_matter("lectures/W07.qmd")$title`
 ## Models in Science, Linear Model, Nonlinear Models, Causal Inference {.unnumbered}
 
 Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.

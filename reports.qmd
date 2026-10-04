@@ -1,5 +1,6 @@
 ---
 title: "Create a homework report"
+format: html
 ---
 
 When you are to create a reports in your Homework Project in quarto yourself these are the first steps. 

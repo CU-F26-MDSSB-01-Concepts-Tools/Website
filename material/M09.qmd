@@ -1,6 +1,7 @@
 ---
 week: "09"
 title: "W#09"
+format: html
 ---
 
 ## Prediction (Building a Spam Filter), Classification and Regression with Decision Trees {.unnumbered}

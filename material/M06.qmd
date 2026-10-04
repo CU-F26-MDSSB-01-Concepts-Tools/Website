@@ -1,6 +1,7 @@
 ---
 week: "06"
 title: "W#06"
+format: html
 ---
 
 ## Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus {.unnumbered}

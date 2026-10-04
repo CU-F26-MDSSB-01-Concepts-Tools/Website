@@ -1,5 +1,6 @@
 ---
 title: "Onboarding for late arriving students"
+format: html
 ---
 
 If you are a registered student but arrive after the semester start on campus or struggled with course registration, this is the page for you guiding you on how to **catch up** and **get into the study program for Data Science Concepts and Tools**! 

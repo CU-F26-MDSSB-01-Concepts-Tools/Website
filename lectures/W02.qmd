@@ -1,9 +1,9 @@
 ---
-title: "W#02 Data Visualization Data Formats"
-subtitle: "Part 2 - A tour with code"
+title: "W#02 Data Visualization, Data Formats, Tidy"
+subtitle: ""
 author: Jan Lorenz
 format: 
-  revealjs:
+  live-revealjs:
     smaller: true
     toc: true
     toc-depth: 1
@@ -11,11 +11,167 @@ format:
     chalkboard: 
       buttons: true
     preview-links: true
+    css: slidestyles.css
     logo: img/ConstructorUniversity.png
     footer: "MDSSB-DSCO-02: Data Science Concepts"
+webr:
+  packages:
+    - tidyr
+    - dplyr
+    - ggplot2
+  show-startup-message: true
 ---
 
-# Grammar of Graphics with `ggplot`
+<!-- Presentation notes:
+Get through Visualization and beginning of ggplot in Session 1
+Session 2: ggplot pragmatics, Data Formats, Tidy Data, Pipe is tough (15-20 min each)
+Reconsider the stucture. 
+Pipe is duplicated in W03
+Relate tidy data to visualization
+ -->
+
+
+{{< include ../_extensions/r-wasm/live/_knitr.qmd >}}
+
+# Data Visualization
+
+Definition: Creating images that convey salient information about [**underlying data**]{.text-red} and processes.
+
+## Visualization in the Data Science Process
+
+::: {.absolute .fragment}
+![](img/VisCom_DataScienceProcess_1.png)
+:::
+::: {.absolute .fragment}
+![](img/VisCom_DataScienceProcess_2.png)
+:::
+::: {.absolute .fragment}
+![](img/VisCom_DataScienceProcess_3.png)
+:::
+
+## Visualization for exploring data
+
+::: {.columns}
+::: {.column}
+**Exploring =**   
+**Transforming + [Visualizing]{.text-red}** Data   
+(we omit Modeling for now.)
+
+Packages: `dplyr` + `ggplot`
+:::
+::: {.column}
+![](https://r4ds.had.co.nz/diagrams/data-science-explore.png)
+:::
+:::
+
+. . . 
+
+::: {.columns}
+::: {.column}
+**Wrangling = **    
+**Import + Tidying + Transforming**
+
+`readr` + `tidyr` + `dplyr`
+:::
+::: {.column}
+![](https://r4ds.had.co.nz/diagrams/data-science-wrangle.png)
+:::
+:::
+
+. . .
+
+Before *Data Exploration* comes *Data Wrangling*, but we focus on exploring first!
+
+# A short tour through examples of data visualization
+
+Extra [Presentation](https://docs.google.com/presentation/d/e/2PACX-1vSpRGv3OkrWRX7C7X6b3M3B-yp0MvwdaOsfwvyG-y8v_MOKod46Vt5Fzo7r8C2C-VPYuVQkJCjXi4aF/pub?start=false&loop=false&delayms=3000)
+
+# Grammar of Graphics
+
+Our way to think about, talk about, and produce data visualizations
+
+## The Grammar of Graphics
+
+**Leland Wilkinson's** wrote the Grammar of Graphics: A general scheme for data visualization which breaks up graphs into semantic components such as scales and layers.
+
+. . . 
+
+::: {.columns}
+
+::: {.column width=70%}
+Inspired **Hadley Wickham** to develop the R-package [`ggplot`](https://ggplot2.tidyverse.org/reference/ggplot.html) (Grammar of Graphics Plot).
+:::
+::: {.column width=30%}
+![](https://ggplot2.tidyverse.org/logo.png)
+:::
+:::
+
+. . .
+
+::: {.slide-source}
+Wilkinson, L. (2005). [The Grammar of Graphics](https://doi.org/10.1007/0-387-28695-0). Springer-Verlag.     
+Wickham, H. (2010). [A Layered Grammar of Graphics](https://doi.org/10.1198/jcgs.2009.07098). Journal of Computational and Graphical Statistics, 19(1), 3–28. 
+:::
+
+## Grammar of Graphics: Basics
+
+::: {.columns}
+::: {.column}
+![](img/ggplotbasics1.png)
+:::
+::: {.column .fragment}
+![](img/ggplotbasics2.png)
+:::
+:::
+
+::: {.slide-source}
+From the ggplot Cheatsheet <https://rstudio.github.io/cheatsheets/data-visualization.pdf>
+:::
+
+## Aesthetics in gglot
+
+Definition **Aesthetic**: Visual property of plot elements that can be mapped to variables in the dataset. 
+
+. . .
+
+The main 8 aesthetics in ggplot:
+
+::: {.incremental}
+1. `x`: The x-axis position.
+2. `y`: The y-axis position.
+3. `color` (or `colour`): The color of points, lines, or borders around shapes.
+4. `fill`: The fill color of shapes (like bars in a bar plot).
+5. `size`: The size of points or thickness of lines.
+6. `shape`: The shape of points.
+7. `linetype`: The type of line (solid, dashed, dotted, etc.).
+8. `alpha`: The transparency level of points or shapes.
+:::
+
+## geom = Geometric object
+
+Definition: A **geom** defines the type of visual elements used to represent data in a plot, like points, lines, bars, or boxes. Geoms dictate how variable values mapped to aesthetics are displayed
+
+. . .
+
+::: {.columns}
+::: {.column}
+3 Core geoms
+
+1. `geom_point()` uses aesthetics like x, y, color, and size to create a scatter plot.
+2. `geom_line()` connects data points using lines, with aesthetics like x, y, and linetype.
+3. `geom_col()` creates bar charts using aesthetics like x, y, and fill.
+:::
+::: {.column .fragment}
+Some geoms also aggregate data
+
+- `geom_bar()` first counts observations and uses the counts for x or y before making a bar chart. 
+- `geom_histogram()` groups numbers in equally sized bins and counts values in bins before making a bar chart. 
+- `geom_smooth()` creates a line through a scattered set of data points in the x-y plane.
+:::
+:::
+
+
+# `ggplot` workflow
 
 ## Let us walk through the workflow
 
@@ -173,6 +329,12 @@ ggplot(aes(x = cty, y = hwy)) + geom_point(data = mpg)
 ggplot(mpg,aes(hwy, x = cty)) + geom_point() 
 ggplot(mapping = aes(y = hwy, x = cty)) + geom_point(mpg) 
 ```
+
+```{webr}
+
+```
+
+
 
 . . .
 
@@ -395,7 +557,56 @@ our_plot + theme_dark()
 ```
 
 
-# Data Types and Tidy Data
+# Data Types
+
+## Tabular Data
+
+For analysis we need **well structured data**. Often [**tabular form**]{.text-red}. Like a spreadsheet:
+
+![](img/tabulardata.png)
+
+Dimension of a table: Always count the rows first! [**m-by-n table**]{.text-red}   
+Example: cell **(4,3)** is in **row 4** and **column 3**.
+
+Warning: Spreadsheet cell labelling differs. Columns have letter-labels and go first.   
+**Cell (4,3) is C4**
+
+## Basic Data types in R, atomic vectors
+
+[**character:**]{.text-red} `"a"`, `"swc"`  
+[**double:**]{.text-red} `2`, `15.5` (double precision floating point numbers)   
+**integer:** `2L` (L tells R to store as integer)   
+[**logical:**]{.text-red} `TRUE`, `FALSE`   
+**complex:** `1+4i` (complex number with real and imaginary parts)   
+These exist in similar ways in other programming languages.
+
+[**Atomic vectors**]{.text-red} are ***ordered*** *collections* of values of the same data type.   
+**Construction in R:** `c(2,3,4)` or `c(TRUE, FALSE)` or `c("A","B")`    
+**Properties:** `typeof()` and `length()`
+
+::: aside
+For historic reasons, *double* and *integer* are both of the R class ***numeric***. Another rare data type *raw* which stores bytes. Check the type of an object `x` with `typeof(x)`.
+:::
+
+## Type Coercion
+
+**What happens when values of different data type are combined?**  
+(in R and python or other *dynamically typed* programming languages)
+
+Combined could mean for example for `x` and `y`
+
+- Put together in a vector `c(x,y)`
+- Added (e.g. with `x + y`)
+- Compared (e.g. with `x == y`)
+
+. . . 
+
+[**Coercion!**]{.tex-red}
+
+logical and integer -> integer (TRUE is 1, FALSE is 0)  
+integer and double -> double  
+double and character -> character  
+
 
 ## Let us test coercion
 
@@ -465,6 +676,13 @@ z + a
 
 Not possible, because stings cannot be added. 
 
+```{webr}
+x <- TRUE
+y <- 2L
+z <- 3
+a <- "4"
+```
+
 
 ## Danger! Floating point numbers
 
@@ -499,16 +717,185 @@ a - b
 Aha, the difference is about $2.8 \times 10^{-17}$ (The `e` stands for [scientific notation](https://en.wikipedia.org/wiki/Scientific_notation), learn to read it!)
 Such problems can happen when subtracting and comparing floating point numbers!
 
+## Lists, Dataframes (=Tibbles)
 
-## Tidying
+::: {.columns}
 
-What is tidy depends to some extent on the purpose you want to use the data for.
+::: {.column}
 
-Let us practice the two important commands
+[**List**]{.text-red} `list()`
 
-`pivot_longer`
+- act as container
+- contents of a list are not restricted to a single type
+- lists can contain further lists (and so on …)
+- the basic data type for building and storing complex data structures
+- in R syntax the “$” is important for constructing and accessing
 
-`pivot_wider`
+
+:::
+
+::: {.column .fragment}
+
+[**Dataframe**]{.text-red} 
+
+- the way to store tabular data
+- it can be seen as a **list of atomic vectors which all have the same length**
+
+[**Tibble**]{.text-red}
+
+- An advanced type of data frame invented in the tidyverse
+- Behaves a bit nicer in daily routines
+- Largely identical in behavior and easy to convert 
+
+
+:::
+
+:::
+
+## tibble and data.
+
+```{webr}
+mpg
+as_tibble(mpg)
+```
+
+## Data Types Summary
+
+
+::: {.columns}
+
+::: {.column}
+
+The most important basic data types: 
+
+- character
+- logical
+- double
+
+These can be combined to atomic vectors: an indexed list of n values
+
+- character vector
+- logical vector
+- double vector
+
+
+:::
+
+::: {.column}
+
+**Lists** are similar to vectors (and indexed list of n values) but every element can be anything, an atomic vector of any type and length or even another list. 
+
+**Dataframes** (and **Tibbles**) are a special type of lists: A list of atomic vectors (the columns) of the same length. Additional to the numerical index 1 to n, the list elements also have names (the variable names). 
+
+:::
+
+:::
+
+
+
+
+# Tidy Data
+
+## Definition of tidy
+
+![](img/tidydata.png)
+
+There are three interrelated rules which make a dataset tidy:
+
+- Each variable must have its own column.
+- Each observation must have its own row.
+- Each value must have its own cell.
+
+::: aside
+The name of the concept *tidy data* is promoted in the tidyverse (who could have guessed…)
+:::
+
+## Example Tidy Data
+
+Which data is tidy?
+
+::: {.absolute .fragment}
+![](img/tidyexample1.png)
+:::
+::: {.absolute .fragment}
+![](img/tidyexample2.png)
+:::
+::: {.absolute .fragment}
+![](img/tidyexample3.png)
+:::
+
+
+## Characteristics of tidy data
+
+**Tidy data**
+
+- Each column is a meaningful variable
+- Each row is a meaningful observation
+
+Additionally
+
+- Each type of observational unit forms another table (see the nycflights13 data for a collection of connected tables)
+
+. . .
+
+**Untidy data**
+
+. . .
+
+... can be anything
+
+
+## Pivoting
+
+Functions from the `tidyverse` package `tidyr`
+
+
+::: {.columns}
+
+::: {.column}
+
+The most important functions are 
+
+**`pivot_longer()`**  
+`pivot_wider()`
+
+Pivoting to longer means that we collect variable names in
+a new variable
+
+
+:::
+
+::: {.column}
+
+![](img/pivot_longer.png)
+
+:::
+
+:::
+
+
+## Pivoting to wider
+
+
+::: {.columns}
+
+::: {.column}
+
+When observation is scattered across multiple rows. Typically you have
+
+- A key-variable which makes the new column names
+- A value-variable which makes the values in the cells of the new variables
+
+
+:::
+
+::: {.column}
+
+![](img/pivot_wider.png)
+
+:::
+
+:::
 
 
 ## `pivot_longer`
@@ -534,7 +921,9 @@ data_longer <- pivot_longer(
 data_longer
 ```
 
-## Input: The pipe `|>`
+# The pipe `|>`
+
+## `|>`
 
 In data wrangling it is common to do various data manipulations one after the other.  
 A common tool is to use the pipe to give it an ordered structure in the writing. 
@@ -546,9 +935,10 @@ When `do_this` is a function and `to_this` is an object like a dataframe then
 
 ```R
 do_this(to_this)
-```R
+```
 
 is the same as 
+
 ```R
 to_this |> do_this()
 ```
@@ -565,9 +955,6 @@ is the same as
 ```R
 data |> function1() |> function2() |> function3()
 ```
-
-
-
 
 
 

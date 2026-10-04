@@ -1,6 +1,7 @@
 ---
 week: "08"
 title: "W#08"
+format: html
 ---
 
 ##  Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression {.unnumbered}

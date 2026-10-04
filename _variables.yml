@@ -6,16 +6,21 @@ org:
 link: 
   academic-calendar: https://constructor.university/student-life/academic-calendar/academic-calendar-2026
   program_onsite: https://constructor.university/programs/graduate-education/data-science-for-society-business
-  handbook_onsite: "https://constructor.university/sites/default/files/2025-08/2025-DSSB-MSc.pdf"
+  handbook_onsite: https://constructor.university/sites/default/files/2026-08/DSSB_MSc_HandBook_2026.pdf
   registrar_services: https://constructor.university/student-life/student-services/registrar-services
   grading: https://constructor.university/sites/default/files/2023-02/Grading_Table_2023.pdf
 teams:
   concepts: 
-    link: #https://teams.microsoft.com/l/channel/19%3AFTugJeuNUGHKyuzX4jD0RIcQUQAx0upN2ss556C05XM1%40thread.tacv2/General?groupId=e433aa5a-f5c2-47c1-ad50-220ac81e9455&tenantId=f78e973e-5c0b-4ab8-bbd7-9887c95a8ebd
-    recording_folder_link: #https://constructoruniversity.sharepoint.com/:f:/s/f26_mdssbdsoc02_datascienceconcepts/EsR-fgW1oalGoOE_26PasggBVVRg-siJqnhCcDO6oePRqw?e=9HoMoI
+    link_general: https://teams.microsoft.com/l/channel/19%3AYCLREw5LB6BH5_bdwUpo1qXO4mhsC-yU3lTJ8J5H6zk1%40thread.tacv2/General?groupId=fd12dacc-09f9-44f3-879b-d6523ceb3383&tenantId=f78e973e-5c0b-4ab8-bbd7-9887c95a8ebd
+    recording_folder_link: https://constructoruniversity.sharepoint.com/:f:/s/f26_mdssbdsoc02_datascienceconcepts/IgCafQLbOLAqRLGERLRwuX56AdQTvr-1JHgJK4COqTQElRw?e=uSEk5p
     name: F26_MDSSB-DSOC-02_Data Science Concepts
+  tools: 
+    link_general: https://teams.microsoft.com/l/channel/19%3ASkIY4LDMSDLnQiaGSRsiQa-O68wWZSrGQc4yehn_cJQ1%40thread.tacv2/General?groupId=b75668cd-17b1-4419-ac5d-5d35f1ae18b1&tenantId=f78e973e-5c0b-4ab8-bbd7-9887c95a8ebd
+    recording_folder_link: https://constructoruniversity.sharepoint.com/:f:/s/f26_mdssbmet01_datasciencetoolsinrandpython/IgAWaQgyzEfAS5al6k9xyBEkASXzIxGlhn9Oso72AzDf0M0?e=FVqom8
+    name: F26_MDSSB-MET-01_Data Science Tools in R and Python
 room: 
-  concepts: "SH-229 Video Conference in South Hall"
+  concepts: "RLH-274 Seminar Room (Reimar Lüst Hall)"
+  tools: "IRC Seminar Room III (IRC Building, 3rd Floor)"
 session1:
   concepts: "Mon 9:45 - 11:00"
   tools: "Thu 9:45 - 11:00"

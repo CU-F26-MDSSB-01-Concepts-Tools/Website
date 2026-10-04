@@ -1,6 +1,7 @@
 ---
 week: "11"
 title: "W#11"
+format: html
 ---
 
 ## Collaborative Git, More Prediction Modeling, Quantifying Uncertainty, Crowd Wisdom {.unnumbered}

@@ -9,27 +9,28 @@ project:
     - literature.qmd
     - help.qmd
     - material/M01.qmd
-    # # - material/M02.qmd
-    # # - material/M03.qmd
-    # # - material/M04.qmd
-    # # - material/M05.qmd
-    # # - material/M06.qmd
-    # # - material/M07.qmd
-    # # - material/M08.qmd
-    # # - material/M09.qmd
-    # # - material/M10.qmd
-    # # - material/M11.qmd
-    # # - material/M12.qmd
-    # - lectures/W02.qmd
-    # - lectures/W03.qmd
-    # - lectures/W04.qmd
+    - lectures/W01.qmd
+    - material/M02.qmd
+    - lectures/W02.qmd
+    - material/M03.qmd
+    - lectures/W03.qmd
+    - material/M04.qmd
+    - lectures/W04.qmd
+    # - material/M05.qmd
     # - lectures/W05.qmd
+    # - material/M06.qmd
     # - lectures/W06.qmd
+    # - material/M07.qmd
     # - lectures/W07.qmd
+    # - material/M08.qmd
     # - lectures/W08.qmd
+    # - material/M09.qmd
     # - lectures/W09.qmd
+    # - material/M10.qmd
     # - lectures/W10.qmd
+    # - material/M11.qmd
     # - lectures/W11.qmd
+    # - material/M12.qmd
     # - lectures/W12.qmd
     
 execute:
@@ -40,7 +41,7 @@ website:
   announcement: 
     icon: fast-forward #info-circle
     dismissable: true
-    content: "**New here?** Priority 1: **Become member of GitHub-Organization** [{{< var org.name >}}]({{< var org.link >}}), Priority 2: Get your computer's [**Technical Setup**](setup.qmd) ready!"
+    content: "**New here?**<br> Priority 1: **Come to class** in person! (As late arriving student: Come on Teams.) <br> Priority 2: **Become member of GitHub-Organization** [{{< var org.name >}}]({{< var org.link >}}) <br> Priority 3: Get your computer's [**Technical Setup**](setup.qmd) ready!"
 #"[**Data Science Tools Final Project Check-In**](https://forms.office.com/e/75qEdyZbim) open! Deadline Sat, Nov 8."
 #"All [Homework Projects](https://{{< var org.name >}}.github.io/Website/homework.html) listed. Tools module passing requirements specified in [Syllabus](https://{{< var org.name >}}.github.io/Website#tools-module).*"
     type: warning
@@ -58,26 +59,39 @@ website:
         
   sidebar:
     style: "docked"
-    search: true
-    collapse-level: 2
+    collapse-level: 1
     contents:
       - text: "Syllabus"
         file: index.qmd
       - section: Schedule 
         href: schedule.qmd
         contents:
-          - material/M01.qmd
-          # - material/M02.qmd
-          # - material/M03.qmd
-          # - material/M04.qmd
-          # - material/M05.qmd
-          # - material/M06.qmd
-          # - material/M07.qmd
-          # - material/M08.qmd
-          # - material/M09.qmd
-          # - material/M10.qmd
-          # - material/M11.qmd
-          # - material/M12.qmd
+          - text: "#W01" 
+            href: material/M01.qmd
+          - text: "#W02"
+            href: material/M02.qmd
+          - text: "#W03"
+            href: material/M03.qmd
+          - text: "#W04"
+            href: material/M04.qmd
+          - text: "#W05"
+            # href: material/M05.qmd
+          - text: "#W06"
+            # href: material/M06.qmd
+          - text: "#W07"
+            # href: material/M07.qmd
+          - text: "#W08"
+            # href: material/M08.qmd
+          - text: "#W09"
+            # href: material/M09.qmd
+          - text: "#W10"  
+            # href: material/M10.qmd
+          - text: "#W11"
+            # href: material/M11.qmd
+          - text: "#W12"
+            # href: material/M12.qmd
+          - text: "#W13"
+            # href: material/M13.qmd
       - setup.qmd
       - literature.qmd
       # - text: "Onboarding Late-arriving"
@@ -92,6 +106,17 @@ format:
     css: styles.css
     toc: true
     number-sections: true
+  live-revealjs:
+    smaller: true
+    toc: true
+    toc-depth: 1
+    slide-number: true
+    chalkboard: 
+      buttons: true
+    preview-links: true
+    css: slidestyles.css
+    logo: img/ConstructorUniversity.png
+    footer: "MDSSB-DSCO-02: Data Science Concepts"
 
 
 

@@ -1,9 +1,10 @@
 ---
 week: "04"
 title: "W#04"
+format: html
 ---
 
-## Relational Data, Math: Sets and Functions, Programming Functions {.unnumbered}
+## Strings, Relational Data, Functions  {.unnumbered}
 
 Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.
 

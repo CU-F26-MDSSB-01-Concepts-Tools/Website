@@ -317,7 +317,6 @@ Practice it. See that it is exactly identical! (Example: try `c()` as `f` and ju
 
 ```{webr-r}
 
-
 ```
 
 ## Reasons for using pipes `|>` {.smaller}

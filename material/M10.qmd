@@ -1,6 +1,7 @@
 ---
 week: "10"
 title: "W#10"
+format: html
 ---
 
 ## Overfitting, Clustering Algorithms {.unnumbered}

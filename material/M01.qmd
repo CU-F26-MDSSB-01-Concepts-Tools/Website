@@ -1,10 +1,11 @@
 ---
 title: "W#01"
+format: html
 ---
 
 ## What is Data Science?  {.unnumbered}
 
-Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself.
+Reconsider the Lecture Material, consider the Additional Readings and Material, and check if you reached the  Achievements.
 
 ## Lecture Material
 
@@ -27,10 +28,12 @@ Find the live recording in the [Course's Team's Recording Folder]({{< var teams.
 
 You  
 
+- [ ] are enrolled in the partner course Data Science Tools
 - [ ] have read the [Syllabus](index.qmd) and understood the course organization and the relations between Data Science Concepts and Data Science Tools
-- [ ] have a running R with Positron installation on you computer and can check all marks on the [Checklist Technical Setup](setup.qmd)
-- [ ] have done the *git-GitHub dance* and know what the tools are in principle
-- [ ] have rendered quarto documents and understood its idea
+- [ ] have a running R installation which you can access with Positron on you computer and can check all marks on the [Checklist Technical Setup](setup.qmd)
+- [ ] have signed up at GitHub and have submitted your GitHub username in the [GitHub username Form](https://forms.cloud.microsoft/e/jqNDNTN5xP)
+- [ ] have done the *git-GitHub dance* and know what the tools do
+- [ ] have rendered quarto documents and understood the ideas of literate programming and reproducible research
 - [ ] have made your first steps with R
 - [ ] have filled out the [Data Science Profile Survey](https://forms.office.com/e/dHvdFusjqV)
 

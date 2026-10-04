@@ -620,7 +620,7 @@ B %*% A
 ::: {.columns}
 
 ::: {.column width='50%'}
-- The **inner product** of two vectors $x$ and $y$ is $x^Ty = \sum_{i=1}^n x_i y_i$.  
+- The **dot product** (or **scalar product**) of two vectors $x$ and $y$ is $x^Ty = \sum_{i=1}^n x_i y_i$.  
   - In $A\cdot B$ each element of the new matrix is an inner product of a row of $A$ and a column of $B$. 
 - The **length** of a vector $x$ is $\|x\| = \sqrt{x^Tx} = \sqrt{\sum_{i=1}^n x_i^2}$. 
   - The length of a vector is the square root of the inner product of the vector with itself.
@@ -628,7 +628,7 @@ B %*% A
 :::
 
 ::: {.column width='50%'}
-- Think of an inner product as relating the length of the vectors and their angle like this
+- Think of an dot product as relating the length of the vectors and their angle like this
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Inner-product-angle.png/450px-Inner-product-angle.png)
 

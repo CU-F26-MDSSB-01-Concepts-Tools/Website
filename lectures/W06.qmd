@@ -579,6 +579,14 @@ Also changing bases for powers is easy: $x^y = (e^{\log(x)})^y = e^{y\cdot\log(x
 
 
 
+<!-- TODO -->
+
+## Soft-max
+
+Logistic Function
+
+Softmax to produce probability distributions
+
 
 
 

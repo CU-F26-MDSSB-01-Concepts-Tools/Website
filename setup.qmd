@@ -1,5 +1,6 @@
 ---
 title: "Checklist Technical Setup"
+format: html
 ---
 
 - [ ] I have made a GitHub account and submitted it
@@ -14,11 +15,12 @@ If any of this does not work, read the details below and try to solve it. Many p
 ## Details {.unnumbered} 
 
 You need a GitHub account and become member of the [GitHub Organization: {{< var org.name >}}]({{< var org.link >}}) of the course. Follow the instructions on the linked page of the organization.
+
 - You need a computer with Windows, MacOS, or Linux (maybe also other exotic operating systems). A tablet, phone or Chromebook is probably not sufficient.
 - You need to install software on your computer. Here is what you need including links where to download and find instructions for you operating system:
-    - *Statistical Programming Language:* [R](https://cran.r-project.org/), later we will alos use python. Instructions will come in class. 
+    - *Statistical Programming Language:* [R](https://cran.r-project.org/), later we will also use python. Instructions will come in class. 
     - *Version Control System:* [Git](https://git-scm.com/)
-    - *Integrated Development Environments* (IDE): The instructors uses [positron](https://positron.posit.co/). All instructions will be based on this. In the past the instructors used RStudio. Positron is developed by the same people and is somehow its modern version. 
+    - *Integrated Development Environments* (IDE): The instructors use [Positron](https://positron.posit.co/). All instructions will be based on this. In the past the instructors used RStudio (this is a viable alternative for R). Positron is developed by the same people and is somehow its modern version. Positron is built on *Code OSS*, the same foundation as *Visual Studio Code*, with custom features and UI elements designed specifically for data science. If you have worked with Visual Studio Code for programming in python already, it should be vary familiar. 
  
 When [R](https://cran.r-project.org/), [Git](https://git-scm.com/), [positron](https://positron.posit.co/) are installed, open positron and test that everything works together:
 

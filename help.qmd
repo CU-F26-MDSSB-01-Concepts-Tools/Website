@@ -1,5 +1,6 @@
 ---
 title: "Need help for Homework?"
+format: html
 ---
 
 ## Setting up the basic toolkit

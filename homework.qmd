@@ -1,6 +1,7 @@
 ---
 title: "Homework Projects"
 subtitle: "Do data science by working on Homework Projects!"
+format: html
 ---
 
 ::: {.callout-important appearance="simple"}
@@ -87,7 +88,7 @@ In the cloud:
      - You write code chunks either for loading packages, importing data and computations, or for producing visualizations and tables in the output document
      - While you do this you work a lot using the programming console in which you execute part of your written code to test it or modify it to explore other options until you develop something which goes into your file 
   3. (Sometimes/Optionally) Create an additional script-file, for example for downloading data, or performing lengthy calculation and creating intermediate datasets. 
-  4. `quarto render` the main Project's quarto markdown document and create a HTML-file with your Project Report ([Guide for postitron](https://quarto.org/docs/get-started/hello/positron.html))
+  4. `quarto render` the main Project's quarto markdown document and create a HTML-file with your Project Report ([Guide for positron](https://quarto.org/docs/get-started/hello/positron.html))
   5. You repeat step 2.-4. and repeatedly check if your (local) HTML-output looks good. You repeat until you are done for the session. Ideally, you leave the document such that it renders well and with a short list of problems to solve and next steps to do.  
   6. `git add` your (intermediate) markdown file, your additional scripts, the HTML-file, and (if necessary) all additional automatically created files or directories necessary to view the report properly to the `git` staging area of your repository on your computer
   7. Create a `git commit` of the (intermediate) state of your project and 

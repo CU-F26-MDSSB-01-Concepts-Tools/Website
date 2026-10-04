@@ -1,5 +1,6 @@
 ---
 title: "Data Science on the Internet and in Social Media"
+format: html
 ---
 
 ## Data Science on Social Media
