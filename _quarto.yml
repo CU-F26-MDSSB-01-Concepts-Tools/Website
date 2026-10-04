@@ -16,8 +16,8 @@ project:
     - lectures/W03.qmd
     - material/M04.qmd
     - lectures/W04.qmd
-    # - material/M05.qmd
-    # - lectures/W05.qmd
+    - material/M05.qmd
+    - lectures/W05.qmd
     # - material/M06.qmd
     # - lectures/W06.qmd
     # - material/M07.qmd
@@ -75,7 +75,7 @@ website:
           - text: "#W04"
             href: material/M04.qmd
           - text: "#W05"
-            # href: material/M05.qmd
+            href: material/M05.qmd
           - text: "#W06"
             # href: material/M06.qmd
           - text: "#W07"

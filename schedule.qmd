@@ -25,11 +25,11 @@ For online participation you find all events in your Teams Calendar.
 | 3    | Sep-14  | [W#02 Data Visualization, Data Formats, Tidy Data](material/M02.qmd) | Sep-17    | R            |
 | 4    | Sep-21  | [W#03 Data Import, Data Wrangling](material/M03.qmd) | Sep-24    | R            |
 | 5    | Sep-28  | [W#04 Strings, Relational Data, Functions](material/M04.qmd)  | Oct-01 | R |
-| 6    | Oct-05  | W#05 Descriptive Statistics, Exploratory Data Analysis | Oct-08 | R    |
+| 6    | Oct-05  | [W#05 Descriptive Statistics, Exploratory Data Analysis](material/M05.qmd) | Oct-08 | R    |
 | 7    | Oct-12  | W#06 Principal Component Analysis, Epidemic Modeling, Calculus | Oct-15 | R  |
-| 8    | Oct-19  | W#07 Models in Science, Linear Model, Nonlinear Models | Oct-22 | python |
-| 9    | Oct-26  | W#08 Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression | Oct-29    | python |
-| 10   | Nov-02  | W#09 <!--](https://forms.office.com/e/75qEdyZbim)--> Prediction, Classification and Regression Decision Trees <br> **Final Project Check-In**| Nov-05    | python   |
+| 8    | Oct-19  | W#07 Models in Science, Linear Model, Nonlinear Models <br> **Social Scientist Input:** [Georgi Dragolov](https://constructor.university/faculty-member/georgi-dragolov), [Klaus Boehnke](https://constructor.university/faculty-member/klaus-boehnke)| Oct-22 | python |
+| 9    | Oct-26  | W#08 Categorical Predictors, More Predictors, Categorical Response, Logistic Regression  <br> **Social Scientist Input:** [Ulrich Kühnen](https://constructor.university/faculty-member/ulrich-kuhnen), [Fabian Dehos](https://constructor.university/faculty-member/fabian-t-dehos)| Oct-29    | python |
+| 10   | Nov-02  | W#09 <!--](https://forms.office.com/e/75qEdyZbim)--> Prediction, Classification and Regression Decision Trees <br> **Check-In: Final Project**| Nov-05    | python   |
 | 11   | Nov-09  | W#10 Overfitting, Clustering Algorithms  | Nov-12    | python       |
 | 12   | Nov-16  | W#11 Collaborative Git, More Prediction Modeling, Quantifying Uncertainty | Nov-19    | python  |
 | 13   | Nov-23  | W#12 Hypothesis Testing, Matrices, Probability | Nov-26    | python   |
