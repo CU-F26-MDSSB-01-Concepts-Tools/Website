@@ -1,5 +1,397 @@
 [
   {
+    "objectID": "lectures/W05.html#preliminaries",
+    "href": "lectures/W05.html#preliminaries",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Preliminaries",
+    "text": "Preliminaries\nIn this lectures we will use these packages and datasets. You need to do this code in the Console to download data and play with some of the code in this lecture.\n\nlibrary(tidyverse)\nlibrary(palmerpenguins)\ngalton &lt;- read_csv(\"galton.csv\")\nviertel &lt;- read_csv(\"Viertelfest.csv\")\n\nThe datasets used can be downloaded from:\nhttps://github.com/CU-F26-MDSSB-01-Concepts-Tools/Website/tree/main/lectures"
+  },
+  {
+    "objectID": "lectures/W05.html#descriptive-vs.-inferential-statistics",
+    "href": "lectures/W05.html#descriptive-vs.-inferential-statistics",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Descriptive vs. Inferential Statistics",
+    "text": "Descriptive vs. Inferential Statistics\n\nThe process of using and analyzing summary statistics\n\nSolely concerned with properties of the observed data.\n\nDistinct from inferential statistics:\n\nInference of properties of an underlying distribution given sampled observations from a larger population.\n\n\nSummary Statistics are used to summarize a set of observations to communicate the largest amount of information as simple as possible."
+  },
+  {
+    "objectID": "lectures/W05.html#summary-statistics",
+    "href": "lectures/W05.html#summary-statistics",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Summary statistics",
+    "text": "Summary statistics\nUnivariate (for one variable)\n\nMeasures of location, or central tendency\nMeasures of statistical dispersion\nMeasure of the shape of the distribution like skewness or kurtosis\n\nBivariate (for two variables)\n\nMeasures of statistical dependence or correlation"
+  },
+  {
+    "objectID": "lectures/W05.html#measures-of-central-tendency-1",
+    "href": "lectures/W05.html#measures-of-central-tendency-1",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Measures of central tendency",
+    "text": "Measures of central tendency\nGoal: For a sequence of numerical observations \\(x_1,\\dots,x_n\\) we want to measure\n\nthe “typical” value.\na value summarizing the location of values on the numerical axis.\n\nThree different ways:\n\nArithmetic mean (also mean, average): Sum of the all observations divided by the number of observations \\(\\frac{1}{n}\\sum_{i=1}^n x_i\\)\nMedian: Assume \\(x_1 \\leq x_2 \\leq\\dots\\leq x_n\\). Then the median is middlemost values in the sequence \\(x_\\frac{n+1}{2}\\) when \\(n\\) odd. For \\(n\\) even there are two middlemost values and the median is \\(\\frac{x_\\frac{n}{2} + x_\\frac{n+1}{2}}{2}\\)\nMode: The value that appears most often in the sequence."
+  },
+  {
+    "objectID": "lectures/W05.html#measures-of-central-tendency-examples",
+    "href": "lectures/W05.html#measures-of-central-tendency-examples",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Measures of central tendency: Examples",
+    "text": "Measures of central tendency: Examples\n\n\n\nx &lt;- c(1, 2, 4, 10, 300)\nmean(x)\n\n\n\n[1] 63.4\n\n\n\nmedian(x)\n\n\n\n[1] 4\n\n\n\ny &lt;- c(-2, -2, 4, 7, 7, 7)\nmean(y)\n\n\n\n[1] 3.5\n\n\n\nmedian(y)\n\n\n\n[1] 5.5\n\n\nMedian of an even number of numbers: Mean of two most central numbers.\n\nThere is no function for the Mode in R.\n\nMode &lt;- function(x) {\n  ux &lt;- unique(x)\n  ux[which.max(tabulate(match(x, ux)))]\n}\n\n\nMode(y)\n\n\n\n[1] 7\n\n\n\nMode(x)\n\n\n\n[1] 1\n\n\nWarning: Mode is not unique and there is no fix like for the Median."
+  },
+  {
+    "objectID": "lectures/W05.html#philosophy-of-aggregation",
+    "href": "lectures/W05.html#philosophy-of-aggregation",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Philosophy of aggregation",
+    "text": "Philosophy of aggregation\n\nThe mean represents total value per value.\nExample: per capita income in a town is the total income per individual\nThe median represents the value such that half of the values are lower and higher.\nIn a democracy where each value is represented by one voter preferring it, the median is the value which is unbeatable by an absolute majority. Half of the people prefer higher the other half lower values. (Median voter model)\nThe mode represents the most common value.\nIn a democracy, the mode represents the winner of a plurality vote where each value runs as a candidate and the winner is the one with the most votes."
+  },
+  {
+    "objectID": "lectures/W05.html#mean-median-mode-properties",
+    "href": "lectures/W05.html#mean-median-mode-properties",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Mean, Median, Mode properties",
+    "text": "Mean, Median, Mode properties\nDo they deliver one unambiguous answer for any sequence?\n\nMean and median, yes.\nThe mode has no rules for a tie.\n\n\nCan they by generalized to variables with ordered or even unordered categories?\n\n\nMean: No.\nMedian: For ordered categories (except when even number and the two middlemost are not the same)\nMode: For any categorical variable.\n\n\nIs the measured value also always in the data?\n\n\nMean: No.\nMedian: Yes, for sequences of odd length.\nMode: Yes."
+  },
+  {
+    "objectID": "lectures/W05.html#generalized-means",
+    "href": "lectures/W05.html#generalized-means",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Generalized means1",
+    "text": "Generalized means1\nFor \\(x_1, \\dots, x_n &gt; 0\\) and \\(p\\in \\mathbb{R}_{\\neq 0}\\) the generalized mean is\n\\[M_p(x_1, \\dots, x_n) = (\\frac{1}{n}\\sum_{i=1}^n x_i^p)^\\frac{1}{p}\\]\nFor \\(p = 0\\) it is \\(M_0(x_1, \\dots, x_n) = (\\prod_{i=1}^n x_i)^\\frac{1}{n}\\).\n\\(M_1\\) is the arithmetic mean. \\(M_0\\) is called the geometric mean. \\(M_{-1}\\) the harmonic mean.\nNote: Generalized means are often only reasonable when all values are positive \\(x_i &gt; 0\\).\n\n\n\\(M_0\\) can also be expressed as the exponential (\\(\\exp(x) = e^x\\)) of the mean of the the \\(\\log\\)’s of the \\(x_i\\)’s: \\(\\exp(\\log((\\prod_{i=1}^n x_i)^\\frac{1}{n})) = \\exp(\\frac{1}{n}\\sum_{i=1}^n\\log(x_i))\\).\nAlso called power mean or \\(p\\)-mean."
+  },
+  {
+    "objectID": "lectures/W05.html#box-cox-transformation-function",
+    "href": "lectures/W05.html#box-cox-transformation-function",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Box-Cox transformation function",
+    "text": "Box-Cox transformation function\nFor \\(p \\in \\mathbb{R}\\): \\(f(x) = \\begin{cases}\\frac{x^p - 1}{p} & \\text{for $p\\neq 0$} \\\\ \\log(x) & \\text{for $p= 0$}\\end{cases}\\)\n\n\nThe \\(p\\)-mean is\n\\[M_p(x) = f^{-1}(\\frac{1}{n}\\sum_{i=1}^n f(x_i))\\]\nwith \\(x = [x_1, \\dots, x_n]\\). \\(f^{-1}\\) is the inverse of \\(f\\).\n\nInverse means \\(f^-1(f(x)) = x =f(f^-1(x))\\).\n\nBox-Cox is a common transformation in data pre-processing to make the variable’s (arithmetic) mean being a “good” measure of central tendency.\n\n\n\n\nCode\npfun &lt;- function(x, p) (x^p - 1) / p\nipfun &lt;- function(x, p) (p * x + 1)^(1 / p)\nggplot() +\n  geom_function(fun = pfun, args = list(p = 1), color = \"red\", size = 1.5) +\n  geom_function(fun = pfun, args = list(p = 2), color = \"red\", alpha = 0.6) +\n  geom_function(fun = pfun, args = list(p = 3), color = \"red\", alpha = 0.3) +\n  geom_function(fun = pfun, args = list(p = 1 / 2), color = \"red3\") +\n  geom_function(fun = pfun, args = list(p = 1 / 3), color = \"red4\") +\n  geom_function(fun = pfun, args = list(p = -1), color = \"blue\", size = 1.5) +\n  geom_function(fun = pfun, args = list(p = -1 / 2), color = \"blue3\") +\n  geom_function(fun = pfun, args = list(p = -1 / 3), color = \"blue4\") +\n  geom_function(fun = pfun, args = list(p = -2), color = \"blue\", alpha = 0.6) +\n  geom_function(fun = pfun, args = list(p = -3), color = \"blue\", alpha = 0.3) +\n  geom_function(fun = log, color = \"black\", size = 1.5) +\n  coord_fixed() +\n  xlim(c(0.01, 4)) +\n  ylim(c(-2, 2)) +\n  labs(x = \"x\", y = \"f(x)\", title = \"p = -1 (blue), 0 (black), +1 (red)\") +\n  theme(title = element_text(size = 2)) +\n  theme_minimal()"
+  },
+  {
+    "objectID": "lectures/W05.html#application-the-wisdom-of-the-crowd",
+    "href": "lectures/W05.html#application-the-wisdom-of-the-crowd",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Application: The Wisdom of the Crowd",
+    "text": "Application: The Wisdom of the Crowd\n\n\n\nPhenomenon: When collective estimate of a diverse group of independent individuals is better than that of single experts.\nThe classical wisdom-of-the-crowds finding is about point estimation of a continuous quantity.\nPopularized by James Surowiecki (2004).\nThe opening anecdote is about Francis Galton’s1 surprise in 1907 that the crowd at a county fair accurately guessed the weight of an ox’s meat when their individual guesses were averaged.\n\n\n\n\n\nGalton (1822-1911) was a half-cousin to Charles Darwin and one of the founding fathers of statistics. He also was a scientific racist, see https://twitter.com/kareem_carr/status/1575506343401775104?s=20&t=8T5TzrayAWNShmOSzJgCJQ.."
+  },
+  {
+    "objectID": "lectures/W05.html#galtons-data",
+    "href": "lectures/W05.html#galtons-data",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Galton’s data1",
+    "text": "Galton’s data1\nWhat is the weight of the meat of this ox?\n\n\nCode\ngalton |&gt;\n  ggplot(aes(Estimate)) +\n  geom_histogram(binwidth = 5) +\n  geom_vline(xintercept = 1198, color = \"green\") +\n  geom_vline(xintercept = mean(galton$Estimate), color = \"red\") +\n  geom_vline(xintercept = median(galton$Estimate), color = \"blue\") +\n  geom_vline(xintercept = Mode(galton$Estimate), color = \"purple\")\n\n\n\n\n\n\n\n\n\n787 estimates, true value 1198, mean 1196.7, median 1208, mode 1218\nKenneth Wallis dug out the data from Galton’s notebook and put it here https://warwick.ac.uk/fac/soc/economics/staff/kfwallis/publications/galton_data.xlsx"
+  },
+  {
+    "objectID": "lectures/W05.html#viertelfest-bremen-2008",
+    "href": "lectures/W05.html#viertelfest-bremen-2008",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Viertelfest Bremen 20081",
+    "text": "Viertelfest Bremen 20081\nHow many lots will be sold by the end of the festival?\n\n\nCode\nviertel |&gt;\n  ggplot(aes(\n    `Schätzung`\n  )) +\n  geom_histogram() +\n  geom_vline(xintercept = 10788, color = \"green\") +\n  geom_vline(xintercept = mean(viertel$Schätzung), color = \"red\") +\n  geom_vline(xintercept = median(viertel$Schätzung), color = \"blue\") +\n  geom_vline(xintercept = Mode(viertel$Schätzung), color = \"purple\")\n\n\n\n\n\n\n\n\n\n1226 estimates, the maximal value is 29530000! We should filter …\nData collected as additional guessing game at the Lottery “Haste mal ’nen Euro?”, data provided by Jan Lorenz https://docs.google.com/spreadsheets/d/1HiYhUrYrsbeybJ10mwsae_hQCawZlUQFOOZzcugXzgA/edit#gid=0"
+  },
+  {
+    "objectID": "lectures/W05.html#viertelfest-bremen-2008-1",
+    "href": "lectures/W05.html#viertelfest-bremen-2008-1",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Viertelfest Bremen 2008",
+    "text": "Viertelfest Bremen 2008\nHow many lots will be sold by the end of the festival?\n\n\nCode\nviertel |&gt;\n  filter(Schätzung &lt; 100000) |&gt;\n  ggplot(aes(`Schätzung`)) +\n  geom_histogram(binwidth = 500) +\n  geom_vline(xintercept = 10788, color = \"green\") +\n  geom_vline(xintercept = mean(viertel$Schätzung), color = \"red\") +\n  geom_vline(xintercept = median(viertel$Schätzung), color = \"blue\") +\n  geom_vline(xintercept = Mode(viertel$Schätzung), color = \"purple\") +\n  geom_vline(xintercept = exp(mean(log(viertel$Schätzung))), color = \"orange\")\n\n\n\n1226 estimates, true value 10788, mean 53163.9, median 9843, mode 10000,\ngeometric mean 10510.1"
+  },
+  {
+    "objectID": "lectures/W05.html#log_10-transformation-viertelfest",
+    "href": "lectures/W05.html#log_10-transformation-viertelfest",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "\\(\\log_{10}\\) transformation Viertelfest",
+    "text": "\\(\\log_{10}\\) transformation Viertelfest\n\n\nCode\nviertel |&gt;\n  mutate(log10Est = log10(Schätzung)) |&gt;\n  ggplot(aes(log10Est)) +\n  geom_histogram(binwidth = 0.05) +\n  geom_vline(xintercept = log10(10788), color = \"green\") +\n  geom_vline(xintercept = log10(mean(viertel$Schätzung)), color = \"red\") +\n  geom_vline(xintercept = log10(median(viertel$Schätzung)), color = \"blue\") +\n  geom_vline(xintercept = log10(Mode(viertel$Schätzung)), color = \"purple\") +\n  geom_vline(xintercept = mean(log10(viertel$Schätzung)), color = \"orange\")\n\n\n\n1226 estimates, true value 10788, mean 53163.9, median 9843, mode 10000,\ngeometric mean 10510.1"
+  },
+  {
+    "objectID": "lectures/W05.html#wisdom-of-the-crowd-insights",
+    "href": "lectures/W05.html#wisdom-of-the-crowd-insights",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Wisdom of the crowd insights",
+    "text": "Wisdom of the crowd insights\n\nIn Galton’s sample the different measures do not make a big difference\nIn the Viertelfest data the arithmetic mean performs very bad!\nThe mean is vulnerable to extreme values.\nQuoting Galton on the mean as a democratic aggregation function:\n“The mean gives voting power to the cranks in proportion to their crankiness.”\nThe mode tends to be on focal values as round numbers (10,000). In Galton’s data this is not so pronounced beause estimators used several weight units (which Galton converted to pounds).\nHow to choose a measure to aggregate the wisdom?\n\nBy the nature of the estimate problem? Is the scale mostly clear? (Are we in the hundreds, thousands, ten thousands, …)\nBy the nature of the distribution?\nThere is no real insurance against a systematic bias in the population."
+  },
+  {
+    "objectID": "lectures/W05.html#measures-of-dispersion-1",
+    "href": "lectures/W05.html#measures-of-dispersion-1",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Measures of dispersion1",
+    "text": "Measures of dispersion1\nGoal: We want to measure\n\nHow spread out values are around the central tendency.\nHow stretched or squeezed is the distribution?\n\nVariance is the mean of the squared deviation from the mean: \\(\\text{Var}(x) = \\frac{1}{n}\\sum_{i=1}^n(x_i - \\mu)^2\\) where \\(\\mu\\) (mu) is the mean.\n\nStandard deviation is the square root of the variance \\(\\text{SD}(x) = \\sqrt{\\text{Var}(x)}\\).\nThe standard deviation is often denoted \\(\\sigma\\) (sigma) and the variance \\(\\sigma^2\\).\n\n\nMean absolute deviation (MAD) is the mean of the absolute deviation from the mean: \\(\\text{MAD}(x) = \\frac{1}{n}\\sum_{i=1}^n|x_i - \\mu|\\).\n\n\nWarning: MAD can also mean Median absolute deviation from the median.\nRange is the difference of the maximal and the minimal value \\(\\max(x) - \\min(x)\\).\n\nAlso called variability, scatter, or spread."
+  },
+  {
+    "objectID": "lectures/W05.html#examples-of-measures-of-dispersion",
+    "href": "lectures/W05.html#examples-of-measures-of-dispersion",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Examples of measures of dispersion",
+    "text": "Examples of measures of dispersion\n\n\n\nvar(galton$Estimate)\n\n[1] 5415.013\n\nsd(galton$Estimate)\n\n[1] 73.58677\n\nmad(galton$Estimate) # Warning: median absolute deviation is default\n\n[1] 51.891\n\nrange(galton$Estimate) # Oh, range gives us a vector of min and max. So, we diff\n\n[1]  896 1516\n\ndiff(range(galton$Estimate))\n\n[1] 620\n\n\n\n\nvar(viertel$Schätzung)\n\n[1] 719774887849\n\nsd(viertel$Schätzung)\n\n[1] 848395.5\n\nmad(viertel$Schätzung) # Warning: median absolute deviation is default\n\n[1] 8771.803\n\nrange(viertel$Schätzung) # Oh, range gives us a vector of min and max. So, we diff\n\n[1]      120 29530000\n\ndiff(range(viertel$Schätzung))\n\n[1] 29529880\n\n\n\n\n\nVariance (and standard deviation) in statistics is usually computed with \\(\\frac{1}{n-1}\\) instead of \\(\\frac{1}{n}\\) to provide an unbiased estimator of the potentially underlying population variance. We omit more detail here."
+  },
+  {
+    "objectID": "lectures/W05.html#normalization-of-variables",
+    "href": "lectures/W05.html#normalization-of-variables",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Normalization of variables",
+    "text": "Normalization of variables\nIn Machine Learning, Statistics, and Descripitve Analysis we often want to bring different variables to common scales. We want to make the dispersion and the location comparable.\nTo that end, some linear transformation are common:\n\nStandardization\nMin-max Feature Scaling\n\nWhen we normalize a variable we receive a dimensionless variable. It does not have a unit.\nExample: We measure height in \\(m\\) meters. When we standardize are scale by min-max the new variable has no unit. Mathematically it cancels out."
+  },
+  {
+    "objectID": "lectures/W05.html#standardization",
+    "href": "lectures/W05.html#standardization",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Standardization",
+    "text": "Standardization\nVariables are standardized by subtracting their mean and then dividing by their standard deviations.\nA value from a standardized variable is called a standard score or z-score.\n\\(z_i = \\frac{x_i - \\mu}{\\sigma}\\)\nwhere \\(\\mu\\) is the mean and \\(\\sigma\\) the standard deviation of the vector \\(x\\).\n\nThis is a shift-scale transformation. We shift each value by the mean and scale by the standard deviation.\nA standard score \\(z_i\\) represents how many standard deviations \\(x_i\\) is away from the mean of \\(x\\).\nThe standard scores \\(z_i\\)’s have a mean of zero and a standard deviation of one (by construction)."
+  },
+  {
+    "objectID": "lectures/W05.html#min-max-feature-scaling",
+    "href": "lectures/W05.html#min-max-feature-scaling",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Min-max Feature Scaling",
+    "text": "Min-max Feature Scaling\nWhen we want to make the values of the scaled variable to range from zero to one.\nThe transformed variable values \\(y_i\\)’s are\n\\[y_i = \\frac{x_i - \\min(x)}{\\max(x) - \\min(x)}.\\]\nWe shift by the minimum \\(\\min(x)\\) and scale by the range \\(\\max(x) - \\min(x)\\).\n\nWhat are mean and standard deviation of \\(y\\)? We do not know, but less than one.\nCaution: The new values are heavily dependent of the actual values of \\(\\min\\) and \\(\\max\\)!"
+  },
+  {
+    "objectID": "lectures/W05.html#data-sets-1a-and-1b-widsom-of-crowd",
+    "href": "lectures/W05.html#data-sets-1a-and-1b-widsom-of-crowd",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Data Sets 1a and 1b: Widsom of Crowd",
+    "text": "Data Sets 1a and 1b: Widsom of Crowd\n1a: Ox weigh guessing competition 1907 (collected by Galton)\n\ngalton |&gt; ggplot(aes(Estimate)) + geom_histogram(binwidth = 5)\n\n\n\n\n\n\n\n\n1b: Viertelfest “guess the number of sold lots”-competition 2009\n\nviertel |&gt;\n  filter(Schätzung &lt; 100000) |&gt;\n  ggplot(aes(`Schätzung`)) +\n  geom_histogram(binwidth = 500)"
+  },
+  {
+    "objectID": "lectures/W05.html#data-set-2-palmer-penguins",
+    "href": "lectures/W05.html#data-set-2-palmer-penguins",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Data Set 2: Palmer Penguins",
+    "text": "Data Set 2: Palmer Penguins\nPalmer Penguins\nChinstrap, Gentoo, and Adélie Penguins\n   \n\n\n# A tibble: 344 × 8\n   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g\n   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;\n 1 Adelie  Torgersen           39.1          18.7               181        3750\n 2 Adelie  Torgersen           39.5          17.4               186        3800\n 3 Adelie  Torgersen           40.3          18                 195        3250\n 4 Adelie  Torgersen           NA            NA                  NA          NA\n 5 Adelie  Torgersen           36.7          19.3               193        3450\n 6 Adelie  Torgersen           39.3          20.6               190        3650\n 7 Adelie  Torgersen           38.9          17.8               181        3625\n 8 Adelie  Torgersen           39.2          19.6               195        4675\n 9 Adelie  Torgersen           34.1          18.1               193        3475\n10 Adelie  Torgersen           42            20.2               190        4250\n# ℹ 334 more rows\n# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;"
+  },
+  {
+    "objectID": "lectures/W05.html#summary-from-base-r",
+    "href": "lectures/W05.html#summary-from-base-r",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "summary from base R",
+    "text": "summary from base R\n\n\nShows summary statistics for the values in a vector\n\nsummary(galton$Estimate)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n    896    1162    1208    1197    1236    1516 \n\n\n\nsummary(viertel$Schätzung)\n\n    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. \n     120     5000     9843    53164    20000 29530000 \n\n\n\nQuestion\nWhat does\n1 st Qu. and\n3 rd Qu. mean?\n\n\nFor all columns in a data frame\n\nsummary(penguins)\n\n      species          island    bill_length_mm  bill_depth_mm  \n Adelie   :152   Biscoe   :168   Min.   :32.10   Min.   :13.10  \n Chinstrap: 68   Dream    :124   1st Qu.:39.23   1st Qu.:15.60  \n Gentoo   :124   Torgersen: 52   Median :44.45   Median :17.30  \n                                 Mean   :43.92   Mean   :17.15  \n                                 3rd Qu.:48.50   3rd Qu.:18.70  \n                                 Max.   :59.60   Max.   :21.50  \n                                 NAs    :2       NAs    :2      \n flipper_length_mm  body_mass_g       sex           year     \n Min.   :172.0     Min.   :2700   female:165   Min.   :2007  \n 1st Qu.:190.0     1st Qu.:3550   male  :168   1st Qu.:2007  \n Median :197.0     Median :4050   NAs   : 11   Median :2008  \n Mean   :200.9     Mean   :4202                Mean   :2008  \n 3rd Qu.:213.0     3rd Qu.:4750                3rd Qu.:2009  \n Max.   :231.0     Max.   :6300                Max.   :2009  \n NAs    :2         NAs    :2"
+  },
+  {
+    "objectID": "lectures/W05.html#quantiles-1",
+    "href": "lectures/W05.html#quantiles-1",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Quantiles",
+    "text": "Quantiles\nCut points specifying intervals which contain equal amounts of values of the distribution.\n\\(q\\)-quantiles divide numbers into \\(q\\) intervals covering all values.\nThe quantiles are the cut points: For \\(q\\) intervals there are \\(q-1\\) cut points of interest.\n\nThe one 2-quantile is the median\nThe three 4-quantiles are called quartiles\n\n1st Qu. is the first quartile\nThe second quartile is the median\n3rd Qu. is the third quartile\n\n100-quantiles are called percentiles\n\n\n\nWe omit problems of estimating quantiles from a sample where the number of estimates does not fit to a desired partition of equal size here."
+  },
+  {
+    "objectID": "lectures/W05.html#a-galton-quartiles",
+    "href": "lectures/W05.html#a-galton-quartiles",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "1a Galton: Quartiles",
+    "text": "1a Galton: Quartiles\n\n# Min, 3 Quartiles, Max\nquantile(galton$Estimate, prob = seq(0, 1, by = 0.25))\n\n    0%    25%    50%    75%   100% \n 896.0 1162.5 1208.0 1236.0 1516.0 \n\n\nInterpretation: What does the value at 25% mean?\n\nThe 25% of all values are lower than the value. 75% are larger.\n\n\n\ngalton |&gt;\n  ggplot(aes(Estimate)) +\n  geom_histogram(binwidth = 5) +\n  geom_vline(\n    xintercept = quantile(galton$Estimate, prob = seq(0, 1, by = 0.25)),\n    color = \"red\"\n  )"
+  },
+  {
+    "objectID": "lectures/W05.html#a-galton-20-quantiles",
+    "href": "lectures/W05.html#a-galton-20-quantiles",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "1a Galton: 20-quantiles",
+    "text": "1a Galton: 20-quantiles\n\n# Min, 3 Quartiles, Max\nquantile(galton$Estimate, prob = seq(0, 1, by = 0.05))\n\n    0%     5%    10%    15%    20%    25%    30%    35%    40%    45%    50% \n 896.0 1078.3 1109.0 1126.9 1150.0 1162.5 1174.0 1181.0 1189.0 1199.0 1208.0 \n   55%    60%    65%    70%    75%    80%    85%    90%    95%   100% \n1214.0 1219.0 1225.0 1231.0 1236.0 1243.8 1255.1 1270.0 1293.0 1516.0 \n\n\n\ngalton |&gt;\n  ggplot(aes(Estimate)) +\n  geom_histogram(binwidth = 5) +\n  geom_vline(\n    xintercept = quantile(galton$Estimate, prob = seq(0, 1, by = 0.05)),\n    color = \"red\"\n  )"
+  },
+  {
+    "objectID": "lectures/W05.html#b-viertelfest-quartiles",
+    "href": "lectures/W05.html#b-viertelfest-quartiles",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "1b Viertelfest: Quartiles",
+    "text": "1b Viertelfest: Quartiles\n\nquantile(viertel$Schätzung, prob = seq(0, 1, by = 0.25))\n\n      0%      25%      50%      75%     100% \n     120     5000     9843    20000 29530000 \n\n\n\nviertel |&gt;\n  filter(Schätzung &lt; 100000) |&gt;\n  ggplot(aes(\n    `Schätzung`\n  )) +\n  geom_histogram(binwidth = 500) +\n  geom_vline(\n    xintercept = quantile(\n      viertel$`Schätzung`,\n      prob = seq(0, 1, by = 0.25)\n    )[1:4],\n    color = \"red\"\n  )"
+  },
+  {
+    "objectID": "lectures/W05.html#b-viertelfest-20-quantiles",
+    "href": "lectures/W05.html#b-viertelfest-20-quantiles",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "1b Viertelfest: 20-quantiles",
+    "text": "1b Viertelfest: 20-quantiles\n\nquantile(viertel$Schätzung, prob = seq(0, 1, by = 0.05))\n\n         0%          5%         10%         15%         20%         25% \n     120.00     1213.25     2000.00     3115.00     4012.00     5000.00 \n        30%         35%         40%         45%         50%         55% \n    5853.50     7000.00     7821.00     8705.25     9843.00    10967.50 \n        60%         65%         70%         75%         80%         85% \n   12374.00    14444.00    16186.00    20000.00    27500.00    38000.00 \n        90%         95%        100% \n   63649.50    99773.50 29530000.00 \n\n\n\nviertel |&gt;\n  filter(Schätzung &lt; 100000) |&gt;\n  ggplot(aes(`Schätzung`)) +\n  geom_histogram(binwidth = 500) +\n  geom_vline(\n    xintercept = quantile(viertel$`Schätzung`, prob = seq(0, 1, by = 0.05))[\n      1:19\n    ],\n    color = \"red\"\n  )"
+  },
+  {
+    "objectID": "lectures/W05.html#palmer-penguins-flipper-length-quartiles",
+    "href": "lectures/W05.html#palmer-penguins-flipper-length-quartiles",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "2 Palmer Penguins Flipper Length: Quartiles",
+    "text": "2 Palmer Penguins Flipper Length: Quartiles\n\nquantile(penguins$flipper_length_mm, prob = seq(0, 1, by = 0.25), na.rm = TRUE)\n\n  0%  25%  50%  75% 100% \n 172  190  197  213  231 \n\n\n\npenguins |&gt;\n  ggplot(aes(flipper_length_mm)) +\n  geom_histogram(binwidth = 1) +\n  geom_vline(\n    xintercept = quantile(\n      penguins$flipper_length_mm,\n      prob = seq(0, 1, by = 0.25),\n      na.rm = TRUE\n    ),\n    color = \"red\"\n  )"
+  },
+  {
+    "objectID": "lectures/W05.html#palmer-penguins-flipper-length-20-quantiles",
+    "href": "lectures/W05.html#palmer-penguins-flipper-length-20-quantiles",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "2 Palmer Penguins Flipper Length: 20-quantiles",
+    "text": "2 Palmer Penguins Flipper Length: 20-quantiles\n\nquantile(penguins$flipper_length_mm, prob = seq(0, 1, by = 0.05), na.rm = TRUE)\n\n   0%    5%   10%   15%   20%   25%   30%   35%   40%   45%   50%   55%   60% \n172.0 181.0 185.0 187.0 188.0 190.0 191.0 193.0 194.0 195.0 197.0 199.0 203.0 \n  65%   70%   75%   80%   85%   90%   95%  100% \n208.0 210.0 213.0 215.0 218.0 220.9 225.0 231.0 \n\n\n\npenguins |&gt;\n  ggplot(aes(flipper_length_mm)) +\n  geom_histogram(binwidth = 1) +\n  geom_vline(\n    xintercept = quantile(\n      penguins$flipper_length_mm,\n      prob = seq(0, 1, by = 0.05),\n      na.rm = TRUE\n    ),\n    color = \"red\"\n  )"
+  },
+  {
+    "objectID": "lectures/W05.html#interquartile-range-iqr",
+    "href": "lectures/W05.html#interquartile-range-iqr",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Interquartile range (IQR)",
+    "text": "Interquartile range (IQR)\nThe difference between the 1st and the 3rd quartile. Alternative dispersion measure.\nThe range in which the middle 50% of the values are located.\nExamples:\n\n\n\n# Min, 3 Quartiles, Max\nIQR(galton$Estimate)\n\n[1] 73.5\n\nsd(galton$Estimate) # for comparison\n\n[1] 73.58677\n\nIQR(viertel$Schätzung)\n\n[1] 15000\n\nsd(viertel$Schätzung) # for comparison\n\n[1] 848395.5\n\nIQR(penguins$flipper_length_mm, na.rm = TRUE)\n\n[1] 23\n\nsd(penguins$flipper_length_mm, na.rm = TRUE) # for comparison\n\n[1] 14.06171"
+  },
+  {
+    "objectID": "lectures/W05.html#boxplots",
+    "href": "lectures/W05.html#boxplots",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Boxplots",
+    "text": "Boxplots\nA condensed visualization of a distribution showing location, spread, skewness and outliers.\n\ngalton |&gt; ggplot(aes(x = Estimate)) + geom_boxplot()\n\n\n\nThe box shows the median in the middle and the other two quartiles as their borders.\nWhiskers: From above the upper quartile, a distance of 1.5 times the IQR is measured out and a whisker is drawn up to the largest observed data point from the dataset that falls within this distance. Similarly, for the lower quartile.\nWhiskers must end at an observed data point! (So lengths can differ.)\nAll other values outside of box and whiskers are shown as points and often called outliers. (There may be none.)"
+  },
+  {
+    "objectID": "lectures/W05.html#boxplots-vs.-histograms",
+    "href": "lectures/W05.html#boxplots-vs.-histograms",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Boxplots vs. histograms",
+    "text": "Boxplots vs. histograms\n\nHistograms can show the shape of the distribution well, but not the summary statistics like the median.\n\n\ngalton |&gt; ggplot(aes(x = Estimate)) + geom_boxplot()\n\n\n\n\n\n\n\n\n\ngalton |&gt; ggplot(aes(x = Estimate)) + geom_histogram(binwidth = 5)"
+  },
+  {
+    "objectID": "lectures/W05.html#boxplots-vs.-histograms-1",
+    "href": "lectures/W05.html#boxplots-vs.-histograms-1",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Boxplots vs. histograms",
+    "text": "Boxplots vs. histograms\n\nBoxplots can not show the patterns of bimodal or multimodal distributions.\n\n\npalmerpenguins::penguins |&gt; ggplot(aes(x = flipper_length_mm)) + geom_boxplot()\n\n\n\n\n\n\n\n\n\npalmerpenguins::penguins |&gt;\n  ggplot(aes(x = flipper_length_mm)) +\n  geom_histogram(binwidth = 1)"
+  },
+  {
+    "objectID": "lectures/W05.html#minimizing-proporties-of-mean-and-median",
+    "href": "lectures/W05.html#minimizing-proporties-of-mean-and-median",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Minimizing proporties of Mean and Median",
+    "text": "Minimizing proporties of Mean and Median\nMean minimizes the mean of squared deviations from it. No other value \\(a\\) has a lower mean of square distances from the data points. \\(\\frac{1}{n}\\sum_{i=1}^n(x_i - a)^2\\).\n\nMedian minimizes the sum of the absolute deviation. No other value \\(a\\) has a lower mean of absolute distances from the data points. \\(\\frac{1}{n}\\sum_{i=1}^n|x_i - a|\\).\n\n\nThe Concept of Minimizing\nIs central for all statisitical fitting, machine learning and AI training procedures! These are among the simplest examples of this concept."
+  },
+  {
+    "objectID": "lectures/W05.html#two-families-of-summary-statistics",
+    "href": "lectures/W05.html#two-families-of-summary-statistics",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Two families of summary statistics",
+    "text": "Two families of summary statistics\n\nMeasures based on sums (related to mathematical moments)\n\nMean\nStandard deviation\n\nMeasures based on the ordered sequence of these observations (order statistics)\n\nMedian (and all quantiles)\nInterquartile range"
+  },
+  {
+    "objectID": "lectures/W05.html#a-hierarchy-of-moments",
+    "href": "lectures/W05.html#a-hierarchy-of-moments",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "A hierarchy of moments",
+    "text": "A hierarchy of moments\n\\(k\\)th raw moment: \\(\\frac{1}{n}\\sum_i^n x_i^k\\).\n\nThe mean is the 1st raw moment (because no exponents appear in formula)\nThe variance is the 2nd raw moment the mean-shifted \\(x\\)\nThe 3rd moment appears in the definition of the skewness of \\(x\\)\nThe 4th moment appears in the definition of the kurtosis of \\(x\\)"
+  },
+  {
+    "objectID": "lectures/W05.html#skewness",
+    "href": "lectures/W05.html#skewness",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Skewness",
+    "text": "Skewness\nThe skewness of a distribution is a measure of its asymmetry.\nEquation: \\(\\text{skewness} = \\frac{\\frac{1}{n}\\sum_{i=1}^n(x_i - \\mu)^3}{\\left(\\frac{1}{n}\\sum_{i=1}^n(x_i - \\mu)^2\\right)^{3/2}}\\)\n\nPositive skewness: The right tail is longer or fatter than the left tail.\nNegative skewness: The left tail is longer or fatter than the right tail.\n\n\nThe relation of mean and median can give a hint on skewness!\nThe Viertelfest data is heavily positively skew. (The Galton data is a little bit negatively skew, but it is barely visible.)"
+  },
+  {
+    "objectID": "lectures/W05.html#kurtosis",
+    "href": "lectures/W05.html#kurtosis",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Kurtosis",
+    "text": "Kurtosis\nThe kurtosis of a distribution is a measure of the “tailedness” of the distribution. It often goes along with also higher “peakedness”.\nEquation: \\(\\text{kurtosis} = \\frac{\\frac{1}{n}\\sum_{i=1}^n(x_i - \\mu)^4}{\\left(\\frac{1}{n}\\sum_{i=1}^n(x_i - \\mu)^2\\right)^{2}}\\)\n\nLeptokurtic: Fatter tails and a higher peak than the normal distribution.\nPlatykurtic: Thinner tails and a lower peak than the normal distribution.\n\n \nThe logarithmic y-axis shows that tails are fatter with higher kurtosis (red)!"
+  },
+  {
+    "objectID": "lectures/W05.html#covariance",
+    "href": "lectures/W05.html#covariance",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Covariance",
+    "text": "Covariance\nGoal: We want to measure the joint variation in numerical observations of two variables \\(x_1,\\dots,x_n\\) and \\(y_1, \\dots, y_n\\).\nCovariance\n\\(\\text{cov}(x,y) = \\frac{1}{n}\\sum_{i=1}^n(x_i - \\mu_x)(y_i - \\mu_y)\\)\nwhere \\(\\mu_x\\) and \\(\\mu_y\\) are the arithmetic means of \\(x\\) and \\(y\\).\n\nNote: \\(\\text{cov}(x,x) = \\frac{1}{n}\\sum_{i=1}^n(x_i - \\mu_x)(x_i - \\mu_x) = \\frac{1}{n}\\sum_{i=1}^n(x_i - \\mu_x)^2 = \\text{Var}(x)\\)"
+  },
+  {
+    "objectID": "lectures/W05.html#correlation",
+    "href": "lectures/W05.html#correlation",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Correlation",
+    "text": "Correlation\nGoal: We want to measure the linear correlation in numerical observations of two variables \\(x_1,\\dots,x_n\\) and \\(y_1, \\dots, y_n\\).\nPearson correlation coefficient \\(r_{xy} = \\frac{\\sum_{i=1}^n(x_i - \\mu_x)(y_i - \\mu_y)}{\\sqrt{\\sum_{i=1}^n(x_i - \\mu_x)^2}\\sqrt{\\sum_{i=1}^n(y_i - \\mu_y)^2}}\\)\n(Note: Do you are missing $ terms compared to covariance? They all cancel out!)\n\nRelation to covariance: \\(r_{xy} = \\frac{\\text{cov}(x,y)}{\\sigma_x\\sigma_y}\\)\nwhere \\(\\sigma_x\\) and \\(\\sigma_y\\) are the standard deviations of \\(x\\) and \\(y\\).\nRelation to standard scores:\nWhen \\(x\\) and \\(y\\) are standard scores (each with mean zero and standard deviation one), then \\(\\text{cov}(x,y) = r_{xy}\\).\n\n\n\nThere are other correlation coefficients which we omit here."
+  },
+  {
+    "objectID": "lectures/W05.html#interpretation-of-correlation",
+    "href": "lectures/W05.html#interpretation-of-correlation",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Interpretation of correlation",
+    "text": "Interpretation of correlation\nCorrelation between two vectors \\(x\\) and \\(y\\) is “normalized”.\n\nThe maximal possible values is \\(r_{xy} = 1\\)\n\n\\(x\\) and \\(y\\) are fully correlated\n\nThe minimal values is \\(r_{xy} = -1\\)\n\n\\(x\\) and \\(y\\) are anticorrelated\n\n\\(r_{xy} \\approx 0\\) mean\n\nthe variables are uncorrelated\n\n\\(r_{xy} = r_{yx}\\)"
+  },
+  {
+    "objectID": "lectures/W05.html#correlation-matrix",
+    "href": "lectures/W05.html#correlation-matrix",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Correlation matrix",
+    "text": "Correlation matrix\nUsing corrr from the packages tidymodels\n\nlibrary(corrr)\npenguins |&gt; select(-species, -island, -sex) |&gt; correlate()\n\n# A tibble: 5 × 6\n  term        bill_length_mm bill_depth_mm flipper_length_mm body_mass_g    year\n  &lt;chr&gt;                &lt;dbl&gt;         &lt;dbl&gt;             &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;\n1 bill_lengt…        NA            -0.235              0.656      0.595   0.0545\n2 bill_depth…        -0.235        NA                 -0.584     -0.472  -0.0604\n3 flipper_le…         0.656        -0.584             NA          0.871   0.170 \n4 body_mass_g         0.595        -0.472              0.871     NA       0.0422\n5 year                0.0545       -0.0604             0.170      0.0422 NA"
+  },
+  {
+    "objectID": "lectures/W05.html#correlation-table",
+    "href": "lectures/W05.html#correlation-table",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Correlation table",
+    "text": "Correlation table\nUsing correlation from the packages correlation\n\nlibrary(correlation)\nresults &lt;- palmerpenguins::penguins |&gt;\n  select(-species, -island, -sex) |&gt;\n  correlation()\nresults\n\n# Correlation Matrix (pearson-method)\n\nParameter1        |        Parameter2 |     r |         95% CI | t(340) |         p\n-----------------------------------------------------------------------------------\nbill_length_mm    |     bill_depth_mm | -0.24 | [-0.33, -0.13] |  -4.46 | &lt; .001***\nbill_length_mm    | flipper_length_mm |  0.66 | [ 0.59,  0.71] |  16.03 | &lt; .001***\nbill_length_mm    |       body_mass_g |  0.60 | [ 0.52,  0.66] |  13.65 | &lt; .001***\nbill_length_mm    |              year |  0.05 | [-0.05,  0.16] |   1.01 | 0.797    \nbill_depth_mm     | flipper_length_mm | -0.58 | [-0.65, -0.51] | -13.26 | &lt; .001***\nbill_depth_mm     |       body_mass_g | -0.47 | [-0.55, -0.39] |  -9.87 | &lt; .001***\nbill_depth_mm     |              year | -0.06 | [-0.17,  0.05] |  -1.11 | 0.797    \nflipper_length_mm |       body_mass_g |  0.87 | [ 0.84,  0.89] |  32.72 | &lt; .001***\nflipper_length_mm |              year |  0.17 | [ 0.06,  0.27] |   3.17 | 0.007**  \nbody_mass_g       |              year |  0.04 | [-0.06,  0.15] |   0.78 | 0.797    \n\np-value adjustment method: Holm (1979)\nObservations: 342\n\n\n\n\nWhat do the stars mean? Statistical significance automatically added by the . We treat that later."
+  },
+  {
+    "objectID": "lectures/W05.html#correlation-visualization",
+    "href": "lectures/W05.html#correlation-visualization",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Correlation visualization",
+    "text": "Correlation visualization\n\nresults %&gt;%\n  summary(redundant = TRUE) %&gt;%\n  plot()"
+  },
+  {
+    "objectID": "lectures/W05.html#exploratory-data-analysis-1",
+    "href": "lectures/W05.html#exploratory-data-analysis-1",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Exploratory Data Analysis",
+    "text": "Exploratory Data Analysis\n\nEDA is the systematic exploration of data using\n\nvisualization\ntransformation\ncomputation of characteristic values\nmodeling\n\n\n\nComputation of characteristic values: Functions like mean, median, mode, standard deviation, or interquartile range\nModeling: Operations like linear regression or dimensionality reduction. We haven’t talked about it, but will do soon."
+  },
+  {
+    "objectID": "lectures/W05.html#systematic-but-no-standard-routine",
+    "href": "lectures/W05.html#systematic-but-no-standard-routine",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Systematic but no standard routine",
+    "text": "Systematic but no standard routine\n\n“There are no routine statistical questions, only questionable statistical routines.” — Sir David Cox\n\n\n“Far better an approximate answer to the right question, which is often vague, than an exact answer to the wrong question, which can always be made precise.” — John Tukey"
+  },
+  {
+    "objectID": "lectures/W05.html#systematic-but-no-standard-routine-1",
+    "href": "lectures/W05.html#systematic-but-no-standard-routine-1",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Systematic but no standard routine",
+    "text": "Systematic but no standard routine\n\nGoal of EDA: Develop understanding of your data.\nEDA’s iterative cycle\n\nGenerate questions about your data.\nSearch for answers by visualizing, transforming, and modelling your data.\nUse what you learn to refine your questions and/or generate new questions.\n\nEDA is fundamentally a creative process. What could be interesting?"
+  },
+  {
+    "objectID": "lectures/W05.html#questions",
+    "href": "lectures/W05.html#questions",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Questions",
+    "text": "Questions\n\nThe way to ask quality questions:\n\nGenerate many questions!\nYou cannot come up with most interesting questions when you start.\n\nThere is no rule which questions to ask. These are useful\n\nWhat type of variation occurs within my variables?\n(Barplots, Histograms,…)\nWhat type of covariation occurs between my variables?\n(Scatterplots, Timelines,…)"
+  },
+  {
+    "objectID": "lectures/W05.html#eda-embedded-in-a-statistical-data-science-project",
+    "href": "lectures/W05.html#eda-embedded-in-a-statistical-data-science-project",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "EDA embedded in a statistical data science project",
+    "text": "EDA embedded in a statistical data science project\n\nStating and refining the question\nExploring the data\nBuilding formal statistical models\nInterpreting the results\nCommunicating the results\n\n\n\nRoger D. Peng and Elizabeth Matsui. “The Art of Data Science.” A Guide for Anyone Who Works with Data. Skybrude Consulting, LLC (2015)."
+  },
+  {
+    "objectID": "lectures/W05.html#six-types-of-questions",
+    "href": "lectures/W05.html#six-types-of-questions",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Six types of questions",
+    "text": "Six types of questions\n\nDescriptive: summarize a characteristic of a set of data\nExploratory: analyze to see if there are patterns, trends, or relationships between variables (hypothesis generating)\nInferential: analyze patterns, trends, or relationships in representative data from a population\nPredictive: make predictions for individuals or groups of individuals\nCausal: whether changing one factor will change another factor, on average, in a population\nMechanistic: explore “how” one factor (probably/most likely/potentially) changes another\n\n\nWe only did 1 and 2, so far.\n\n\n\nLeek, Jeffery T., and Roger D. Peng. 2015. “What Is the Question?” Science 347 (6228): 1314–15. https://doi.org/10.1126/science.aaa6146."
+  },
+  {
+    "objectID": "lectures/W05.html#descriptive-projects",
+    "href": "lectures/W05.html#descriptive-projects",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Descriptive Projects",
+    "text": "Descriptive Projects\n\n\n\nDubin (1969). Theory Building - A Practical Guide to the Construction and Testing of Theoretical Models"
+  },
+  {
+    "objectID": "lectures/W05.html#data-analysis-flowchart",
+    "href": "lectures/W05.html#data-analysis-flowchart",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Data Analysis Flowchart",
+    "text": "Data Analysis Flowchart"
+  },
+  {
+    "objectID": "lectures/W05.html#example-covid-19-and-vitamin-d",
+    "href": "lectures/W05.html#example-covid-19-and-vitamin-d",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Example: COVID-19 and Vitamin D",
+    "text": "Example: COVID-19 and Vitamin D\nExamine\n\nDescriptive: the frequency of daily hospitalisations due to COVID-19 and the frequency of Vitamin D intake in a sample of people\nExploratory: examine the relationships between taking Vitamine D supplements and COVID-19 hospitalisations in a sample of people diagnosed with COVID-19\nInferential: examine whether any relationship between taking Vitamin D supplements and COVID-19 hospitalisations found in the sample hold for the population at large\nPredictive: examine what types of people and how many will take Vitamin D supplements next year\nCausal: examine whether people with COVID-19 who were randomly assigned to take Vitamin D supplements or those who were not are hospitalised\nMechanistic: examine when and how increased vitamin D intake leads to a reduction in the number of viral illnesses"
+  },
+  {
+    "objectID": "lectures/W05.html#questions-to-questions",
+    "href": "lectures/W05.html#questions-to-questions",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Questions to questions",
+    "text": "Questions to questions\n\nDo you have appropriate data to answer your question?\nDo you have information on confounding variables?\nWas the data you’re working with collected in a way that introduces bias?\n\n\n\nExample\nI want to estimate the average number of children in households in Bremen. I conduct a survey at an elementary school and ask pupils how many children, including themselves, live in their house. Then, I take the average of the responses.\n\nIs this a biased or an unbiased estimate of the number of children in households in Bremen?\nIf biased, will the value be an overestimate or underestimate?"
+  },
+  {
+    "objectID": "lectures/W05.html#context-information-is-important",
+    "href": "lectures/W05.html#context-information-is-important",
+    "title": "W#05: Descriptive Statistics, Exploratory Data Analysis",
+    "section": "Context Information is important!",
+    "text": "Context Information is important!\n\nNot all information is in the data!\nPotential confounding variables you infer from general knowledge\nInformation about data collection you may receive from an accompanying report\nInformation about computed variables you may need to look up in accompanying documentation\nInformation about certain variables you may find in an accompanying codebook. For example the exact wording of questions in survey data."
+  },
+  {
     "objectID": "lectures/W04.html#preliminaries",
     "href": "lectures/W04.html#preliminaries",
     "title": "W#04: Strings, Relational Data, Functions",
@@ -1475,7 +1867,7 @@
     "href": "schedule.html",
     "title": "Schedule",
     "section": "",
-    "text": "Caution\n\n\n\nThe titles are still tentative.\n\n\n\nTabular Schedule\nData Science Tools on Thursday\nData Science Concepts on Monday\nFor online participation you find all events in your Teams Calendar.\nConcepts General Channel\nTools General Channel.\n\n\n\nWeek\nDates Concepts\nTopics\nDates Tools\nTools Topic\n\n\n\n\n1\n\nOnly Tools: Hello to Data Science Tools and Concepts Technical Setup\nSep-03\nR\n\n\n2\nSep-07\nW#01 What is Data Science?\nSep-10\nR\n\n\n3\nSep-14\nW#02 Data Visualization, Data Formats, Tidy Data\nSep-17\nR\n\n\n4\nSep-21\nW#03 Data Import, Data Wrangling\nSep-24\nR\n\n\n5\nSep-28\nW#04 Strings, Relational Data, Functions\nOct-01\nR\n\n\n6\nOct-05\nW#05 Descriptive Statistics, Exploratory Data Analysis\nOct-08\nR\n\n\n7\nOct-12\nW#06 Principal Component Analysis, Epidemic Modeling, Calculus\nOct-15\nR\n\n\n8\nOct-19\nW#07 Models in Science, Linear Model, Nonlinear Models\nOct-22\npython\n\n\n9\nOct-26\nW#08 Linear Model: Categorical Predictors, More Predictors, Interaction; Categorical Response, Logistic Regression\nOct-29\npython\n\n\n10\nNov-02\nW#09  Prediction, Classification and Regression Decision Trees  Final Project Check-In\nNov-05\npython\n\n\n11\nNov-09\nW#10 Overfitting, Clustering Algorithms\nNov-12\npython\n\n\n12\nNov-16\nW#11 Collaborative Git, More Prediction Modeling, Quantifying Uncertainty\nNov-19\npython\n\n\n13\nNov-23\nW#12 Hypothesis Testing, Matrices, Probability\nNov-26\npython\n\n\n14\nNov-30\nW#13 To be announced.\nDec-03\npython\n\n\n15\nDec-07\nOnly Concepts Exam Preparation with a Mock Exam\n\n\n\n\nExam\n\nThe exam takes place as an online exam in the date range marked in the academic calendar\n\n\n\n\nProject\n\nDeadline for submission of the Final Project marked in the academic calendar\n\n\n\n\n\n\n2026\n\n\n\n\n2nd  Exam\n\nThose who fail the exam and those who are officially excused can sit in the second exam end of January 2026.  Date range marked in the academic calendar",
+    "text": "Caution\n\n\n\nThe titles are still tentative.\n\n\n\nTabular Schedule\nData Science Tools on Thursday\nData Science Concepts on Monday\nFor online participation you find all events in your Teams Calendar.\nConcepts General Channel\nTools General Channel.\n\n\n\nWeek\nDates Concepts\nTopics\nDates Tools\nTools Topic\n\n\n\n\n1\n\nOnly Tools: Hello to Data Science Tools and Concepts Technical Setup\nSep-03\nR\n\n\n2\nSep-07\nW#01 What is Data Science?\nSep-10\nR\n\n\n3\nSep-14\nW#02 Data Visualization, Data Formats, Tidy Data\nSep-17\nR\n\n\n4\nSep-21\nW#03 Data Import, Data Wrangling\nSep-24\nR\n\n\n5\nSep-28\nW#04 Strings, Relational Data, Functions\nOct-01\nR\n\n\n6\nOct-05\nW#05 Descriptive Statistics, Exploratory Data Analysis\nOct-08\nR\n\n\n7\nOct-12\nW#06 Principal Component Analysis, Epidemic Modeling, Calculus\nOct-15\nR\n\n\n8\nOct-19\nW#07 Models in Science, Linear Model, Nonlinear Models  Social Scientist Input: Georgi Dragolov, Klaus Boehnke\nOct-22\npython\n\n\n9\nOct-26\nW#08 Categorical Predictors, More Predictors, Categorical Response, Logistic Regression  Social Scientist Input: Ulrich Kühnen, Fabian Dehos\nOct-29\npython\n\n\n10\nNov-02\nW#09  Prediction, Classification and Regression Decision Trees  Check-In: Final Project\nNov-05\npython\n\n\n11\nNov-09\nW#10 Overfitting, Clustering Algorithms\nNov-12\npython\n\n\n12\nNov-16\nW#11 Collaborative Git, More Prediction Modeling, Quantifying Uncertainty\nNov-19\npython\n\n\n13\nNov-23\nW#12 Hypothesis Testing, Matrices, Probability\nNov-26\npython\n\n\n14\nNov-30\nW#13 To be announced.\nDec-03\npython\n\n\n15\nDec-07\nOnly Concepts Exam Preparation with a Mock Exam\n\n\n\n\nExam\n\nThe exam takes place as an online exam in the date range marked in the academic calendar\n\n\n\n\nProject\n\nDeadline for submission of the Final Project marked in the academic calendar\n\n\n\n\n\n\n2026\n\n\n\n\n2nd  Exam\n\nThose who fail the exam and those who are officially excused can sit in the second exam end of January 2026.  Date range marked in the academic calendar",
     "crumbs": [
       "Syllabus",
       "Schedule"
@@ -1988,6 +2380,78 @@
       "Syllabus",
       "Schedule",
       "#W04"
+    ]
+  },
+  {
+    "objectID": "material/M05.html",
+    "href": "material/M05.html",
+    "title": "W#05",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W05"
+    ]
+  },
+  {
+    "objectID": "material/M05.html#descriptive-statistics-exploratory-data-analysis",
+    "href": "material/M05.html#descriptive-statistics-exploratory-data-analysis",
+    "title": "W#05",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W05"
+    ]
+  },
+  {
+    "objectID": "material/M05.html#lecture-material",
+    "href": "material/M05.html#lecture-material",
+    "title": "W#05",
+    "section": "1 Lecture Material",
+    "text": "1 Lecture Material\nSlides: Direct Link\n\nFind the live recording in the Course’s Team’s Recording Folder.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W05"
+    ]
+  },
+  {
+    "objectID": "material/M05.html#additional-readings-and-material",
+    "href": "material/M05.html#additional-readings-and-material",
+    "title": "W#05",
+    "section": "2 Additional Readings and Material",
+    "text": "2 Additional Readings and Material\nLeek, Jeffery T., and Peng, Roger D. 2015. “What Is the Question?” Science 347 (6228): 1314–15. https://doi.org/10.1126/science.aaa6146.\nRead the following sections in R for Data Science\n\nCh 10: Exploratory Data Analysis",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W05"
+    ]
+  },
+  {
+    "objectID": "material/M05.html#achievements",
+    "href": "material/M05.html#achievements",
+    "title": "W#05",
+    "section": "3 Achievements",
+    "text": "3 Achievements\nYou\n\ncan compute and interpret the mean, median, variance, and standard deviation of a vector of numbers\ncan create and interpret histogram plots\ncan compute and interpret quantiles of a data set\ncan create and interpret boxplots\ncan compute and interpret the correlation between two vectors of numbers\nyou have done a first exploratory data analysis and have a first feeling of why it is not a fully standardized process\nyou can classify data science research questions according to the six types of questions of Leek and Peng (2015)",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W05"
+    ]
+  },
+  {
+    "objectID": "material/M05.html#homework-projects-progress-guides",
+    "href": "material/M05.html#homework-projects-progress-guides",
+    "title": "W#05",
+    "section": "4 Homework Projects Progress Guides",
+    "text": "4 Homework Projects Progress Guides\nFind the Repositories of your Homework Projects in the Course’s GitHub-Organization’s CU-F26-MDSSB-01-Concepts-Tools &gt; Repositories.\nProject’s INSTRUCTIONS you should have completed:\nProject_NYCFlights: 1., 2., 3., 4. 5., 6., 7. (This is an open question to practice exploratory data analysis.)\nProject_COVID19: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1\n\n\n\n\n\n\nNote\n\n\n\nDon’t panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W05"
     ]
   }
 ]
