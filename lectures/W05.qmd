@@ -11,9 +11,6 @@ format:
     preview-links: true
     logo: img/ConstructorUniversity.png
     footer: "MDSSB-DSCO-02: Data Science Concepts"
-bibliography: "/home/janlo/Documents/literature/litlorenz_zot.bib"
-editor_options: 
-  chunk_output_type: console
 ---
 
 ## Preliminaries {.smaller}
@@ -29,7 +26,7 @@ viertel <- read_csv("Viertelfest.csv")
 ```
 
 The datasets used can be downloaded from:   
-<https://github.com/CU-F25-MDSSB-01-Concepts-Tools/Website/tree/main/lectures>
+<https://github.com/{{< var org.name>}}/Website/tree/main/lectures>
 
 
 # Descriptive Statistics 
@@ -277,6 +274,7 @@ ggplot() +
 
 ```{r}
 #| echo: true
+#| code-fold: true
 #| fig-height: 2.5
 galton |>
   ggplot(aes(Estimate)) +
@@ -290,12 +288,13 @@ galton |>
 `r nrow(galton)` estimates, [true value]{style="color:green;"} 1198, [mean]{style="color:red;"} `r round(mean((galton$Estimate)), digits=1)`, [median]{style="color:blue;"} `r median((galton$Estimate))`, [mode]{style="color:purple;"} `r Mode((galton$Estimate))`
 
 
-## Viertelfest Bremen 2008^[Data collected as additional guessing game at the Lottery "Haste mal 'nen Euro?", data provided by Jan Lorenz  <https://docs.google.com/spreadsheets/d/1HiYhUrYrsbeybJ10mwsae_hQCawZlUQFOOZzcugXzgA/edit#gid=0>] {.smaller background-color="aquamarine"}
+## Viertelfest Bremen 2008^[Data collected as additional guessing game at the Lottery "Haste mal 'nen Euro?", data provided by Jan Lorenz  <https://docs.google.com/spreadsheets/d/1HiYhUrYrsbeybJ10mwsae_hQCawZlUQFOOZzcugXzgA/edit#gid=0>] {.smaller background-color="khaki"}
 
 *How many lots will be sold by the end of the festival?*
 
 ```{r}
 #| echo: true
+#| code-fold: true
 #| fig-height: 2.5
 viertel |>
   ggplot(aes(
@@ -317,6 +316,7 @@ viertel |>
 
 ```{r}
 #| echo: true
+#| code-fold: true
 #| fig-height: 2.5
 viertel |>
   filter(Schätzung < 100000) |>
@@ -337,6 +337,7 @@ viertel |>
 
 ```{r}
 #| echo: true
+#| code-fold: true
 #| fig-height: 2.5
 viertel |>
   mutate(log10Est = log10(Schätzung)) |>
@@ -392,7 +393,7 @@ The standard deviation is often denoted $\sigma$ (sigma) and the variance $\sigm
 
 . . .
 
-[Warning:]{style='color:red;'} MAD can also be **Median absolute deviation from the median**.
+[Warning:]{style='color:red;'} MAD can also mean **Median absolute deviation from the median**.
 
 **Range** is the difference of the maximal and the minimal value $\max(x) - \min(x)$.
 
@@ -529,13 +530,6 @@ summary(galton$Estimate)
 summary(viertel$Schätzung)
 ```
 
-Or for all columns in a data frame
-
-```{r}
-#| echo: true
-summary(penguins)
-```
-
 :::
 
 ::: {.column width='35%'}
@@ -549,6 +543,17 @@ What does
 :::
 
 ::::
+
+. . . 
+
+For all columns in a data frame
+
+```{r}
+#| echo: true
+summary(penguins)
+```
+
+
 
 # Quantiles
 
@@ -881,7 +886,7 @@ palmerpenguins::penguins |>
 . . . 
 
 [**The Concept of Minimizing**]{style='color:blue;'}  
-Is central for all statisitical fitting and learning procedures! These are among the simplest examples of this concept. 
+Is central for all *statisitical fitting*, *machine learning* and *AI training* procedures! These are among the simplest examples of this concept. 
 
 ## Two families of summary statistics {background-color="aquamarine" .smaller}
 
@@ -910,11 +915,10 @@ Equation: $\text{skewness} = \frac{\frac{1}{n}\sum_{i=1}^n(x_i - \mu)^3}{\left(\
 - **Positive skewness**: The right tail is longer or fatter than the left tail.
 - **Negative skewness**: The left tail is longer or fatter than the right tail.
 
-![](https://upload.wikimedia.org/wikipedia/commons/c/cc/Relationship_between_mean_and_median_under_different_skewness.png)
+![](img/Relationship_between_mean_and_median_under_different_skewness.png)
 
 The relation of *mean* and *median* can give a hint on skewness!  
 The Viertelfest data is heavily positively skew. (The Galton data is a little bit negatively skew, but it is barely visible.)
-
 
 
 ## Kurtosis {background-color="aquamarine" .smaller}
@@ -926,9 +930,10 @@ Equation: $\text{kurtosis} = \frac{\frac{1}{n}\sum_{i=1}^n(x_i - \mu)^4}{\left(\
 - **Leptokurtic**: Fatter tails and a higher peak than the normal distribution.
 - **Platykurtic**: Thinner tails and a lower peak than the normal distribution.
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Standard_symmetric_pdfs.svg/1920px-Standard_symmetric_pdfs.svg.png){height=200}
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Standard_symmetric_pdfs_logscale.svg/1920px-Standard_symmetric_pdfs_logscale.svg.png){height=200} 
-A logarithmic y-axis shows the fatter tails!
+![](img/Standard_symmetric_pdfs.svg.png){height=200}
+![](img/Standard_symmetric_pdfs_logscale.svg.png){height=200} 
+
+The logarithmic y-axis shows that tails are fatter with higher kurtosis (red)!
 
 
 # Bivariate Summary Statistics

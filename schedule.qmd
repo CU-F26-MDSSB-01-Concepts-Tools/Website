@@ -26,7 +26,7 @@ For online participation you find all events in your Teams Calendar.
 | 4    | Sep-21  | [W#03 Data Import, Data Wrangling](material/M03.qmd) | Sep-24    | R            |
 | 5    | Sep-28  | [W#04 Strings, Relational Data, Functions](material/M04.qmd)  | Oct-01 | R |
 | 6    | Oct-05  | [W#05 Descriptive Statistics, Exploratory Data Analysis](material/M05.qmd) | Oct-08 | R    |
-| 7    | Oct-12  | W#06 Principal Component Analysis, Epidemic Modeling, Calculus | Oct-15 | R  |
+| 7    | Oct-12  | [W#06 Principal Component Analysis, Epidemic Modeling, Calculus](material/M06.qmd) | Oct-15 | R  |
 | 8    | Oct-19  | W#07 Models in Science, Linear Model, Nonlinear Models <br> **Social Scientist Input:** [Georgi Dragolov](https://constructor.university/faculty-member/georgi-dragolov), [Klaus Boehnke](https://constructor.university/faculty-member/klaus-boehnke)| Oct-22 | python |
 | 9    | Oct-26  | W#08 Categorical Predictors, More Predictors, Categorical Response, Logistic Regression  <br> **Social Scientist Input:** [Ulrich Kühnen](https://constructor.university/faculty-member/ulrich-kuhnen), [Fabian Dehos](https://constructor.university/faculty-member/fabian-t-dehos)| Oct-29    | python |
 | 10   | Nov-02  | W#09 <!--](https://forms.office.com/e/75qEdyZbim)--> Prediction, Classification and Regression Decision Trees <br> **Check-In: Final Project**| Nov-05    | python   |

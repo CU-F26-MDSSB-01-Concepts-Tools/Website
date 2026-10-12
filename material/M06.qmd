@@ -4,7 +4,7 @@ title: "W#06"
 format: html
 ---
 
-## Principal Component Analysis, Math: Exponentiations and Logarithms, Epidemic Modeling, Calculus {.unnumbered}
+## Principal Component Analysis, Epidemic Modeling, Calculus {.unnumbered}
 
 Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.
 
