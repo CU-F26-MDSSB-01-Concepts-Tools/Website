@@ -1347,11 +1347,11 @@ Explore and analyze with <strong>computer simulations</strong>.</p>
 <span id="cb29-9"><a></a><span class="fu">randomly_infect</span>(N, beta) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">50</span>) <span class="co"># First 50</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE FALSE
-[13] FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE
-[25] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
-[37] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE
-[49]  TRUE FALSE</code></pre>
+<pre><code> [1]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+[13]  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+[25] FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE
+[37] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE
+[49] FALSE  TRUE</code></pre>
 </div>
 </div></div>
 <div class="cell columns column-output-location">
@@ -1841,7 +1841,7 @@ Story:
 <ul>
 <li class="fragment">The <strong>gradient</strong> is a vector-valued function. It is based on a function describing a landscape over a highdimensional space. Each entry of the gradient is the <strong>derivative</strong> of that function in one dimension of the high-dimensional space.<br>
 </li>
-<li class="fragment">The gradient points to the direction where the landscape goes steepest up (and steepest down in the opposite direction). The idea of gradient descent is to follow this direction to reach the maximum (or minimum) fast and efficient.</li>
+<li class="fragment">The gradient points to the direction where the landscape goes steepest up (and steepest down in the opposite direction). The idea of gradient descent is to follow this direction to reach the argmaximum (or argminimum) fast and efficient.</li>
 <li class="fragment">Gradient-based optimization powers most of modern deep learning, and therefore most of today’s AI training.</li>
 </ul></li>
 </ul>
