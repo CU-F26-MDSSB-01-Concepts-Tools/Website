@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/lectures/W07.html</loc>
+    <lastmod>2026-10-18T20:00:20.763Z</lastmod>
+  </url>
+  <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/lectures/W06.html</loc>
-    <lastmod>2026-10-12T07:19:39.844Z</lastmod>
+    <lastmod>2026-10-18T10:01:36.262Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/lectures/W05.html</loc>
@@ -42,7 +46,7 @@
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/schedule.html</loc>
-    <lastmod>2026-10-11T08:23:49.391Z</lastmod>
+    <lastmod>2026-10-18T10:02:15.558Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/final.html</loc>
@@ -75,5 +79,9 @@
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/material/M06.html</loc>
     <lastmod>2026-10-11T08:24:14.121Z</lastmod>
+  </url>
+  <url>
+    <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/material/M07.html</loc>
+    <lastmod>2026-10-18T17:53:30.856Z</lastmod>
   </url>
 </urlset>
