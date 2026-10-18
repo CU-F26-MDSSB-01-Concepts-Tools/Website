@@ -3192,11 +3192,23 @@
     ]
   },
   {
+    "objectID": "material/M07.html",
+    "href": "material/M07.html",
+    "title": "W#07",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W07"
+    ]
+  },
+  {
     "objectID": "material/M07.html#models-in-science-linear-model-nonlinear-models-social-science-input",
     "href": "material/M07.html#models-in-science-linear-model-nonlinear-models-social-science-input",
     "title": "W#07",
-    "section": "Models in Science, Linear Model, Nonlinear Models, Social Science Input",
-    "text": "Models in Science, Linear Model, Nonlinear Models, Social Science Input\nReconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.",
     "crumbs": [
       "Syllabus",
       "Schedule",
@@ -3207,8 +3219,8 @@
     "objectID": "material/M07.html#lecture-material",
     "href": "material/M07.html#lecture-material",
     "title": "W#07",
-    "section": "2 Lecture Material",
-    "text": "2 Lecture Material\nSlides: Direct Link\n\n\nFind the live recording in the Course’s Team’s Recording Folder.",
+    "section": "1 Lecture Material",
+    "text": "1 Lecture Material\nSlides: Direct Link\n\n\nFind the live recording in the Course’s Team’s Recording Folder.",
     "crumbs": [
       "Syllabus",
       "Schedule",
@@ -3219,8 +3231,8 @@
     "objectID": "material/M07.html#additional-readings-and-material",
     "href": "material/M07.html#additional-readings-and-material",
     "title": "W#07",
-    "section": "3 Additional Readings and Material",
-    "text": "3 Additional Readings and Material\nRead the following sections in Introduction to Modern Statistics:\n\nCh 7: Linear regression with a single predictor",
+    "section": "2 Additional Readings and Material",
+    "text": "2 Additional Readings and Material\nRead the following sections in Introduction to Modern Statistics:\n\nCh 7: Linear regression with a single predictor",
     "crumbs": [
       "Syllabus",
       "Schedule",
@@ -3231,8 +3243,8 @@
     "objectID": "material/M07.html#achievements",
     "href": "material/M07.html#achievements",
     "title": "W#07",
-    "section": "4 Achievements",
-    "text": "4 Achievements\nYou\n\ncan explain, and interpret the coefficients of a linear model\ncan define and fit a linear model (in R and/or python)\nknow which part of a linear model output relates to explanation and prediction\ncan explain what residuals are\nhave an idea what “All models are wrong, but some are useful” means\nknow the difference between the \\(\\beta\\)’s (population parameters which we do not know) and the \\(\\hat\\beta\\)’s (the estimated parameters from the data) and how this relates to a inferential research questions\nknow how the correlation of two variables relates to the slope of a linear model with one variable as predictor and the other as response variable (the slope is the correlation times the ratio of the standard deviations of the two variables)\ncan draw example data points in 2-dimensions where a linear model is a bad fit\ncan give an explanation where log-transforming the response variable for a linear model is a good idea\nknow the “gold standard” for identifying causal effect, and can explain why it is the gold standard",
+    "section": "3 Achievements",
+    "text": "3 Achievements\nYou\n\ncan explain, and interpret the coefficients of a linear model\ncan define and fit a linear model (in R and/or python)\nknow which part of a linear model output relates to explanation and prediction\ncan explain what residuals are\nhave an idea what “All models are wrong, but some are useful” means\nknow the difference between the \\(\\beta\\)’s (population parameters which we do not know) and the \\(\\hat\\beta\\)’s (the estimated parameters from the data) and how this relates to a inferential research questions\nknow how the correlation of two variables relates to the slope of a linear model with one variable as predictor and the other as response variable (the slope is the correlation times the ratio of the standard deviations of the two variables)\ncan draw example data points in 2-dimensions where a linear model is a bad fit\ncan give an explanation where log-transforming the response variable for a linear model is a good idea\nknow the “gold standard” for identifying causal effect, and can explain why it is the gold standard",
     "crumbs": [
       "Syllabus",
       "Schedule",
@@ -3243,8 +3255,8 @@
     "objectID": "material/M07.html#homework-projects-progress-guides",
     "href": "material/M07.html#homework-projects-progress-guides",
     "title": "W#07",
-    "section": "5 Homework Projects Progress Guides",
-    "text": "5 Homework Projects Progress Guides\nFind the Repositories of your Homework Projects in the Course’s GitHub-Organization’s CU-F26-MDSSB-01-Concepts-Tools &gt; Repositories.\nProject’s INSTRUCTIONS you should have completed:\nProject_NYCFlights: 1., 2., 3., 4. 5., 6., 7.\nProject_COVID19: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2\n\n\n\n\n\n\nNote\n\n\n\nDon’t panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!",
+    "section": "4 Homework Projects Progress Guides",
+    "text": "4 Homework Projects Progress Guides\nFind the Repositories of your Homework Projects in the Course’s GitHub-Organization’s CU-F26-MDSSB-01-Concepts-Tools &gt; Repositories.\nProject’s INSTRUCTIONS you should have completed:\nProject_NYCFlights: 1., 2., 3., 4. 5., 6., 7.\nProject_COVID19: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2\n\n\n\n\n\n\nNote\n\n\n\nDon’t panic, if you fell behind, just do it later. Find your own learning path. Better step by step than randomly skipping things. It is about learning not just completing!",
     "crumbs": [
       "Syllabus",
       "Schedule",
