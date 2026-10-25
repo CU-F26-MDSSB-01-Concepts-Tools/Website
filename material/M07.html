@@ -71,35 +71,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -220,8 +191,11 @@ window.Quarto = {
   </div>
 </li>
           <li class="sidebar-item">
- <span class="menu-text">#W08</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="../material/M08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">#W08</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
  <span class="menu-text">#W09</span>
   </li>
@@ -279,7 +253,7 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#models-in-science-linear-model-nonlinear-models-social-science-input" id="toc-models-in-science-linear-model-nonlinear-models-social-science-input" class="nav-link active" data-scroll-target="#models-in-science-linear-model-nonlinear-models-social-science-input">Models in Science, Linear Model, Nonlinear Models, Social Science Input</a></li>
+  <li><a href="#models-in-science-linear-model-social-science-input" id="toc-models-in-science-linear-model-social-science-input" class="nav-link active" data-scroll-target="#models-in-science-linear-model-social-science-input">Models in Science, Linear Model, Social Science Input</a></li>
   <li><a href="#lecture-material" id="toc-lecture-material" class="nav-link" data-scroll-target="#lecture-material"><span class="header-section-number">1</span> Lecture Material</a></li>
   <li><a href="#additional-readings-and-material" id="toc-additional-readings-and-material" class="nav-link" data-scroll-target="#additional-readings-and-material"><span class="header-section-number">2</span> Additional Readings and Material</a></li>
   <li><a href="#achievements" id="toc-achievements" class="nav-link" data-scroll-target="#achievements"><span class="header-section-number">3</span> Achievements</a></li>
@@ -309,8 +283,8 @@ window.Quarto = {
 </header>
 
 
-<section id="models-in-science-linear-model-nonlinear-models-social-science-input" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="models-in-science-linear-model-nonlinear-models-social-science-input">Models in Science, Linear Model, Nonlinear Models, Social Science Input</h2>
+<section id="models-in-science-linear-model-social-science-input" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="models-in-science-linear-model-social-science-input">Models in Science, Linear Model, Social Science Input</h2>
 <p>Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.</p>
 </section>
 <section id="lecture-material" class="level2" data-number="1">
@@ -319,9 +293,12 @@ window.Quarto = {
 <iframe src="https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/lectures/W07.html" frameborder="0" width="800" height="550" style="border:1px solid black;" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 <!-- 
  -->
-<p><strong>Input Social Scientists</strong></p>
-<p><strong>Georgi Dragolov</strong></p>
-<p><strong>Klaus Boehnke</strong></p>
+<p>Input Social Scientists: <a href="https://constructor.university/faculty-member/georgi-dragolov"><strong>Georgi Dragolov</strong></a><br>
+Large-scale Social Surveys, Representative Samples</p>
+<p><object data="../lectures/W07_Dragolov.pdf" type="application/pdf" width="100%" height="550"><a href="../lectures/W07_Dragolov.pdf" download="">Download PDF file.</a></object></p>
+<p>Input Social Scientists: <a href="https://constructor.university/faculty-member/klaus-boehnke"><strong>Klaus Boehnke</strong></a><br>
+Latent Variables, Factor Analysis</p>
+<p><object data="../lectures/W07_Boehnke.pdf" type="application/pdf" width="100%" height="550"><a href="../lectures/W07_Boehnke.pdf" download="">Download PDF file.</a></object></p>
 <p>Find the live recording in the <a href="https://constructoruniversity.sharepoint.com/:f:/s/f26_mdssbdsoc02_datascienceconcepts/IgCafQLbOLAqRLGERLRwuX56AdQTvr-1JHgJK4COqTQElRw?e=uSEk5p">Course’s Team’s Recording Folder</a>.</p>
 </section>
 <section id="additional-readings-and-material" class="level2" data-number="2">
@@ -335,16 +312,13 @@ window.Quarto = {
 <h2 data-number="3" class="anchored" data-anchor-id="achievements"><span class="header-section-number">3</span> Achievements</h2>
 <p>You</p>
 <ul class="task-list">
-<li><label><input type="checkbox">can explain, and interpret the coefficients of a linear model</label></li>
-<li><label><input type="checkbox">can define and fit a linear model (in R and/or python)</label></li>
-<li><label><input type="checkbox">know which part of a linear model output relates to explanation and prediction</label></li>
-<li><label><input type="checkbox">can explain what residuals are</label></li>
+<li><label><input type="checkbox">can explain the general idea of the relation of a model and the real world</label></li>
+<li><label><input type="checkbox">can distinguish different purposes of models</label></li>
 <li><label><input type="checkbox">have an idea what “All models are wrong, but some are useful” means</label></li>
-<li><label><input type="checkbox">know the difference between the <span class="math inline">\(\beta\)</span>’s (population parameters which we do not know) and the <span class="math inline">\(\hat\beta\)</span>’s (the estimated parameters from the data) and how this relates to a <em>inferential</em> research questions</label></li>
-<li><label><input type="checkbox">know how the correlation of two variables relates to the slope of a linear model with one variable as predictor and the other as response variable (the slope is the correlation times the ratio of the standard deviations of the two variables)</label></li>
-<li><label><input type="checkbox">can draw example data points in 2-dimensions where a linear model is a bad fit</label></li>
-<li><label><input type="checkbox">can give an explanation where log-transforming the response variable for a linear model is a good idea</label></li>
-<li><label><input type="checkbox">know the “gold standard” for identifying causal effect, and can explain why it is the gold standard</label></li>
+<li><label><input type="checkbox">can relate different terminolgy under the general idea of <em>Models to learn from data</em></label></li>
+<li><label><input type="checkbox">know how a line is modeled mathematically and what intercept and slope are</label></li>
+<li><label><input type="checkbox">can explain different sampling strategies for surveys</label></li>
+<li><label><input type="checkbox">know what a latent variable is</label></li>
 </ul>
 </section>
 <section id="homework-projects-progress-guides" class="level2" data-number="4">
