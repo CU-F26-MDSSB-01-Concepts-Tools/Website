@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="Jan Lorenz">
-  <title>Data Science Concepts / Data Science Tools – W#08: Fitting the Linear Model, Nonlinear Models</title>
+  <title>Data Science Concepts / Data Science Tools – W#08: Fitting the Linear Model</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -198,7 +198,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">W#08: Fitting the Linear Model, Nonlinear Models</h1>
+  <h1 class="title">W#08: Fitting the Linear Model</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -213,7 +213,6 @@ Jan Lorenz
 <h2 id="toc-title">Table of contents</h2>
 <ul>
 <li><a href="#/fitting-the-linear-model" id="/toc-fitting-the-linear-model">Fitting the Linear Model</a></li>
-<li><a href="#/nonlinear-models" id="/toc-nonlinear-models">Nonlinear Models</a></li>
 </ul>
 </nav>
 </section>
@@ -615,276 +614,9 @@ Coefficients:
   2.51334876   9.16677830  13.33232766  -1.39614069  10.63918673   3.60385931 </code></pre>
 </div>
 </div>
-</section>
-<section id="fitting-method-least-squares-regression" class="slide level2 smaller" data-background-color="aquamarine">
-<h2>Fitting method: Least squares regression</h2>
-<ul>
-<li>The regression line shall minimize the sum of the squared residuals<br>
-(or, identically, their mean).</li>
-<li>Mathematically: The residual for case <span class="math inline">\(i\)</span> is <span class="math inline">\(e_i = \hat y_i - y_i\)</span>.</li>
-<li>Now we want to minimize <span class="math inline">\(\sum_{i=1}^n e_i^2\)</span><br>
-(or equivalently <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n e_i^2\)</span> the <em>mean of squared errors</em>, which we will look at later).</li>
-</ul>
-</section>
-<section id="visualization-of-residuals" class="slide level2 smaller scrollable" data-background-color="aquamarine">
-<h2>Visualization of residuals</h2>
-<p>The residuals are the gray lines between predicted values on the regression line and the actual values.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>pengmod <span class="ot">&lt;-</span></span>
-<span id="cb30-2"><a></a>  <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb30-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb30-4"><a></a>  <span class="fu">fit</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins)</span>
-<span id="cb30-5"><a></a>penguins <span class="sc">|&gt;</span></span>
-<span id="cb30-6"><a></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(pengmod, penguins)) <span class="sc">|&gt;</span></span>
-<span id="cb30-7"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(body_mass_g, flipper_length_mm)) <span class="sc">+</span></span>
-<span id="cb30-8"><a></a>  <span class="fu">geom_segment</span>(</span>
-<span id="cb30-9"><a></a>    <span class="fu">aes</span>(</span>
-<span id="cb30-10"><a></a>      <span class="at">x =</span> body_mass_g,</span>
-<span id="cb30-11"><a></a>      <span class="at">y =</span> flipper_length_mm,</span>
-<span id="cb30-12"><a></a>      <span class="at">xend =</span> body_mass_g,</span>
-<span id="cb30-13"><a></a>      <span class="at">yend =</span> .pred</span>
-<span id="cb30-14"><a></a>    ),</span>
-<span id="cb30-15"><a></a>    <span class="at">color =</span> <span class="st">"gray"</span></span>
-<span id="cb30-16"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb30-17"><a></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb30-18"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb30-19"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> .pred), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
 
-</div>
-<img data-src="W08_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch"></section>
-<section id="check-fitted-values-and-residuals" class="slide level2 smaller scrollable" data-background-color="aquamarine">
-<h2>Check: Fitted values and Residuals</h2>
-<p>Recall: <strong>Residual = Observed value - Predicted value</strong></p>
-<p>The <em>Predicted values</em> are also called <em>Fitted values</em>. Hence:</p>
-<p>Residuals + Fitted values = Observed values</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>pengmod<span class="sc">$</span>fit<span class="sc">$</span>residuals <span class="sc">+</span> pengmod<span class="sc">$</span>fit<span class="sc">$</span>fitted.values</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  1   2   3   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21 
-181 186 195 193 190 181 195 193 190 186 180 182 191 198 185 195 197 184 194 174 
- 22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41 
-180 189 185 180 187 183 187 172 180 178 178 188 184 195 196 190 180 181 184 182 
- 42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60  61 
-195 186 196 185 190 182 179 190 191 186 188 190 200 187 191 186 193 181 194 185 
- 62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80  81 
-195 185 192 184 192 195 188 190 198 190 190 196 197 190 195 191 184 187 195 189 
- 82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 101 
-196 187 193 191 194 190 189 189 190 202 205 185 186 187 208 190 196 178 192 192 
-102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 
-203 183 190 193 184 199 190 181 197 198 191 193 197 191 196 188 199 189 189 187 
-122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 
-198 176 202 186 199 191 195 191 210 190 197 193 199 187 190 191 200 185 193 193 
-142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 
-187 188 190 192 185 190 184 195 193 187 201 211 230 210 218 215 210 211 219 209 
-162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 
-215 214 216 214 213 210 217 210 221 209 222 218 215 213 215 215 215 216 215 210 
-182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199 200 201 
-220 222 209 207 230 220 220 213 219 208 208 208 225 210 216 222 217 210 225 213 
-202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 
-215 210 220 210 225 217 220 208 220 208 224 208 221 214 231 219 230 214 229 220 
-222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 
-223 216 221 221 217 216 230 209 220 215 223 212 221 212 224 212 228 218 218 212 
-242 243 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 260 261 
-230 218 228 212 224 214 226 216 222 203 225 219 228 215 228 216 215 210 219 208 
-262 263 264 265 266 267 268 269 270 271 273 274 275 276 277 278 279 280 281 282 
-209 216 229 213 230 217 230 217 222 214 215 222 212 213 192 196 193 188 197 198 
-283 284 285 286 287 288 289 290 291 292 293 294 295 296 297 298 299 300 301 302 
-178 197 195 198 193 194 185 201 190 201 197 181 190 195 181 191 187 193 195 197 
-303 304 305 306 307 308 309 310 311 312 313 314 315 316 317 318 319 320 321 322 
-200 200 191 205 187 201 187 203 195 199 195 210 192 205 210 187 196 196 196 201 
-323 324 325 326 327 328 329 330 331 332 333 334 335 336 337 338 339 340 341 342 
-190 212 187 198 199 201 193 203 187 197 191 203 202 194 206 189 195 207 202 193 
-343 344 
-210 198 </code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>penguins<span class="sc">$</span>flipper_length_mm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  [1] 181 186 195  NA 193 190 181 195 193 190 186 180 182 191 198 185 195 197
- [19] 184 194 174 180 189 185 180 187 183 187 172 180 178 178 188 184 195 196
- [37] 190 180 181 184 182 195 186 196 185 190 182 179 190 191 186 188 190 200
- [55] 187 191 186 193 181 194 185 195 185 192 184 192 195 188 190 198 190 190
- [73] 196 197 190 195 191 184 187 195 189 196 187 193 191 194 190 189 189 190
- [91] 202 205 185 186 187 208 190 196 178 192 192 203 183 190 193 184 199 190
-[109] 181 197 198 191 193 197 191 196 188 199 189 189 187 198 176 202 186 199
-[127] 191 195 191 210 190 197 193 199 187 190 191 200 185 193 193 187 188 190
-[145] 192 185 190 184 195 193 187 201 211 230 210 218 215 210 211 219 209 215
-[163] 214 216 214 213 210 217 210 221 209 222 218 215 213 215 215 215 216 215
-[181] 210 220 222 209 207 230 220 220 213 219 208 208 208 225 210 216 222 217
-[199] 210 225 213 215 210 220 210 225 217 220 208 220 208 224 208 221 214 231
-[217] 219 230 214 229 220 223 216 221 221 217 216 230 209 220 215 223 212 221
-[235] 212 224 212 228 218 218 212 230 218 228 212 224 214 226 216 222 203 225
-[253] 219 228 215 228 216 215 210 219 208 209 216 229 213 230 217 230 217 222
-[271] 214  NA 215 222 212 213 192 196 193 188 197 198 178 197 195 198 193 194
-[289] 185 201 190 201 197 181 190 195 181 191 187 193 195 197 200 200 191 205
-[307] 187 201 187 203 195 199 195 210 192 205 210 187 196 196 196 201 190 212
-[325] 187 198 199 201 193 203 187 197 191 203 202 194 206 189 195 207 202 193
-[343] 210 198</code></pre>
-</div>
-</div>
+
 </section></section>
-<section>
-<section id="nonlinear-models" class="title-slide slide level1 center">
-<h1>Nonlinear Models</h1>
-
-</section>
-<section id="when-a-linear-model-is-bad" class="slide level2">
-<h2>When a linear model is bad</h2>
-<p>Example: Total corona cases in Germany in the first wave 2020.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>whofull <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"WHO-COVID-19-global-data.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb35-2"><a></a>  <span class="fu">filter</span>(Country <span class="sc">==</span> <span class="st">"Germany"</span>)</span>
-<span id="cb35-3"><a></a>who <span class="ot">&lt;-</span> whofull <span class="sc">|&gt;</span></span>
-<span id="cb35-4"><a></a>  <span class="fu">filter</span>(Date_reported <span class="sc">&lt;</span> <span class="st">"2020-03-20"</span>, Date_reported <span class="sc">&gt;</span> <span class="st">"2020-02-25"</span>)</span>
-<span id="cb35-5"><a></a>who <span class="sc">|&gt;</span></span>
-<span id="cb35-6"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Date_reported, Cumulative_cases)) <span class="sc">+</span></span>
-<span id="cb35-7"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb35-8"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb35-9"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-
-</div>
-<img data-src="W08_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
-<section id="log-transformation" class="slide level2 smaller">
-<h2><span class="math inline">\(\log\)</span> transformation</h2>
-<p>Instead of <code>Cumulative_cases</code> we look at <span class="math inline">\(\log(\)</span><code>Cumulative_cases</code><span class="math inline">\()\)</span></p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>who <span class="sc">|&gt;</span></span>
-<span id="cb36-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Date_reported, <span class="fu">log</span>(Cumulative_cases))) <span class="sc">+</span></span>
-<span id="cb36-3"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb36-4"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb36-5"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb36-6"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-
-</div>
-<img data-src="W08_files/figure-revealjs/unnamed-chunk-14-1.png" width="960" class="r-stretch"><p>Almost perfect fit of the linear model: <span class="math inline">\(\log(y)=\log(\beta_0) + \beta_1\cdot x\)</span><br>
-(<span class="math inline">\(y=\)</span> <code>Cumulative cases</code>, <span class="math inline">\(x=\)</span> Days)</p>
-<div class="fragment">
-<p>Exponentiation gives the model: <span class="math inline">\(y=\beta_0 e^{\beta_1\cdot x}\)</span><br>
-<!-- (Check $e^{\log(\beta_0) + \beta_1\cdot x} = e^{\log(\beta_0)} e^{\beta_1\cdot x} = \beta_0 e^{\beta_1\cdot x}$) --></p>
-</div>
-</section>
-<section id="exponential-growth" class="slide level2 smaller">
-<h2>Exponential growth!</h2>
-<p><span style="color:red;"><span class="math inline">\(y=\beta_0 e^{\beta_1\cdot x}\)</span></span> For comparison: Logistic function <span style="color:blue;"><span class="math inline">\(y = \frac{N \beta_0 e^{\beta_1\cdot x}}{N + \beta_0 e^{\beta_1\cdot x}}\)</span></span> for <span class="math inline">\(N=200000\)</span></p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>wholm <span class="ot">&lt;-</span> who <span class="sc">|&gt;</span></span>
-<span id="cb37-2"><a></a>  <span class="fu">lm</span>(<span class="fu">log</span>(Cumulative_cases) <span class="sc">~</span> Date_reported, <span class="at">data =</span> _)</span>
-<span id="cb37-3"><a></a>who <span class="sc">|&gt;</span></span>
-<span id="cb37-4"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Date_reported, Cumulative_cases)) <span class="sc">+</span></span>
-<span id="cb37-5"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb37-6"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb37-7"><a></a>  <span class="fu">geom_function</span>(</span>
-<span id="cb37-8"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)),</span>
-<span id="cb37-9"><a></a>    <span class="at">color =</span> <span class="st">"red"</span></span>
-<span id="cb37-10"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb37-11"><a></a>  <span class="fu">geom_function</span>(</span>
-<span id="cb37-12"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb37-13"><a></a>      <span class="dv">200000</span> <span class="sc">*</span></span>
-<span id="cb37-14"><a></a>        <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)) <span class="sc">/</span></span>
-<span id="cb37-15"><a></a>        (<span class="dv">200000</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)))</span>
-<span id="cb37-16"><a></a>    },</span>
-<span id="cb37-17"><a></a>    <span class="at">color =</span> <span class="st">"blue"</span></span>
-<span id="cb37-18"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb37-19"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-
-</div>
-<img data-src="W08_files/figure-revealjs/unnamed-chunk-15-1.png" width="960" class="r-stretch"><p>Logistic growth (as in the SI model) mimicks exponential growth initially.</p>
-</section>
-<section id="log-transformation-1" class="slide level2 smaller">
-<h2><span class="math inline">\(\log\)</span> transformation</h2>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>who <span class="sc">|&gt;</span></span>
-<span id="cb38-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Date_reported, <span class="fu">log10</span>(Cumulative_cases))) <span class="sc">+</span></span>
-<span id="cb38-3"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb38-4"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb38-5"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb38-6"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-
-</div>
-<img data-src="W08_files/figure-revealjs/unnamed-chunk-16-1.png" width="960" class="r-stretch"><p>An important difference of <code>log10(Cumulative_cases) ~ Date_Reported</code> to the penguin model <code>flipper_length_mm ~ body_mass_g</code>? ?</p>
-<div class="fragment">
-<ul>
-<li><span class="math inline">\(x\)</span> has an ordered structure: regular time steps</li>
-</ul>
-<p>The fit looks so good. Why?</p>
-</div>
-<div class="fragment">
-<p>Because there is a good <em>mechanistic explanation</em> behind: The SI model.</p>
-</div>
-</section>
-<section id="it-works-only-in-a-certain-data-range" class="slide level2 smaller">
-<h2>It works only in a certain data range</h2>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>who <span class="sc">|&gt;</span></span>
-<span id="cb39-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Date_reported, Cumulative_cases)) <span class="sc">+</span></span>
-<span id="cb39-3"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb39-4"><a></a>  <span class="fu">geom_function</span>(</span>
-<span id="cb39-5"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)),</span>
-<span id="cb39-6"><a></a>    <span class="at">color =</span> <span class="st">"red"</span></span>
-<span id="cb39-7"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb39-8"><a></a>  <span class="fu">geom_function</span>(</span>
-<span id="cb39-9"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb39-10"><a></a>      <span class="dv">200000</span> <span class="sc">*</span></span>
-<span id="cb39-11"><a></a>        <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)) <span class="sc">/</span></span>
-<span id="cb39-12"><a></a>        (<span class="dv">200000</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)))</span>
-<span id="cb39-13"><a></a>    },</span>
-<span id="cb39-14"><a></a>    <span class="at">color =</span> <span class="st">"blue"</span></span>
-<span id="cb39-15"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb39-16"><a></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> whofull <span class="sc">|&gt;</span> <span class="fu">filter</span>(Date_reported <span class="sc">&lt;</span> <span class="st">"2020-06-30"</span>)) <span class="sc">+</span></span>
-<span id="cb39-17"><a></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">300000</span>)) <span class="sc">+</span></span>
-<span id="cb39-18"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-
-</div>
-<img data-src="W08_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
-<section id="for-comparison-log-scale-on-y" class="slide level2 smaller">
-<h2>For comparison: log-scale on y</h2>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>who <span class="sc">|&gt;</span></span>
-<span id="cb40-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Date_reported, Cumulative_cases)) <span class="sc">+</span></span>
-<span id="cb40-3"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb40-4"><a></a>  <span class="fu">geom_function</span>(</span>
-<span id="cb40-5"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)),</span>
-<span id="cb40-6"><a></a>    <span class="at">color =</span> <span class="st">"red"</span></span>
-<span id="cb40-7"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb40-8"><a></a>  <span class="fu">geom_function</span>(</span>
-<span id="cb40-9"><a></a>    <span class="at">fun =</span> <span class="cf">function</span>(x) {</span>
-<span id="cb40-10"><a></a>      <span class="dv">200000</span> <span class="sc">*</span></span>
-<span id="cb40-11"><a></a>        <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)) <span class="sc">/</span></span>
-<span id="cb40-12"><a></a>        (<span class="dv">200000</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="fu">coef</span>(wholm)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(wholm)[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">as.numeric</span>(x)))</span>
-<span id="cb40-13"><a></a>    },</span>
-<span id="cb40-14"><a></a>    <span class="at">color =</span> <span class="st">"blue"</span></span>
-<span id="cb40-15"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb40-16"><a></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> whofull <span class="sc">|&gt;</span> <span class="fu">filter</span>(Date_reported <span class="sc">&lt;</span> <span class="st">"2020-06-30"</span>)) <span class="sc">+</span></span>
-<span id="cb40-17"><a></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">300000</span>)) <span class="sc">+</span></span>
-<span id="cb40-18"><a></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
-<span id="cb40-19"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-
-</div>
-
-
-<img data-src="W08_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="img/ConstructorUniversity.png" class="slide-logo"></p>
