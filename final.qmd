@@ -53,17 +53,17 @@ All members receive the same grade for it. However, the module grade can be diff
 - The repository for the final project will be created in the [{{< var org.name >}}]({{< var org.link >}}) by the instructors **upon team and project approval**. 
 - **The assessment will be done of the HTML file `report.html`.** You write the report in Quarto Markdown (`report.qmd`) or Jupyter Notebook (`report.ipynb`) and render it to HTML.
 - The source files (`report.qmd` or `report.ipynb`) must be included.
-    - Note: In large teams it can be helpful that members work on individual files for some time to avoid to much technical coordination (e.g. `analysis_NAME.qmd`). This is OK. However, in the end you need to put everything together in one file `report.html`! Reseve some time for it as a team. Individual files (and rendered files) should be removed from the repository before delivery time.
+    - Note: In large teams it can be helpful that members work on individual files for some time to avoid to much technical coordination (e.g. `analysis_NAME.qmd`). This is OK. However, in the end you need to put everything together in one file `report.html`! Reserve some time for it as a team. Individual files (and rendered files) should be removed from the repository before delivery time.
 - The assessment will start after the deadline with the latest commit. Help us by calling your final commit message `DELIVERY`.
 - Assessment will be done based on reading the HTML-file `report.html`. Additionally and if necessary, the Quarto Markdown File and other provided files may be looked at. Ideally, the HTML-Report is sufficient to assess the project!  
-(To test if the HTML file looks good for the instructors do the following: Clone the repository anew to a temporaty directory on your computer, open the HTML file from this newly cloned directory. Check if it looks good. This is what instructors will do.)
+(To test if the HTML file looks good for the instructors do the following: Clone the repository anew to a temporary directory on your computer, open the HTML file from this newly cloned directory. Check if it looks good. This is what instructors will do.)
 
 
 ## Deadline
 
 See [Schedule](schedule.qmd).
 
-Note: The deadline is before the Winter (German Christmas) break in December. In total you have 3 attampts to pass any module. The second attempt will be with a deadline in late January 2025. The third attempt will be in the next academic year. If you feel very time pressured in December and you are still keeping up with learning. You can consider to let the first attempt pass and work furterh in January. A failed attempt does not harm your transcript.      
+Note: The deadline is before the Winter (German Christmas) break in December. In total you have 3 attempts to pass any module. The second attempt will be with a deadline in late January 2025. The third attempt will be in the next academic year. If you feel very time pressured in December and you are still keeping up with learning. You can consider to let the first attempt pass and work further in January. A failed attempt does not harm your transcript.      
 
 
 ## Grading
@@ -93,7 +93,7 @@ Nevertheless, the assessment goes along some criteria with some approximate weig
 - Put the data you need into a folder `data`. Very large datasets need not be committed and pushed. Document where the data can be retrieved and where it should be put to Use it with your code.  
 - All team members need to clone the repository to their local computers.
 - Try both:
-    - Working together at the same time with realtime communction. 
+    - Working together at the same time with realtime communication. 
     - Working together remotely based on a plan who should do what. Feel free to use GitHub issues in your repository for this!
 - Every team member should finally have pushed some work to GitHub!
 - Commit early and often! We help you when you have questions or need directions based on committed code. 
