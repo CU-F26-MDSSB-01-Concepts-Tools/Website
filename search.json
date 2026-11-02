@@ -4,7 +4,7 @@
     "href": "lectures/W09.html#preliminaries",
     "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
     "section": "Preliminaries",
-    "text": "Preliminaries\n\nlibrary(tidyverse)\nlibrary(palmerpenguins)\nlibrary(tidymodels)\nlibrary(openintro)\nlibrary(patchwork) # For pasting ggplots together"
+    "text": "Preliminaries\n\nlibrary(tidyverse)\nlibrary(palmerpenguins)\nlibrary(tidymodels)\nlibrary(openintro)\nlibrary(datasauRus)\nlibrary(patchwork) # For pasting ggplots together"
   },
   {
     "objectID": "lectures/W09.html#parsnip-model-objects",
@@ -67,7 +67,7 @@
     "href": "lectures/W09.html#log-transformation-1",
     "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
     "section": "\\(\\log\\) transformation",
-    "text": "\\(\\log\\) transformation\n\n\nCode\nwho |&gt;\n  ggplot(aes(Date_reported, log10(Cumulative_cases))) +\n  geom_line() +\n  geom_point() +\n  geom_smooth(method = \"lm\") +\n  theme_minimal(base_size = 20)\n\n\n\nAn important difference of log10(Cumulative_cases) ~ Date_Reported to the penguin model flipper_length_mm ~ body_mass_g? ?\n\n\n\\(x\\) has an ordered structure: regular time steps\n\nThe fit looks so good. Why?\n\n\nBecause there is a good mechanistic explanation behind: The SI model."
+    "text": "\\(\\log\\) transformation\n\n\nCode\nwho |&gt;\n  ggplot(aes(Date_reported, log10(Cumulative_cases))) +\n  geom_line() +\n  geom_point() +\n  geom_smooth(method = \"lm\") +\n  theme_minimal(base_size = 20)\n\n\n\nWhy is the fit log10(Cumulative_cases) ~ Date_Reported so much better then the penguin model flipper_length_mm ~ body_mass_g?\n\n\nBecause there is a good mechanistic explanation behind: The SI model.\n\n\n\nAn important difference of the dependent variables: Date_reported vs. body_mass_g?\n\n\n\n\\(x\\) has an ordered structure: regular time steps and only one value per timestep!"
   },
   {
     "objectID": "lectures/W09.html#it-works-only-in-a-certain-data-range",
@@ -84,18 +84,39 @@
     "text": "For comparison: log-scale on y\n\n\nCode\nwho |&gt;\n  ggplot(aes(Date_reported, Cumulative_cases)) +\n  geom_point() +\n  geom_function(\n    fun = function(x) exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)),\n    color = \"red\"\n  ) +\n  geom_function(\n    fun = function(x) {\n      200000 *\n        exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)) /\n        (200000 + exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)))\n    },\n    color = \"blue\"\n  ) +\n  geom_line(data = whofull |&gt; filter(Date_reported &lt; \"2020-06-30\")) +\n  ylim(c(0, 300000)) +\n  scale_y_log10() +\n  theme_minimal(base_size = 20)"
   },
   {
+    "objectID": "lectures/W09.html#various-types-of-nonlinear-structures",
+    "href": "lectures/W09.html#various-types-of-nonlinear-structures",
+    "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
+    "section": "Various Types of Nonlinear Structures",
+    "text": "Various Types of Nonlinear Structures\n\nIt depends on the data if linear models work well or not\nThere is no standard way to detect substantial non-linear structures\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# A tibble: 142 × 3\n   dataset     x     y\n   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;\n 1 dino     55.4  97.2\n 2 dino     51.5  96.0\n 3 dino     46.2  94.5\n 4 dino     42.8  91.4\n 5 dino     40.8  88.3\n 6 dino     38.7  84.9\n 7 dino     35.6  79.9\n 8 dino     33.1  77.6\n 9 dino     29.0  74.5\n10 dino     26.2  71.4\n# ℹ 132 more rows\n\n\n# A tibble: 1 × 5\n  mean_x mean_y  sd_x  sd_y  cor_xy\n   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;\n1   54.3   47.8  16.8  26.9 -0.0645"
+  },
+  {
+    "objectID": "lectures/W09.html#the-data-saurus-and-12-friends",
+    "href": "lectures/W09.html#the-data-saurus-and-12-friends",
+    "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
+    "section": "The Data Saurus and 12 Friends",
+    "text": "The Data Saurus and 12 Friends\n\n\nCode\ndatasaurus_dozen |&gt;\n  ggplot(aes(x = x, y = y)) +\n  geom_point() +\n  facet_wrap(~dataset, ncol = 5) +\n  coord_fixed() +\n  theme_minimal()"
+  },
+  {
+    "objectID": "lectures/W09.html#the-data-saurus-and-12-friends-1",
+    "href": "lectures/W09.html#the-data-saurus-and-12-friends-1",
+    "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
+    "section": "The Data Saurus and 12 Friends",
+    "text": "The Data Saurus and 12 Friends\nSummary statistcs do not reveal the nonlinear structures!\n\n\nCode\ndatasaurus_dozen |&gt;\n  summarise(\n    mean_x = mean(x),\n    mean_y = mean(y),\n    sd_x = sd(x),\n    sd_y = sd(y),\n    cor_xy = cor(x, y),\n    .by = dataset\n  )\n\n\n# A tibble: 13 × 6\n   dataset    mean_x mean_y  sd_x  sd_y  cor_xy\n   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;\n 1 dino         54.3   47.8  16.8  26.9 -0.0645\n 2 away         54.3   47.8  16.8  26.9 -0.0641\n 3 h_lines      54.3   47.8  16.8  26.9 -0.0617\n 4 v_lines      54.3   47.8  16.8  26.9 -0.0694\n 5 x_shape      54.3   47.8  16.8  26.9 -0.0656\n 6 star         54.3   47.8  16.8  26.9 -0.0630\n 7 high_lines   54.3   47.8  16.8  26.9 -0.0685\n 8 dots         54.3   47.8  16.8  26.9 -0.0603\n 9 circle       54.3   47.8  16.8  26.9 -0.0683\n10 bullseye     54.3   47.8  16.8  26.9 -0.0686\n11 slant_up     54.3   47.8  16.8  26.9 -0.0686\n12 slant_down   54.3   47.8  16.8  26.9 -0.0690\n13 wide_lines   54.3   47.8  16.8  26.9 -0.0666"
+  },
+  {
     "objectID": "lectures/W09.html#categorical-variables-as-predictors",
     "href": "lectures/W09.html#categorical-variables-as-predictors",
     "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
     "section": "Categorical variables as predictors?",
-    "text": "Categorical variables as predictors?\nWhen a variable has categories the entries are not numbers but strings like \"Adelie\" or \"Chinstrap\". Can we use such a variable as a predictor?\n\nLet’s explore and just try what happens with species as explanatory variable:\n\n\nCode\nlinear_reg() |&gt;\n  set_engine(\"lm\") |&gt;\n  fit(flipper_length_mm ~ species, data = penguins) |&gt;\n  tidy()\n\n\n# A tibble: 3 × 5\n  term             estimate std.error statistic   p.value\n  &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)        190.       0.540    351.   0        \n2 speciesChinstrap     5.87     0.970      6.05 3.79e-  9\n3 speciesGentoo       27.2      0.807     33.8  1.84e-110\n\n\nRemember, we have three species: Adelie, Chinstrap, Gentoo. What happened?\n\n\nTwo of the three species categories appear as variables now.\n\nCategorical variables are automatically encoded as dummy variables\nEach coefficient describes the expected difference between flipper length of that particular species compared to the baseline level\nWhat is the baseline level? The first category! (Here alphabetically \"Adelie\")"
+    "text": "Categorical variables as predictors?\nWhen a variable has categories the entries are not numbers but strings like \"Adelie\" or \"Chinstrap\". Can we use such a variable as a predictor?\n\nLet’s explore and just try what happens with species as explanatory variable:\n\nlinear_reg() |&gt;\n  set_engine(\"lm\") |&gt;\n  fit(flipper_length_mm ~ species, data = penguins) |&gt;\n  tidy()\n\n# A tibble: 3 × 5\n  term             estimate std.error statistic   p.value\n  &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)        190.       0.540    351.   0        \n2 speciesChinstrap     5.87     0.970      6.05 3.79e-  9\n3 speciesGentoo       27.2      0.807     33.8  1.84e-110\n\n\nRemember, we have three species: Adelie, Chinstrap, Gentoo. What happened?\n\n\nTwo of the three species categories appear as variables now.\n\nCategorical variables are automatically encoded as dummy variables \nWhat is the baseline level? The first category! (Here alphabetically \"Adelie\")"
   },
   {
     "objectID": "lectures/W09.html#how-do-dummy-variables-look",
     "href": "lectures/W09.html#how-do-dummy-variables-look",
     "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
     "section": "How do dummy variables look?",
-    "text": "How do dummy variables look?\n\n\n\nspecies\nspeciesChinstrap\nspeciesGentoo\n\n\n\n\nAdelie\n0\n0\n\n\nAdelie\n0\n0\n\n\nChinstrap\n1\n0\n\n\nGentoo\n0\n1\n\n\nGentoo\n0\n1\n\n\nGentoo\n0\n1\n\n\nAdelie\n0\n0\n\n\nChinstrap\n1\n0\n\n\n\nThen the fitting of the linear model is as before using variables which just have 0’s and 1’s as entries. (In machine learning called one-hot encoding)"
+    "text": "How do dummy variables look?\n\n\n\nspecies\nspeciesChinstrap\nspeciesGentoo\n\n\n\n\nAdelie\n0\n0\n\n\nChinstrap\n1\n0\n\n\nGentoo\n0\n1\n\n\nGentoo\n0\n1\n\n\nGentoo\n0\n1\n\n\nAdelie\n0\n0\n\n\nChinstrap\n1\n0\n\n\n\n\nFitting is as before. The dummy variables just have 0 and 1 entries.\n\n\n\nIn machine learning creating dummy variables is called one-hot encoding."
   },
   {
     "objectID": "lectures/W09.html#check-create-dummies-ourselves",
@@ -123,7 +144,7 @@
     "href": "lectures/W09.html#quality-of-different-linear-models",
     "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
     "section": "Quality of different linear models?",
-    "text": "Quality of different linear models?\n\n\nCode\nlinear_reg() |&gt;\n  set_engine(\"lm\") |&gt;\n  fit(flipper_length_mm ~ body_mass_g, data = penguins) |&gt;\n  tidy()\n\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic   p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept) 137.      2.00          68.5 5.71e-201\n2 body_mass_g   0.0153  0.000467      32.7 4.37e-107\n\n\naverage flipper_length_mm \\(= 137 + 0.0153\\cdot\\) body_mass_g\n\n\n\nCode\nlinear_reg() |&gt;\n  set_engine(\"lm\") |&gt;\n  fit(bill_depth_mm ~ bill_length_mm, data = penguins) |&gt;\n  tidy()\n\n\n# A tibble: 2 × 5\n  term           estimate std.error statistic  p.value\n  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 (Intercept)     20.9       0.844      24.7  4.72e-78\n2 bill_length_mm  -0.0850    0.0191     -4.46 1.12e- 5\n\n\naverage bill_depth_mm \\(= 20.9 -0.085\\cdot\\) bill_length_mm\n\n\nTechnical: The idea of the tidy() function is to turn an object into a tidy tibble. Here, it extracts the coefficients of the linear model (and more statistical information)."
+    "text": "Quality of different linear models?\n\nlinear_reg() |&gt;\n  set_engine(\"lm\") |&gt;\n  fit(flipper_length_mm ~ body_mass_g, data = penguins) |&gt;\n  tidy()\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic   p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept) 137.      2.00          68.5 5.71e-201\n2 body_mass_g   0.0153  0.000467      32.7 4.37e-107\n\n\naverage flipper_length_mm \\(= 137 + 0.0153\\cdot\\) body_mass_g\n\n\nlinear_reg() |&gt;\n  set_engine(\"lm\") |&gt;\n  fit(bill_depth_mm ~ bill_length_mm, data = penguins) |&gt;\n  tidy()\n\n# A tibble: 2 × 5\n  term           estimate std.error statistic  p.value\n  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 (Intercept)     20.9       0.844      24.7  4.72e-78\n2 bill_length_mm  -0.0850    0.0191     -4.46 1.12e- 5\n\n\naverage bill_depth_mm \\(= 20.9 -0.085\\cdot\\) bill_length_mm\n\n\nTechnical: The idea of the tidy() function is to turn an object into a tidy tibble. Here, it extracts the coefficients of the linear model (and more statistical information)."
   },
   {
     "objectID": "lectures/W09.html#r-squared-of-a-fitted-model",
@@ -221,7 +242,7 @@
     "href": "lectures/W09.html#multinomial-response-variable",
     "title": "W#09: More Linear Model, Nonlinear Models, Logistic Regression",
     "section": "Multinomial response variable?",
-    "text": "Multinomial response variable?\n\nWe will not cover other categorical variables than binary ones here.\nHowever, many of the probabilistic concepts transfer."
+    "text": "Multinomial response variable?\nMultinominal variable: A categroical variable with more than two categories\n\n\nWe will not cover other categorical variables than binary ones here.\nHowever, many of the probabilistic concepts transfer."
   },
   {
     "objectID": "lectures/W09.html#email-example-variables",
@@ -2841,7 +2862,7 @@
     "href": "final.html#how-to-write-a-project-report-in-a-nutshell",
     "title": "Final Project",
     "section": "1 How to write a project report in a nutshell",
-    "text": "1 How to write a project report in a nutshell\n\nYou find a team,\n\npick a dataset or the data source of the Homework Projects COVID19, FuelWatch, or DataScienceProfiles\n\nFinding suitable datasets is not trivial. A few suggestions for Final Projects:\n\nA microeconomics professor has compiled a nice list: https://github.com/toddrjones/datasets#states-conflict-and-regimes\nWith internet search you often land at https://www.kaggle.com/datasets. If something interests you there: Try to find the original source. In the past there have been many bad experiences with fully synthetic datasets with NO value for data science projects.\n\n\ncheck-in your project \ndo some interesting question-driven data analysis with it, and\nwrite up a well-structured and nicely formatted report about the analysis in your team’s repository.",
+    "text": "1 How to write a project report in a nutshell\n\nYou find a team,\n\npick a dataset or the data source of the Homework Projects COVID19, FuelWatch, or DataScienceProfiles\n\nFinding suitable datasets is not trivial. A few suggestions for Final Projects:\n\nA microeconomics professor has compiled a nice list: https://github.com/toddrjones/datasets#states-conflict-and-regimes\nCaution: With internet search you often land at https://www.kaggle.com/datasets. If something interests you there: Try to find the original source. In the past there have been many bad experiences with fully synthetic datasets with NO substantive value for data science projects.\n\n\ncheck-in your project \ndo some interesting question-driven data analysis with it, and\nwrite up a well-structured and nicely formatted report about the analysis in your team’s repository.",
     "crumbs": [
       "Syllabus",
       "Final Project"
