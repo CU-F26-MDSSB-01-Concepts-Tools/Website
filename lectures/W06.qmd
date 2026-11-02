@@ -51,8 +51,8 @@ Leek, Jeffery T., and Roger D. Peng. 2015. “What Is the Question?” Science 3
 
 ::: {.incremental}
 1. **Descriptive:** Examine the average flight delays for flights departing from New York City airports. 
-2. **Exploratory:** Examine the relationship of flight delays with other variables, like the destination, the weather at departure, the departure the airline, the plane, ...
-3.  **Inferential:** Examine if relationships between delays and other are likely to hold for *for all flights at large*.
+2. **Exploratory:** Examine the relationship of flight delays with other variables, like the destination, the weather at departure, the airline, the plane, ...
+3.  **Inferential:** Examine if relationships between delays and other variables are likely to hold for *for all flights at large*.
 4. **Predictive:** Examime whether flight delays of individual flights can be predicted days or hours ahead.
 5. **Causal:** Examine whether changing a plane or the departure time will bring down the average delay. (Probably hard or impossible with the given data.)
 6.  **Mechanistic:** Examine the exact reasons for the delay by following the chain of actions in scheduling departure, while flying, and scheduling the landing. (Information is not in the given data)
@@ -154,7 +154,7 @@ Principle component analysis
 - computes new variables which represent the data in a different way.
 - transforms the data **linearly** to a new coordinate system where most of the variation in the data can be described with fewer variables than the original data.
 
-**Today:** Quick walk through how to do, visualize and scutinize, and interpret a PCA. 
+**Today:** Quick walk through how to do, visualize and scrutinize, and interpret a PCA. 
 
 
 ## Example: Numerical variables of penguins {.smaller}

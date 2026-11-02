@@ -1,5 +1,5 @@
 ---
-title: "W#07: Models in Science, Linear Model, Nonlinear Models"
+title: "W#07: Models in Science, Linear Model"
 author: Jan Lorenz
 format: 
   revealjs: 
@@ -11,6 +11,7 @@ format:
     chalkboard: 
       buttons: true
     preview-links: true
+    css: slidestyles.css
     logo: img/ConstructorUniversity.png
     footer: "MDSSB-DSCO-02: Data Science Concepts"
 ---
@@ -31,9 +32,11 @@ library(palmerpenguins)
 
 - A model is an informative representation of an object, person or system. 
 
-![](https://upload.wikimedia.org/wikipedia/commons/4/46/Astrid_Andersen_01.jpg){height=200}
-![](https://upload.wikimedia.org/wikipedia/commons/b/b8/Beta-D-Gulopyranose_Molek%C3%BClbaukasten_9288.JPG){height=200}
-![](https://upload.wikimedia.org/wikipedia/commons/7/73/AtmosphericModelSchematic.png){height=200} 
+![](img/Astrid_Andersen_01.jpg){height=300}
+![](img/Beta-D-Gulopyranose_Molek%C3%BClbaukasten_9288.JPG){height=300}
+![](img/AtmosphericModelSchematic.png){height=300} 
+
+. . .
 
 - A model is a [**simplified**]{style='color:blue;'} representation of the real world focusing on the essential parts for its [**purpose**]{style='color:blue;'}.
 
@@ -48,21 +51,26 @@ Source: <https://en.wikipedia.org/wiki/Model>
 ::: {.column width='50%'}
 **Scientific modeling** is an activity that produces models representing empirical objects, phenomena, and physical processes, to make a particular part or feature of the world easier to 
 
+::: {.incremental}
 - understand, 
 - define, 
 - quantify, 
 - visualize, or 
 - simulate.
 :::
+:::
 
 ::: {.column width='50%'}
 
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/MathModel.svg/2560px-MathModel.svg.png)
+![](img/MathModel.svg.webp)
 
-#### Famous wisdom 
+::: {.fragment}
+#### Famous "wisdom" 
 
 > [All models are wrong, but some are useful.](https://en.wikipedia.org/wiki/All_models_are_wrong)
+:::
+
 :::
 
 ::::
@@ -77,13 +85,16 @@ Source: <https://en.wikipedia.org/wiki/Scientific_modelling>
 :::: {.columns}
 
 ::: {.column width='60%'}
+
+::: {.incremental}
 - **Agent-based models** and **differential equations**
     - are used to **explain** the **dynamics** of one or more variables (typically) over time. They are used to answer [*mechanistic questions*]{style='color:blue;'}.
 - [**Variable-based models**]{style='color:blue;'} 
     - are used to specify relations between variables
     - to **explain** relations and make **predictions**.
     - Used to answer [*inferential*]{style='color:blue;'} and [*predictive questions*]{style='color:blue;'}.   
-    - (With experimental and theoretical effort also for [*causal questions*]{style='color:blue;'}.)
+    - With experimental and theoretical effort also for [*causal questions*]{style='color:blue;'}.
+:::
 
 :::
 
@@ -104,10 +115,12 @@ In much of the following we use a *narrower* definition of **model**:
 
 A **mathematical model** that consists of **variables** and **functions**. 
 
+. . . 
+
 :::: {.columns}
 
 ::: {.column width='50%'}
-Different names and roles of [**variables**]{style='color:blue;'}: 
+Different names for [**variables**]{style='color:blue;'}: 
 
 - random variables
 - covariates
@@ -116,20 +129,23 @@ Different names and roles of [**variables**]{style='color:blue;'}:
 - features
 - targets
 - outcomes
+
+These names are inspired from different **theoretical** or **practical** purposes. 
 :::
 
-::: {.column width='50%'}
+::: {.column width='50%' .fragment}
 [**Functions**]{style='color:blue;'} relate variables to each other
 
 - In a linear model we model one variable as a weighted sum of the other variables
 
-Once a model (setup of variables and functions) is specified, modelers use [**Data**]{style='color:blue;'} to find the *best* function, called
+::: {.fragment}
+Once variables and functions are specified, modelers use [**Data**]{style='color:blue;'} **to find the *best*** function. Different names of
 
 - estimation
 - training
 - fitting
 - learning
-
+:::
 
 :::
 
@@ -140,7 +156,7 @@ Once a model (setup of variables and functions) is specified, modelers use [**Da
 
 ## Modeling Mindsets {.smaller background-color="khaki"}
 
-Even within the setup of *Models to Learn from Data* there are many different [**Modeling Mindsets**]{style='color:blue;'}
+For **Models to Learn from Data** there are many different [**Modeling Mindsets**]{style='color:blue;'}
 
 ![](img/ModelingMindsets.png)
 
@@ -186,6 +202,7 @@ penguins
 
 ```{r}
 #| echo: true
+
 penguins |>
   ggplot(aes(body_mass_g)) +
   geom_histogram()
@@ -206,7 +223,7 @@ A **line** is a shift-scale transformation of the identity function usually writ
 
 $$f(x) = a\cdot x + b$$
 
-where [$a$ is the *slope*]{style="color:red;"}, [$b$ is the *intercept*]{style="color:blue;"}.^[This a scale and a shift in the $y$ direction. Note: For lines there is always an analog transformations on the $x$ direction.]
+where [$a$ is the *slope*]{style="color:red;"}, [$b$ is the *intercept*]{style="color:blue;"}.^[This is a scale and a shift in the $y$ direction. Note: For lines there is always an analog transformations on the $x$ direction.]
 
 ```{r}
 #| echo: true
@@ -250,7 +267,9 @@ ggplot() +
 ```{r}
 #| echo: true
 #| output-location: column
+#| code-fold: false
 #| fig-height: 9
+
 penguins |>
   ggplot(aes(x = body_mass_g, y = flipper_length_mm)) +
   geom_point() +
@@ -265,6 +284,7 @@ penguins |>
 ```{r}
 #| echo: true
 #| output-location: column
+#| code-fold: false
 #| fig-height: 7
 penguins |>
   ggplot(aes(x = body_mass_g, y = flipper_length_mm)) +
@@ -273,18 +293,20 @@ penguins |>
   theme_classic(base_size = 24)
 ```
 
-This is a less theory-driven and more data-driven model. Why?    
+This function is part of a more *data-driven* and less *theory-driven* model. Why?    
 [We don't have a simple mathematical form of the function.]{.fragment}
 
 ## Terminology variable-based models {.smaller background-color="khaki"}
 
-- **Response variable:**^[Also **dependent variable** in statistics or empirical social sciences.] Variable whose behavior or variation you are trying to understand, on the y-axis
-- **Explanatory variable(s):**^[Also **independent variable(s)** in statistics or empirical social sciences.] Other variable(s) that you want to use to explain the variation in the response, on the x-axis
+::: {.incremental}
+- **Response variable:**^[Also **dependent variable** in statistics and empirical social sciences.] Variable whose behavior or variation you are trying to understand, on the y-axis
+- **Explanatory variable(s):**^[Also **independent variable(s)** in statistics and empirical social sciences.] Other variable(s) that you want to use to explain the variation in the response, on the x-axis
 - **Predicted value:** Output of the model function. 
   - The model function gives the **(expected) average value** of the response variable conditioning on the explanatory variables
   - **Residual(s):** A measure of how far away a case is from its predicted value (based on the particular model)   
     Residual = Observed value minus Predicted value  
     The residual tells how far above/below the expected value each case is
+:::
 
 ## More explanatory variables {.smaller}
 
@@ -293,6 +315,7 @@ How does the relation between flipper length and body mass change with different
 ```{r}
 #| echo: true
 #| output-location: column
+#| code-fold: false
 #| fig-height: 7
 penguins |>
   ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
@@ -308,6 +331,7 @@ Put the mapping of the color aesthetic into the `geom_point` command.
 ```{r}
 #| echo: true
 #| output-location: column
+#| code-fold: false
 #| fig-height: 6
 penguins |>
   ggplot(aes(x = body_mass_g, y = flipper_length_mm)) +
@@ -334,6 +358,7 @@ How does the relation between bill length and body mass change with different sp
 ```{r}
 #| echo: true
 #| output-location: column
+#| code-fold: false
 #| fig-height: 7
 penguins |>
   ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
@@ -348,9 +373,12 @@ penguins |>
 
 - Models can reveal patterns that are not evident in a graph of the data. This is an advantage of modeling over simple visual inspection of data.
   - How would you visualize dependencies of more than two variables?
-- The risk is that a model is imposing structure that is not really there in the real world data. 
-  - People imagined animal shapes in the stars. This is maybe a good model to detect and memorize shapes, but it has nothing to do with these animals.
-  - Every model is a simplification of the real world, but there are good and bad models (for particular purposes). 
+
+. . . 
+
+- The risk is that a model imposes structure that is badly represents the real world data. 
+  - *Metaphorical Example:* People imagine(d) animal shapes in the stars. This is maybe a good model to detect and memorize shapes, but it has nothing to do with these animals.
+  - Every model is a simplification of the real world, but there are better or worse one
   - A skeptical (but constructive) approach to a model is always advisable. 
   
   
@@ -358,11 +386,19 @@ penguins |>
 
 ... is as interesting and important as the model!
 
+. . . 
+
 *[**Statistics**]{style='color:blue;'} is the explanation of uncertainty of variation in the context of what remains unexplained.*
 
-- The scattered data of flipper length and body mass suggests that there maybe other factors that account for some parts of the variability. 
-- Or is it randomness?
-- Adding more explanatory variables can help (but need not)
+. . . 
+
+Questions to think about: The scattered data of flipper length and body mass suggests that there maybe other factors that account for some parts of the variability.
+
+- Is it randomness?
+- Will more explanatory variables make predictions better? 
+
+The answers to these questions are interesting and important and they are never clear upfront. 
+
 
 ## *All models are wrong ...* {.smaller background-color="khaki"}
 
@@ -374,6 +410,7 @@ Extending the range of the model:
 ```{r}
 #| echo: true
 #| output-location: column
+#| code-fold: false
 #| fig-height: 5.5
 penguins |>
   ggplot(aes(x = body_mass_g, y = flipper_length_mm)) +
@@ -388,355 +425,24 @@ penguins |>
   theme_classic(base_size = 24)
 ```
 
-- The model predicts that penguins with zero weight still have flippers of about 140 mm on average.
-- Is the model useless? [Yes, around zero body mass.   
-However, it works OK in the range of the body mass data.]{.fragment}
+::: {.incremental}
+- The model predicts that penguins with zero weight still have flippers of about 140 mm on average. [This makes obviously no sense.]{.text-red .fragment}
+- Is the model useless? [Yes, in the range around zero body mass.]{.text-red .fragment}     
+[However, it works OK in the range of the body mass data.]{.text-green .fragment}
+:::
 
 ## Two model purposes {.smaller background-color="khaki"}
 
 Linear models can be used for:
 
 - **Explanation:** Understand the relationship of variables in a quantitative way.   
-*For the linear model, interpret slope and intercept.*
+[For the linear model: Interpret slope and intercept.]{.text-red}
     - In other words: We make **inference** about relations in any sample of penguins.
-    - Warning: We use the word "explain" because it is an established statistical term for describing relations. However, **beware a relation is not causation!**  
+    - Warning: We use the word "explain" because it is an established statistical term for describing relations. However: **A relation is not causation!**  
     When discussing causation, much more is needed than a statistical relation.   
-    In substantive discussion about model output we speak about the not-necessarily causal *relation* or *association* of variables.  
+    In substantive discussion about model output we should speak about *relation* or *association* of variables.  
+
+. . . 
+
 - **Prediction:** Plug in new values for the explanatory variable(s) and receive the expected response value.   
-*For the linear model, predict the flipper length of new penguins by their body mass.*
-
-# Fitting Models
-
-Today: The linear model. 
-
-## In R: `tidymodels`
-
-![](https://datasciencebox.org/course-materials/_slides/u4-d02-fitting-interpreting-models/img/tidymodels.png)
-
-:::{.aside}
-From <https://datasciencebox.org>
-:::
-
-## Our goal
-
-Predict flipper length from body mass
-
-average `flipper_length_mm` $= \beta_0 + \beta_1\cdot$ `body_mass_g`
-
-
-## Step 1: Specify model
-
-```{r}
-#| echo: true
-library(tidymodels)
-linear_reg()
-```
-
-## Step 2: Set the model fitting *engine*
-
-```{r}
-#| echo: true
-linear_reg() |>
-  set_engine("lm")
-```
-
-## Step 3: Fit model and estimate parameters {.smaller}
-
-Only now, the data and the variable selection comes in. 
-
-Use of **formula syntax**
-
-```{r}
-#| echo: true
-linear_reg() |>
-  set_engine("lm") |>
-  fit(flipper_length_mm ~ body_mass_g, data = penguins)
-```
-
-[`parsnip`](http://parsnip.tidymodels.org) is package in `tidymodels` which is to provide a tidy, unified interface to models that can be used to try a range of models. 
-
-:::{.aside}
-Note: The fit command does not follow the tidyverse principle the data comes first. Instead, the formula comes first. This is to relate to existing traditions of a much older established way of modeling in base R. 
-:::
-
-## What does the output say? {.smaller}
-
-```{r}
-#| echo: true
-linear_reg() |>
-  set_engine("lm") |>
-  fit(flipper_length_mm ~ body_mass_g, data = penguins)
-```
-
-. . .
-
-average `flipper_length_mm` $= 136.72956 + 0.01528\cdot$ `body_mass_g`
-
-. . .
-
-**Interpretation:**   
-The penguins have a flipper length of 138 mm plus 0.01528 mm for each gram of body mass (that is 15.28 mm per kg).
-Penguins with zero mass have a flipper length of 138 mm. However, this is not in the range where the model was fitted.
-
-## Show output in *tidy* form
-
-```{r}
-#| echo: true
-linear_reg() |>
-  set_engine("lm") |>
-  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
-  tidy()
-```
-
-## Parameter estimation {.smaller background-color="aquamarine"}
-
-Notation from statistics: $\beta$'s for the population parameters and $\hat\beta$'s for the parameters estimated from the sample statistics. 
-
-$$\hat y = \beta_0 + \beta_1 x$$
-
-The population parameters $\beta_0$ and $\beta_1$ we cannot have. ($\hat y$ stands for *predicted value of $y$*. )
- 
-. . .
-
-Instead, we estimate $\hat\beta_0$ and $\hat\beta_1$ in the model fitting process.
-
-$$\hat y = \hat\beta_0 + \hat\beta_1 x$$
-
-:::{style="background-color:khaki;padding:10px;"}
-A typical follow-up data analysis question is what the fitted values $\hat\beta_0$ and $\hat\beta_1$ tell us about the (unknown) population-wide values $\beta_0$ and $\beta_1$? 
-
-This is the typical [**inferential question**]{style='color:blue}.
-::: 
-
-
-
-## `parsnip` model objects {.smaller}
-
-```{r}
-#| echo: true
-pengmod <- linear_reg() |>
-  set_engine("lm") |>
-  fit(flipper_length_mm ~ body_mass_g, data = penguins)
-class(pengmod) # attributes
-typeof(pengmod)
-names(pengmod)
-```
-
-. . . 
-
-Most interesting for us for now: `$fit`
-
-```{r}
-#| echo: true
-pengmod$fit
-```
-
-. . . 
-
-Notice: `parsnip model object` is now missing in the output.
-
-## `$fit` is the object created by `lm` (base R) {.smaller .scrollable}
-
-```{r}
-#| echo: true
-names(pengmod$fit)
-pengmod$fit$call
-pengmod$fit$coefficients
-pengmod$fit$fitted.values
-pengmod$fit$residuals
-```
-
-## Fitting method: Least squares regression {.smaller background-color="aquamarine"}
-
-- The regression line shall minimize the sum of the squared residuals     
-  (or, identically, their mean). 
-- Mathematically: The residual for case $i$ is $e_i = \hat y_i - y_i$. 
-- Now we want to minimize $\sum_{i=1}^n e_i^2$   
-(or equivalently $\frac{1}{n}\sum_{i=1}^n e_i^2$ the *mean of squared errors*, which we will look at later). 
-
-## Visualization of residuals {.smaller background-color="aquamarine" .scrollable}
-
-The residuals are the gray lines between predicted values on the regression line and the actual values. 
-
-```{r}
-#| echo: true
-#| code-fold: true
-pengmod <-
-  linear_reg() |>
-  set_engine("lm") |>
-  fit(flipper_length_mm ~ body_mass_g, data = penguins)
-penguins |>
-  bind_cols(predict(pengmod, penguins)) |>
-  ggplot(aes(body_mass_g, flipper_length_mm)) +
-  geom_segment(
-    aes(
-      x = body_mass_g,
-      y = flipper_length_mm,
-      xend = body_mass_g,
-      yend = .pred
-    ),
-    color = "gray"
-  ) +
-  geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm") +
-  geom_point(aes(y = .pred), color = "red", alpha = 0.3)
-```
-
-## Check: Fitted values and Residuals {.smaller background-color="aquamarine" .scrollable}
-
-Recall: **Residual = Observed value - Predicted value**
-
-The *Predicted values* are also called *Fitted values*. Hence: 
-
-Residuals + Fitted values = Observed values
-
-```{r}
-#| echo: true
-pengmod$fit$residuals + pengmod$fit$fitted.values
-```
-
-```{r}
-#| echo: true
-penguins$flipper_length_mm
-```
-
-
-# Nonlinear Models
-
-## When a linear model is bad
-
-Example: Total corona cases in Germany in the first wave 2020. 
-
-```{r}
-whofull <- read_csv("WHO-COVID-19-global-data.csv", show_col_types = FALSE) |>
-  filter(Country == "Germany")
-who <- whofull |>
-  filter(Date_reported < "2020-03-20", Date_reported > "2020-02-25")
-who |>
-  ggplot(aes(Date_reported, Cumulative_cases)) +
-  geom_line() +
-  geom_point() +
-  geom_smooth(method = "lm")
-```
-
-## $\log$ transformation {.smaller}
-
-Instead of `Cumulative_cases` we look at $\log($`Cumulative_cases`$)$
-```{r}
-who |>
-  ggplot(aes(Date_reported, log(Cumulative_cases))) +
-  geom_line() +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  theme_minimal(base_size = 20)
-```
-
-Almost perfect fit of the linear model: $\log(y)=\log(\beta_0) + \beta_1\cdot x$   
-($y=$ `Cumulative cases`, $x=$ Days)
-
-. . . 
-
-Exponentiation gives the model: $y=\beta_0 e^{\beta_1\cdot x}$    
-(Check $e^{\log(\beta_0) + \beta_1\cdot x} = e^{\log(\beta_0)} e^{\beta_1\cdot x} = \beta_0 e^{\beta_1\cdot x}$)
-
-## Exponential growth! {.smaller}
-
-[$y=\beta_0 e^{\beta_1\cdot x}$]{style='color:red;'}  
-For comparison: Logistic function [$y = \frac{N \beta_0 e^{\beta_1\cdot x}}{N + \beta_0 e^{\beta_1\cdot x}}$]{style='color:blue;'}   for $N=200000$
-
-```{r}
-wholm <- who |>
-  lm(log(Cumulative_cases) ~ Date_reported, data = _)
-who |>
-  ggplot(aes(Date_reported, Cumulative_cases)) +
-  geom_line() +
-  geom_point() +
-  geom_function(
-    fun = function(x) exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)),
-    color = "red"
-  ) +
-  geom_function(
-    fun = function(x) {
-      200000 *
-        exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)) /
-        (200000 + exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)))
-    },
-    color = "blue"
-  ) +
-  theme_minimal(base_size = 20)
-```
-
-Logistic growth (as in the SI model) mimicks exponential growth initially. 
- 
-
-## $\log$ transformation {.smaller}
-
-```{r}
-who |>
-  ggplot(aes(Date_reported, log10(Cumulative_cases))) +
-  geom_line() +
-  geom_point() +
-  geom_smooth(method = "lm")
-```
-
-An important difference of `log10(Cumulative_cases) ~ Date_Reported` to the penguin model `flipper_length_mm ~ body_mass_g`?
-?
-
-. . . 
-
-- $x$ has an ordered structure and no duplicates
-
-The fit looks so good. Why?
-
-. . . 
-
-Because there is a *mechanistic explanation* behind: The SI model. 
-
-## However, it works only in a certain range {.smaller}
-
-```{r}
-who |>
-  ggplot(aes(Date_reported, Cumulative_cases)) +
-  geom_point() +
-  geom_function(
-    fun = function(x) exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)),
-    color = "red"
-  ) +
-  geom_function(
-    fun = function(x) {
-      200000 *
-        exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)) /
-        (200000 + exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)))
-    },
-    color = "blue"
-  ) +
-  theme_minimal(base_size = 20) +
-  geom_line(data = whofull |> filter(Date_reported < "2020-06-30")) +
-  ylim(c(0, 300000))
-```
-
-## However, it works only in a certain range (log scale on y) {.smaller}
-
-```{r}
-who |>
-  ggplot(aes(Date_reported, Cumulative_cases)) +
-  geom_point() +
-  geom_function(
-    fun = function(x) exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)),
-    color = "red"
-  ) +
-  geom_function(
-    fun = function(x) {
-      200000 *
-        exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)) /
-        (200000 + exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)))
-    },
-    color = "blue"
-  ) +
-  theme_minimal(base_size = 20) +
-  geom_line(data = whofull |> filter(Date_reported < "2020-06-30")) +
-  ylim(c(0, 300000)) +
-  scale_y_log10()
-```
-
-
+[For the linear model: predict the flipper length of new penguins by their body mass.]{.text-red}

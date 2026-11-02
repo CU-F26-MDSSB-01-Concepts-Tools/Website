@@ -1,1522 +1,1144 @@
 ---
-title: "W#09: Prediction (Building a Spam Filter), Classification and Regression with Decision Trees"
+title: "W#09: More Linear Model, Nonlinear Models, Logistic Regression"
 author: Jan Lorenz
 format: 
   revealjs: 
-    smaller: true
     toc: true
     toc-depth: 1
+    smaller: true
     slide-number: true
+    code-fold: true
     chalkboard: 
       buttons: true
-    preview-links: false
+    preview-links: true
     logo: img/ConstructorUniversity.png
     footer: "MDSSB-DSCO-02: Data Science Concepts"
 bibliography: "/home/janlo/Documents/literature/litlorenz_zot.bib"
-editor_options: 
-  chunk_output_type: console
 ---
 
-## Packages used here
+## Preliminaries
 
 ```{r}
 #| echo: true
+#| code-fold: false
 library(tidyverse)
-library(tidymodels)
-library(rpart.plot)
-library(openintro)
 library(palmerpenguins)
+library(tidymodels)
+library(openintro)
+library(datasauRus)
+library(patchwork) # For pasting ggplots together
 ```
 
-## Prediction Example: Building a spam filter {.smaller}
 
-- Data: Set of emails and we know
-    - if each email is spam or not 
-    -  several other features 
-- Use logistic regression to predict the probability that an incoming email is spam
-- Use model selection to pick the model with the best predictive performance
+# Fitting the Linear Model
 
-. . .
 
-- Building a model to predict the probability that an email is spam is only half of the battle! We also need a decision rule about which emails get flagged as spam (e.g. what probability should we use as out cutoff?)
+## `parsnip` model objects {.smaller}
 
-. . .
-
-- A simple approach: choose a single threshold probability and any email that exceeds that probability is flagged as spam
-
-## Emails: Use all predictors {.smaller}
+average `flipper_length_mm` $= \beta_0 + \beta_1\cdot$ `body_mass_g`
 
 ```{r}
 #| echo: true
-#| warning: true
-logistic_reg() |>
-  set_engine("glm") |>
-  fit(spam ~ ., data = email, family = "binomial") |>
-  tidy() |>
-  print(n = 22)
+#| code-fold: false
+pengmod <- linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins)
+
+class(pengmod) # attributes
+typeof(pengmod)
+names(pengmod)
 ```
-
-:::{.aside}
-We treat the warning later.
-:::
-
-## The prediction task
-
-- The mechanics of prediction is **easy**:
-  - Plug in values of predictors to the model equation
-  - Calculate the predicted value of the response variable, $\hat{y}$
 
 . . . 
 
-- Getting it right is **harder**
-  - There is no guarantee the model estimates you have are correct
-  - Or that your model will perform as well with **new data** as it did with your sample data
+Most interesting for us for now is the entry `$fit`
+
+```{r}
+#| echo: true
+#| code-fold: false
+pengmod$fit
+```
 
 
+## `$fit` is the object created by `lm` {.smaller .scrollable}
 
+```{r}
+#| echo: true
+#| code-fold: false
+names(pengmod$fit)
+pengmod$fit$call
+pengmod$fit$coefficients
+pengmod$fit$fitted.values
+pengmod$fit$residuals
+```
 
-## Balance Over- and Underfitting
+## Fitting method: Least squares regression {.smaller background-color="aquamarine"}
 
-In a one predictor model we can show both visually:
+- The regression line shall minimize the sum of the squared residuals     
+  (or, identically, their mean). 
+- Mathematically: The residual for case $i$ is $e_i = \hat y_i - y_i$. 
+- Now we want to minimize $\sum_{i=1}^n e_i^2$   
+(or equivalently $\frac{1}{n}\sum_{i=1}^n e_i^2$ the *mean of squared errors*, which we will look at later). 
+
+## Visualization of residuals {.smaller background-color="aquamarine" .scrollable}
+
+The residuals are the gray lines between predicted values on the regression line and the actual values. 
 
 ```{r}
 #| echo: true
 #| code-fold: true
-lm_fit <- linear_reg() |>
+pengmod <-
+  linear_reg() |>
   set_engine("lm") |>
-  fit(y4 ~ x2, data = association)
-
-loess_fit <- loess(y4 ~ x2, data = association)
-
-loess_overfit <- loess(y4 ~ x2, span = 0.05, data = association)
-
-association |>
-  select(x2, y4) |>
-  mutate(
-    Underfit = augment(lm_fit$fit) |> select(.fitted) |> pull(),
-    OK = augment(loess_fit) |> select(.fitted) |> pull(),
-    Overfit = augment(loess_overfit) |> select(.fitted) |> pull(),
-  ) |>
-  pivot_longer(
-    cols = Underfit:Overfit,
-    names_to = "fit",
-    values_to = "y_hat"
-  ) |>
-  mutate(fit = fct_relevel(fit, "Underfit", "OK", "Overfit")) |>
-  ggplot(aes(x = x2)) +
-  geom_point(aes(y = y4), color = "darkgray") +
-  geom_line(aes(y = y_hat, group = fit, color = fit), size = 1) +
-  labs(x = NULL, y = NULL, color = NULL) +
-  scale_color_viridis_d(option = "plasma", end = 0.7)
+  fit(flipper_length_mm ~ body_mass_g, data = penguins)
+penguins |>
+  bind_cols(predict(pengmod, penguins)) |>
+  na.omit() |>
+  ggplot(aes(body_mass_g, flipper_length_mm)) +
+  geom_segment(
+    aes(
+      x = body_mass_g,
+      y = flipper_length_mm,
+      xend = body_mass_g,
+      yend = .pred
+    ),
+    color = "gray"
+  ) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm") +
+  geom_point(aes(y = .pred), color = "red", alpha = 0.3)
 ```
 
-:::{.aside}
-This is simulated data. 
-:::
+## Check: Fitted values and Residuals {.smaller background-color="aquamarine" .scrollable}
 
-## Spending our data
+Recall: **Residual = Observed value - Predicted value**
 
-**Problem:** 
+The *Predicted values* are also called *Fitted values*. Hence: 
 
-- There are several steps to create a useful prediction model: parameter estimation, model selection, performance assessment, etc.
-- Doing all of this on the entire data we have available can lead to **overfitting**.
-
-
-**Solution:** We subsets our data for different tasks, as opposed to allocating all data to parameter estimation (as we have done so far). 
-
-
-# Splitting Data
-
-## Splitting data {.smaller}
-
-- **Training set:**
-  - Sandbox for model building 
-  - Spend most of your time using the training set to develop the model
-  - Majority of the data (usually 80%)
-  
-- **Testing set:**
-  - Held in reserve to determine efficacy of one or two chosen models
-  - Critical to look at it once, otherwise it becomes part of the modeling process
-  - Remainder of the data (usually 20%)
-  
-
-
-[Sidenote:]{style='color:blue;'} Splitting data is very important for the predictive questions, because we want to know how well our model performs on new data. It is not relevant for explanatory questions where we want to interpret coefficients and infer about the underlying population.
-
-
-
-## Performing the split {.smaller}
+Residuals + Fitted values = Observed values
 
 ```{r}
 #| echo: true
-# Fix random numbers by setting the seed
-# Enables analysis to be reproducible when random numbers are used
-set.seed(1116)
-
-# Put 80% of the data into the training set
-email_split <- initial_split(email, prop = 0.80)
-
-# Create data frames for the two sets:
-train_data <- training(email_split)
-test_data <- testing(email_split)
-```
-
-**A note on the seed:** The seed is an arbitrary number that is used to initialize a pseudorandom number generator. The same seed will always result in the same sequence of pseudorandom numbers. This is useful for reproducibility.
-
-## Peek at the split {.smaller}
-
-:::: {.columns}
-::: {.column width='50%'}
-
-```{r}
-#| echo: true
-glimpse(train_data)
-```
-
-:::
-::: {.column width='50%'}
-
-```{r}
-#| echo: true
-glimpse(test_data)
-```
-
-:::
-::::
-
-
-# Workflow of Predictive Modeling
-
-## Fit a model to the training dataset 
-
-```{r}
-#| echo: true
-#| warning: true
-email_fit <- logistic_reg() |>
-  set_engine("glm") |>
-  fit(spam ~ ., data = train_data, family = "binomial")
-```
-
-We get a warning and should explore the reasons for 0 or 1 probability. 
-
-::: aside
-- A deeper looking into the predicted probabilities (not shown here) shows that 4 cases are predicted to be spam with 100% probability, as well as 864 cases are predicted to be not spam with 100% probability. 
-- Note: The `dplyr` function `near` was used to assess if predicted probabilities were one. 
-- This is usually undesirable. Hence the warning. 
-:::
-
-## Look at categorical predictors
-
-```{r}
-factor_predictors <- train_data |>
-  select(where(is.factor), -spam) |>
-  names()
-
-p_to_multiple <- ggplot(train_data, aes(x = to_multiple, fill = spam)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#E48957", "#CA235F"))
-
-p_from <- ggplot(train_data, aes(x = from, fill = spam)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#E48957", "#CA235F"))
-
-p_sent_email <- ggplot(train_data, aes(x = sent_email, fill = spam)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#E48957", "#CA235F"))
-
-p_winner <- ggplot(train_data, aes(x = winner, fill = spam)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#E48957", "#CA235F"))
-
-p_format <- ggplot(train_data, aes(x = format, fill = spam)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#E48957", "#CA235F"))
-
-p_re_subj <- ggplot(train_data, aes(x = re_subj, fill = spam)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#E48957", "#CA235F"))
-
-p_urgent_subj <- ggplot(train_data, aes(x = urgent_subj, fill = spam)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#E48957", "#CA235F"))
-
-p_number <- ggplot(train_data, aes(x = number, fill = spam)) +
-  geom_bar() +
-  scale_fill_manual(values = c("#E48957", "#CA235F"))
-
-library(patchwork)
-p_to_multiple +
-  p_from +
-  p_sent_email +
-  p_winner +
-  p_format +
-  p_re_subj +
-  p_urgent_subj +
-  p_number +
-  plot_layout(ncol = 4, guides = "collect") &
-  theme(axis.title.y = element_blank())
-```
-
-Closer look at `from` and `sent_email`. 
-
-## Counting cases {.smaller}
-
-:::: {.columns}
-
-::: {.column width='50%'}
-`from`: Whether the message was listed as from anyone (this is usually set by default for regular outgoing email). 
-
-```{r}
-#| echo: true
-train_data |> count(spam, from)
-```
-
-*No non-spam mails without `from`.*
-:::
-
-::: {.column width='50%'}
-`sent_mail`: Indicator for whether the sender had been sent an email from the receiver in the last 30 days.
-
-```{r}
-#| echo: true
-train_data |> count(spam, sent_email)
-```
-
-*No spam mails with `sent_email`.*
-
-:::
-
-::::
-
-- There is *incomplete separation* in the data for those variables. 
-- That mean we have a *sure* prediction probabilities (0 or 1). (That is the warning. Also, these variables have the highest coefficients.)
-- This is not what we assume about reality. Maybe our sample is too small to see it. 
-- Therefore we exclude these variables.
-
-## Look at numerical variables {.smaller}
-
-```{r}
-#| echo: true
-#| output-location: column
-train_data |>
-  group_by(spam) |>
-  select(where(is.numeric)) |>
-  pivot_longer(-spam) |>
-  group_by(name, spam) |>
-  summarize(mean = mean(value), sd = sd(value)) |>
-  print(n = 22)
-```
-
-`viagra` has no mentions in non-spam emails.
-
-- We should exclude this variable for the same reason. 
-
-
-## Fit a model to the training dataset {.smaller}
-
-```{r}
-#| echo: true
-#| warning: true
-email_fit <- logistic_reg() |>
-  set_engine("glm") |>
-  fit(
-    spam ~ . - from - sent_email - viagra,
-    data = train_data,
-    family = "binomial"
-  )
-```
-
-We still get a warning, but without very high coefficients. 
-
-::: aside
-A deeper analysis shows that now only two cases are predicted not spam with 100% probability. 
-:::
-
-## The fitted model
-
-```{r}
-#| echo: true
-#| warning: true
-email_fit
-```
-
-
-
-## Predict with the testing dataset {.smaller}
-
-Predicting the raw values (log-odds)
-```{r}
-#| echo: true
-predict(email_fit, test_data, type = "raw") |> head() # head prints the first values
-```
-
-:::: {.columns}
-
-::: {.column width='50%'}
-Predicting probabilities
-
-```{r}
-#| echo: true
-predict(email_fit, test_data, type = "prob") |> head()
-```
-
-:::
-
-::: {.column width='50%'}
-Predicting spam (default)
-
-```{r}
-#| echo: true
-predict(email_fit, test_data) # Would be type = "class"
-```
-
-:::
-
-::::
-
-
-## Relate back to the model concept {.smaller}
-
-```{r}
-#| echo: true
-#| output-location: column
-email_pred <-
-  predict(email_fit, test_data, type = "prob") |>
-  select(spam_prob = .pred_1) |>
-  mutate(
-    spam_logodds = predict(email_fit, test_data, type = "raw"),
-    spam_odds = exp(spam_logodds)
-  ) |>
-  bind_cols(predict(email_fit, test_data)) |>
-  # Append real data
-  bind_cols(test_data |> select(spam))
-email_pred
-```
-
-- The raw predictions are the log-odds.
-- From which we can compute the odds. 
-- From which the probability is computed. Here it is done by `predict`. 
-- The `.pred_class` prediction is when the probability > 0.5. 
-  - What does it mean for the odds and the log-odds?
-  
-. . . 
-
-Answers: odds > 1, log-odds > 0
-
-## Another look {.smaller}
-
-```{r}
-#| echo: true
-email_pred |> arrange(desc(spam_prob)) |> print(n = 20)
-```
-
-We see false positives and false negatives.
-
-## Evaluate the performance {.smaller}
-
-**Receiver operating characteristic (ROC) curve**^[Originally developed for operators of military radar receivers, hence the odd name.] which plots true positive rate (sensitivity) vs. false positive rate (1 - specificity)
-
-```{r}
-#| echo: true
-#| fig-height: 3.5
-email_pred |>
-  roc_curve(
-    truth = spam,
-    spam_prob,
-    event_level = "second" # this adjusts the location above the diagonal
-  ) |>
-  autoplot()
-```
-
-
-## Evaluate the performance  {.smaller}
-
-Find the area under the curve (AUC). 
-
-In calculus language:    
-$\int_0^1 \text{TPR}(\text{FPR}) d\text{FPR}$    
-
-Remember: 
-
-- TPR = True Positive Rate = sensitivity 
-- FPR = False Positive Rate = 1 - specificity
-- specificity is the true negative rate. 
-
-```{r}
-#| echo: true
-email_pred |>
-  roc_auc(
-    truth = spam,
-    spam_prob,
-    event_level = "second"
-  )
-```
-
-# Feature engineering
-
-## Feature engineering {.smaller}
-
-- We prefer simple models when possible, but **parsimony** does not mean sacrificing accuracy (or predictive performance) in the interest of simplicity
-- Variables that go into the model and how they are represented are critical to the success of the model
-- **Feature engineering** is getting creative with our predictors in an effort to make them more useful for our model (to increase its predictive performance) 
-
-## Modeling workflow, revisited {.smaller}
-
-- Create a **recipe** for feature engineering steps to be applied to the training data
-  - The `tidymodels` way (similar to a pipeline in python's scikit-learn). 
-
-- Fit the model to the training data after these steps have been applied
-
-- Using the model estimates from the training data, predict outcomes for the test data
-
-- Evaluate the performance of the model on the test data
-
-# Recipes
-
-## Initiate a recipe {.smaller}
-
-```{r}
-#| echo: true
-email_rec <- recipe(
-  spam ~ ., # formula
-  data = train_data # data to use for cataloguing names and types of variables
+#| code-fold: false
+
+tibble(
+  residuals = pengmod$fit$residuals,
+  fitted_values = pengmod$fit$fitted.values,
+  sum = residuals + fitted_values,
 )
-summary(email_rec) |> print(n = 21)
+penguins$flipper_length_mm
 ```
 
-The object `email_rec` only includes *meta-data* (columns names and types)! 
+# Excursion: Nonlinear Models
 
+## When a linear model is bad
 
-
-## Remove certain variables {.smaller}
+Example: Total COVID-19 cases in Germany in the first wave 2020. 
 
 ```{r}
 #| echo: true
-email_rec |>
-  step_rm(from, sent_email, viagra)
+whofull <- read_csv("WHO-COVID-19-global-data.csv", show_col_types = FALSE) |>
+  filter(Country == "Germany")
+who <- whofull |>
+  filter(Date_reported < "2020-03-20", Date_reported > "2020-02-25")
+who |>
+  ggplot(aes(Date_reported, Cumulative_cases)) +
+  geom_line() +
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
 
+## $\log$ transformation {.smaller}
 
-## Feature engineer date {.smaller}
-
-- The date-time may not be such an interesting predictor. 
-  - It could only bring in a general trend over time
-- Often decomposing the date to the month or the day of the week (dow) is more interesting.
-  - `step_date` can easily extract these
-
+Instead of `Cumulative_cases` we look at $\log($`Cumulative_cases`$)$
 ```{r}
 #| echo: true
-email_rec |>
-  step_rm(from, sent_email, viagra) |>
-  step_date(time, features = c("dow", "month")) |>
-  step_rm(time)
+who |>
+  ggplot(aes(Date_reported, log(Cumulative_cases))) +
+  geom_line() +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal(base_size = 20)
 ```
 
-## Create dummy variables {.smaller}
-
-- Use helper functions like `all_nominal` or `all_outcomes` from `tidymodels` for column selection.
-
-```{r}
-#| echo: true
-email_rec |>
-  step_rm(from, sent_email, viagra) |>
-  step_date(time, features = c("dow", "month")) |>
-  step_rm(time) |>
-  step_dummy(all_nominal(), -all_outcomes())
-```
-
-## Remove zero variance variables {.smaller}
-
-Variables that contain only a single value.
-
-```{r}
-#| echo: true
-email_rec |>
-  step_rm(from, sent_email, viagra) |>
-  step_date(time, features = c("dow", "month")) |>
-  step_rm(time) |>
-  step_dummy(all_nominal(), -all_outcomes()) |>
-  step_zv(all_predictors())
-```
-
-## Full recipe {.smaller}
-
-```{r}
-#| echo: true
-#| warning: true
-email_rec <- recipe(
-  spam ~ ., # formula
-  data = train_data # data to use for cataloguing names and types of variables
-) |>
-  step_rm(from, sent_email, viagra) |>
-  step_date(time, features = c("dow", "month")) |>
-  step_rm(time) |>
-  step_dummy(all_nominal(), -all_outcomes()) |>
-  step_zv(all_predictors())
-print(email_rec)
-```
-
-## Recipes are only metadata
-
-The object `email_rec` only includes *meta-data* of the data frame it shall work on. Metadata here means 
-
-- a formula
-- column names
-- columns types
-
-No actual data transformation has happened yet!
-
-# Building workflows
-
-
-## Define model {.smaller}
-
-```{r}
-#| echo: true
-email_mod <- logistic_reg() |>
-  set_engine("glm")
-
-email_mod
-```
-
-## Define workflow {.smaller}
-
-**Workflows** bring together models and recipes so that they can be easily applied to both the training and test data.
-
-```{r}
-#| echo: true
-email_wflow <- workflow() |>
-  add_model(email_mod) |>
-  add_recipe(email_rec)
-email_wflow
-```
-
-
-## Fit model to training data {.smaller}
-
-```{r}
-#| echo: true
-email_fit <- email_wflow |>
-  fit(data = train_data)
-
-tidy(email_fit) |> print(n = 27)
-```
-
-Note: `email_fit` builds on the workflow object `email_wflow` defined before, which specified a model and a recipe.
-
-
-## Make predictions for test data {.smaller}
-
-```{r}
-#| echo: true
-email_pred <- email_fit |>
-  predict(test_data, type = "prob") |>
-  bind_cols(test_data)
-email_pred
-```
-
-Note: `email_pred` builds on the fit object `email_fit` defined and computed before, which in turn builds on workflow defined before, which specified a model and a recipe.
-
-## Summary of the workflow steps {.smaller}
-
-- Define a model
-- Define a recipe for data preprocessing, feature engineering and selection
-- Define a workflow that brings model and recipe together
-- Nothing is computed so far!
-- Fit the workflow with the **training** data
-- Make predictions for the **test** data
-
-The purpose of modularization is to separate the different tasks and to make it easy to re-use and combine parts of it, e.g. to test and compare different versions or to do cross-validation with different splits of *testing* and *training* data.
-
-
-
-## Evaluate the performance {.smaller}
-
-```{r}
-#| echo: true
-email_pred |>
-  roc_curve(
-    truth = spam,
-    .pred_1,
-    event_level = "second"
-  ) |>
-  autoplot()
-```
-
-
-
-## Evaluate the performance  {.smaller}
-
-```{r}
-#| echo: true
-email_pred |>
-  roc_auc(
-    truth = spam,
-    .pred_1,
-    event_level = "second"
-  )
-```
-
-This is better than our former model (without the feature engineering workflow), which had AUC = 0.857. 
-
-# From probabilities to decisions {.smaller}
-
-## Cutoff probability: 0.5 {.smaller}
-
-Suppose we decide to label an email as spam if the model predicts the probability of spam to be **more than 0.5**. (That is the default.)
-
-**Confusion matrix:**
-
-```{r}
-#| echo: true
-cutoff_prob <- 0.5
-email_pred |>
-  mutate(
-    spam = if_else(spam == 1, "Email is spam", "Email is not spam"),
-    spam_pred = if_else(
-      .pred_1 > cutoff_prob,
-      "Email labelled spam",
-      "Email labelled not spam"
-    )
-  ) |>
-  count(spam_pred, spam) |>
-  pivot_wider(names_from = spam_pred, values_from = n) |>
-  select(1, 3, 2) |>
-  slice(c(2, 1)) |> # reorder rows and cols to fit convention
-  knitr::kable()
-```
-
-
-## Confusion Matrix, Sensitivity, Specificity {.smaller}
-
-
-```{r}
-#| echo: false
-cutoff_prob <- 0.5
-email_pred |>
-  mutate(
-    spam = if_else(spam == 1, "Email is spam", "Email is not spam"),
-    spam_pred = if_else(
-      .pred_1 > cutoff_prob,
-      "Email labelled spam",
-      "Email labelled not spam"
-    )
-  ) |>
-  count(spam_pred, spam) |>
-  pivot_wider(names_from = spam_pred, values_from = n) |>
-  select(1, 3, 2) |>
-  slice(c(2, 1)) |> # reorder rows and cols to fit convention
-  knitr::kable()
-```
-
-**Sensitivity:** 14/(14+54) = 0.206   
-**Specificity:** 707/(707+10) = 0.986   
-
-## Cutoff probability: 0.25  {.smaller}
-
-Suppose we decide to label an email as spam if the model predicts the probability of spam to be **more than 0.25**.
-
-**Confusion matrix:**
-
-```{r}
-cutoff_prob <- 0.25
-email_pred |>
-  mutate(
-    spam = if_else(spam == 1, "Email is spam", "Email is not spam"),
-    spam_pred = if_else(
-      .pred_1 > cutoff_prob,
-      "Email labelled spam",
-      "Email labelled not spam"
-    )
-  ) |>
-  count(spam_pred, spam) |>
-  pivot_wider(names_from = spam_pred, values_from = n) |>
-  select(1, 3, 2) |>
-  slice(c(2, 1)) |> # reorder rows and cols to fit convention
-  knitr::kable()
-```
-
-**Sensitivity:** 32/(32+36) = 0.471   
-**Specificity:** 656/(656 + 61) = 0.915   
-
-
-## Cutoff probability: 0.75 {.smaller}
-
-Suppose we decide to label an email as spam if the model predicts the probability of spam to be **more than 0.75**.
-
-**Confusion matrix:**
-
-```{r}
-cutoff_prob <- 0.75
-email_pred |>
-  mutate(
-    spam = if_else(spam == 1, "Email is spam", "Email is not spam"),
-    spam_pred = if_else(
-      .pred_1 > cutoff_prob,
-      "Email labelled spam",
-      "Email labelled not spam"
-    )
-  ) |>
-  count(spam_pred, spam) |>
-  pivot_wider(names_from = spam_pred, values_from = n) |>
-  select(1, 3, 2) |>
-  slice(c(2, 1)) |> # reorder rows and cols to fit convention
-  knitr::kable()
-```
-
-**Sensitivity:** 3/(3+65) = 0.044   
-**Specificity:** 716/(716+1) = 0.999
-
-
-## Compare: Check our very first model {.smaller}
-
-Using the modular sturcutr: We make a new simple recipe and draw workflow and fitting re-using the same specified logisitc regression model `email_mod`. 
-
-```{r}
-#| echo: true
-simple_email_rec <- recipe(
-  spam ~ num_char, # formula
-  data = train_data # data to use for cataloguing names and types of variables
-)
-simple_email_pred <-
-  workflow() |>
-  add_model(email_mod) |>
-  add_recipe(simple_email_rec) |>
-  fit(data = train_data) |>
-  predict(test_data, type = "prob") |>
-  bind_cols(test_data |> select(spam, num_char, time))
-simple_email_pred
-```
-
-## Evaluate the performance {.smaller}
-
-```{r}
-#| echo: true
-#| fig-height: 3.5
-simple_email_pred |>
-  roc_curve(
-    truth = spam,
-    .pred_1,
-    event_level = "second" # this adjusts the location above the diagonal
-  ) |>
-  autoplot()
-```
-
-
-```{r}
-simple_email_pred |>
-  roc_auc(
-    truth = spam,
-    .pred_1,
-    event_level = "second"
-  )
-```
-
-**Conclusion:** It is not as good compared to AUC 0.86
-
-
-## Compare: Predict Penguins' Sex {.scrollable .smaller}
-
-Following all the steps introduced before:
-
-```{r}
-#| echo: true
-set.seed(1)
-# Put 80% of the data into the training set
-peng_split <- initial_split(penguins, prop = 0.80)
-# Create data frames for the two sets:
-train_data_peng <- training(peng_split)
-test_data_peng <- testing(peng_split)
-
-# Create a recipe for the model
-peng_rec <- recipe(
-  sex ~ .,
-  data = train_data_peng
-) |>
-  step_naomit(all_predictors()) |>
-  step_dummy(all_nominal(), -all_outcomes()) |>
-  step_zv(all_predictors())
-
-# Create a logistic regression model
-peng_mod <- logistic_reg() |>
-  set_engine("glm")
-
-# Create a workflow
-peng_wflow <- workflow() |>
-  add_model(peng_mod) |>
-  add_recipe(peng_rec)
-
-# Fitting model to training data
-peng_fit <- peng_wflow |>
-  fit(data = train_data_peng)
-
-# Make predictions for test data
-peng_pred <- peng_fit |>
-  predict(test_data_peng, type = "prob") |>
-  bind_cols(test_data_peng)
-```
-
-## Penguins: Evaluate Performance {.smaller}
-
-```{r}
-#| echo: true
-#| fig-height: 3.5
-peng_pred |>
-  roc_curve(
-    truth = sex,
-    .pred_male,
-    event_level = "second"
-  ) |>
-  autoplot()
-```
-
-```{r}
-#| echo: true
-peng_pred |>
-  roc_auc(
-    truth = sex,
-    .pred_male,
-    event_level = "second"
-  )
-```
-
-
-
-## Penguins: Cutoff probability 0.5 {.smaller}
-
-**Confusion matrix:**
-
-```{r}
-#| echo: true
-cutoff_prob <- 0.5
-peng_pred |>
-  mutate(
-    sex = if_else(sex == "male", "Penguin is male", "Penguin is female"),
-    sex_pred = if_else(
-      .pred_male > cutoff_prob,
-      "Penguin labelled male",
-      "Penguin labelled female"
-    )
-  ) |>
-  count(sex_pred, sex) |>
-  pivot_wider(names_from = sex_pred, values_from = n) |>
-  select(1, 3, 2) |>
-  slice(c(2, 1)) |> # reorder rows and cols to fit convention
-  knitr::kable()
-```
-
-**Sensitivity:** 31/(31+4) = 0.886   
-**Specificity:** 28/(28+4) = 0.875
-
-## Penguins: Cutoff probability 0.25 {.smaller}
-
-**Confusion matrix:**
-
-```{r}
-#| echo: true
-cutoff_prob <- 0.25
-peng_pred |>
-  mutate(
-    sex = if_else(sex == "male", "Penguin is male", "Penguin is female"),
-    sex_pred = if_else(
-      .pred_male > cutoff_prob,
-      "Penguin labelled male",
-      "Penguin labelled female"
-    )
-  ) |>
-  count(sex_pred, sex) |>
-  pivot_wider(names_from = sex_pred, values_from = n) |>
-  select(1, 3, 2) |>
-  slice(c(2, 1)) |> # reorder rows and cols to fit convention
-  knitr::kable()
-```
-
-**Sensitivity:** 34/(34+1) = 0.971   
-**Specificity:** 25/(25+7) = 0.781
-
-
-## Penguins: Cutoff probability 0.75 {.smaller}
-
-**Confusion matrix:**
-
-```{r}
-#| echo: true
-cutoff_prob <- 0.75
-peng_pred |>
-  mutate(
-    sex = if_else(sex == "male", "Penguin is male", "Penguin is female"),
-    sex_pred = if_else(
-      .pred_male > cutoff_prob,
-      "Penguin labelled male",
-      "Penguin labelled female"
-    )
-  ) |>
-  count(sex_pred, sex) |>
-  pivot_wider(names_from = sex_pred, values_from = n) |>
-  select(1, 3, 2) |>
-  slice(c(2, 1)) |> # reorder rows and cols to fit convention
-  knitr::kable()
-```
-
-**Sensitivity:** 29/(29+6) = 0.829    
-**Specificity:** 30/(30+2) = 0.938
-
-## Penguins vs. Emails
-
-Why are the differences between different cutoff probabilities smaller for penguins than for emails?
+Almost perfect fit of the linear model: $\log(y)=\log(\beta_0) + \beta_1\cdot x$   
+($y=$ `Cumulative cases`, $x=$ Days)
 
 . . . 
 
-**Answer:** The response variable `sex` in `penguins` is more balanced (about 50% males and 50% females) than the response variable `spam` in `email`.
+Exponentiation gives the model: $y=\beta_0 e^{\beta_1\cdot x}$    
+<!-- (Check $e^{\log(\beta_0) + \beta_1\cdot x} = e^{\log(\beta_0)} e^{\beta_1\cdot x} = \beta_0 e^{\beta_1\cdot x}$) -->
+
+## Exponential growth! {.smaller}
+
+[$y=\beta_0 e^{\beta_1\cdot x}$]{style='color:red;'} For comparison: Logistic function [$y = \frac{N \beta_0 e^{\beta_1\cdot x}}{N + \beta_0 e^{\beta_1\cdot x}}$]{style='color:blue;'}   for $N=200000$
+
+```{r}
+#| echo: true
+wholm <- who |>
+  lm(log(Cumulative_cases) ~ Date_reported, data = _)
+who |>
+  ggplot(aes(Date_reported, Cumulative_cases)) +
+  geom_line() +
+  geom_point() +
+  geom_function(
+    fun = function(x) exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)),
+    color = "red"
+  ) +
+  geom_function(
+    fun = function(x) {
+      200000 *
+        exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)) /
+        (200000 + exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)))
+    },
+    color = "blue"
+  ) +
+  theme_minimal(base_size = 20)
+```
+
+Logistic growth (as in the SI model) mimicks exponential growth initially. 
+ 
+
+## $\log$ transformation {.smaller}
+
+```{r}
+#| echo: true
+who |>
+  ggplot(aes(Date_reported, log10(Cumulative_cases))) +
+  geom_line() +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal(base_size = 20)
+```
+Why is the fit `log10(Cumulative_cases) ~ Date_Reported` so much better then the penguin model `flipper_length_mm ~ body_mass_g`?
+
+. . . 
+
+- Because there is a good *mechanistic explanation* behind: The SI model. 
+
+. . . 
+
+An important difference of the dependent variables: `Date_reported` vs. `body_mass_g`?
+
+. . . 
+
+- $x$ has an ordered structure: regular time steps and only one value per timestep!
+
+
+
+## It works only in a certain data range {.smaller}
+
+```{r}
+#| echo: true
+who |>
+  ggplot(aes(Date_reported, Cumulative_cases)) +
+  geom_point() +
+  geom_function(
+    fun = function(x) exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)),
+    color = "red"
+  ) +
+  geom_function(
+    fun = function(x) {
+      200000 *
+        exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)) /
+        (200000 + exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)))
+    },
+    color = "blue"
+  ) +
+  geom_line(data = whofull |> filter(Date_reported < "2020-06-30")) +
+  ylim(c(0, 300000)) +
+  theme_minimal(base_size = 20)
+```
+
+## For comparison: log-scale on y {.smaller}
+
+```{r}
+#| echo: true
+who |>
+  ggplot(aes(Date_reported, Cumulative_cases)) +
+  geom_point() +
+  geom_function(
+    fun = function(x) exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)),
+    color = "red"
+  ) +
+  geom_function(
+    fun = function(x) {
+      200000 *
+        exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)) /
+        (200000 + exp(coef(wholm)[1] + coef(wholm)[2] * as.numeric(x)))
+    },
+    color = "blue"
+  ) +
+  geom_line(data = whofull |> filter(Date_reported < "2020-06-30")) +
+  ylim(c(0, 300000)) +
+  scale_y_log10() +
+  theme_minimal(base_size = 20)
+```
+
+## Various Types of Nonlinear Structures 
+
+- It depends on the data if linear models work well or not
+- There is no standard way to detect substantial non-linear structures  
+
+. . . 
 
 ::: {.columns}
 ::: {.column}
+```{r}
+#| echo: false
+#| code-fold: true
+datasaurus_dozen |>
+  filter(dataset == "dino") |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  coord_fixed() +
+  theme_minimal(base_size = 20)
+```
+:::
+::: {.column}
+```{r}
+#| echo: false
+#| code-fold: true
+datasaurus_dozen |>
+  filter(dataset == "dino")
+
+datasaurus_dozen |>
+  filter(dataset == "dino") |>
+  summarise(
+    mean_x = mean(x),
+    mean_y = mean(y),
+    sd_x = sd(x),
+    sd_y = sd(y),
+    cor_xy = cor(x, y)
+  )
+```
+:::
+:::
+
+## The Data Saurus and 12 Friends
 
 ```{r}
 #| echo: true
-penguins |> count(sex) |> mutate(prop = n / sum(n))
+#| code-fold: true
+datasaurus_dozen |>
+  ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  facet_wrap(~dataset, ncol = 5) +
+  coord_fixed() +
+  theme_minimal()
+```
+
+## The Data Saurus and 12 Friends
+
+Summary statistcs do not reveal the nonlinear structures!
+
+```{r}
+#| echo: true
+#| code-fold: true
+datasaurus_dozen |>
+  summarise(
+    mean_x = mean(x),
+    mean_y = mean(y),
+    sd_x = sd(x),
+    sd_y = sd(y),
+    cor_xy = cor(x, y),
+    .by = dataset
+  )
+```
+
+
+
+# Categorical Predictors - Dummies
+
+## Categorical variables as predictors? 
+
+When a variable has categories the entries are not numbers but strings like `"Adelie"` or `"Chinstrap"`. Can we use such a variable as a predictor?
+
+. . . 
+
+Let's explore and just try what happens with `species` as explanatory variable: 
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ species, data = penguins) |>
+  tidy()
+```
+Remember, we have three species: **Adelie, Chinstrap, Gentoo.** What happened? 
+
+. . . 
+
+Two of the three species categories appear as variables now.
+
+- Categorical variables are automatically encoded as **dummy variables**
+<!-- - Each coefficient describes the expected difference between flipper length of that particular species compared to the baseline level -->
+- What is the baseline level? [[The first category!]{style='color:red;'} (Here alphabetically `"Adelie"`)]{.fragment}
+
+
+## How do dummy variables look? 
+
+
+species    | speciesChinstrap | speciesGentoo 
+-----------|------------------|--------------
+Adelie     |      0           | 0
+Chinstrap  |      1           | 0
+Gentoo     |      0           | 1
+Gentoo     |      0           | 1
+Gentoo     |      0           | 1
+Adelie     |      0           | 0
+Chinstrap  |      1           | 0
+
+
+- Fitting is as before. The dummy variables just have 0 and 1 entries. 
+
+::: aside
+In machine learning creating dummy variables is called *one-hot encoding*.  
+::: 
+
+
+## Check: Create Dummies ourselves 
+
+::: {.columns}
+::: {.column}
+Create dummy variables with `if_else` and show three example rows, one for each species:
+
+```{r}
+#| echo: true
+penguins_with_dummies <- penguins |>
+  mutate(
+    speciesChinstrap = if_else(species == "Chinstrap", 1, 0),
+    speciesGentoo = if_else(species == "Gentoo", 1, 0)
+  ) |>
+  select(flipper_length_mm, speciesChinstrap, speciesGentoo)
+penguins_with_dummies |> slice(1, 200, 300)
 ```
 
 :::
 ::: {.column}
+Fit the model manually:
 
 ```{r}
 #| echo: true
-email |> count(spam) |> mutate(prop = n / sum(n))
+penguins_with_dummies |>
+  lm(flipper_length_mm ~ speciesChinstrap + speciesGentoo, data = _)
 ```
 
 :::
+::: 
+
+Equation:   
+average `flipper_length_mm` $= \beta_0 + \beta_1\cdot$ `speciesChinstrap` $+ \beta_2\cdot$ `speciesGentoo`    
+With fitted parameters $\beta_0 \approx 190, \beta_1 \approx 5.87$ and $\beta_2 = 27.2$ 
+
+::: aside 
+
+Coding notes: With `lm` we use the linear model engine directly without the tidymodels pipeline. With `data = _` we use the data that is piped in. The `_` is a placeholder for the piped data. We need it because `lm` does not have a `data` argument in the first position. (`lm` is older than the tidyverse and does not support piping directly.)
+
 :::
+
+
+
+
+
+## Interpretation {.smaller background-color="khaki"}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ species, data = penguins) |>
+  tidy()
+```
+
+- Flipper length of the baseline species is the intercept.    
+    - Average flipper length of Adelie is 190 mm
+- Flipper length of the two other species add their coefficient
+    - Average flipper length of Chinstrap is 190 + 5.87 mm
+    - Average flipper length of Gentoo is 190 + 27.2 mm
+
+
+## Compare to a visualization {.smaller}
+
+```{r}
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ species, data = penguins) |>
+  tidy()
+```
+
+```{r}
+#| echo: true
+jitterplots <- penguins |>
+  ggplot(aes(species, flipper_length_mm)) +
+  geom_jitter(width = 0.1, alpha = 0.3) +
+  stat_summary(fun.y = mean, geom = "point", size = 5, color = "red")
+boxplots <- penguins |>
+  ggplot(aes(species, flipper_length_mm)) +
+  geom_boxplot() +
+  stat_summary(fun.y = mean, geom = "point", size = 5, color = "red")
+jitterplots + boxplots
+```
+
+The red dots are the mean values for species. 
+
+# R-squared
+
+## Quality of different linear models? {.smaller} 
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  tidy()
+```
+
+average `flipper_length_mm` $= 137 + 0.0153\cdot$ `body_mass_g`
 
 . . .
 
-A naive classifier that classifies everything as the majority class would achieve about 50% accuracy for `penguins`, but about 88% accuracy for `email`.
-
-
-
-# Classification: Compare logistic regression and decision tree
-
-## Purpose of the section {.smaller}
-
-- Go again through the modeling workflow (with `tidymodels`) and see that large parts are identical
-- Look again at the coefficients of a logistic regression model
-- Learn the basic idea of a decision tree (you will not learn the details here)
-- Do the classification with both models and compare the confusion matrices
-
-## Specify recipe and models {.smaller}
-
-For both logistic regression and decision tree:
-
 ```{r}
 #| echo: true
-peng_recipe <- recipe(sex ~ ., data = penguins) |>
-  step_rm(year)
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(bill_depth_mm ~ bill_length_mm, data = penguins) |>
+  tidy()
 ```
+
+average `bill_depth_mm` $= 20.9 -0.085\cdot$ `bill_length_mm`
 
 . . .
 
-- We specify a recipe to predict `sex` with all available variables in `penguins`
-    - In typical model development, more pre-processing steps are done. 
+**Technical:** The idea of the `tidy()` function is to turn an object into a tidy tibble. Here, it extracts the coefficients of the linear model (and more statistical information).
+
+
+
+
+## R-squared of a fitted model {.smaller background-color="aquamarine"}
+
+$R^2$ is the percentage of variability in the response explained by the regression model. 
+
+R-squared is also called **coefficient of determination**. 
+
+**Definition**: 
+
+$R^2 = 1 - \frac{SS_\text{res}}{SS_\text{tot}}$
+
+where $SS_\text{res} = \sum_i(y_i - f_i)^2 = \sum_i e_i^2$ is the *sum of the squared residuals*, and   
+$SS_\text{tot} = \sum_i(y_i - \bar y)^2$ the *total sum of squares* which is proportional to the variance of $y$. ($\bar y$ is the mean of $y$.)
+
+![](https://upload.wikimedia.org/wikipedia/commons/8/86/Coefficient_of_Determination.svg)
+
+
+
+## Linear model R-squared {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  glance()
+```
+
+The command `glance` shows summary statistics of model fits in a single row.
+
+
+**Interpretation R-squared?** 75.9% of the variance of flipper length can be explained by a linear relation with body mass. [Warning: "Explain" $\neq$ causal claim!]{.fragment style='color:red;'}
 
 . . .
 
-:::: {.columns}
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(bill_depth_mm ~ bill_length_mm, data = penguins) |>
+  glance()
+```
 
-::: {.column width='50%'}
+5.52% of the variance of bill depth can be explained by a linear relation with bill length. 
 
-**Logistic Regression**
+
+## R-squared and correlation {.smaller}
+
+For a linear model with one predictor, the square of the correlation coefficient is the same as the R-squared of the model. Hence, the name $R^2$! Check with code:
 
 ```{r}
 #| echo: true
-peng_logreg <- logistic_reg() |>
-  set_engine("glm")
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  glance()
 ```
-
-`peng_logreg` specifies to fit with `glm` (generalized linear model from `base` R) 
-:::
-
-::: {.column width='50%'}
-
-**Decision Tree**
 
 ```{r}
 #| echo: true
-peng_tree <- decision_tree() |>
-  set_engine("rpart") |>
-  set_mode("classification")
+#| code-fold: false
+cor(
+  penguins$flipper_length_mm,
+  penguins$body_mass_g,
+  use = "pairwise.complete.obs"
+)
 ```
-
-`peng_tree` specifies to fit  for `classification` with the `rpart`^[`rpart` is a package for *recursive partitioning and regression trees*. Different decision tree procedures are subsumed as **classification and regression trees (CART)**] as engine. 
-
-:::
-::::
-
-
-## Split and fit {.smaller}
-
-For logistic regression and decision tree:
-
-Split into test and training data
 
 ```{r}
 #| echo: true
-set.seed(1)
-penguins_split <- initial_split(penguins, prop = 0.7, strata = sex)
-peng_train <- training(penguins_split)
-peng_test <- testing(penguins_split)
-peng_workflow <- workflow() |> add_recipe(peng_recipe)
+#| code-fold: false
+cor(
+  penguins$flipper_length_mm,
+  penguins$body_mass_g,
+  use = "pairwise.complete.obs"
+)^2
 ```
 
-. . .
-
-:::: {.columns}
-
-::: {.column width='50%'}
-**Logistic Regression**
-
-```{r}
-#| echo: true
-peng_logreg_fit <- peng_workflow |>
-  add_model(peng_logreg) |>
-  fit(data = peng_train)
-```
-
-:::
-
-::: {.column width='50%'}
-**Decision Tree**
-
-```{r}
-#| echo: true
-peng_tree_fit <- peng_workflow |>
-  add_model(peng_tree) |>
-  fit(data = peng_train)
-```
-
-:::
-
-::::
-
-
-## Look at fitted logistic regression {.smaller}
-
-:::: {.columns}
-
-::: {.column width='60%'}
-
-```{r}
-#| echo: true
-peng_logreg_fit |> tidy()
-```
-
-:::
-
-::: {.column width='40%'}
-- What do the categorical predictors tell us? Which are signigficant?
-- What do the numerical predictors tell us? Which are signigficant?
-- Why is the coefficient for `body_mass_g` so small, but highly significant?
-:::
-
-::::
- 
 . . . 
 
 
-**Categorical predictors:** We have 3 `species`, 3 `island`. So, we see 4 new variables, 2 for `species` and 2 for `island` (the third is the reference category). Species are significant (p < 0.05), but islands not.
+# More predictors
 
-**Numerical predictors:** `flipper_length_mm` is insignificant, though its coefficient is larger than for `body_mass_g`. Reason: values of `body_mass_g` are larger than those of `flipper_length_mm`. Body mass differs by much more grams than flipper length differs by millimeters. 
+- We had already two predictors created all of a sudden when we were using a categorical variable with 3 categories
+- We can also add more numerical predictors
 
-
-## What is a decision tree? {.smaller}
-
-```{r}
-#| echo: true
-peng_tree_fit
-```
-
-- A sequence of rules for yes/no decisions
-- Selects variables and thresholds which separate the data to predict (here `sex`) best 
-- Further details are not the scope of this course
-
-
-## Show rules {.smaller}
-
-We "dig out" the original fitted `rpart`-object from the `workflow`-object with `peng_tree_fit$fit$fit$fit` and plot it:
+## Add predictors $\to$ More coefficients {.smaller .scrollable}
 
 ```{r}
 #| echo: true
-rpart.rules(peng_tree_fit$fit$fit$fit, roundint = FALSE)
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  tidy()
 ```
-
-- The first three rules would predict `female` for all observations
-- The last five rules would predict `male` for all observations
-
-The order of `male` and `female` is because `sex` is a factor with the first level `female` and the second level `male`. The probabilities in front of the rule-text are for the second level: `male`.
-
-## Visualize tree {.smaller}
 
 ```{r}
 #| echo: true
-rpart.plot(peng_tree_fit$fit$fit$fit, roundint = FALSE, tweak = 1.5)
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + bill_length_mm, data = penguins) |>
+  tidy()
 ```
-
-How to read?
-
-- The percentage is the fraction of the total cases in this group
-- The probability-number is the fraction of observations which are male in the group
-- `male` of `female` and color would match the predicted outcome at this decision node
-
-
-## Make predictions for test data {.smaller}
-
-:::: {.columns}
-
-::: {.column width='50%'}
-```{r}
-#| echo: true
-peng_logreg_pred <-
-  predict(peng_logreg_fit, peng_test) |>
-  bind_cols(peng_test)
-peng_logreg_pred |>
-  conf_mat(truth = sex, estimate = .pred_class)
-```
-
-:::
-
-::: {.column width='50%'}
 
 ```{r}
 #| echo: true
-peng_tree_pred <-
-  predict(peng_tree_fit, peng_test) |>
-  bind_cols(peng_test)
-peng_tree_pred |>
-  conf_mat(truth = sex, estimate = .pred_class)
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(
+    flipper_length_mm ~ body_mass_g + bill_length_mm + bill_depth_mm,
+    data = penguins
+  ) |>
+  tidy()
 ```
 
-:::
-
-::::
-
-- The logistic regression has more correct predictions. 
-- [Warning:]{style='color:red;'} The function `conf_mat` (from `yardstick` of `tidymodels`) shows the transposed confusion matrix compared with [Wikipedia:Confusion Matrix](https://en.wikipedia.org/wiki/Confusion_matrix). In `conf_mat`, the *true conditions* are in columns. The wikipedia convention is that columns are the *predicted conditions*. 
-
-
-# Regression: Compare linear regression and decision tree
-
-## Purpose of the section {.smaller}
-
-- Go again through the modeling workflow (with `
-tidymodels
-`) and see that large parts are identical
-- Look again at the coefficients of a linear model
-- See how the decision tree looks like for a regression problem
-- Compare the two most common performance measures for regression models: Root Mean Squared Error (RMSE) and R-squared
-
-## Specify recipe and models {.smaller}
-
-- We specify a recipe to predict `body_mass_g` with all available variables in `penguins` and put it in a workflow
-    - Typically, more pre-processing steps are specified here, but we are mostly fine
+## More predictors: `glance` R-squared {.smaller .scrollable}
 
 ```{r}
 #| echo: true
-peng_recipe2 <- recipe(body_mass_g ~ ., data = penguins) |>
-  step_rm(year)
-peng_workflow2 <- workflow() |>
-  add_recipe(peng_recipe2)
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g, data = penguins) |>
+  glance()
 ```
 
-We can re-use the split and the training and test set. 
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + bill_length_mm, data = penguins) |>
+  glance()
+```
 
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(
+    flipper_length_mm ~ body_mass_g + bill_length_mm + bill_depth_mm,
+    data = penguins
+  ) |>
+  glance()
+```
+
+##  More predictors: Equations {.smaller}
+
+average `flipper_length_mm` $= 137 + 0.0153\cdot$ `body_mass_g`    
+75.9% explained variance
+
+average `flipper_length_mm` $= 122 + 0.0131\cdot$ `body_mass_g` $+ 0.549\cdot$ `bill_length_mm`    
+78.8% explained variance
+
+average `flipper_length_mm` $= 158 + 0.0109\cdot$ `body_mass_g` $+ 0.592\cdot$ `bill_length_mm` $- 1.68\cdot$ `bill_length_mm`   
+83.1% explained variance
+
+Often more predictors bring higher R-squared. However, doing it blindly makes  interpretation complicated and can lead to **overfitting**! (Treated later.)
+
+
+# Interaction Effects
+
+Adding products of variables as new variable.
+
+## Categorical variable as main effect {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + species, data = penguins) |>
+  tidy()
+```
+
+A **main effect** by categorical dummy variables allows for different intercepts per species. (However, the slope is the same.)
+
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + species, data = penguins) |>
+  glance()
+```
+
+Adding species increases R-squared better than adding bill length and bill depth together!
+
+
+## Adding as interaction effect {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g * species, data = penguins) |>
+  tidy()
+```
+
+- Note the `*` for interaction effect!
+- Also main effects for both variables are in as coefficients.
+- Adelie is the baseline species (because it is first in the alphabet).
+- An **interaction effect** allows for different slopes for each species!
+
+
+## Regression lines by species {.smaller}
+
+```{r}
+#| echo: true
+penguins |>
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_minimal()
+```
+
+Compare the slopes to the regression output on the slides before!
+
+
+## Different equations for each species! {.smaller}
+
+```{r}
+#| echo: true
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g * species, data = penguins) |>
+  tidy()
+```
+
+Adelie:   
+average `flipper_length_mm` $= 165 + 0.00668\cdot$ `body_mass_g`    
+
+Chinstrap:   
+average `flipper_length_mm` $= 165 - 13.6 + (0.00668 + 0.00523)\cdot$ `body_mass_g`    
+
+Gentoo:   
+average `flipper_length_mm` $= 165 + 6.06 + (0.00668 + 0.00236)\cdot$ `body_mass_g`    
+
+
+## Improvement of interaction effects is small here {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g + species, data = penguins) |>
+  glance()
+```
+
+```{r}
+#| echo: true
+#| code-fold: false
+linear_reg() |>
+  set_engine("lm") |>
+  fit(flipper_length_mm ~ body_mass_g * species, data = penguins) |>
+  glance()
+```
+
+
+## Interaction effects of two categoricals {.smaller background-color="khaki"}
+
+Assume $x_1$ and $x_2$ are categorical variables. We add their product in the linear model as a *new variable*: 
+$y_i = \beta_0 + \beta_1x_1  + \beta_2x_2 + \beta_{3}x_1x_2 + \dots$. 
+
+**Example:** $x_1$ is *gender female* and $x_2$ *having kids* 
 
 . . .
 
-:::: {.columns}
-
-::: {.column width='50%'}
-
-**Linear Regression**
-
 ```{r}
 #| echo: true
-peng_linreg <- linear_reg() |>
-  set_engine("lm")
+#| code-fold: true
+tibble(gender_female = c(0, 1, 1, 0), has_kids = c(1, 0, 1, 0)) |>
+  mutate(gender_female_x_has_kids = gender_female * has_kids) |>
+  knitr::kable()
 ```
 
-:::
-
-::: {.column width='50%'}
-
-**Decision Tree**
-
-```{r}
-#| echo: true
-peng_regtree <- decision_tree() |>
-  set_engine("rpart") |>
-  set_mode("regression")
-```
-
-:::
-::::
+- What is the baseline (where both dummies are 0)? [*Being male without kids.*]{.fragment}
+- Thought experiment: When we estimate a model explaining life satisfaction with these. How would we see if being a mother increases life satisfaction more than being a father? [*positive coefficient for `gender_female_x_has_kids`*]{.fragment}
 
 
-## Fit Regression Models {.smaller}
+# Predicting Categorical Data
 
-:::: {.columns}
-
-::: {.column width='50%'}
-**Linear Regression**
-
-```{r}
-#| echo: true
-peng_linreg_fit <- peng_workflow2 |>
-  add_model(peng_linreg) |>
-  fit(data = peng_train)
-```
-
-:::
-
-::: {.column width='50%'}
-**Decision Tree**
-
-```{r}
-#| echo: true
-peng_regtree_fit <- peng_workflow2 |>
-  add_model(peng_regtree) |>
-  fit(data = peng_train)
-```
-
-:::
-
-::::
-
-
-## Look at fitted linear regression {.smaller}
-
-:::: {.columns}
-
-::: {.column width='60%'}
-
-```{r}
-#| echo: true
-peng_linreg_fit |> tidy()
-```
-
-:::
-
-::: {.column width='40%'}
-- What do the categorical predictors tell us? Which are signigficant?
-- What do the numerical predictors tell us? Which are signigficant?
-:::
-
-::::
+Large part of the content adapted from <http://datasciencebox.org>.
  
+## What if response is binary?  {.smaller}
+
+- Example: **Spam filter** for emails
+
+```{r}
+#| echo: true
+glimpse(email) # Part of the openintro data package
+```
+
+## Multinomial response variable?
+
+**Multinominal variable:** A categroical variable with more than two categories 
+
 . . . 
 
-
-**Categorical predictors:** We have 3 `species`, 3 `island` and 2 `sex`. So, we see
-5 new variables. Species and sex are significant, but islands not.
-
-**Numerical predictors:** All 3 are significant.
+- We will not cover other categorical variables than binary ones here.
+- However, many of the probabilistic concepts transfer. 
 
 
-## Show rules {.smaller}
 
-```{r}
-#| echo: true
-rpart.rules(peng_regtree_fit$fit$fit$fit, roundint = FALSE)
-```
+## Email Example: Variables {.smaller}
 
-- For each terminal node a certain value is predicted (the mean of the remaining penguins)
+`?email` shows all variable descriptions. For example: 
 
+- `spam` Indicator for whether the email was spam.
+- `from` Whether the message was listed as from anyone (this is usually set by default for regular outgoing email).
+- `cc` Number of people cc'ed.
+- `time` Time at which email was sent.
+- `attach` The number of attached files.
+- `dollar` The number of times a dollar sign or the word “dollar” appeared in the email.
+- `num_char` The number of characters in the email, in thousands.
+- `re_subj` Whether the subject started with “Re:”, “RE:”, “re:”, or “rE:”
 
-## Visualize tree {.smaller}
-
-```{r}
-#| echo: true
-rpart.plot(peng_regtree_fit$fit$fit$fit, roundint = FALSE, tweak = 1.5)
-```
-
-How to read?
-
-- The percentage is the fraction of the total cases in this group
-- The number is the predicted outcome (mean body mass) at this decision node
-
-
-## Make predictions for test data {.smaller}
-
-:::: {.columns}
-
-::: {.column width='65%'}
-**Linear Regression**
-
-```{r}
-#| echo: true
-peng_linreg_pred <-
-  predict(peng_linreg_fit, peng_test) |>
-  bind_cols(peng_test)
-peng_linreg_pred |>
-  select(.pred, body_mass_g, everything()) |>
-  slice(10 * (1:10)) # show selected rows
-```
-
+:::{.aside}
+The development, extraction, or discovery of such variables is called **feature engineering**, **feature extraction** or **feature discovery**. Usually, a combination of *domain knowledge* and *data science* skill is needed to do this. 
 :::
 
-::: {.column width='35%'}
-**Decision Tree**
+## Email Example: Data exploration {.smaller}
+
+Would you expect spam to be longer or shorter?
+
+. . . 
 
 ```{r}
 #| echo: true
-peng_regtree_pred <-
-  predict(peng_regtree_fit, peng_test) |>
-  bind_cols(peng_test)
-peng_regtree_pred |>
-  select(.pred, body_mass_g, species, sex) |>
-  slice(10 * (1:10)) # show same selected rows
+#| fig-height: 1.5
+email |> ggplot(aes(x = num_char, y = spam)) + geom_boxplot()
 ```
-
-:::
-
-::::
-
-## Regression Performance Evaluation {.smaller}
-
-[**R-squared**]{style='color:blue;'}: Percentage of variability in `body_mass_g` explained by the model
-
-:::: {.columns}
-
-::: {.column width='50%'}
-**Linear Regression**
-
-```{r}
-#| echo: true
-rsq(peng_linreg_pred, truth = body_mass_g, estimate = .pred)
-```
-
-:::
-
-::: {.column width='50%'}
-
-**Decision Tree**
-
-```{r}
-#| echo: true
-rsq(peng_regtree_pred, truth = body_mass_g, estimate = .pred)
-```
-
-:::
-
-::::
-
-[**Root Mean Squared Error (RMSE)**:]{style='color:blue;'} $\text{RMSE} = \sqrt{\frac{1}{n}\sum_{i = 1}^n (y_i - \hat{y}_i)^2}$  
-where $\hat{y}_i$ is the predicted value and $y_i$ the true value. (The name RMSE is descriptive.)
-
-:::: {.columns}
-
-::: {.column width='50%'}
-```{r}
-#| echo: true
-rmse(peng_linreg_pred, truth = body_mass_g, estimate = .pred)
-```
-
-:::
-
-::: {.column width='50%'}
-
-```{r}
-#| echo: true
-rmse(peng_regtree_pred, truth = body_mass_g, estimate = .pred)
-```
-
-:::
-
-::::
-
-Which model is better in prediction? [**Linear regression.** The R-squared is higher.]{.fragment}
-
-
-## Should RMSE be high or low? {.smaller}
 
 . . .
 
-**Low. The lower the error, the better the model's prediction.**
+Would you expect spam subject to start with "Re:" or the like?
 
-It is the other way round than R-squared! Do not confuse them.
+. . . 
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+email |> ggplot(aes(y = re_subj, fill = spam)) + geom_bar()
+```
+
+## Linear models? {.smaller}
+
+Both seem to give some signal. **How can we model the relationship?**
+
+We focus first on just `num_char`:
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+email |>
+  ggplot(aes(x = num_char, y = as.numeric(spam) - 1)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm")
+```
+
+We would like to have a better concept!
+
+::: aside
+Why do we need `y = as.numeric(spam)-1` instead of just `y = spam`?? Answer: `spam` is a factor although it looks like a numeric variable. The underlying integers for the two categories `"0"` and `"1"` are `1` and `2`. The strange form transforms the factor into a numerical variables with the values `0` and `1` as we need it for a target variable in a linear model.
+:::
+
+
+## A penguins example - predict sex{.smaller}
+
+```{r}
+#| echo: true
+#| fig-height: 1.5
+penguins |>
+  na.omit() |>
+  ggplot(aes(x = body_mass_g, y = as.numeric(sex) - 1)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm")
+```
+
+[It does not make much sense to predict 0-1-values with a linear model.]{style='color:red;'}
+
+
+
+## A probabilistic concept {.smaller background-color="aquamarine"}
+
+- We treat each outcome (spam and not) as successes and failures arising from separate Bernoulli trials
+  - **Bernoulli trial:** a random experiment with exactly two possible outcomes, *success* and *failure*, in which the *probability of success* is the same every time the experiment is conducted
 
 . . .
 
-Notes: 
+- Each email is treated as Bernoulli trial with separate probability of success
 
-- The common method to fit a linear model is the *ordinary least squares* (OLS) method
-- That means the fitted parameters should deliver the lowest possible sum of squared errors (SSE) between predicted and observed values. 
-- Minimizing the sum of squared errors (SSE) is identical to minimizing the mean of squared errors (MSE) because it only adds the factor $1/n$.
-- Minimizing the mean of squared errors (MSE) is identical to minimizing the root mean of squared errors (RMSE) because the square root is strictly monotone function.
-
-Conclusion: RMSE can be seen as a definition of the OLS optimization goal. 
-
-## Interpreting RMSE {.smaller}
-
-In contrast to R-squared, RMSE can only be interpreted with knowledge about the range and of the response variable! It also has the same unit (grams for `body_mass_g`).
-
-
-```{r}
-#| echo: true
-#| output-location: column
-#| fig-height: 1.8
-peng_test |>
-  ggplot(aes(x = body_mass_g, fill = species)) +
-  geom_histogram(binwidth = 50) +
-  theme_minimal(base_size = 20)
-```
-
-```{r}
-#| echo: true
-#| output-location: column
-#| fig-height: 1.8
-peng_linreg_pred |>
-  ggplot(aes(x = .pred, fill = species)) +
-  geom_histogram(binwidth = 50) +
-  theme_minimal(base_size = 20)
-```
-
-```{r}
-#| echo: true
-#| output-location: column
-#| #| fig-height: 1.8
-peng_regtree_pred |>
-  ggplot(aes(x = .pred, fill = species)) +
-  geom_histogram(binwidth = 50) +
-  theme_minimal(base_size = 20)
-```
-
-
-
-The RMSE shows many grams predicted values deviate from the true value on average. (Taking the squaring of differences and root of the average into account.)
-
-# What do we mean by "model"? How to be specific
-
-## "Model" in Statistical Learning {.smaller}
-
-We already had the difference between *variable-based* and *agent-based* models in earlier lectures.
-
-But even in the variable-based model setting of **statistical learning**, the term *model* can be more or less abstract: 
-
-1. Very general: $Y = f(X_1, \dots, X_m) + \varepsilon$ where $Y$ is the response variable and $X_i$ are features which we put in our **model**: the abstract and unknown function $f$.   
-$\varepsilon$ is the *error* which we can never explain usually do not know. 
-2. More specific: The **model** $f$ could already be of a specific type, like *logistic regression*, a *decision tree* or other functional forms. As this need not be the *real* function we may call it *assumed model* $\hat f$   For example a linear model $\hat f(X_1, \dots, X_m) = \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m + \varepsilon$. Now, the model has specified parameters which values are unknown. 
-
-
-## More specific: Fitted model {.smaller}
-
-3. Fitted model: When we have a data set with values for $Y, X_1, \dots, X_m$ we can fit values for the parameters $\hat\beta_0, \dots, \hat\beta_m$ to the data. This is the *fitted model* $\hat f$. This is called parameter estimation: We estimate $\hat\beta_0, \dots, \hat\beta_m$ with the hope that they match the *real* values $\beta_0, \dots, \beta_m$ and that the linear model $\hat f$ matches the *real* function $f$. 
-4. Now we could specify further to fit a specific parameterized model with a specific algorithm, and a specific set of hyperparameters, and maybe more ...
-    
-Sometimes model means only a certain aspect of all these, for example the *formula* like `sex ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g + species + island`
+$$ y_i ∼ \text{Bernoulli}(p_i) $$
 
 . . .
 
-[Take away:]{style='color:blue;'} "Model" can mean things with very different granularity. That is OK because they are all related and all fit the definition of being a **simplified representation of reality**. 
+- We use the predictor variables to model the Bernoulli parameter $p_i$
 
-[**Be prepared to specify what you mean when you are talking about a model.**]{style='color:blue;'}
+. . .
 
+- Now we conceptualized a continuous response, but still a linear model does not fit perfectly for $p_i$ (since a probability is between 0 and 1). 
+- However, we can transform the linear model to have the appropriate range.
+
+
+
+# Generalized linear models
+
+## Characterising GLMs {.smaller background-color="aquamarine"}
+
+- **Generalized linear models (GLMs)** are a way of addressing many problems in regression
+- Logistic regression is one example
+
+All GLMs have the following three characteristics:
+
+1. A **probability distribution** as a generative model for the outcome variable $y_i \sim \text{Distribution}(\text{parameter})$
+
+. . .
+
+2. A **linear model** $\eta = \beta_0 + \beta_1 X_1 + \cdots + \beta_k X_k$  
+where $\eta$ is related to a mean parameter of the distribution by the ...
+
+. . .
+
+3. **Link function** that relates the linear model to the parameter of the outcome distribution. 
+  
+# Logistic regression
+
+## Logistic regression {.smaller background-color="aquamarine"}
+
+- **Logistic regression** is a GLM used to model a binary categorical outcome using numerical and categorical predictors.
+- The *distribution* is the Bernoulli distribution with parameter $p$ (success probability). 
+- As *link function* connecting $\eta_i$ to $p_i$ we use the **logit function**.
+
+. . .
+
+- **Logit function:** $\text{logit}: [0,1] \to \mathbb{R}$
+
+$$\text{logit}(p) = \log\left(\frac{p}{1-p}\right)$$
+
+- $\frac{p}{1-p}$ is called the **odds** of a success which happens with probability $p$.  
+Example: Roll a six with a die has $p=1/6$. Thus, the odds are $\frac{1/6}{5/6} = 1/5$. Sometimes written as 1:5. *"The odds of success are one to five."*
+
+
+## Properties of the logit {.smaller background-color="aquamarine"}
+
+- Logit takes values between 0 and 1 and returns values between $-\infty$ and $\infty$
+- The inverse of the logit function if the **logistic function** (mapping values from $-\infty$ and $\infty$ to values between 0 and 1):
+$$\text{logit}^{-1}(x) = \text{logistic}(x) = \frac{e^x}{1+e^x} = \frac{1}{1+e^{-x}}$$
+- Logit can be interpreted as the log odds of a success -- more on this later.
+
+:::{.aside}
+- The logistic function is the solution of the differential equation $\frac{d}{dx}f(x) = f(x)(1-f(x))$ which also appears in the SI-model of epidemics (and other models of exponential growth with saturation).
+- Good exercises to check your math skills:
+  1. Show that $\text{logit}^{-1}(x) = \text{logistic}(x)$ or the other way round. 
+  2. Transform $\frac{e^x}{1+e^x}$ into $\frac{1}{1+e^{-x}}$.
+  3. Check that $\text{logistic}(x)$ is a solution to $\frac{d}{dx}f(x) = f(x)(1-f(x))$.
+- You can request hints from me when you get stuck.
+:::
+
+
+## Logit and [logistic]{style='color:red;'} function {.smaller background-color="aquamarine"}
+
+```{r}
+#| echo: true
+#| fig-height: 5
+ggplot() +
+  geom_function(
+    fun = function(x) log(x / (1 - x)),
+    xlim = c(0.001, 0.999),
+    n = 500
+  ) +
+  geom_function(fun = function(x) 1 / (1 + exp(-x)), color = "red") +
+  scale_x_continuous(breaks = seq(-5, 5, 1), limits = c(-5, 5)) +
+  scale_y_continuous(breaks = seq(-5, 5, 1), limits = c(-5, 5)) +
+  coord_fixed() +
+  theme_minimal(base_size = 24) +
+  labs(x = "x")
+```
+
+
+## The logistic regression model {background-color="aquamarine"}
+
+- Based on the three GLM criteria we have
+  - $y_i \sim \text{Bernoulli}(p_i)$
+  - $\eta_i = \beta_0+\beta_1 x_{1,i} + \cdots + \beta_n x_{n,i}$
+  - $\text{logit}(p_i) = \eta_i$
+
+. . .
+
+- From which we get
+
+$$p_i = \frac{e^{\beta_0+\beta_1 x_{1,i} + \cdots + \beta_k x_{k,i}}}{1 + e^{\beta_0+\beta_1 x_{1,i} + \cdots + \beta_k x_{k,i}}}$$
+
+
+## Modeling spam {.smaller}
+
+With `tidymodels` we fit a GLM in the same way as a linear model except we
+
+- specify the model with `logistic_reg()`
+- use `"glm"` instead of `"lm"` as the engine 
+- define `family = "binomial"` for the link function to be used in the model
+
+```{r}
+#| echo: true
+#| code-fold: false
+spam_fit <- logistic_reg() |>
+  set_engine("glm") |>
+  fit(spam ~ num_char, data = email, family = "binomial")
+tidy(spam_fit)
+```
+
+:::{.aside}
+- The family is *binomial* because the Bernoulli distribution is a special case of the binomial distribution $\text{Binomial}(n,p)$ with $n=1$. 
+- The binomial distribution specifies the probability to have $k$ successes in $n$ Bernoulli trials with the same success probability $p$. 
+:::
+
+## Spam model  {.smaller}
+
+```{r}
+tidy(spam_fit)
+```
+
+Model:
+$$\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot \text{num_char}$$
+
+
+
+## Predicted probability: Examples {.smaller}
+
+We can compute the **predicted probability** that an email with 2000 character is spam as follows:
+
+$$\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot 2 = -1.9242$$
+
+(Note: `num_char` is in thousands.)
+
+$$\frac{p}{1-p} = e^{-1.9242} = 0.15 \Rightarrow p = 0.15 \cdot (1 - p)$$
+
+$$p = 0.15 - 0.15\cdot p \Rightarrow 1.15\cdot p = 0.15$$
+
+$$p = 0.15 / 1.15 = 0.13$$
+
+
+## Predicted probability {.smaller}
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+logistic <- function(t) 1 / (1 + exp(-t))
+preds <- tibble(x = c(2, 15, 40), y = logistic(-1.80 - 0.0621 * x))
+email |>
+  ggplot(aes(x = num_char, y = as.numeric(spam) - 1)) +
+  geom_point(alpha = 0.2) +
+  geom_function(fun = function(x) logistic(-1.80 - 0.0621 * x), color = "red") +
+  geom_point(data = preds, mapping = aes(x, y), color = "blue", size = 3)
+```
+
+Spam probability 2,000 characters: `r preds[1,2]`  
+Spam probability 15,000 characters: `r preds[2,2]`  
+Spam probability 40,000 characters: `r preds[3,2]`
+
+## Interpretation of coefficients {.smaller}
+
+$$\log\left(\frac{p}{1-p}\right) = -1.80-0.0621\cdot \text{num_char}$$
+
+What does an increase by thousand characters (`num_char + 1`) imply?
+
+. . .
+
+Let us assume the predicted probability of an email is $p_0$. Then an increase of `num_char` by one implied that the log-odds become 
+
+$$\log\left(\frac{p_0}{1-p_0}\right) - 0.0621 = \log\left(\frac{p_0}{1-p_0}\right) - \log(e^{0.0621})$$
+
+$$ = \log\left(\frac{p_0}{1-p_0}\right) + \log(\frac{1}{e^{0.0621}}) = \log\left(\frac{p_0}{1-p_0} \frac{1}{e^{0.0621}}\right) = \log\left(\frac{p_0}{1-p_0} 0.94\right)$$ 
+
+That means the odds of being spam decrease by 6%. 
+
+
+## Penguins example {.smaller}
+
+```{r}
+#| echo: true
+#| code-fold: false
+library(palmerpenguins)
+sex_fit <- logistic_reg() |>
+  set_engine("glm") |>
+  fit(sex ~ body_mass_g, data = na.omit(penguins), family = "binomial")
+tidy(sex_fit)
+```
+
+```{r}
+#| echo: true
+#| fig-height: 2.5
+na.omit(penguins) |>
+  ggplot(aes(x = body_mass_g, y = sex)) +
+  geom_point(alpha = 0.2) +
+  geom_function(
+    fun = function(x) logistic(-5.16 + 0.00124 * x) + 1,
+    color = "red"
+  ) +
+  xlim(c(2000, 7000))
+```
+
+
+## Summarizing the Idea of Logistic Regression {.smaller}
+
+::: {.incremental}
+- We want to explain/predict a binary response variable. 
+- We want to use the concept of linear models.
+- To that end we first interprete each outcome as the outcome of a probabilisitic event happening with probability $p_i$. That way we transform the problem from modeling a binary outcome to a numerical outcome.
+- However, probabilities are bounded between 0 and 1.
+- We use the logit function to map probabilities to the real line. That means we predict the log-odds of the probability.
+- We model the log-odds with a linear model.
+:::
 

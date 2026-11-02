@@ -20,12 +20,12 @@ project:
     - lectures/W05.qmd
     - material/M06.qmd
     - lectures/W06.qmd
-    # - material/M07.qmd
-    # - lectures/W07.qmd
-    # - material/M08.qmd
-    # - lectures/W08.qmd
-    # - material/M09.qmd
-    # - lectures/W09.qmd
+    - material/M07.qmd
+    - lectures/W07.qmd
+    - material/M08.qmd
+    - lectures/W08.qmd
+    - material/M09.qmd
+    - lectures/W09.qmd
     # - material/M10.qmd
     # - lectures/W10.qmd
     # - material/M11.qmd
@@ -34,7 +34,7 @@ project:
     # - lectures/W12.qmd
     
 execute:
-  freeze: auto  # re-render only when source changes
+  freeze: auto
 
 website:
   title: "Data Science Concepts / Data Science Tools"
@@ -79,11 +79,11 @@ website:
           - text: "#W06"
             href: material/M06.qmd
           - text: "#W07"
-            # href: material/M07.qmd
+            href: material/M07.qmd
           - text: "#W08"
-            # href: material/M08.qmd
+            href: material/M08.qmd
           - text: "#W09"
-            # href: material/M09.qmd
+            href: material/M09.qmd
           - text: "#W10"  
             # href: material/M10.qmd
           - text: "#W11"

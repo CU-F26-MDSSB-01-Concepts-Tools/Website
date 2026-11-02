@@ -4,7 +4,7 @@ title: "W#12"
 format: html
 ---
 
-## Hypothesis Testing, Matrices, Probability {.unnumbered}
+## Collaborative Git, More Prediction Modeling, Quantifying Uncertainty, Crowd Wisdom {.unnumbered}
 
 Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.
 
@@ -20,11 +20,22 @@ Find the live recording in the [Course's Team's Recording Folder]({{< var teams.
 
 ## Additional Readings and Material  
 
-*Maybe later.*
+To come. 
+
 
 ## Achievements
  
-*To come.*
+You
+
+- [ ] have successfully worked on a collaborative Git where you pull commits from colleagues, scrutinized how the new content was merged into you local work, and pushed your own commits 
+- [ ] can explain cross-validation and a use case of it
+- [ ] can explain the idea of tuning hyper-parameters in prediction models
+- [ ] can explain how the random forest algorithm works and how it extends the idea of decision trees
+- [ ] you now about the idea of variable importance for more complex machine learning models like random forests, and why such postmethods are not 
+- [ ] can explain the idea and process of bootstrapping to quantify the uncertainty of a statistic
+- [ ] know the difference between standard error and standard deviation
+- [ ] can interpret what 95% confidence interval means (also for other confidence levels than 95%)
+- [ ] can explain the relation of bias, variance, and MSE in the context of computing "crowd wisdom" estimates
 
 ## Homework Projects Progress Guides
 

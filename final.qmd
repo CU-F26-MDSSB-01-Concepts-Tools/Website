@@ -15,6 +15,9 @@ These are specifications and guidelines for the final **Data Science Project** a
 
 - You find a team,  
 - pick a dataset or the data source of the Homework Projects COVID19, FuelWatch, or DataScienceProfiles
+    - Finding suitable datasets is not trivial. A few suggestions for Final Projects:
+        - A microeconomics professor has compiled a nice list: <https://github.com/toddrjones/datasets#states-conflict-and-regimes>
+        - [Caution:]{.text-red} With internet search you often land at <https://www.kaggle.com/datasets>. If something interests you there: **Try to find the original source.** In the past there have been many bad experiences with *fully synthetic datasets with NO substantive value for data science projects*. 
 - check-in your project <!-- in the Form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim),-->
 - do some interesting question-driven data analysis with it, and
 - write up a well-structured and nicely formatted report about the analysis in your team's repository. 
@@ -41,7 +44,7 @@ All members receive the same grade for it. However, the module grade can be diff
 3. Decide if you want to build on one of your Homework Projects or search for your own data. 
     a. Find a suitable dataset (see below). 
 4. Come up with **one initial question per team member**. Discuss in your team how the questions are related and if and how they build on each other.  
-5. Fill out the Form [Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim)
+5. Fill out the Form *link will come*.<!--[Data Science Tools Final Project Check-In](https://forms.office.com/e/75qEdyZbim)-->
 
 
 ## Delivery

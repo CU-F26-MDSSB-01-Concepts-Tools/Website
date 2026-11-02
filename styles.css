@@ -11,3 +11,9 @@
 .text-green {
   color: darkgreen;
 }
+
+
+/* For iframes with pdfs */
+.pdf-iframe-no-autoscrolling { outline: none; }
+.pdf-iframe-no-autoscrolling iframe { pointer-events: none; }
+.pdf-iframe-no-autoscrolling:focus-within iframe { pointer-events: auto; }

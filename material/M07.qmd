@@ -4,8 +4,7 @@ title: "W#07"
 format: html
 ---
 
-## `r rmarkdown::yaml_front_matter("lectures/W07.qmd")$title`
-## Models in Science, Linear Model, Nonlinear Models, Causal Inference {.unnumbered}
+## Models in Science, Linear Model, Social Science Input {.unnumbered}
 
 Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.
 
@@ -16,8 +15,24 @@ Slides: [Direct Link](../lectures/W{{< meta week >}}.qmd)
 ```{=html}
 <iframe src="https://{{< var org.name >}}.github.io/Website/lectures/W{{< meta week >}}.html" frameborder="0" width="800" height="550" style="border:1px solid black;" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 ```
+<!-- 
+{{< pdf ../lectures/W07_Input_Dehos_Causal_Inference.pdf width=100% height=550 >}} -->
 
-{{< pdf ../lectures/W07_Input_Dehos_Causal_Inference.pdf width=100% height=550 >}}
+
+Input Social Scientists: [**Georgi Dragolov**](https://constructor.university/faculty-member/georgi-dragolov)  
+Large-scale Social Surveys, Representative Samples
+
+
+::: {..pdf-iframe-no-autoscrolling tabindex="0"}
+{{< pdf ../lectures/W07_Dragolov.pdf width=100% height=550 >}}
+:::
+
+Input Social Scientists: [**Klaus Boehnke**](https://constructor.university/faculty-member/klaus-boehnke)  
+Latent Variables, Factor Analysis
+
+::: {.pdf-iframe-no-autoscrolling tabindex="0"}
+{{< pdf ../lectures/W07_Boehnke.pdf width=100% height=550 >}}
+:::
 
 Find the live recording in the [Course's Team's Recording Folder]({{< var teams.concepts.recording_folder_link >}}). 
 
@@ -32,16 +47,14 @@ Read the following sections in [Introduction to Modern Statistics](https://openi
 
 You
 
-- [ ] can explain, and interpret the coefficients of a linear model
-- [ ] can define and fit a linear model (in R and/or python)
-- [ ] know which part of a linear model output relates to explanation and prediction 
-- [ ] can explain what residuals are
+- [ ] can explain the general idea of the relation of a model and the real world 
+- [ ] can distinguish different purposes of models
 - [ ] have an idea what "All models are wrong, but some are useful" means
-- [ ] know the difference between the $\beta$'s (population parameters which we do not know) and the $\hat\beta$'s (the estimated parameters from the data) and how this relates to a *inferential* research questions
-- [ ] know how the correlation of two variables relates to the slope of a linear model with one variable as predictor and the other as response variable (the slope is the correlation times the ratio of the standard deviations of the two variables)
-- [ ] can draw example data points in 2-dimensions where a linear model is bad
-- [ ] can give an explanation where log-transforming the response variable for a linear model is a good idea
-- [ ] know the "gold standard" for identifying causal effect, and can explain why it is the gold standard
+- [ ] can relate different terminolgy under the general idea of *Models to learn from data*
+- [ ] know how a line is modeled mathematically and what intercept and slope are
+- [ ] can explain Simpson's paradox
+- [ ] can explain different sampling strategies for surveys
+- [ ] know what a latent variable is
 
 
 ## Homework Projects Progress Guides
