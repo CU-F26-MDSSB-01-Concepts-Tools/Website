@@ -227,71 +227,11 @@ Jan Lorenz
 <section id="packages-used-here" class="slide level2">
 <h2>Packages used here</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.2.1     ✔ readr     2.2.0
-✔ forcats   1.0.1     ✔ stringr   1.6.0
-✔ ggplot2   4.0.3     ✔ tibble    3.3.1
-✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-✔ purrr     1.2.2     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">library</span>(tidymodels)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching packages ────────────────────────────────────── tidymodels 1.5.0 ──
-✔ broom        1.0.13     ✔ rsample      1.3.2 
-✔ dials        1.4.4      ✔ tailor       0.1.0 
-✔ infer        1.1.0      ✔ tune         2.1.0 
-✔ modeldata    1.6.0      ✔ workflows    1.3.0 
-✔ parsnip      1.6.0      ✔ workflowsets 1.1.1 
-✔ recipes      1.4.0      ✔ yardstick    1.4.0 
-── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
-✖ scales::discard() masks purrr::discard()
-✖ dplyr::filter()   masks stats::filter()
-✖ recipes::fixed()  masks stringr::fixed()
-✖ dplyr::lag()      masks stats::lag()
-✖ yardstick::spec() masks readr::spec()
-✖ recipes::step()   masks stats::step()</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">library</span>(rpart.plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: rpart
-
-Attaching package: 'rpart'
-
-The following object is masked from 'package:dials':
-
-    prune</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">library</span>(openintro)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: airports
-Loading required package: cherryblossom
-Loading required package: usdata
-
-Attaching package: 'openintro'
-
-The following object is masked from 'package:modeldata':
-
-    ames</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">library</span>(palmerpenguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'palmerpenguins'
-
-The following object is masked from 'package:modeldata':
-
-    penguins
-
-The following objects are masked from 'package:datasets':
-
-    penguins, penguins_raw</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-3"><a></a><span class="fu">library</span>(rpart.plot)</span>
+<span id="cb1-4"><a></a><span class="fu">library</span>(openintro)</span>
+<span id="cb1-5"><a></a><span class="fu">library</span>(palmerpenguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section>
@@ -453,11 +393,11 @@ Something is the case <strong><em>given</em></strong> that something else was th
 <section id="emails-use-all-predictors" class="slide level2 smaller">
 <h2>Emails: Use all predictors</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-3"><a></a>  <span class="fu">fit</span>(spam <span class="sc">~</span> ., <span class="at">data =</span> email, <span class="at">family =</span> <span class="st">"binomial"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-4"><a></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
-<span id="cb11-5"><a></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">22</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a></a>  <span class="fu">fit</span>(spam <span class="sc">~</span> ., <span class="at">data =</span> email, <span class="at">family =</span> <span class="st">"binomial"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a></a>  <span class="fu">tidy</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-5"><a></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">22</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 </div>
@@ -518,47 +458,37 @@ Something is the case <strong><em>given</em></strong> that something else was th
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb14-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb14-3"><a></a>  <span class="fu">fit</span>(y4 <span class="sc">~</span> x2, <span class="at">data =</span> association)</span>
-<span id="cb14-4"><a></a></span>
-<span id="cb14-5"><a></a>loess_fit <span class="ot">&lt;-</span> <span class="fu">loess</span>(y4 <span class="sc">~</span> x2, <span class="at">data =</span> association)</span>
-<span id="cb14-6"><a></a></span>
-<span id="cb14-7"><a></a>loess_overfit <span class="ot">&lt;-</span> <span class="fu">loess</span>(y4 <span class="sc">~</span> x2, <span class="at">span =</span> <span class="fl">0.05</span>, <span class="at">data =</span> association)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a></a>  <span class="fu">fit</span>(y4 <span class="sc">~</span> x2, <span class="at">data =</span> association)</span>
+<span id="cb5-4"><a></a></span>
+<span id="cb5-5"><a></a>loess_fit <span class="ot">&lt;-</span> <span class="fu">loess</span>(y4 <span class="sc">~</span> x2, <span class="at">data =</span> association)</span>
+<span id="cb5-6"><a></a></span>
+<span id="cb5-7"><a></a>loess_overfit <span class="ot">&lt;-</span> <span class="fu">loess</span>(y4 <span class="sc">~</span> x2, <span class="at">span =</span> <span class="fl">0.05</span>, <span class="at">data =</span> association)</span>
+<span id="cb5-8"><a></a></span>
+<span id="cb5-9"><a></a>association <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a></a>  <span class="fu">select</span>(x2, y4) <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-12"><a></a>    <span class="at">Underfit =</span> <span class="fu">augment</span>(lm_fit<span class="sc">$</span>fit) <span class="sc">|&gt;</span> <span class="fu">select</span>(.fitted) <span class="sc">|&gt;</span> <span class="fu">pull</span>(),</span>
+<span id="cb5-13"><a></a>    <span class="at">OK =</span> <span class="fu">augment</span>(loess_fit) <span class="sc">|&gt;</span> <span class="fu">select</span>(.fitted) <span class="sc">|&gt;</span> <span class="fu">pull</span>(),</span>
+<span id="cb5-14"><a></a>    <span class="at">Overfit =</span> <span class="fu">augment</span>(loess_overfit) <span class="sc">|&gt;</span> <span class="fu">select</span>(.fitted) <span class="sc">|&gt;</span> <span class="fu">pull</span>(),</span>
+<span id="cb5-15"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb5-17"><a></a>    <span class="at">cols =</span> Underfit<span class="sc">:</span>Overfit,</span>
+<span id="cb5-18"><a></a>    <span class="at">names_to =</span> <span class="st">"fit"</span>,</span>
+<span id="cb5-19"><a></a>    <span class="at">values_to =</span> <span class="st">"y_hat"</span></span>
+<span id="cb5-20"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-21"><a></a>  <span class="fu">mutate</span>(<span class="at">fit =</span> <span class="fu">fct_relevel</span>(fit, <span class="st">"Underfit"</span>, <span class="st">"OK"</span>, <span class="st">"Overfit"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-22"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x2)) <span class="sc">+</span></span>
+<span id="cb5-23"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> y4), <span class="at">color =</span> <span class="st">"darkgray"</span>) <span class="sc">+</span></span>
+<span id="cb5-24"><a></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> y_hat, <span class="at">group =</span> fit, <span class="at">color =</span> fit), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-25"><a></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">color =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> <span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-: k-d tree limited by memory. ncmax= 200</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>association <span class="sc">|&gt;</span></span>
-<span id="cb16-2"><a></a>  <span class="fu">select</span>(x2, y4) <span class="sc">|&gt;</span></span>
-<span id="cb16-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb16-4"><a></a>    <span class="at">Underfit =</span> <span class="fu">augment</span>(lm_fit<span class="sc">$</span>fit) <span class="sc">|&gt;</span> <span class="fu">select</span>(.fitted) <span class="sc">|&gt;</span> <span class="fu">pull</span>(),</span>
-<span id="cb16-5"><a></a>    <span class="at">OK =</span> <span class="fu">augment</span>(loess_fit) <span class="sc">|&gt;</span> <span class="fu">select</span>(.fitted) <span class="sc">|&gt;</span> <span class="fu">pull</span>(),</span>
-<span id="cb16-6"><a></a>    <span class="at">Overfit =</span> <span class="fu">augment</span>(loess_overfit) <span class="sc">|&gt;</span> <span class="fu">select</span>(.fitted) <span class="sc">|&gt;</span> <span class="fu">pull</span>(),</span>
-<span id="cb16-7"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb16-8"><a></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb16-9"><a></a>    <span class="at">cols =</span> Underfit<span class="sc">:</span>Overfit,</span>
-<span id="cb16-10"><a></a>    <span class="at">names_to =</span> <span class="st">"fit"</span>,</span>
-<span id="cb16-11"><a></a>    <span class="at">values_to =</span> <span class="st">"y_hat"</span></span>
-<span id="cb16-12"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb16-13"><a></a>  <span class="fu">mutate</span>(<span class="at">fit =</span> <span class="fu">fct_relevel</span>(fit, <span class="st">"Underfit"</span>, <span class="st">"OK"</span>, <span class="st">"Overfit"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb16-14"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x2)) <span class="sc">+</span></span>
-<span id="cb16-15"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> y4), <span class="at">color =</span> <span class="st">"darkgray"</span>) <span class="sc">+</span></span>
-<span id="cb16-16"><a></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> y_hat, <span class="at">group =</span> fit, <span class="at">color =</span> fit), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb16-17"><a></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">color =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb16-18"><a></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> <span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.</code></pre>
-</div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W10_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
+<p><img data-src="W10_files/figure-revealjs/unnamed-chunk-3-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -604,16 +534,16 @@ Something is the case <strong><em>given</em></strong> that something else was th
 <section id="performing-the-split" class="slide level2 smaller">
 <h2>Performing the split</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="co"># Fix random numbers by setting the seed</span></span>
-<span id="cb18-2"><a></a><span class="co"># Enables analysis to be reproducible when random numbers are used</span></span>
-<span id="cb18-3"><a></a><span class="fu">set.seed</span>(<span class="dv">1116</span>)</span>
-<span id="cb18-4"><a></a></span>
-<span id="cb18-5"><a></a><span class="co"># Put 80% of the data into the training set</span></span>
-<span id="cb18-6"><a></a>email_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(email, <span class="at">prop =</span> <span class="fl">0.80</span>)</span>
-<span id="cb18-7"><a></a></span>
-<span id="cb18-8"><a></a><span class="co"># Create data frames for the two sets:</span></span>
-<span id="cb18-9"><a></a>train_data <span class="ot">&lt;-</span> <span class="fu">training</span>(email_split)</span>
-<span id="cb18-10"><a></a>test_data <span class="ot">&lt;-</span> <span class="fu">testing</span>(email_split)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># Fix random numbers by setting the seed</span></span>
+<span id="cb6-2"><a></a><span class="co"># Enables analysis to be reproducible when random numbers are used</span></span>
+<span id="cb6-3"><a></a><span class="fu">set.seed</span>(<span class="dv">1116</span>)</span>
+<span id="cb6-4"><a></a></span>
+<span id="cb6-5"><a></a><span class="co"># Put 80% of the data into the training set</span></span>
+<span id="cb6-6"><a></a>email_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(email, <span class="at">prop =</span> <span class="fl">0.80</span>)</span>
+<span id="cb6-7"><a></a></span>
+<span id="cb6-8"><a></a><span class="co"># Create data frames for the two sets:</span></span>
+<span id="cb6-9"><a></a>train_data <span class="ot">&lt;-</span> <span class="fu">training</span>(email_split)</span>
+<span id="cb6-10"><a></a>test_data <span class="ot">&lt;-</span> <span class="fu">testing</span>(email_split)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>A note on the seed:</strong> The seed is an arbitrary number that is used to initialize a pseudorandom number generator. The same seed will always result in the same sequence of pseudorandom numbers. This is useful for reproducibility.</p>
 </section>
@@ -622,7 +552,7 @@ Something is the case <strong><em>given</em></strong> that something else was th
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">glimpse</span>(train_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">glimpse</span>(train_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 3,136
 Columns: 21
@@ -651,7 +581,7 @@ $ number       &lt;fct&gt; small, none, big, big, small, small, small, small, sm
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">glimpse</span>(test_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">glimpse</span>(test_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 785
 Columns: 21
@@ -688,9 +618,9 @@ $ number       &lt;fct&gt; big, small, small, big, small, none, small, small, sm
 <section id="fit-a-model-to-the-training-dataset" class="slide level2">
 <h2>Fit a model to the training dataset</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>email_fit <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb23-3"><a></a>  <span class="fu">fit</span>(spam <span class="sc">~</span> ., <span class="at">data =</span> train_data, <span class="at">family =</span> <span class="st">"binomial"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>email_fit <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a></a>  <span class="fu">fit</span>(spam <span class="sc">~</span> ., <span class="at">data =</span> train_data, <span class="at">family =</span> <span class="st">"binomial"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 </div>
@@ -707,57 +637,8 @@ $ number       &lt;fct&gt; big, small, small, big, small, none, small, small, sm
 <section id="look-at-categorical-predictors" class="slide level2">
 <h2>Look at categorical predictors</h2>
 <p>How is spam distributed within these variables?</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>factor_predictors <span class="ot">&lt;-</span> train_data <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.factor), <span class="sc">-</span>spam) <span class="sc">|&gt;</span></span>
-<span id="cb25-3"><a></a>  <span class="fu">names</span>()</span>
-<span id="cb25-4"><a></a></span>
-<span id="cb25-5"><a></a>p_to_multiple <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(train_data, <span class="fu">aes</span>(<span class="at">x =</span> to_multiple, <span class="at">fill =</span> spam)) <span class="sc">+</span></span>
-<span id="cb25-6"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb25-7"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E48957"</span>, <span class="st">"#CA235F"</span>))</span>
-<span id="cb25-8"><a></a></span>
-<span id="cb25-9"><a></a>p_from <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(train_data, <span class="fu">aes</span>(<span class="at">x =</span> from, <span class="at">fill =</span> spam)) <span class="sc">+</span></span>
-<span id="cb25-10"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb25-11"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E48957"</span>, <span class="st">"#CA235F"</span>))</span>
-<span id="cb25-12"><a></a></span>
-<span id="cb25-13"><a></a>p_sent_email <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(train_data, <span class="fu">aes</span>(<span class="at">x =</span> sent_email, <span class="at">fill =</span> spam)) <span class="sc">+</span></span>
-<span id="cb25-14"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb25-15"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E48957"</span>, <span class="st">"#CA235F"</span>))</span>
-<span id="cb25-16"><a></a></span>
-<span id="cb25-17"><a></a>p_winner <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(train_data, <span class="fu">aes</span>(<span class="at">x =</span> winner, <span class="at">fill =</span> spam)) <span class="sc">+</span></span>
-<span id="cb25-18"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb25-19"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E48957"</span>, <span class="st">"#CA235F"</span>))</span>
-<span id="cb25-20"><a></a></span>
-<span id="cb25-21"><a></a>p_format <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(train_data, <span class="fu">aes</span>(<span class="at">x =</span> format, <span class="at">fill =</span> spam)) <span class="sc">+</span></span>
-<span id="cb25-22"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb25-23"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E48957"</span>, <span class="st">"#CA235F"</span>))</span>
-<span id="cb25-24"><a></a></span>
-<span id="cb25-25"><a></a>p_re_subj <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(train_data, <span class="fu">aes</span>(<span class="at">x =</span> re_subj, <span class="at">fill =</span> spam)) <span class="sc">+</span></span>
-<span id="cb25-26"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb25-27"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E48957"</span>, <span class="st">"#CA235F"</span>))</span>
-<span id="cb25-28"><a></a></span>
-<span id="cb25-29"><a></a>p_urgent_subj <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(train_data, <span class="fu">aes</span>(<span class="at">x =</span> urgent_subj, <span class="at">fill =</span> spam)) <span class="sc">+</span></span>
-<span id="cb25-30"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb25-31"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E48957"</span>, <span class="st">"#CA235F"</span>))</span>
-<span id="cb25-32"><a></a></span>
-<span id="cb25-33"><a></a>p_number <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(train_data, <span class="fu">aes</span>(<span class="at">x =</span> number, <span class="at">fill =</span> spam)) <span class="sc">+</span></span>
-<span id="cb25-34"><a></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb25-35"><a></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E48957"</span>, <span class="st">"#CA235F"</span>))</span>
-<span id="cb25-36"><a></a></span>
-<span id="cb25-37"><a></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb25-38"><a></a>p_to_multiple <span class="sc">+</span></span>
-<span id="cb25-39"><a></a>  p_from <span class="sc">+</span></span>
-<span id="cb25-40"><a></a>  p_sent_email <span class="sc">+</span></span>
-<span id="cb25-41"><a></a>  p_winner <span class="sc">+</span></span>
-<span id="cb25-42"><a></a>  p_format <span class="sc">+</span></span>
-<span id="cb25-43"><a></a>  p_re_subj <span class="sc">+</span></span>
-<span id="cb25-44"><a></a>  p_urgent_subj <span class="sc">+</span></span>
-<span id="cb25-45"><a></a>  p_number <span class="sc">+</span></span>
-<span id="cb25-46"><a></a>  <span class="fu">plot_layout</span>(<span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
-<span id="cb25-47"><a></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
-</div>
-<img data-src="W10_files/figure-html/unnamed-chunk-8-1.png" width="672" class="r-stretch"><p>Closer look at <code>from</code> and <code>sent_email</code>.</p>
+<img data-src="W10_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"><p>Closer look at <code>from</code> and <code>sent_email</code>.</p>
 </section>
 <section id="counting-cases" class="slide level2 smaller">
 <h2>Counting cases</h2>
@@ -765,7 +646,7 @@ $ number       &lt;fct&gt; big, small, small, big, small, none, small, small, sm
 <div class="column" style="width:50%;">
 <p><code>from</code>: Whether the message was listed as from anyone (this is usually set by default for regular outgoing email).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>train_data <span class="sc">|&gt;</span> <span class="fu">count</span>(spam, from)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>train_data <span class="sc">|&gt;</span> <span class="fu">count</span>(spam, from)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   spam  from      n
@@ -779,7 +660,7 @@ $ number       &lt;fct&gt; big, small, small, big, small, none, small, small, sm
 </div><div class="column" style="width:50%;">
 <p><code>sent_mail</code>: Indicator for whether the sender had been sent an email from the receiver in the last 30 days.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>train_data <span class="sc">|&gt;</span> <span class="fu">count</span>(spam, sent_email)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>train_data <span class="sc">|&gt;</span> <span class="fu">count</span>(spam, sent_email)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   spam  sent_email     n
@@ -803,18 +684,14 @@ $ number       &lt;fct&gt; big, small, small, big, small, none, small, small, sm
 <p>What is mean and stadard deviation separated by spam and not spam?</p>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>train_data <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a></a>  <span class="fu">group_by</span>(spam) <span class="sc">|&gt;</span></span>
-<span id="cb30-3"><a></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span></span>
-<span id="cb30-4"><a></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>spam) <span class="sc">|&gt;</span></span>
-<span id="cb30-5"><a></a>  <span class="fu">group_by</span>(name, spam) <span class="sc">|&gt;</span></span>
-<span id="cb30-6"><a></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value), <span class="at">sd =</span> <span class="fu">sd</span>(value)) <span class="sc">|&gt;</span></span>
-<span id="cb30-7"><a></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">22</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>train_data <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a></a>  <span class="fu">group_by</span>(spam) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>spam) <span class="sc">|&gt;</span></span>
+<span id="cb17-5"><a></a>  <span class="fu">group_by</span>(name, spam) <span class="sc">|&gt;</span></span>
+<span id="cb17-6"><a></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value), <span class="at">sd =</span> <span class="fu">sd</span>(value)) <span class="sc">|&gt;</span></span>
+<span id="cb17-7"><a></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">22</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
-<div class="cell-output cell-output-stderr">
-<pre><code>Adding missing grouping variables: `spam`
-`summarise()` has regrouped the output.</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 22 × 4
 # Groups:   name [11]
@@ -852,13 +729,13 @@ $ number       &lt;fct&gt; big, small, small, big, small, none, small, small, sm
 <section id="fit-a-model-to-the-training-dataset-1" class="slide level2 smaller">
 <h2>Fit a model to the training dataset</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>email_fit <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb33-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb33-3"><a></a>  <span class="fu">fit</span>(</span>
-<span id="cb33-4"><a></a>    spam <span class="sc">~</span> . <span class="sc">-</span> from <span class="sc">-</span> sent_email <span class="sc">-</span> viagra,</span>
-<span id="cb33-5"><a></a>    <span class="at">data =</span> train_data,</span>
-<span id="cb33-6"><a></a>    <span class="at">family =</span> <span class="st">"binomial"</span></span>
-<span id="cb33-7"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>email_fit <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a></a>  <span class="fu">fit</span>(</span>
+<span id="cb19-4"><a></a>    spam <span class="sc">~</span> . <span class="sc">-</span> from <span class="sc">-</span> sent_email <span class="sc">-</span> viagra,</span>
+<span id="cb19-5"><a></a>    <span class="at">data =</span> train_data,</span>
+<span id="cb19-6"><a></a>    <span class="at">family =</span> <span class="st">"binomial"</span></span>
+<span id="cb19-7"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 </div>
@@ -871,7 +748,7 @@ $ number       &lt;fct&gt; big, small, small, big, small, none, small, small, sm
 <section id="the-fitted-model" class="slide level2">
 <h2>The fitted model</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>email_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>email_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>parsnip model object
 
@@ -899,7 +776,7 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 <h2>Predict with the testing dataset</h2>
 <p>Predicting the raw values (log-odds)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">predict</span>(email_fit, test_data, <span class="at">type =</span> <span class="st">"raw"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>() <span class="co"># head prints the first values</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">predict</span>(email_fit, test_data, <span class="at">type =</span> <span class="st">"raw"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>() <span class="co"># head prints the first values</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        1         2         3         4         5         6 
 -4.942500 -6.312226 -3.938487 -6.688992 -4.399541 -1.587700 </code></pre>
@@ -909,7 +786,7 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 <div class="column" style="width:50%;">
 <p>Predicting probabilities</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">predict</span>(email_fit, test_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">predict</span>(email_fit, test_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 2
   .pred_0 .pred_1
@@ -925,7 +802,7 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 </div><div class="column" style="width:50%;">
 <p>Predicting spam (default)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">predict</span>(email_fit, test_data) <span class="co"># Would be type = "class"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">predict</span>(email_fit, test_data) <span class="co"># Would be type = "class"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 785 × 1
    .pred_class
@@ -949,17 +826,17 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 <h2>Relate back to the model concept</h2>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>email_pred <span class="ot">&lt;-</span></span>
-<span id="cb43-2"><a></a>  <span class="fu">predict</span>(email_fit, test_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb43-3"><a></a>  <span class="fu">select</span>(<span class="at">spam_prob =</span> .pred_1) <span class="sc">|&gt;</span></span>
-<span id="cb43-4"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb43-5"><a></a>    <span class="at">spam_logodds =</span> <span class="fu">predict</span>(email_fit, test_data, <span class="at">type =</span> <span class="st">"raw"</span>),</span>
-<span id="cb43-6"><a></a>    <span class="at">spam_odds =</span> <span class="fu">exp</span>(spam_logodds)</span>
-<span id="cb43-7"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb43-8"><a></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(email_fit, test_data)) <span class="sc">|&gt;</span></span>
-<span id="cb43-9"><a></a>  <span class="co"># Append real data</span></span>
-<span id="cb43-10"><a></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">|&gt;</span> <span class="fu">select</span>(spam))</span>
-<span id="cb43-11"><a></a>email_pred</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>email_pred <span class="ot">&lt;-</span></span>
+<span id="cb29-2"><a></a>  <span class="fu">predict</span>(email_fit, test_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a></a>  <span class="fu">select</span>(<span class="at">spam_prob =</span> .pred_1) <span class="sc">|&gt;</span></span>
+<span id="cb29-4"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb29-5"><a></a>    <span class="at">spam_logodds =</span> <span class="fu">predict</span>(email_fit, test_data, <span class="at">type =</span> <span class="st">"raw"</span>),</span>
+<span id="cb29-6"><a></a>    <span class="at">spam_odds =</span> <span class="fu">exp</span>(spam_logodds)</span>
+<span id="cb29-7"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb29-8"><a></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(email_fit, test_data)) <span class="sc">|&gt;</span></span>
+<span id="cb29-9"><a></a>  <span class="co"># Append real data</span></span>
+<span id="cb29-10"><a></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">|&gt;</span> <span class="fu">select</span>(spam))</span>
+<span id="cb29-11"><a></a>email_pred</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 785 × 5
@@ -994,7 +871,7 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 <section id="another-look" class="slide level2 smaller">
 <h2>Another look</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>email_pred <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(spam_prob)) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>email_pred <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(spam_prob)) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 785 × 5
    spam_prob spam_logodds spam_odds .pred_class spam 
@@ -1028,17 +905,17 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 <h2>Evaluate the performance</h2>
 <p><strong>Receiver operating characteristic (ROC) curve</strong><sup>1</sup> which plots true positive rate (sensitivity) vs.&nbsp;false positive rate (1 - specificity)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>email_pred <span class="sc">|&gt;</span></span>
-<span id="cb47-2"><a></a>  <span class="fu">roc_curve</span>(</span>
-<span id="cb47-3"><a></a>    <span class="at">truth =</span> spam,</span>
-<span id="cb47-4"><a></a>    spam_prob,</span>
-<span id="cb47-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span> <span class="co"># this adjusts the location above the diagonal</span></span>
-<span id="cb47-6"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb47-7"><a></a>  <span class="fu">autoplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>email_pred <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a></a>  <span class="fu">roc_curve</span>(</span>
+<span id="cb33-3"><a></a>    <span class="at">truth =</span> spam,</span>
+<span id="cb33-4"><a></a>    spam_prob,</span>
+<span id="cb33-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span> <span class="co"># this adjusts the location above the diagonal</span></span>
+<span id="cb33-6"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb33-7"><a></a>  <span class="fu">autoplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W10_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
+<p><img data-src="W10_files/figure-revealjs/unnamed-chunk-19-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1056,12 +933,12 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 <li>specificity is the true negative rate.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>email_pred <span class="sc">|&gt;</span></span>
-<span id="cb48-2"><a></a>  <span class="fu">roc_auc</span>(</span>
-<span id="cb48-3"><a></a>    <span class="at">truth =</span> spam,</span>
-<span id="cb48-4"><a></a>    spam_prob,</span>
-<span id="cb48-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
-<span id="cb48-6"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>email_pred <span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a></a>  <span class="fu">roc_auc</span>(</span>
+<span id="cb34-3"><a></a>    <span class="at">truth =</span> spam,</span>
+<span id="cb34-4"><a></a>    spam_prob,</span>
+<span id="cb34-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
+<span id="cb34-6"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -1103,11 +980,11 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 <section id="initiate-a-recipe" class="slide level2 smaller">
 <h2>Initiate a recipe</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>email_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
-<span id="cb50-2"><a></a>  spam <span class="sc">~</span> ., <span class="co"># formula</span></span>
-<span id="cb50-3"><a></a>  <span class="at">data =</span> train_data <span class="co"># data to use for cataloguing names and types of variables</span></span>
-<span id="cb50-4"><a></a>)</span>
-<span id="cb50-5"><a></a><span class="fu">summary</span>(email_rec) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">21</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>email_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
+<span id="cb36-2"><a></a>  spam <span class="sc">~</span> ., <span class="co"># formula</span></span>
+<span id="cb36-3"><a></a>  <span class="at">data =</span> train_data <span class="co"># data to use for cataloguing names and types of variables</span></span>
+<span id="cb36-4"><a></a>)</span>
+<span id="cb36-5"><a></a><span class="fu">summary</span>(email_rec) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">21</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 21 × 4
    variable     type      role      source  
@@ -1140,36 +1017,8 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 <section id="remove-certain-variables" class="slide level2 smaller">
 <h2>Remove certain variables</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>email_rec <span class="sc">|&gt;</span></span>
-<span id="cb52-2"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Inputs </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Number of variables by role</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>outcome:    1
-predictor: 20</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Operations </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Variables removed: from, sent_email, viagra</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>email_rec <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="feature-engineer-date" class="slide level2 smaller">
@@ -1185,44 +1034,10 @@ predictor: 20</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a>email_rec <span class="sc">|&gt;</span></span>
-<span id="cb62-2"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span></span>
-<span id="cb62-3"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb62-4"><a></a>  <span class="fu">step_rm</span>(time)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Inputs </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Number of variables by role</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>outcome:    1
-predictor: 20</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Operations </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Variables removed: from, sent_email, viagra</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Date features from: time</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Variables removed: time</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>email_rec <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a></a>  <span class="fu">step_rm</span>(time)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="create-dummy-variables" class="slide level2 smaller">
@@ -1231,115 +1046,38 @@ predictor: 20</code></pre>
 <li>Use helper functions like <code>all_nominal</code> or <code>all_outcomes</code> from <code>tidymodels</code> for column selection.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a>email_rec <span class="sc">|&gt;</span></span>
-<span id="cb74-2"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span></span>
-<span id="cb74-3"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb74-4"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span></span>
-<span id="cb74-5"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Inputs </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Number of variables by role</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>outcome:    1
-predictor: 20</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Operations </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Variables removed: from, sent_email, viagra</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Date features from: time</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Variables removed: time</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Dummy variables from: all_nominal() -all_outcomes()</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>email_rec <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span></span>
+<span id="cb40-3"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb40-4"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span></span>
+<span id="cb40-5"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="remove-zero-variance-variables" class="slide level2 smaller">
 <h2>Remove zero variance variables</h2>
 <p>Variables that contain only a single value.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>email_rec <span class="sc">|&gt;</span></span>
-<span id="cb87-2"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span></span>
-<span id="cb87-3"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb87-4"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span></span>
-<span id="cb87-5"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb87-6"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Inputs </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Number of variables by role</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>outcome:    1
-predictor: 20</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Operations </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Variables removed: from, sent_email, viagra</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Date features from: time</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Variables removed: time</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Dummy variables from: all_nominal() -all_outcomes()</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>• Zero variance filter on: all_predictors()</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>email_rec <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span></span>
+<span id="cb41-3"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb41-4"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span></span>
+<span id="cb41-5"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb41-6"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="full-recipe" class="slide level2 smaller">
 <h2>Full recipe</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a>email_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
-<span id="cb101-2"><a></a>  spam <span class="sc">~</span> ., <span class="co"># formula</span></span>
-<span id="cb101-3"><a></a>  <span class="at">data =</span> train_data <span class="co"># data to use for cataloguing names and types of variables</span></span>
-<span id="cb101-4"><a></a>) <span class="sc">|&gt;</span></span>
-<span id="cb101-5"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span></span>
-<span id="cb101-6"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb101-7"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span></span>
-<span id="cb101-8"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb101-9"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span>
-<span id="cb101-10"><a></a><span class="fu">print</span>(email_rec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>email_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
+<span id="cb42-2"><a></a>  spam <span class="sc">~</span> ., <span class="co"># formula</span></span>
+<span id="cb42-3"><a></a>  <span class="at">data =</span> train_data <span class="co"># data to use for cataloguing names and types of variables</span></span>
+<span id="cb42-4"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb42-5"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span></span>
+<span id="cb42-6"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb42-7"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span></span>
+<span id="cb42-8"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb42-9"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span>
+<span id="cb42-10"><a></a><span class="fu">print</span>(email_rec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code></code></pre>
 </div>
@@ -1400,10 +1138,10 @@ predictor: 20</code></pre>
 <section id="define-model" class="slide level2 smaller">
 <h2>Define model</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>email_mod <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb115-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
-<span id="cb115-3"><a></a></span>
-<span id="cb115-4"><a></a>email_mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>email_mod <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb56-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
+<span id="cb56-3"><a></a></span>
+<span id="cb56-4"><a></a>email_mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Logistic Regression Model Specification (classification)
 
@@ -1415,10 +1153,10 @@ Computational engine: glm </code></pre>
 <h2>Define workflow</h2>
 <p><strong>Workflows</strong> bring together models and recipes so that they can be easily applied to both the training and test data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a>email_wflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb117-2"><a></a>  <span class="fu">add_model</span>(email_mod) <span class="sc">|&gt;</span></span>
-<span id="cb117-3"><a></a>  <span class="fu">add_recipe</span>(email_rec)</span>
-<span id="cb117-4"><a></a>email_wflow</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a>email_wflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb58-2"><a></a>  <span class="fu">add_model</span>(email_mod) <span class="sc">|&gt;</span></span>
+<span id="cb58-3"><a></a>  <span class="fu">add_recipe</span>(email_rec)</span>
+<span id="cb58-4"><a></a>email_wflow</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
 Preprocessor: Recipe
@@ -1443,12 +1181,10 @@ Computational engine: glm </code></pre>
 <section id="fit-model-to-training-data" class="slide level2 smaller">
 <h2>Fit model to training data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb119"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a></a>email_fit <span class="ot">&lt;-</span> email_wflow <span class="sc">|&gt;</span></span>
-<span id="cb119-2"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> train_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a><span class="fu">tidy</span>(email_fit) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">27</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>email_fit <span class="ot">&lt;-</span> email_wflow <span class="sc">|&gt;</span></span>
+<span id="cb60-2"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> train_data)</span>
+<span id="cb60-3"><a></a></span>
+<span id="cb60-4"><a></a><span class="fu">tidy</span>(email_fit) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">27</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 27 × 5
    term            estimate std.error statistic  p.value
@@ -1487,10 +1223,10 @@ Computational engine: glm </code></pre>
 <section id="make-predictions-for-test-data" class="slide level2 smaller">
 <h2>Make predictions for test data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a>email_pred <span class="ot">&lt;-</span> email_fit <span class="sc">|&gt;</span></span>
-<span id="cb123-2"><a></a>  <span class="fu">predict</span>(test_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb123-3"><a></a>  <span class="fu">bind_cols</span>(test_data)</span>
-<span id="cb123-4"><a></a>email_pred</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a>email_pred <span class="ot">&lt;-</span> email_fit <span class="sc">|&gt;</span></span>
+<span id="cb62-2"><a></a>  <span class="fu">predict</span>(test_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb62-3"><a></a>  <span class="fu">bind_cols</span>(test_data)</span>
+<span id="cb62-4"><a></a>email_pred</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 785 × 23
    .pred_0  .pred_1 spam  to_multiple from     cc sent_email time               
@@ -1529,25 +1265,25 @@ Computational engine: glm </code></pre>
 <section id="evaluate-the-performance-2" class="slide level2 smaller">
 <h2>Evaluate the performance</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb125"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a></a>email_pred <span class="sc">|&gt;</span></span>
-<span id="cb125-2"><a></a>  <span class="fu">roc_curve</span>(</span>
-<span id="cb125-3"><a></a>    <span class="at">truth =</span> spam,</span>
-<span id="cb125-4"><a></a>    .pred_1,</span>
-<span id="cb125-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
-<span id="cb125-6"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb125-7"><a></a>  <span class="fu">autoplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>email_pred <span class="sc">|&gt;</span></span>
+<span id="cb64-2"><a></a>  <span class="fu">roc_curve</span>(</span>
+<span id="cb64-3"><a></a>    <span class="at">truth =</span> spam,</span>
+<span id="cb64-4"><a></a>    .pred_1,</span>
+<span id="cb64-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
+<span id="cb64-6"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb64-7"><a></a>  <span class="fu">autoplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W10_files/figure-html/unnamed-chunk-31-1.png" width="672" class="r-stretch"></section>
+<img data-src="W10_files/figure-revealjs/unnamed-chunk-31-1.png" width="960" class="r-stretch"></section>
 <section id="evaluate-the-performance-3" class="slide level2 smaller">
 <h2>Evaluate the performance</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a>email_pred <span class="sc">|&gt;</span></span>
-<span id="cb126-2"><a></a>  <span class="fu">roc_auc</span>(</span>
-<span id="cb126-3"><a></a>    <span class="at">truth =</span> spam,</span>
-<span id="cb126-4"><a></a>    .pred_1,</span>
-<span id="cb126-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
-<span id="cb126-6"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a>email_pred <span class="sc">|&gt;</span></span>
+<span id="cb65-2"><a></a>  <span class="fu">roc_auc</span>(</span>
+<span id="cb65-3"><a></a>    <span class="at">truth =</span> spam,</span>
+<span id="cb65-4"><a></a>    .pred_1,</span>
+<span id="cb65-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
+<span id="cb65-6"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -1567,21 +1303,21 @@ Computational engine: glm </code></pre>
 <p>Suppose we decide to label an email as spam if the model predicts the probability of spam to be <strong>more than 0.5</strong>. (That is the default.)</p>
 <p><strong>Confusion matrix:</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb128"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb128-2"><a></a>email_pred <span class="sc">|&gt;</span></span>
-<span id="cb128-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb128-4"><a></a>    <span class="at">spam =</span> <span class="fu">if_else</span>(spam <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Email is spam"</span>, <span class="st">"Email is not spam"</span>),</span>
-<span id="cb128-5"><a></a>    <span class="at">spam_pred =</span> <span class="fu">if_else</span>(</span>
-<span id="cb128-6"><a></a>      .pred_1 <span class="sc">&gt;</span> cutoff_prob,</span>
-<span id="cb128-7"><a></a>      <span class="st">"Email labelled spam"</span>,</span>
-<span id="cb128-8"><a></a>      <span class="st">"Email labelled not spam"</span></span>
-<span id="cb128-9"><a></a>    )</span>
-<span id="cb128-10"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb128-11"><a></a>  <span class="fu">count</span>(spam_pred, spam) <span class="sc">|&gt;</span></span>
-<span id="cb128-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> spam_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb128-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb128-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
-<span id="cb128-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb67-2"><a></a>email_pred <span class="sc">|&gt;</span></span>
+<span id="cb67-3"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb67-4"><a></a>    <span class="at">spam =</span> <span class="fu">if_else</span>(spam <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Email is spam"</span>, <span class="st">"Email is not spam"</span>),</span>
+<span id="cb67-5"><a></a>    <span class="at">spam_pred =</span> <span class="fu">if_else</span>(</span>
+<span id="cb67-6"><a></a>      .pred_1 <span class="sc">&gt;</span> cutoff_prob,</span>
+<span id="cb67-7"><a></a>      <span class="st">"Email labelled spam"</span>,</span>
+<span id="cb67-8"><a></a>      <span class="st">"Email labelled not spam"</span></span>
+<span id="cb67-9"><a></a>    )</span>
+<span id="cb67-10"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb67-11"><a></a>  <span class="fu">count</span>(spam_pred, spam) <span class="sc">|&gt;</span></span>
+<span id="cb67-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> spam_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb67-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb67-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
+<span id="cb67-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -1642,21 +1378,6 @@ Computational engine: glm </code></pre>
 <p>Suppose we decide to label an email as spam if the model predicts the probability of spam to be <strong>more than 0.25</strong>.</p>
 <p><strong>Confusion matrix:</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb129"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.25</span></span>
-<span id="cb129-2"><a></a>email_pred <span class="sc">|&gt;</span></span>
-<span id="cb129-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb129-4"><a></a>    <span class="at">spam =</span> <span class="fu">if_else</span>(spam <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Email is spam"</span>, <span class="st">"Email is not spam"</span>),</span>
-<span id="cb129-5"><a></a>    <span class="at">spam_pred =</span> <span class="fu">if_else</span>(</span>
-<span id="cb129-6"><a></a>      .pred_1 <span class="sc">&gt;</span> cutoff_prob,</span>
-<span id="cb129-7"><a></a>      <span class="st">"Email labelled spam"</span>,</span>
-<span id="cb129-8"><a></a>      <span class="st">"Email labelled not spam"</span></span>
-<span id="cb129-9"><a></a>    )</span>
-<span id="cb129-10"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb129-11"><a></a>  <span class="fu">count</span>(spam_pred, spam) <span class="sc">|&gt;</span></span>
-<span id="cb129-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> spam_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb129-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb129-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
-<span id="cb129-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -1689,21 +1410,6 @@ Computational engine: glm </code></pre>
 <p>Suppose we decide to label an email as spam if the model predicts the probability of spam to be <strong>more than 0.75</strong>.</p>
 <p><strong>Confusion matrix:</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.75</span></span>
-<span id="cb130-2"><a></a>email_pred <span class="sc">|&gt;</span></span>
-<span id="cb130-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb130-4"><a></a>    <span class="at">spam =</span> <span class="fu">if_else</span>(spam <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Email is spam"</span>, <span class="st">"Email is not spam"</span>),</span>
-<span id="cb130-5"><a></a>    <span class="at">spam_pred =</span> <span class="fu">if_else</span>(</span>
-<span id="cb130-6"><a></a>      .pred_1 <span class="sc">&gt;</span> cutoff_prob,</span>
-<span id="cb130-7"><a></a>      <span class="st">"Email labelled spam"</span>,</span>
-<span id="cb130-8"><a></a>      <span class="st">"Email labelled not spam"</span></span>
-<span id="cb130-9"><a></a>    )</span>
-<span id="cb130-10"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb130-11"><a></a>  <span class="fu">count</span>(spam_pred, spam) <span class="sc">|&gt;</span></span>
-<span id="cb130-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> spam_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb130-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb130-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
-<span id="cb130-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -1735,18 +1441,18 @@ Computational engine: glm </code></pre>
 <h2>Compare: Check our very first model</h2>
 <p>Using the modular sturcutr: We make a new simple recipe and draw workflow and fitting re-using the same specified logisitc regression model <code>email_mod</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb131"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a></a>simple_email_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
-<span id="cb131-2"><a></a>  spam <span class="sc">~</span> num_char, <span class="co"># formula</span></span>
-<span id="cb131-3"><a></a>  <span class="at">data =</span> train_data <span class="co"># data to use for cataloguing names and types of variables</span></span>
-<span id="cb131-4"><a></a>)</span>
-<span id="cb131-5"><a></a>simple_email_pred <span class="ot">&lt;-</span></span>
-<span id="cb131-6"><a></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb131-7"><a></a>  <span class="fu">add_model</span>(email_mod) <span class="sc">|&gt;</span></span>
-<span id="cb131-8"><a></a>  <span class="fu">add_recipe</span>(simple_email_rec) <span class="sc">|&gt;</span></span>
-<span id="cb131-9"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> train_data) <span class="sc">|&gt;</span></span>
-<span id="cb131-10"><a></a>  <span class="fu">predict</span>(test_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb131-11"><a></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">|&gt;</span> <span class="fu">select</span>(spam, num_char, time))</span>
-<span id="cb131-12"><a></a>simple_email_pred</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a>simple_email_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
+<span id="cb68-2"><a></a>  spam <span class="sc">~</span> num_char, <span class="co"># formula</span></span>
+<span id="cb68-3"><a></a>  <span class="at">data =</span> train_data <span class="co"># data to use for cataloguing names and types of variables</span></span>
+<span id="cb68-4"><a></a>)</span>
+<span id="cb68-5"><a></a>simple_email_pred <span class="ot">&lt;-</span></span>
+<span id="cb68-6"><a></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb68-7"><a></a>  <span class="fu">add_model</span>(email_mod) <span class="sc">|&gt;</span></span>
+<span id="cb68-8"><a></a>  <span class="fu">add_recipe</span>(simple_email_rec) <span class="sc">|&gt;</span></span>
+<span id="cb68-9"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> train_data) <span class="sc">|&gt;</span></span>
+<span id="cb68-10"><a></a>  <span class="fu">predict</span>(test_data, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb68-11"><a></a>  <span class="fu">bind_cols</span>(test_data <span class="sc">|&gt;</span> <span class="fu">select</span>(spam, num_char, time))</span>
+<span id="cb68-12"><a></a>simple_email_pred</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 785 × 5
    .pred_0 .pred_1 spam  num_char time               
@@ -1768,22 +1474,16 @@ Computational engine: glm </code></pre>
 <section id="evaluate-the-performance-4" class="slide level2 smaller">
 <h2>Evaluate the performance</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a></a>simple_email_pred <span class="sc">|&gt;</span></span>
-<span id="cb133-2"><a></a>  <span class="fu">roc_curve</span>(</span>
-<span id="cb133-3"><a></a>    <span class="at">truth =</span> spam,</span>
-<span id="cb133-4"><a></a>    .pred_1,</span>
-<span id="cb133-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span> <span class="co"># this adjusts the location above the diagonal</span></span>
-<span id="cb133-6"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb133-7"><a></a>  <span class="fu">autoplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a>simple_email_pred <span class="sc">|&gt;</span></span>
+<span id="cb70-2"><a></a>  <span class="fu">roc_curve</span>(</span>
+<span id="cb70-3"><a></a>    <span class="at">truth =</span> spam,</span>
+<span id="cb70-4"><a></a>    .pred_1,</span>
+<span id="cb70-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span> <span class="co"># this adjusts the location above the diagonal</span></span>
+<span id="cb70-6"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb70-7"><a></a>  <span class="fu">autoplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W10_files/figure-html/unnamed-chunk-38-1.png" width="672" class="r-stretch"><div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb134"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a></a>simple_email_pred <span class="sc">|&gt;</span></span>
-<span id="cb134-2"><a></a>  <span class="fu">roc_auc</span>(</span>
-<span id="cb134-3"><a></a>    <span class="at">truth =</span> spam,</span>
-<span id="cb134-4"><a></a>    .pred_1,</span>
-<span id="cb134-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
-<span id="cb134-6"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<img data-src="W10_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch"><div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -1797,60 +1497,60 @@ Computational engine: glm </code></pre>
 <h2>Compare: Predict Penguins’ Sex</h2>
 <p>Following all the steps introduced before:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb136-2"><a></a><span class="co"># Put 80% of the data into the training set</span></span>
-<span id="cb136-3"><a></a>peng_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(penguins, <span class="at">prop =</span> <span class="fl">0.80</span>)</span>
-<span id="cb136-4"><a></a><span class="co"># Create data frames for the two sets:</span></span>
-<span id="cb136-5"><a></a>train_data_peng <span class="ot">&lt;-</span> <span class="fu">training</span>(peng_split)</span>
-<span id="cb136-6"><a></a>test_data_peng <span class="ot">&lt;-</span> <span class="fu">testing</span>(peng_split)</span>
-<span id="cb136-7"><a></a></span>
-<span id="cb136-8"><a></a><span class="co"># Create a recipe for the model</span></span>
-<span id="cb136-9"><a></a>peng_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
-<span id="cb136-10"><a></a>  sex <span class="sc">~</span> .,</span>
-<span id="cb136-11"><a></a>  <span class="at">data =</span> train_data_peng</span>
-<span id="cb136-12"><a></a>) <span class="sc">|&gt;</span></span>
-<span id="cb136-13"><a></a>  <span class="fu">step_naomit</span>(<span class="fu">all_predictors</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb136-14"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb136-15"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span>
-<span id="cb136-16"><a></a></span>
-<span id="cb136-17"><a></a><span class="co"># Create a logistic regression model</span></span>
-<span id="cb136-18"><a></a>peng_mod <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb136-19"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
-<span id="cb136-20"><a></a></span>
-<span id="cb136-21"><a></a><span class="co"># Create a workflow</span></span>
-<span id="cb136-22"><a></a>peng_wflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb136-23"><a></a>  <span class="fu">add_model</span>(peng_mod) <span class="sc">|&gt;</span></span>
-<span id="cb136-24"><a></a>  <span class="fu">add_recipe</span>(peng_rec)</span>
-<span id="cb136-25"><a></a></span>
-<span id="cb136-26"><a></a><span class="co"># Fitting model to training data</span></span>
-<span id="cb136-27"><a></a>peng_fit <span class="ot">&lt;-</span> peng_wflow <span class="sc">|&gt;</span></span>
-<span id="cb136-28"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> train_data_peng)</span>
-<span id="cb136-29"><a></a></span>
-<span id="cb136-30"><a></a><span class="co"># Make predictions for test data</span></span>
-<span id="cb136-31"><a></a>peng_pred <span class="ot">&lt;-</span> peng_fit <span class="sc">|&gt;</span></span>
-<span id="cb136-32"><a></a>  <span class="fu">predict</span>(test_data_peng, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb136-33"><a></a>  <span class="fu">bind_cols</span>(test_data_peng)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb72-2"><a></a><span class="co"># Put 80% of the data into the training set</span></span>
+<span id="cb72-3"><a></a>peng_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(penguins, <span class="at">prop =</span> <span class="fl">0.80</span>)</span>
+<span id="cb72-4"><a></a><span class="co"># Create data frames for the two sets:</span></span>
+<span id="cb72-5"><a></a>train_data_peng <span class="ot">&lt;-</span> <span class="fu">training</span>(peng_split)</span>
+<span id="cb72-6"><a></a>test_data_peng <span class="ot">&lt;-</span> <span class="fu">testing</span>(peng_split)</span>
+<span id="cb72-7"><a></a></span>
+<span id="cb72-8"><a></a><span class="co"># Create a recipe for the model</span></span>
+<span id="cb72-9"><a></a>peng_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(</span>
+<span id="cb72-10"><a></a>  sex <span class="sc">~</span> .,</span>
+<span id="cb72-11"><a></a>  <span class="at">data =</span> train_data_peng</span>
+<span id="cb72-12"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb72-13"><a></a>  <span class="fu">step_naomit</span>(<span class="fu">all_predictors</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb72-14"><a></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal</span>(), <span class="sc">-</span><span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb72-15"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span>
+<span id="cb72-16"><a></a></span>
+<span id="cb72-17"><a></a><span class="co"># Create a logistic regression model</span></span>
+<span id="cb72-18"><a></a>peng_mod <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb72-19"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
+<span id="cb72-20"><a></a></span>
+<span id="cb72-21"><a></a><span class="co"># Create a workflow</span></span>
+<span id="cb72-22"><a></a>peng_wflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb72-23"><a></a>  <span class="fu">add_model</span>(peng_mod) <span class="sc">|&gt;</span></span>
+<span id="cb72-24"><a></a>  <span class="fu">add_recipe</span>(peng_rec)</span>
+<span id="cb72-25"><a></a></span>
+<span id="cb72-26"><a></a><span class="co"># Fitting model to training data</span></span>
+<span id="cb72-27"><a></a>peng_fit <span class="ot">&lt;-</span> peng_wflow <span class="sc">|&gt;</span></span>
+<span id="cb72-28"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> train_data_peng)</span>
+<span id="cb72-29"><a></a></span>
+<span id="cb72-30"><a></a><span class="co"># Make predictions for test data</span></span>
+<span id="cb72-31"><a></a>peng_pred <span class="ot">&lt;-</span> peng_fit <span class="sc">|&gt;</span></span>
+<span id="cb72-32"><a></a>  <span class="fu">predict</span>(test_data_peng, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb72-33"><a></a>  <span class="fu">bind_cols</span>(test_data_peng)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="penguins-evaluate-performance" class="slide level2 smaller">
 <h2>Penguins: Evaluate Performance</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb137"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a></a>peng_pred <span class="sc">|&gt;</span></span>
-<span id="cb137-2"><a></a>  <span class="fu">roc_curve</span>(</span>
-<span id="cb137-3"><a></a>    <span class="at">truth =</span> sex,</span>
-<span id="cb137-4"><a></a>    .pred_male,</span>
-<span id="cb137-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
-<span id="cb137-6"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb137-7"><a></a>  <span class="fu">autoplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a>peng_pred <span class="sc">|&gt;</span></span>
+<span id="cb73-2"><a></a>  <span class="fu">roc_curve</span>(</span>
+<span id="cb73-3"><a></a>    <span class="at">truth =</span> sex,</span>
+<span id="cb73-4"><a></a>    .pred_male,</span>
+<span id="cb73-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
+<span id="cb73-6"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb73-7"><a></a>  <span class="fu">autoplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W10_files/figure-html/unnamed-chunk-41-1.png" width="672" class="r-stretch"><div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb138"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a></a>peng_pred <span class="sc">|&gt;</span></span>
-<span id="cb138-2"><a></a>  <span class="fu">roc_auc</span>(</span>
-<span id="cb138-3"><a></a>    <span class="at">truth =</span> sex,</span>
-<span id="cb138-4"><a></a>    .pred_male,</span>
-<span id="cb138-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
-<span id="cb138-6"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<img data-src="W10_files/figure-revealjs/unnamed-chunk-41-1.png" width="960" class="r-stretch"><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a>peng_pred <span class="sc">|&gt;</span></span>
+<span id="cb74-2"><a></a>  <span class="fu">roc_auc</span>(</span>
+<span id="cb74-3"><a></a>    <span class="at">truth =</span> sex,</span>
+<span id="cb74-4"><a></a>    .pred_male,</span>
+<span id="cb74-5"><a></a>    <span class="at">event_level =</span> <span class="st">"second"</span></span>
+<span id="cb74-6"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -1863,21 +1563,21 @@ Computational engine: glm </code></pre>
 <h2>Penguins: Cutoff probability 0.5</h2>
 <p><strong>Confusion matrix:</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb140"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb140-2"><a></a>peng_pred <span class="sc">|&gt;</span></span>
-<span id="cb140-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb140-4"><a></a>    <span class="at">sex =</span> <span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Penguin is male"</span>, <span class="st">"Penguin is female"</span>),</span>
-<span id="cb140-5"><a></a>    <span class="at">sex_pred =</span> <span class="fu">if_else</span>(</span>
-<span id="cb140-6"><a></a>      .pred_male <span class="sc">&gt;</span> cutoff_prob,</span>
-<span id="cb140-7"><a></a>      <span class="st">"Penguin labelled male"</span>,</span>
-<span id="cb140-8"><a></a>      <span class="st">"Penguin labelled female"</span></span>
-<span id="cb140-9"><a></a>    )</span>
-<span id="cb140-10"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb140-11"><a></a>  <span class="fu">count</span>(sex_pred, sex) <span class="sc">|&gt;</span></span>
-<span id="cb140-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb140-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb140-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
-<span id="cb140-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb76-2"><a></a>peng_pred <span class="sc">|&gt;</span></span>
+<span id="cb76-3"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb76-4"><a></a>    <span class="at">sex =</span> <span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Penguin is male"</span>, <span class="st">"Penguin is female"</span>),</span>
+<span id="cb76-5"><a></a>    <span class="at">sex_pred =</span> <span class="fu">if_else</span>(</span>
+<span id="cb76-6"><a></a>      .pred_male <span class="sc">&gt;</span> cutoff_prob,</span>
+<span id="cb76-7"><a></a>      <span class="st">"Penguin labelled male"</span>,</span>
+<span id="cb76-8"><a></a>      <span class="st">"Penguin labelled female"</span></span>
+<span id="cb76-9"><a></a>    )</span>
+<span id="cb76-10"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb76-11"><a></a>  <span class="fu">count</span>(sex_pred, sex) <span class="sc">|&gt;</span></span>
+<span id="cb76-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb76-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb76-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
+<span id="cb76-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -1909,21 +1609,21 @@ Computational engine: glm </code></pre>
 <h2>Penguins: Cutoff probability 0.25</h2>
 <p><strong>Confusion matrix:</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb141"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.25</span></span>
-<span id="cb141-2"><a></a>peng_pred <span class="sc">|&gt;</span></span>
-<span id="cb141-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb141-4"><a></a>    <span class="at">sex =</span> <span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Penguin is male"</span>, <span class="st">"Penguin is female"</span>),</span>
-<span id="cb141-5"><a></a>    <span class="at">sex_pred =</span> <span class="fu">if_else</span>(</span>
-<span id="cb141-6"><a></a>      .pred_male <span class="sc">&gt;</span> cutoff_prob,</span>
-<span id="cb141-7"><a></a>      <span class="st">"Penguin labelled male"</span>,</span>
-<span id="cb141-8"><a></a>      <span class="st">"Penguin labelled female"</span></span>
-<span id="cb141-9"><a></a>    )</span>
-<span id="cb141-10"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb141-11"><a></a>  <span class="fu">count</span>(sex_pred, sex) <span class="sc">|&gt;</span></span>
-<span id="cb141-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb141-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb141-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
-<span id="cb141-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.25</span></span>
+<span id="cb77-2"><a></a>peng_pred <span class="sc">|&gt;</span></span>
+<span id="cb77-3"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb77-4"><a></a>    <span class="at">sex =</span> <span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Penguin is male"</span>, <span class="st">"Penguin is female"</span>),</span>
+<span id="cb77-5"><a></a>    <span class="at">sex_pred =</span> <span class="fu">if_else</span>(</span>
+<span id="cb77-6"><a></a>      .pred_male <span class="sc">&gt;</span> cutoff_prob,</span>
+<span id="cb77-7"><a></a>      <span class="st">"Penguin labelled male"</span>,</span>
+<span id="cb77-8"><a></a>      <span class="st">"Penguin labelled female"</span></span>
+<span id="cb77-9"><a></a>    )</span>
+<span id="cb77-10"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb77-11"><a></a>  <span class="fu">count</span>(sex_pred, sex) <span class="sc">|&gt;</span></span>
+<span id="cb77-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb77-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb77-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
+<span id="cb77-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -1955,21 +1655,21 @@ Computational engine: glm </code></pre>
 <h2>Penguins: Cutoff probability 0.75</h2>
 <p><strong>Confusion matrix:</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb142"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.75</span></span>
-<span id="cb142-2"><a></a>peng_pred <span class="sc">|&gt;</span></span>
-<span id="cb142-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb142-4"><a></a>    <span class="at">sex =</span> <span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Penguin is male"</span>, <span class="st">"Penguin is female"</span>),</span>
-<span id="cb142-5"><a></a>    <span class="at">sex_pred =</span> <span class="fu">if_else</span>(</span>
-<span id="cb142-6"><a></a>      .pred_male <span class="sc">&gt;</span> cutoff_prob,</span>
-<span id="cb142-7"><a></a>      <span class="st">"Penguin labelled male"</span>,</span>
-<span id="cb142-8"><a></a>      <span class="st">"Penguin labelled female"</span></span>
-<span id="cb142-9"><a></a>    )</span>
-<span id="cb142-10"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb142-11"><a></a>  <span class="fu">count</span>(sex_pred, sex) <span class="sc">|&gt;</span></span>
-<span id="cb142-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb142-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb142-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
-<span id="cb142-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>cutoff_prob <span class="ot">&lt;-</span> <span class="fl">0.75</span></span>
+<span id="cb78-2"><a></a>peng_pred <span class="sc">|&gt;</span></span>
+<span id="cb78-3"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb78-4"><a></a>    <span class="at">sex =</span> <span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="st">"male"</span>, <span class="st">"Penguin is male"</span>, <span class="st">"Penguin is female"</span>),</span>
+<span id="cb78-5"><a></a>    <span class="at">sex_pred =</span> <span class="fu">if_else</span>(</span>
+<span id="cb78-6"><a></a>      .pred_male <span class="sc">&gt;</span> cutoff_prob,</span>
+<span id="cb78-7"><a></a>      <span class="st">"Penguin labelled male"</span>,</span>
+<span id="cb78-8"><a></a>      <span class="st">"Penguin labelled female"</span></span>
+<span id="cb78-9"><a></a>    )</span>
+<span id="cb78-10"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb78-11"><a></a>  <span class="fu">count</span>(sex_pred, sex) <span class="sc">|&gt;</span></span>
+<span id="cb78-12"><a></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sex_pred, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb78-13"><a></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb78-14"><a></a>  <span class="fu">slice</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="co"># reorder rows and cols to fit convention</span></span>
+<span id="cb78-15"><a></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top">
 <thead>
@@ -2005,7 +1705,7 @@ Computational engine: glm </code></pre>
 <div class="columns">
 <div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb143"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a></a>penguins <span class="sc">|&gt;</span> <span class="fu">count</span>(sex) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a>penguins <span class="sc">|&gt;</span> <span class="fu">count</span>(sex) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   sex        n   prop
@@ -2017,7 +1717,7 @@ Computational engine: glm </code></pre>
 </div>
 </div><div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a></a>email <span class="sc">|&gt;</span> <span class="fu">count</span>(spam) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a>email <span class="sc">|&gt;</span> <span class="fu">count</span>(spam) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">prop =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 3
   spam      n   prop
@@ -2050,8 +1750,8 @@ Computational engine: glm </code></pre>
 <h2>Specify recipe and models</h2>
 <p>For both logistic regression and decision tree:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb147"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a></a>peng_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(sex <span class="sc">~</span> ., <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
-<span id="cb147-2"><a></a>  <span class="fu">step_rm</span>(year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a>peng_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(sex <span class="sc">~</span> ., <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb83-2"><a></a>  <span class="fu">step_rm</span>(year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <ul>
@@ -2066,16 +1766,16 @@ Computational engine: glm </code></pre>
 <div class="column" style="width:50%;">
 <p><strong>Logistic Regression</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb148"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a></a>peng_logreg <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb148-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>peng_logreg <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb84-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>peng_logreg</code> specifies to fit with <code>glm</code> (generalized linear model from <code>base</code> R)</p>
 </div><div class="column" style="width:50%;">
 <p><strong>Decision Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb149"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a></a>peng_tree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span></span>
-<span id="cb149-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb149-3"><a></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a>peng_tree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span></span>
+<span id="cb85-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb85-3"><a></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>peng_tree</code> specifies to fit for <code>classification</code> with the <code>rpart</code><sup>1</sup> as engine.</p>
 </div></div>
@@ -2086,27 +1786,27 @@ Computational engine: glm </code></pre>
 <p>For logistic regression and decision tree:</p>
 <p>Split into test and training data</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb150"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb150-2"><a></a>penguins_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(penguins, <span class="at">prop =</span> <span class="fl">0.7</span>, <span class="at">strata =</span> sex)</span>
-<span id="cb150-3"><a></a>peng_train <span class="ot">&lt;-</span> <span class="fu">training</span>(penguins_split)</span>
-<span id="cb150-4"><a></a>peng_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(penguins_split)</span>
-<span id="cb150-5"><a></a>peng_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> <span class="fu">add_recipe</span>(peng_recipe)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb86-2"><a></a>penguins_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(penguins, <span class="at">prop =</span> <span class="fl">0.7</span>, <span class="at">strata =</span> sex)</span>
+<span id="cb86-3"><a></a>peng_train <span class="ot">&lt;-</span> <span class="fu">training</span>(penguins_split)</span>
+<span id="cb86-4"><a></a>peng_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(penguins_split)</span>
+<span id="cb86-5"><a></a>peng_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> <span class="fu">add_recipe</span>(peng_recipe)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <div class="columns">
 <div class="column" style="width:50%;">
 <p><strong>Logistic Regression</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb151"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a></a>peng_logreg_fit <span class="ot">&lt;-</span> peng_workflow <span class="sc">|&gt;</span></span>
-<span id="cb151-2"><a></a>  <span class="fu">add_model</span>(peng_logreg) <span class="sc">|&gt;</span></span>
-<span id="cb151-3"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>peng_logreg_fit <span class="ot">&lt;-</span> peng_workflow <span class="sc">|&gt;</span></span>
+<span id="cb87-2"><a></a>  <span class="fu">add_model</span>(peng_logreg) <span class="sc">|&gt;</span></span>
+<span id="cb87-3"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div><div class="column" style="width:50%;">
 <p><strong>Decision Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb152"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a></a>peng_tree_fit <span class="ot">&lt;-</span> peng_workflow <span class="sc">|&gt;</span></span>
-<span id="cb152-2"><a></a>  <span class="fu">add_model</span>(peng_tree) <span class="sc">|&gt;</span></span>
-<span id="cb152-3"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a>peng_tree_fit <span class="ot">&lt;-</span> peng_workflow <span class="sc">|&gt;</span></span>
+<span id="cb88-2"><a></a>  <span class="fu">add_model</span>(peng_tree) <span class="sc">|&gt;</span></span>
+<span id="cb88-3"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div></div>
 </div>
@@ -2116,7 +1816,7 @@ Computational engine: glm </code></pre>
 <div class="columns">
 <div class="column" style="width:60%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb153"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a></a>peng_logreg_fit <span class="sc">|&gt;</span> <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a>peng_logreg_fit <span class="sc">|&gt;</span> <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9 × 5
   term               estimate std.error statistic      p.value
@@ -2147,7 +1847,7 @@ Computational engine: glm </code></pre>
 <section id="what-is-a-decision-tree" class="slide level2 smaller">
 <h2>What is a decision tree?</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb155"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a></a>peng_tree_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a></a>peng_tree_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow [trained] ══════════════════════════════════════════════════════════
 Preprocessor: Recipe
@@ -2191,7 +1891,7 @@ node), split, n, loss, yval, (yprob)
 <h2>Show rules</h2>
 <p>We “dig out” the original fitted <code>rpart</code>-object from the <code>workflow</code>-object with <code>peng_tree_fit$fit$fit$fit</code> and plot it:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb157"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a></a><span class="fu">rpart.rules</span>(peng_tree_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a></a><span class="fu">rpart.rules</span>(peng_tree_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ..y                                                                                                 
  0.05 when bill_length_mm &lt;  48 &amp; body_mass_g &lt;  4988 &amp; bill_depth_mm &lt;  18                           
@@ -2213,10 +1913,10 @@ node), split, n, loss, yval, (yprob)
 <section id="visualize-tree" class="slide level2 smaller">
 <h2>Visualize tree</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb159"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a></a><span class="fu">rpart.plot</span>(peng_tree_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="fl">1.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a></a><span class="fu">rpart.plot</span>(peng_tree_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="fl">1.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W10_files/figure-html/unnamed-chunk-57-1.png" width="672" class="r-stretch"><p>How to read?</p>
+<img data-src="W10_files/figure-revealjs/unnamed-chunk-57-1.png" width="960" class="r-stretch"><p>How to read?</p>
 <ul>
 <li>The percentage is the fraction of the total cases in this group</li>
 <li>The probability-number is the fraction of observations which are male in the group</li>
@@ -2228,11 +1928,11 @@ node), split, n, loss, yval, (yprob)
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb160"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a></a>peng_logreg_pred <span class="ot">&lt;-</span></span>
-<span id="cb160-2"><a></a>  <span class="fu">predict</span>(peng_logreg_fit, peng_test) <span class="sc">|&gt;</span></span>
-<span id="cb160-3"><a></a>  <span class="fu">bind_cols</span>(peng_test)</span>
-<span id="cb160-4"><a></a>peng_logreg_pred <span class="sc">|&gt;</span></span>
-<span id="cb160-5"><a></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a>peng_logreg_pred <span class="ot">&lt;-</span></span>
+<span id="cb96-2"><a></a>  <span class="fu">predict</span>(peng_logreg_fit, peng_test) <span class="sc">|&gt;</span></span>
+<span id="cb96-3"><a></a>  <span class="fu">bind_cols</span>(peng_test)</span>
+<span id="cb96-4"><a></a>peng_logreg_pred <span class="sc">|&gt;</span></span>
+<span id="cb96-5"><a></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Truth
 Prediction female male
@@ -2242,11 +1942,11 @@ Prediction female male
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb162"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a></a>peng_tree_pred <span class="ot">&lt;-</span></span>
-<span id="cb162-2"><a></a>  <span class="fu">predict</span>(peng_tree_fit, peng_test) <span class="sc">|&gt;</span></span>
-<span id="cb162-3"><a></a>  <span class="fu">bind_cols</span>(peng_test)</span>
-<span id="cb162-4"><a></a>peng_tree_pred <span class="sc">|&gt;</span></span>
-<span id="cb162-5"><a></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a>peng_tree_pred <span class="ot">&lt;-</span></span>
+<span id="cb98-2"><a></a>  <span class="fu">predict</span>(peng_tree_fit, peng_test) <span class="sc">|&gt;</span></span>
+<span id="cb98-3"><a></a>  <span class="fu">bind_cols</span>(peng_test)</span>
+<span id="cb98-4"><a></a>peng_tree_pred <span class="sc">|&gt;</span></span>
+<span id="cb98-5"><a></a>  <span class="fu">conf_mat</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Truth
 Prediction female male
@@ -2481,6 +2181,44 @@ Prediction female male
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
