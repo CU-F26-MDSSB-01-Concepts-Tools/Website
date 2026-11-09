@@ -39,7 +39,7 @@
     "href": "lectures/W10.html#another-view-and-context",
     "title": "W#10: Binary Prediction, Sensitivity and Specificity, Logistic Regression and a Decision Tree",
     "section": "Another view and Context",
-    "text": "Another view and Context\n\n\n\n\n\nThinking about sensitivity and specificity is related to thinking in conditional probability:\nSomething is the case given that something else was the case.\nIn Machine Learning, Sensitivty is also called Recall.\nThe concept is for binary prediction not numerical ones. It is about a positive and a negative outcome."
+    "text": "Another view and Context\n\n\n\n\n\nThinking about sensitivity and specificity is related to thinking in conditional probability:\nSomething is the case given that something else was the case.\nIn Machine Learning, Sensitivity is also called Recall.\nThe concept is for binary prediction not numerical ones. It is about a positive and a negative outcome."
   },
   {
     "objectID": "lectures/W10.html#prediction-vs.-explanation",
@@ -56,11 +56,11 @@
     "text": "Prediction Example: Building a spam filter\n\nData: Set of emails and we know\n\nif each email is spam or not\nseveral other features\n\nUse logistic regression to predict the probability that an incoming email is spam\nUse model selection to pick the model with the best predictive performance\n\n\n\nBuilding a model to predict the probability that an email is spam is only half of the battle! We also need a decision rule about which emails get flagged as spam (e.g. what probability should we use as out cutoff?)\n\n\n\n\nA simple approach: choose a single threshold probability and any email that exceeds that probability is flagged as spam"
   },
   {
-    "objectID": "lectures/W10.html#recall-logistic-equation",
-    "href": "lectures/W10.html#recall-logistic-equation",
+    "objectID": "lectures/W10.html#recall-logistic-regressions",
+    "href": "lectures/W10.html#recall-logistic-regressions",
     "title": "W#10: Binary Prediction, Sensitivity and Specificity, Logistic Regression and a Decision Tree",
-    "section": "Recall: Logistic Equation",
-    "text": "Recall: Logistic Equation\n\nA model where the target variable is binary.\nInstead of predicting the 0 and 1, we predict a probability for 1\nThe logit function can transfrom a probability (range 0 to 1) to the log-odds (range -\\(\\inf\\) to \\(+\\inf\\)).\nWith this setup, we fit a linear model estimating coefficents for various predictors\nThe predicted values are the log-odds and we can transform the back to probabilities with the logistic function"
+    "section": "Recall: Logistic Regressions",
+    "text": "Recall: Logistic Regressions\n\nA model where the target variable is binary.\nInstead of predicting the 0 and 1, we predict a probability for 1\nThe logit function can transfrom a probability (range 0 to 1) to the log-odds (range -\\(\\inf\\) to \\(+\\inf\\)).\nWith this setup, we fit a linear model estimating coefficents for various predictors\nThe predicted values are the log-odds and we can transform them back to probabilities with the logistic function"
   },
   {
     "objectID": "lectures/W10.html#emails-use-all-predictors",

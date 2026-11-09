@@ -116,6 +116,7 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
+      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -240,7 +241,6 @@ Jan Lorenz
 <ul>
 <li>Two <strong>performance</strong> measures for a <strong>prediction</strong> model with <strong>binary</strong> outcome.</li>
 <li>Also called a <strong>binary classifier</strong>.</li>
-<li>Today, just the idea.</li>
 </ul>
 </section>
 <section id="false-positive-and-negative" class="slide level2 smaller">
@@ -324,7 +324,7 @@ Low specificity <span class="math inline">\(\to\)</span> More false positives <s
 <ul>
 <li class="fragment">Thinking about sensitivity and specificity is related to thinking in <strong>conditional probability</strong>:<br>
 Something is the case <strong><em>given</em></strong> that something else was the case.</li>
-<li class="fragment">In Machine Learning, Sensitivty is also called <strong>Recall</strong>.</li>
+<li class="fragment">In Machine Learning, Sensitivity is also called <strong>Recall</strong>.</li>
 <li class="fragment">The concept is for binary prediction not numerical ones. It is about a positive and a negative outcome.</li>
 </ul>
 </div></div>
@@ -334,7 +334,7 @@ Something is the case <strong><em>given</em></strong> that something else was th
 <h1>Prediction</h1>
 
 </section>
-<section id="prediction-vs.-explanation" class="slide level2 smaller">
+<section id="prediction-vs.-explanation" class="slide level2 smaller scrollable">
 <h2>Prediction vs.&nbsp;Explanation</h2>
 <p><strong>Explanation</strong> and <strong>Prediction</strong> are different <strong>Modelling Mindsets</strong><sup>1</sup>.</p>
 <ul>
@@ -380,14 +380,14 @@ Something is the case <strong><em>given</em></strong> that something else was th
 </ul>
 </div>
 </section>
-<section id="recall-logistic-equation" class="slide level2">
-<h2>Recall: Logistic Equation</h2>
+<section id="recall-logistic-regressions" class="slide level2">
+<h2>Recall: Logistic Regressions</h2>
 <ul>
 <li class="fragment">A model where the target variable is binary.</li>
 <li class="fragment">Instead of predicting the 0 and 1, we predict a probability for 1</li>
 <li class="fragment">The <strong>logit function</strong> can transfrom a probability (range 0 to 1) to the log-odds (range -<span class="math inline">\(\inf\)</span> to <span class="math inline">\(+\inf\)</span>).</li>
 <li class="fragment">With this setup, we fit a <strong>linear model</strong> estimating coefficents for various predictors</li>
-<li class="fragment">The predicted values are the log-odds and we can transform the back to probabilities with the <strong>logistic function</strong></li>
+<li class="fragment">The predicted values are the log-odds and we can transform them back to probabilities with the <strong>logistic function</strong></li>
 </ul>
 </section>
 <section id="emails-use-all-predictors" class="slide level2 smaller">
@@ -901,7 +901,7 @@ Residual Deviance: 1447     AIC: 1485</code></pre>
 </div>
 <p>We see false positives and false negatives.</p>
 </section>
-<section id="evaluate-the-performance" class="slide level2 smaller">
+<section id="evaluate-the-performance" class="slide level2 smaller scrollable">
 <h2>Evaluate the performance</h2>
 <p><strong>Receiver operating characteristic (ROC) curve</strong><sup>1</sup> which plots true positive rate (sensitivity) vs.&nbsp;false positive rate (1 - specificity)</p>
 <div class="cell">
@@ -1746,7 +1746,7 @@ Computational engine: glm </code></pre>
 <li>Do the classification with both models and compare the confusion matrices</li>
 </ul>
 </section>
-<section id="specify-recipe-and-models" class="slide level2 smaller">
+<section id="specify-recipe-and-models" class="slide level2 smaller scrollable">
 <h2>Specify recipe and models</h2>
 <p>For both logistic regression and decision tree:</p>
 <div class="cell">
