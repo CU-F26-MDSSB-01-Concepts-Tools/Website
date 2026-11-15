@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/lectures/W11.html</loc>
+    <lastmod>2026-11-15T20:15:09.540Z</lastmod>
+  </url>
+  <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/lectures/W10.html</loc>
     <lastmod>2026-11-09T08:43:22.810Z</lastmod>
   </url>
@@ -58,7 +62,7 @@
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/schedule.html</loc>
-    <lastmod>2026-11-08T21:35:28.740Z</lastmod>
+    <lastmod>2026-11-15T20:23:56.196Z</lastmod>
   </url>
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/final.html</loc>
@@ -107,5 +111,9 @@
   <url>
     <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/material/M10.html</loc>
     <lastmod>2026-11-08T21:31:47.112Z</lastmod>
+  </url>
+  <url>
+    <loc>https://CU-F26-MDSSB-01-Concepts-Tools.github.io/Website/material/M11.html</loc>
+    <lastmod>2026-11-08T21:30:16.657Z</lastmod>
   </url>
 </urlset>
