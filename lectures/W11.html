@@ -247,7 +247,7 @@ Jan Lorenz
 <li>Recipe for <strong>preprocessing</strong><br>
 <span class="fragment"><code>recipe()</code>, specify response variable and preprocessing steps for predictors</span></li>
 <li><strong>Model</strong> specification<br>
-<span class="fragment">E.g. <code>decision_tree()</code>, set engine <code>rpart</code>, mode <code>regression</code> or <code>classification</code></span></li>
+<span class="fragment">For example <code>decision_tree()</code>, <code>set_engine("rpart")</code></span></li>
 <li><strong>Workflow</strong> to combine recipe and model (still all just specifications)<br>
 <span class="fragment"><code>workflow()</code> with <code>add_recipe()</code>, <code>add_model()</code> creates a workflow object</span></li>
 <li><strong>Fit</strong> the model with training data using the workflow (finally the computation happens!) <span class="fragment"><code>fit()</code> with workflow and <code>train</code> data</span></li>
@@ -1582,7 +1582,7 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
   .. ..$ ordered: logi NA
  $ fit_times         : tibble [6 × 2] (S3: tbl_df/tbl/data.frame)
   ..$ stage_id: chr [1:6] "prep.rm_K3sZn" "bake.rm_K3sZn" "prep.center_tnMqa" "bake.center_tnMqa" ...
-  ..$ elapsed : num [1:6] 0.002 0 0.002 0 0.002 ...
+  ..$ elapsed : num [1:6] 0.001 0 0.001 0 0.002 ...
  $ last_term_info    : gropd_df [8 × 6] (S3: grouped_df/tbl_df/tbl/data.frame)
   ..$ variable: chr [1:8] "bill_depth_mm" "bill_length_mm" "body_mass_g" "flipper_length_mm" ...
   ..$ type    :List of 8
