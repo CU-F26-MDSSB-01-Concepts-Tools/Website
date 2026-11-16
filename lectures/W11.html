@@ -215,7 +215,7 @@ Jan Lorenz
 <h2 id="toc-title">Table of contents</h2>
 <ul>
 <li><a href="#/decision-tree-in-comparison" id="/toc-decision-tree-in-comparison">Decision Tree in Comparison</a></li>
-<li><a href="#/how-to-best-prune-trees" id="/toc-how-to-best-prune-trees">How to best prune trees?</a></li>
+<li><a href="#/how-to-prune-trees-for-better-performance" id="/toc-how-to-prune-trees-for-better-performance">How to prune trees for better performance?</a></li>
 <li><a href="#/overfitting" id="/toc-overfitting">Overfitting</a></li>
 <li><a href="#/cluster-analysis" id="/toc-cluster-analysis">Cluster Analysis</a></li>
 <li><a href="#/k-means-clustering" id="/toc-k-means-clustering">k-means clustering</a></li>
@@ -721,8 +721,8 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <p>The RMSE shows how many grams predicted values deviate on average from the true values (taking the squaring of differences and root of the average into account).</p>
 </section></section>
 <section>
-<section id="how-to-best-prune-trees" class="title-slide slide level1 center">
-<h1>How to best prune trees?</h1>
+<section id="how-to-prune-trees-for-better-performance" class="title-slide slide level1 center">
+<h1>How to prune trees for better performance?</h1>
 
 </section>
 <section id="how-a-tree-is-made" class="slide level2 smaller">
@@ -1105,7 +1105,7 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div></div>
 <div class="fragment">
 <p>Trends for R-squared for different trees when going from train to test.</p>
-<div class="cell columns column-output-location">
+<div class="cell columns column-output-location" data-fig-heigth="3">
 <div class="column">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>peng_deep_analysis <span class="sc">|&gt;</span></span>
 <span id="cb64-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
@@ -1128,7 +1128,7 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div></div>
 </div>
 </section>
-<section id="overfitting-in-classification-spam" class="slide level2">
+<section id="overfitting-in-classification-spam" class="slide level2 scrollable">
 <h2>Overfitting in classification: Spam</h2>
 <p><code>email</code> dataset from <code>openintro</code>:<br>
 Steps: 1. Train-Test-Split, 2. Preprocessing-Recipe</p>
@@ -1582,7 +1582,7 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
   .. ..$ ordered: logi NA
  $ fit_times         : tibble [6 × 2] (S3: tbl_df/tbl/data.frame)
   ..$ stage_id: chr [1:6] "prep.rm_K3sZn" "bake.rm_K3sZn" "prep.center_tnMqa" "bake.center_tnMqa" ...
-  ..$ elapsed : num [1:6] 0.001 0 0.001 0 0.002 ...
+  ..$ elapsed : num [1:6] 0.001 0 0.002 0 0.001 ...
  $ last_term_info    : gropd_df [8 × 6] (S3: grouped_df/tbl_df/tbl/data.frame)
   ..$ variable: chr [1:8] "bill_depth_mm" "bill_length_mm" "body_mass_g" "flipper_length_mm" ...
   ..$ type    :List of 8
