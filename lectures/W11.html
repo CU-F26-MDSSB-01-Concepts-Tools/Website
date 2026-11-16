@@ -1105,7 +1105,7 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div></div>
 <div class="fragment">
 <p>Trends for R-squared for different trees when going from train to test.</p>
-<div class="cell columns column-output-location" data-fig-heigth="3">
+<div class="cell columns column-output-location" data-fig-heigth="2.4">
 <div class="column">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>peng_deep_analysis <span class="sc">|&gt;</span></span>
 <span id="cb64-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
@@ -1376,8 +1376,9 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
 <p>The two paradigms are</p>
 <ul>
 <li><span class="text-red"><strong>centroid-based</strong></span> clustering</li>
-<li>[<strong>connectivity-based</strong>]{text-red} hierarchical clustering</li>
+<li><span class="text-red"><strong>connectivity-based</strong></span> hierarchical clustering</li>
 </ul>
+<p>In the following: <span class="text-green">We want to understand the <strong>algorithm</strong> which produces the clustering!</span></p>
 </section></section>
 <section>
 <section id="k-means-clustering" class="title-slide slide level1 center">
@@ -1582,7 +1583,7 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
   .. ..$ ordered: logi NA
  $ fit_times         : tibble [6 × 2] (S3: tbl_df/tbl/data.frame)
   ..$ stage_id: chr [1:6] "prep.rm_K3sZn" "bake.rm_K3sZn" "prep.center_tnMqa" "bake.center_tnMqa" ...
-  ..$ elapsed : num [1:6] 0.001 0 0.002 0 0.001 ...
+  ..$ elapsed : num [1:6] 0.002 0 0.002 0 0.002 ...
  $ last_term_info    : gropd_df [8 × 6] (S3: grouped_df/tbl_df/tbl/data.frame)
   ..$ variable: chr [1:8] "bill_depth_mm" "bill_length_mm" "body_mass_g" "flipper_length_mm" ...
   ..$ type    :List of 8
