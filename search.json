@@ -1,17 +1,458 @@
 [
   {
+    "objectID": "lectures/W12.html#preliminary",
+    "href": "lectures/W12.html#preliminary",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Preliminary",
+    "text": "Preliminary\n\nlibrary(tidyverse)\nlibrary(readxl)\nlibrary(tidymodels)\nlibrary(patchwork)\nlibrary(rpart)\nlibrary(ranger)\nlibrary(vip)\nlibrary(palmerpenguins)\nlibrary(openintro)"
+  },
+  {
+    "objectID": "lectures/W12.html#model-in-statistical-learning",
+    "href": "lectures/W12.html#model-in-statistical-learning",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "“Model” in Statistical Learning",
+    "text": "“Model” in Statistical Learning\nWe already had the difference between variable-based and agent-based models.\nBut even in the variable-based model setting of statistical learning, the term model can be more or less abstract:\n\nVery general: \\(Y = f(X_1, \\dots, X_m) + \\varepsilon\\) where \\(Y\\) is the response variable and \\(X_i\\) are features which we put in our model: the abstract and unknown function \\(f\\).\n\\(\\varepsilon\\) is the error which we can never explain and usually do not know.\nMore specific: The model \\(f\\) could already be of a specific type, like logistic regression, a decision tree or other functional forms. As this need not be the real function we may call it assumed model \\(\\hat f\\) For example a linear model \\(\\hat f(X_1, \\dots, X_m) = \\beta_0 + \\beta_1 X_1 + \\dots + \\beta_m X_m + \\varepsilon\\). Now, the model has specified parameters which values are unknown."
+  },
+  {
+    "objectID": "lectures/W12.html#more-specific-fitted-model",
+    "href": "lectures/W12.html#more-specific-fitted-model",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "More specific: Fitted model",
+    "text": "More specific: Fitted model\n\nFitted model: When we have a data set with values for \\(Y, X_1, \\dots, X_m\\) we can fit values for the parameters \\(\\hat\\beta_0, \\dots, \\hat\\beta_m\\) to the data. This is the fitted model \\(\\hat f\\). This is called parameter estimation: We estimate \\(\\hat\\beta_0, \\dots, \\hat\\beta_m\\) with the hope that they match the real values \\(\\beta_0, \\dots, \\beta_m\\) and that the linear model \\(\\hat f\\) matches the real function \\(f\\).\nNow we could specify further to fit a specific parameterized model with a specific algorithm, and a specific set of hyperparameters, and maybe more …\n\n\nSometimes model means only a certain aspect of all these, for example the formula like sex ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g + species + island\n\n\nTake away: “Model” can mean things with very different granularity. That is OK because they are all related and all fit the definition of being a simplified representation of reality.\nBe prepared to be specific about what you mean by “model”."
+  },
+  {
+    "objectID": "lectures/W12.html#purpose-quantify-uncertainty",
+    "href": "lectures/W12.html#purpose-quantify-uncertainty",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Purpose: Quantify uncertainty",
+    "text": "Purpose: Quantify uncertainty\n\nUncertainty is a central concern in inferential data analysis.\nWe want to estimate a parameter of a population from a sample.\n\n\nCentral inferential assumption:\n\nOur data is a random sample from the population we are interested in.\n\nNo selection biases.\n\n\nExamples:\n\nWe want to know average height of all people but we only have a sample of people.\nWe want know the mean estimate of all possible participants of the ox meat weigh guessing competition from the sample ballots of participants we have.\nWe want to learn something about penguins from the data of the penguins in palmerpenguins::penguins"
+  },
+  {
+    "objectID": "lectures/W12.html#practical-example-galtons-data",
+    "href": "lectures/W12.html#practical-example-galtons-data",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Practical example: Galton’s Data",
+    "text": "Practical example: Galton’s Data\nCompetition: Guess the weight of the meat of an Ox? (Galton, 1907)\nWhat is the mean of all possible participants \\(\\mu\\)?\n\n\ngalton &lt;- read_csv(\"galton.csv\")\ngalton |&gt; ggplot(aes(Estimate)) + geom_histogram(binwidth = 5)\n\n\n\n\n\n\n\n\nThe (arithmetic) mean of the 787 estimates is \\(\\hat\\mu =\\) 1196.71.\nHow sure can we be that \\(\\hat\\mu\\) is close to \\(\\mu\\) and how can we quantify?1\n\nWe already assume that we have an unbiased sample of all possible participants!"
+  },
+  {
+    "objectID": "lectures/W12.html#practical-example-palmer-penguins",
+    "href": "lectures/W12.html#practical-example-palmer-penguins",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Practical example: Palmer Penguins",
+    "text": "Practical example: Palmer Penguins\nA linear model for body mass of penguins: \\(y_i = \\beta_0 + \\beta_1 x_i + \\dots + \\beta_m x_m  + \\varepsilon_i\\).\n\n\npeng_workflow &lt;- workflow() |&gt;\n  add_recipe(recipe(body_mass_g ~ ., data = penguins) |&gt; step_rm(year)) |&gt;\n  add_model(linear_reg() |&gt; set_engine(\"lm\"))\npeng_fit &lt;- peng_workflow |&gt; fit(data = penguins)\npeng_fit |&gt; tidy() |&gt; mutate_if(is.numeric, round, 7)\n\n# A tibble: 9 × 5\n  term              estimate std.error statistic   p.value\n  &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)        -1500.     576.      -2.61  0.00961  \n2 speciesChinstrap    -260.      88.6     -2.94  0.00352  \n3 speciesGentoo        988.     137.       7.20  0        \n4 islandDream          -13.1     58.5     -0.224 0.823    \n5 islandTorgersen      -48.1     60.9     -0.789 0.431    \n6 bill_length_mm        18.2      7.14     2.55  0.0113   \n7 bill_depth_mm         67.6     19.8      3.41  0.000734 \n8 flipper_length_mm     16.2      2.94     5.52  0.0000001\n9 sexmale              387.      48.1      8.04  0        \n\n\n\n\nThe column estimate shows the coefficients \\(\\hat\\beta_0, \\hat\\beta_1, \\dots, \\hat\\beta_m\\) of the linear model for the variables named in term\nHow sure can we be that the \\(\\hat\\beta\\)’s are close to the \\(\\beta\\)’s we are interested in?1\n\nWe already assume that we have an unbiased sample of all penguins!"
+  },
+  {
+    "objectID": "lectures/W12.html#bootstrapping-idea",
+    "href": "lectures/W12.html#bootstrapping-idea",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Bootstrapping1 idea",
+    "text": "Bootstrapping1 idea\n\nTake a bootstrap sample: a random sample taken with replacement from the original sample with the same size.\nCalculate the statistics for the bootstrap sample.\nRepeat steps 1. and 2. many times to create a bootstrap distribution - a distribution of bootstrap statistics\nUse the bootstrap distribution to quantify the uncertainty.\n\nWhat is the statistic in the Galton example? The mean\nWhat are the statistics in the penguins example? The coefficients\nThe name comes from the saying “pull oneself up by one’s bootstrap”. It refers to the somehow magical idea that we can use our small sample to mimic the whole population."
+  },
+  {
+    "objectID": "lectures/W12.html#bootstrapping-in-practice",
+    "href": "lectures/W12.html#bootstrapping-in-practice",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Bootstrapping in practice",
+    "text": "Bootstrapping in practice\n\nYou can do the bootstrapping procedure in various ways (including programming in base R or python).\nWe will use convenient functions from rsample form the tidymodels packages."
+  },
+  {
+    "objectID": "lectures/W12.html#resamplings-galtons-data",
+    "href": "lectures/W12.html#resamplings-galtons-data",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Resamplings: Galton’s Data",
+    "text": "Resamplings: Galton’s Data\n\n\nThe function sample selects size random elements from a vector x with or without replace.\n\nset.seed(224)\nsample(galton$Estimate, size = 3, replace = TRUE)\n\n[1] 1177 1232 1242\n\nsample(galton$Estimate, size = 3, replace = TRUE)\n\n[1] 1270 1440 1232\n\n\nFor tibbles we can use slice_sample.\n\ngalton |&gt; slice_sample(n = 3, replace = TRUE)\n\n# A tibble: 3 × 2\n  Estimate    id\n     &lt;dbl&gt; &lt;dbl&gt;\n1     1189   320\n2     1203   367\n3     1181   278\n\n\n\n\nA bootstrap sample is with replace and of the same size as the original sample:\n\nnrow(galton)\n\n[1] 787\n\ngalton |&gt; slice_sample(n = 787, replace = TRUE)\n\n# A tibble: 787 × 2\n   Estimate    id\n      &lt;dbl&gt; &lt;dbl&gt;\n 1     1347   774\n 2     1221   489\n 3     1112    85\n 4     1320   766\n 5     1266   697\n 6     1145   149\n 7     1271   711\n 8     1215   442\n 9     1238   596\n10     1163   198\n# ℹ 777 more rows\n\n\n\n\n\nCompute some means of bootstrapping samples manually:\n\ngalton |&gt; slice_sample(n = 787, replace = TRUE) |&gt; summarize(mean(Estimate))\n\n# A tibble: 1 × 1\n  `mean(Estimate)`\n             &lt;dbl&gt;\n1            1194.\n\ngalton |&gt; slice_sample(n = 787, replace = TRUE) |&gt; summarize(mean(Estimate))\n\n# A tibble: 1 × 1\n  `mean(Estimate)`\n             &lt;dbl&gt;\n1            1197.\n\ngalton |&gt; slice_sample(n = 787, replace = TRUE) |&gt; summarize(mean(Estimate))\n\n# A tibble: 1 × 1\n  `mean(Estimate)`\n             &lt;dbl&gt;\n1            1193."
+  },
+  {
+    "objectID": "lectures/W12.html#bootstrap-set-galtons-data",
+    "href": "lectures/W12.html#bootstrap-set-galtons-data",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Bootstrap set: Galton’s Data",
+    "text": "Bootstrap set: Galton’s Data\nThe function bootstraps from rsample does this type of bootstrapping for us.\n\n\n1,000 resamples:\n\nboots_galton &lt;- galton |&gt; bootstraps(times = 1000)\nboots_galton |&gt; head(5)\n\n# A tibble: 5 × 2\n  splits            id           \n  &lt;list&gt;            &lt;chr&gt;        \n1 &lt;split [787/295]&gt; Bootstrap0001\n2 &lt;split [787/293]&gt; Bootstrap0002\n3 &lt;split [787/296]&gt; Bootstrap0003\n4 &lt;split [787/303]&gt; Bootstrap0004\n5 &lt;split [787/283]&gt; Bootstrap0005\n\n\nThe column splits contains split objects.\n\nboots_galton$splits[[1]]\n\n&lt;Analysis/Assess/Total&gt;\n&lt;787/295/787&gt;\n\n\n\n\nFrom each split we can extract the bootstrapped resample with analysis.\n\nboots_galton$splits[[1]] |&gt; analysis()\n\n# A tibble: 787 × 2\n   Estimate    id\n      &lt;dbl&gt; &lt;dbl&gt;\n 1     1160   192\n 2     1260   678\n 3     1147   153\n 4     1221   484\n 5     1204   373\n 6     1165   211\n 7     1112    85\n 8     1415   780\n 9     1081    43\n10     1168   220\n# ℹ 777 more rows\n\n\nNote: An assessment set contains the observations not selected randomly in the resample. We ignore it here."
+  },
+  {
+    "objectID": "lectures/W12.html#bootstrap-distribution-galtons-data",
+    "href": "lectures/W12.html#bootstrap-distribution-galtons-data",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Bootstrap distribution: Galton’s Data",
+    "text": "Bootstrap distribution: Galton’s Data\n\n\nWe iterate with a map function1 over the splits and extract the analysis set and calculate the mean.\n\nboots_galton_mean &lt;- boots_galton |&gt;\n  mutate(\n    mean = map_dbl(splits, \\(x) analysis(x)$Estimate |&gt; mean())\n  )\nboots_galton_mean |&gt; head(5)\n\n# A tibble: 5 × 3\n  splits            id             mean\n  &lt;list&gt;            &lt;chr&gt;         &lt;dbl&gt;\n1 &lt;split [787/295]&gt; Bootstrap0001 1194.\n2 &lt;split [787/293]&gt; Bootstrap0002 1196.\n3 &lt;split [787/296]&gt; Bootstrap0003 1199.\n4 &lt;split [787/303]&gt; Bootstrap0004 1196.\n5 &lt;split [787/283]&gt; Bootstrap0005 1194.\n\n\n\n\nPlot the bootstrap distribution of the mean.\n\nboots_galton_mean |&gt;\n  ggplot(aes(x = mean)) +\n  geom_histogram() +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\nCompare distribution of estimates\n\ngalton |&gt;\n  ggplot(aes(Estimate)) +\n  geom_histogram(binwidth = 5) +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\nHere we use map_dbl which iterates over the list of splits and reports the values as a vector of doubles (numbers), the default of map would be to report also a list."
+  },
+  {
+    "objectID": "lectures/W12.html#quantify-uncertainty-standard-error",
+    "href": "lectures/W12.html#quantify-uncertainty-standard-error",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Quantify uncertainty? Standard error",
+    "text": "Quantify uncertainty? Standard error\nCompute the standard deviation of the bootstrap distribution.\n\nsd(boots_galton_mean$mean)\n\n[1] 2.732243\n\n\n\nThe standard deviation of the bootstrap distribution is called the standard error of the statistic.\nDo not confuse standard error (of a statistic) and standard deviation (of a variable).\nThe standard error of the mean can also be estimated directly from the original sample \\(x\\) as \\(\\frac{\\text{sd}(x)}{\\sqrt{n}}\\) where \\(n\\) is the sample size.\n\nsd(galton$Estimate) / sqrt(nrow(galton))\n\n[1] 2.623085\n\n\n\n\nInsight: The standard error decreases with sample size! However, it decreases only with the square root of the sample size.\nQuestion: You want to shrink the standard error by half. How much larger does the sample size need to be? 4 times"
+  },
+  {
+    "objectID": "lectures/W12.html#confidence-interval",
+    "href": "lectures/W12.html#confidence-interval",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Confidence interval",
+    "text": "Confidence interval\nAnother way to quantify uncertainty is to compute a confidence interval (CI) for a certain confidence level:\nThe true value of the statistic is expected to lie with the CI with certain probability (the confidence level).\n\n\n\nCompute the 95% confidence interval of the bootstrap distribution with quantile-functions:\n\nboots_galton_mean |&gt;\n  summarize(\n    lower = quantile(mean, 0.025),\n    upper = quantile(mean, 0.975)\n  )\n\n# A tibble: 1 × 2\n  lower upper\n  &lt;dbl&gt; &lt;dbl&gt;\n1 1191. 1202.\n\n\n\n\n\n\nCode\nboots_galton_mean |&gt;\n  ggplot(aes(x = mean)) +\n  geom_histogram() +\n  geom_vline(\n    xintercept = quantile(boots_galton_mean$mean, 0.025),\n    color = \"red\"\n  ) +\n  geom_vline(\n    xintercept = quantile(boots_galton_mean$mean, 0.975),\n    color = \"red\"\n  ) +\n  annotate(\n    \"text\",\n    x = 1197,\n    y = 10,\n    label = \"95% of estimates\",\n    color = \"white\",\n    size = unit(12, \"pt\")\n  ) +\n  theme_minimal(base_size = 24)"
+  },
+  {
+    "objectID": "lectures/W12.html#confidence-interval-meaning",
+    "href": "lectures/W12.html#confidence-interval-meaning",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Confidence Interval: Meaning",
+    "text": "Confidence Interval: Meaning\n\nboots_galton_mean |&gt;\n  summarize(\n    lower = quantile(mean, 0.025),\n    upper = quantile(mean, 0.975)\n  )\n\n# A tibble: 1 × 2\n  lower upper\n  &lt;dbl&gt; &lt;dbl&gt;\n1 1191. 1202.\n\n\nWhat is the correct interpretation?\n\n95% of the estimates in this sample lie between 1191 and 1202.\nWe are 95% confident that the mean estimate of all potential participants is between 1191 and 1202.\nWe are 95% confident that the mean estimate of this sample is between 1191 and 1202.\n\n\nCorrect: 2.\n1. The confidence is about a statistic (here, population mean) not about sample values!\n3. We know the mean of the sample precisely!\nThe confidence interval assesses where 95% of the values are when we sample anew."
+  },
+  {
+    "objectID": "lectures/W12.html#certainty-in-confidence-intervals",
+    "href": "lectures/W12.html#certainty-in-confidence-intervals",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Certainty in Confidence Intervals",
+    "text": "Certainty in Confidence Intervals\n\nCan’t we increase the confidence level to 99% to get a more precise estimate with a more narrow confidence interval?\n\n\n\nboots_galton_mean |&gt;\n  summarize(\n    lower = quantile(mean, 0.005),\n    upper = quantile(mean, 0.995)\n  )\n\n# A tibble: 1 × 2\n  lower upper\n  &lt;dbl&gt; &lt;dbl&gt;\n1 1190. 1204.\n\n\nNo, it is the other way round: The smaller and more precise the confidence interval, the lower must the confidence level be."
+  },
+  {
+    "objectID": "lectures/W12.html#bootstrap-linear-model-coefficients",
+    "href": "lectures/W12.html#bootstrap-linear-model-coefficients",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Bootstrap linear model coefficients",
+    "text": "Bootstrap linear model coefficients\n\npeng_workflow &lt;- workflow() |&gt;\n  add_recipe(recipe(body_mass_g ~ ., data = penguins) |&gt; step_rm(year)) |&gt;\n  add_model(linear_reg() |&gt; set_engine(\"lm\"))\npeng_fit &lt;- peng_workflow |&gt; fit(data = penguins)\npeng_fit |&gt; tidy() |&gt; mutate_if(is.numeric, round, 7)\n\n# A tibble: 9 × 5\n  term              estimate std.error statistic   p.value\n  &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)        -1500.     576.      -2.61  0.00961  \n2 speciesChinstrap    -260.      88.6     -2.94  0.00352  \n3 speciesGentoo        988.     137.       7.20  0        \n4 islandDream          -13.1     58.5     -0.224 0.823    \n5 islandTorgersen      -48.1     60.9     -0.789 0.431    \n6 bill_length_mm        18.2      7.14     2.55  0.0113   \n7 bill_depth_mm         67.6     19.8      3.41  0.000734 \n8 flipper_length_mm     16.2      2.94     5.52  0.0000001\n9 sexmale              387.      48.1      8.04  0        \n\n\n\nLet us now bootstrap whole models instead of just mean values!\n\n# A function to fit a model to a bootstrap sample and tidy the coefficients\nfit_split &lt;- function(split) {\n  peng_workflow |&gt; fit(data = analysis(split)) |&gt; tidy()\n}\n# Make 1000 bootstrap samples and fit a model to each\nboots_peng &lt;- bootstraps(penguins, times = 1000) |&gt;\n  mutate(coefs = map(splits, fit_split))"
+  },
+  {
+    "objectID": "lectures/W12.html#bootstrap-data-frame",
+    "href": "lectures/W12.html#bootstrap-data-frame",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Bootstrap data frame",
+    "text": "Bootstrap data frame\nNow we have a column coefs with a list of data frames, each containing the fitted coefficients.\n\nboots_peng\n\n# Bootstrap sampling \n# A tibble: 1,000 × 3\n   splits            id            coefs           \n   &lt;list&gt;            &lt;chr&gt;         &lt;list&gt;          \n 1 &lt;split [344/122]&gt; Bootstrap0001 &lt;tibble [9 × 5]&gt;\n 2 &lt;split [344/123]&gt; Bootstrap0002 &lt;tibble [9 × 5]&gt;\n 3 &lt;split [344/125]&gt; Bootstrap0003 &lt;tibble [9 × 5]&gt;\n 4 &lt;split [344/126]&gt; Bootstrap0004 &lt;tibble [9 × 5]&gt;\n 5 &lt;split [344/136]&gt; Bootstrap0005 &lt;tibble [9 × 5]&gt;\n 6 &lt;split [344/120]&gt; Bootstrap0006 &lt;tibble [9 × 5]&gt;\n 7 &lt;split [344/119]&gt; Bootstrap0007 &lt;tibble [9 × 5]&gt;\n 8 &lt;split [344/136]&gt; Bootstrap0008 &lt;tibble [9 × 5]&gt;\n 9 &lt;split [344/126]&gt; Bootstrap0009 &lt;tibble [9 × 5]&gt;\n10 &lt;split [344/120]&gt; Bootstrap0010 &lt;tibble [9 × 5]&gt;\n# ℹ 990 more rows\n\n\nWe can unnest the list column to make a much longer but unnested data frame:\n\nboots_peng |&gt; unnest(coefs)\n\n# A tibble: 9,000 × 7\n   splits            id            term    estimate std.error statistic  p.value\n   &lt;list&gt;            &lt;chr&gt;         &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n 1 &lt;split [344/122]&gt; Bootstrap0001 (Inter…  -1349.     584.       -2.31 2.15e- 2\n 2 &lt;split [344/122]&gt; Bootstrap0001 specie…   -221.     102.       -2.17 3.04e- 2\n 3 &lt;split [344/122]&gt; Bootstrap0001 specie…    938.     139.        6.75 6.62e-11\n 4 &lt;split [344/122]&gt; Bootstrap0001 island…    -74.7     59.2      -1.26 2.08e- 1\n 5 &lt;split [344/122]&gt; Bootstrap0001 island…   -101.      63.8      -1.57 1.16e- 1\n 6 &lt;split [344/122]&gt; Bootstrap0001 bill_l…     11.4      8.58      1.33 1.83e- 1\n 7 &lt;split [344/122]&gt; Bootstrap0001 bill_d…     66.0     20.3       3.26 1.24e- 3\n 8 &lt;split [344/122]&gt; Bootstrap0001 flippe…     17.1      3.04      5.63 3.93e- 8\n 9 &lt;split [344/122]&gt; Bootstrap0001 sexmale    435.      51.6       8.43 1.12e-15\n10 &lt;split [344/123]&gt; Bootstrap0002 (Inter…  -2296.     570.       -4.03 7.02e- 5\n# ℹ 8,990 more rows"
+  },
+  {
+    "objectID": "lectures/W12.html#some-coefficient-distributions",
+    "href": "lectures/W12.html#some-coefficient-distributions",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Some coefficient distributions",
+    "text": "Some coefficient distributions\n\n\nCode\ng1 &lt;- boots_peng |&gt;\n  unnest(coefs) |&gt;\n  filter(term == \"islandDream\") |&gt;\n  ggplot(aes(x = estimate)) +\n  geom_histogram() +\n  xlab(\"coefficients islandDream\") +\n  geom_vline(xintercept = 0, color = \"gray\") +\n  theme_minimal(base_size = 24)\ng2 &lt;- boots_peng |&gt;\n  unnest(coefs) |&gt;\n  filter(term == \"bill_length_mm\") |&gt;\n  ggplot(aes(x = estimate)) +\n  geom_histogram() +\n  xlab(\"coefficients bill_length_mm\") +\n  geom_vline(xintercept = 0, color = \"gray\") +\n  theme_minimal(base_size = 24)\ng3 &lt;- boots_peng |&gt;\n  unnest(coefs) |&gt;\n  filter(term == \"flipper_length_mm\") |&gt;\n  ggplot(aes(x = estimate)) +\n  geom_histogram() +\n  xlab(\"coefficients flipper_length_mm\") +\n  geom_vline(xintercept = 0, color = \"gray\") +\n  theme_minimal(base_size = 24)\ng1 + g2 + g3\n\n\n\n\nWe could derive bootstrapped p-values from these distributions."
+  },
+  {
+    "objectID": "lectures/W12.html#computed-p-values-from-each-fit",
+    "href": "lectures/W12.html#computed-p-values-from-each-fit",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "computed p-values from each fit",
+    "text": "computed p-values from each fit\n\nEach bootstrap fit also delivers computed p-values for each coefficient.1\n\n\n\nCode\ng1 &lt;- boots_peng |&gt;\n  unnest(coefs) |&gt;\n  filter(term == \"islandDream\") |&gt;\n  ggplot(aes(x = p.value)) +\n  geom_histogram() +\n  xlab(\"coefficients islandDream\") +\n  theme_minimal(base_size = 24)\ng2 &lt;- boots_peng |&gt;\n  unnest(coefs) |&gt;\n  filter(term == \"bill_length_mm\") |&gt;\n  ggplot(aes(x = p.value)) +\n  geom_histogram() +\n  xlab(\"coefficients bill_length_mm\") +\n  theme_minimal(base_size = 24)\ng3 &lt;- boots_peng |&gt;\n  unnest(coefs) |&gt;\n  filter(term == \"flipper_length_mm\") |&gt;\n  ggplot(aes(x = p.value)) +\n  geom_histogram() +\n  xlab(\"coefficients flipper_length_mm\") +\n  theme_minimal(base_size = 24)\ng1 + g2 + g3\n\n\n\n\n\n\n\n\n\n\ncomputed p-values in resamples vary widely (see islandDream) when bootstrapped p-values show insignificance.\n\nThese are computed based on theoretical assumptions with the help of t-tests and t-distributions."
+  },
+  {
+    "objectID": "lectures/W12.html#galtons-data",
+    "href": "lectures/W12.html#galtons-data",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Galton’s data",
+    "text": "Galton’s data\nWhat is the weight of the meat of this ox?\n\ngalton |&gt;\n  ggplot(aes(Estimate)) +\n  geom_histogram(binwidth = 5) +\n  geom_vline(xintercept = 1198, color = \"green\") +\n  geom_vline(xintercept = mean(galton$Estimate), color = \"red\")\n\n\n\n\n\n\n\n\n787 estimates, true value 1198, mean 1196.7\n\n\nWe focus on the arithmetic mean as aggregation function for the wisdom of the crowd here."
+  },
+  {
+    "objectID": "lectures/W12.html#rmse-galtons-data",
+    "href": "lectures/W12.html#rmse-galtons-data",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "RMSE Galton’s data",
+    "text": "RMSE Galton’s data\nDescribe the estimation game as a predictive model:\n\nAll estimates are made to predict the same value: the truth.\n\nIn contrast to the regression model, the estimate come from people and not from a regression formula.\n\nThe truth is the same for all.\n\nIn contrast to the regression model, the truth is one value and not a value for each prediction\n\n\n\nrmse_galton &lt;- galton |&gt;\n  mutate(true_value = 1198) |&gt;\n  rmse(truth = true_value, Estimate)\nrmse_galton\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard        73.6"
+  },
+  {
+    "objectID": "lectures/W12.html#mse-variance-and-bias-of-estimates",
+    "href": "lectures/W12.html#mse-variance-and-bias-of-estimates",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "MSE, Variance, and Bias of estimates",
+    "text": "MSE, Variance, and Bias of estimates\nIn a crowd estimation, \\(n\\) estimators delivered the estimates \\(\\hat{y}_1,\\dots,\\hat{y}_n\\). Let us look at the following measures\n\n\\(\\bar{y} = \\frac{1}{n}\\sum_{i = 1}^n \\hat{y}_i^2\\) is the mean estimate, it is the aggregated estimate of the crowd\n\\(\\text{MSE} = \\text{RMSE}^2 = \\frac{1}{n}\\sum_{i = 1}^n (\\text{truth} - \\hat{y}_i)^2\\)\n\\(\\text{Variance} = \\frac{1}{n}\\sum_{i = 1}^n (\\hat{y}_i - \\bar{y})^2\\)\n\\(\\text{Bias-squared} = (\\bar{y} - \\text{truth})^2\\) which is the square difference between truth and mean estimate.\n\nThere is a mathematical relation (a math exercise to check):\n\\[\\text{MSE} = \\text{Bias-squared} + \\text{Variance}\\]"
+  },
+  {
+    "objectID": "lectures/W12.html#testing-for-galtons-data",
+    "href": "lectures/W12.html#testing-for-galtons-data",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Testing for Galton’s data",
+    "text": "Testing for Galton’s data\n\\[\\text{MSE} = \\text{Bias-squared} + \\text{Variance}\\]\n\nMSE &lt;- (rmse_galton$.estimate)^2\nMSE\n\n[1] 5409.795\n\nVariance &lt;- var(galton$Estimate) * (nrow(galton) - 1) / nrow(galton)\n# Note, we had to correct for the divisor (n-1) in the classical statistical definition\n# to get the sample variance instead of the estimate for the population variance\nVariance\n\n[1] 5408.132\n\nBias_squared &lt;- (mean(galton$Estimate) - 1198)^2\nBias_squared\n\n[1] 1.663346\n\nBias_squared + Variance\n\n[1] 5409.795\n\n\n\n\nSuch nice mathematical properties are probably one reason why these squared measures are so popular."
+  },
+  {
+    "objectID": "lectures/W12.html#the-diversity-prediction-theorem",
+    "href": "lectures/W12.html#the-diversity-prediction-theorem",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "The diversity prediction theorem1",
+    "text": "The diversity prediction theorem1\n\nMSE is a measure for the average individuals error\nBias-squared is a measure for the collective error\nVariance is a measure for the diversity of estimates around the mean estimate\n\nThe mathematical relation \\[\\text{MSE} = \\text{Bias-squared} + \\text{Variance}\\] can be formulated as\nCollective error = Individual error - Diversity\nInterpretation: The higher the diversity the lower the collective error!\nNotion from: Page, S. E. (2007). The Difference: How the Power of Diversity Creates Better Groups, Firms, Schools, and Societies. Princeton University Press."
+  },
+  {
+    "objectID": "lectures/W12.html#why-is-this-message-a-bit-suggestive",
+    "href": "lectures/W12.html#why-is-this-message-a-bit-suggestive",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Why is this message a bit suggestive?",
+    "text": "Why is this message a bit suggestive?\nThe mathematical relation \\[\\text{MSE} = \\text{Bias-squared} + \\text{Variance}\\] can be formulated as\nCollective error = Individual error - Diversity\nInterpretation: The higher the diversity the lower the collective error!\n\n\n\\(\\text{MSE}\\) and \\(\\text{Variance}\\) are not independent!\nActivities to increase diversity (Variance) typically also increase the average individual error (MSE).\nFor example, if we just add more random estimates with same mean but wild variance to our sample we increase both and do not gain any decrease of the collective error."
+  },
+  {
+    "objectID": "lectures/W12.html#accuracy-for-numerical-estimate",
+    "href": "lectures/W12.html#accuracy-for-numerical-estimate",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Accuracy for numerical estimate",
+    "text": "Accuracy for numerical estimate\n\nFor binary classifiers accuracy has a simple definition: Fraction of correct classifications.\n\nIt can be further informed by other more specific measures taken from the confusion matrix (sensitivity, specificity)\n\n\nHow about numerical estimators?\nFor example outcomes of estimation games, or linear regression models?\n\n\nAccuracy is for example measured by (R)MSE\n\\(\\text{MSE} = \\text{Bias-squared} + \\text{Variance}\\) shows us that we can make a\nbias-variance decomposition\nThat means some part of the error is a systematic (the bias) and another part due to random variation (the variance)."
+  },
+  {
+    "objectID": "lectures/W12.html#d-accuracy-trueness-and-precision",
+    "href": "lectures/W12.html#d-accuracy-trueness-and-precision",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "2-d Accuracy: Trueness and Precision",
+    "text": "2-d Accuracy: Trueness and Precision\nAccording to ISO 5725-1 Standard: Accuracy (trueness and precision) of measurement methods and results - Part 1: General principles and definitions. there are two dimension of accuracy of numerical measurement."
+  },
+  {
+    "objectID": "lectures/W12.html#what-is-a-wise-crowd",
+    "href": "lectures/W12.html#what-is-a-wise-crowd",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "What is a wise crowd?",
+    "text": "What is a wise crowd?\nAssume the dots are estimates. Which is a wise crowd?\n\n\n\nOf course, high trueness and high precision! But, …\nFocusing on the crowd being wise instead of its individuals: High trueness, low precision."
+  },
+  {
+    "objectID": "lectures/W12.html#summary-crowd-wisdom",
+    "href": "lectures/W12.html#summary-crowd-wisdom",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Summary Crowd Wisdom",
+    "text": "Summary Crowd Wisdom\n\nThe wisdom of the crowd relies on aggregating diverse estimates.\nMore generally as these simple guessing games, crowd wisdom is this idea:\nMany problems can be solved better by aggregating the answers of many individuals than by relying on a single expert.\nThe random forest method of statistical learning is built on this idea:\nInstead of relying on on heavyily fine tuned decision tree, we create a forrest of many partly randomly generated trees and aggregate their predictions.\n\nIt turns out that such forest typically produce predictions that generalize better to new data.\n\nThe bias-variance decomposition helps to understand different sources of errors. It is used to understand error in predicion models (not shown here).\n\nIn an underfitted model, the error stems mostly from variance\nIn an overfitted model, the error stems mostly from bias (in the training data)"
+  },
+  {
+    "objectID": "lectures/W12.html#inference-in-statistics",
+    "href": "lectures/W12.html#inference-in-statistics",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Inference in statistics",
+    "text": "Inference in statistics\n\nInference is the process of using data to make generalizations about a larger population.\nTwo main types of statistical inference: Estimation and Hypothesis testing.\n\nEstimation: Estimate a population parameter based on a sample statistic. Example: Estimate the average height of all students at CU based on a sample of 50 students.\n\nWe can quantify the uncertainty of our estimate using confidence intervals.\nWe can use bootstrapping to create confidence intervals.\n\nHypothesis testing: Test a claim about a population parameter using sample data. Examples:\n\nTest if a new teaching method improves student performance compared to the traditional method.\nTest if a new drug is more effective than a placebo in treating a disease."
+  },
+  {
+    "objectID": "lectures/W12.html#example-organ-donors",
+    "href": "lectures/W12.html#example-organ-donors",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Example: Organ donors",
+    "text": "Example: Organ donors\n\n\nBackground:\n\nLiver donors may seek help of “medical consultants” assisting in all aspects around the surgery to reduce the possibility of complications.\nPatients might choose a consultant based on the historical complication rate of the consultant’s clients.\n\nCase: A consultant advertises:\n\nThe average complication rate for liver donor surgeries in the US is 10%, but her clients have only had 3 complications in the 62 liver donor surgeries. So, she has just 4.8% complications!\n\n\nIs this evidence for a better track record?\nLet us create the data frame for the consultant’s patients:\n\norgan_donor &lt;- tibble(\n  outcome = c(rep(\"complication\", 3), rep(\"no complication\", 59))\n)\norgan_donor |&gt; count(outcome)\n\n# A tibble: 2 × 2\n  outcome             n\n  &lt;chr&gt;           &lt;int&gt;\n1 complication        3\n2 no complication    59"
+  },
+  {
+    "objectID": "lectures/W12.html#formalizing-parameter-vs.-statistic",
+    "href": "lectures/W12.html#formalizing-parameter-vs.-statistic",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Formalizing: Parameter vs. statistic",
+    "text": "Formalizing: Parameter vs. statistic\n\nA parameter for a hypothesis test is the “true” value of interest.\nWe estimate the parameter using a sample statistic, here a so called point estimate (just one number).\n\nParameter: \\(q\\) true rate of complication: 10% complication rate in US\nStatistic: \\(\\hat{q}\\) rate of complication in the sample: \\(\\frac{3}{62}\\) = 4.8% (point estimate)\n\nThe consultant claims that her clients have a lower complication rate than the US average because of here competence. This is a causal claim. Can we assess it with these data? No. The data is observational. For example, maybe patients who can afford a medical consultant can afford better medical care, which can also lead to a lower complication rate.\nWhat could be a randomized controlled trial (RCT, gold standard for causal analysis)?\nBut we can ask Could the low complication rate \\(\\hat{q} = 4.8\\%\\) be due to chance?"
+  },
+  {
+    "objectID": "lectures/W12.html#formalizing-hypothesis-testing",
+    "href": "lectures/W12.html#formalizing-hypothesis-testing",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Formalizing: Hypothesis testing",
+    "text": "Formalizing: Hypothesis testing\n\nNull hypothesis \\(H_0\\): “There is nothing going on”\nHere: The complication rate for this consultant is no different than the US average of 10%. The 3 out of 62 complications is just due to chance.\nAlternative hypothesis \\(H_1\\): “There is something going on”\nThe complication rate for this consultant is lower than the US average of 10%.\n\n\nIdea: Understand hypothesis testing as a court trial\n\nFormulate \\(H_0\\): Defendant is innocent\nFormulate \\(H_A\\): Defendant is guilty\nPresent the evidence: Collect data\nJudge the evidence: “Could these data plausibly have happened by chance if the null hypothesis were true?”\nYes: Fail to reject \\(H_0\\); No: Reject \\(H_0\\)"
+  },
+  {
+    "objectID": "lectures/W12.html#simulating-the-null-distribution",
+    "href": "lectures/W12.html#simulating-the-null-distribution",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Simulating the null distribution",
+    "text": "Simulating the null distribution\nWe want simulate several outcomes of 62 patients where the probability of complication for each patient is 0.10. (Null hypothesis \\(H_0: q = 0.10\\).)\nThese several outcomes is called the null distribution.\n\nThink abstract of this using a bag of chips:\n\nHow many chips? For example 10 which makes 10% choices possible\nHow many colors? 2\nWhat should colors represent? “complication”, “no complication”\nHow many draws? 62 as the data\nWith replacement or without replacement? With replacement"
+  },
+  {
+    "objectID": "lectures/W12.html#simulation",
+    "href": "lectures/W12.html#simulation",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Simulation!",
+    "text": "Simulation!\n\noutcomes &lt;- c(\"complication\", \"no complication\")\nsim1 &lt;- sample(outcomes, size = 62, prob = c(0.1, 0.9), replace = TRUE)\nsim1\n\n [1] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n [5] \"no complication\" \"complication\"    \"no complication\" \"complication\"   \n [9] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[13] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[17] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[21] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[25] \"no complication\" \"complication\"    \"no complication\" \"no complication\"\n[29] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[33] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[37] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[41] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[45] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[49] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[53] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[57] \"no complication\" \"no complication\" \"no complication\" \"no complication\"\n[61] \"no complication\" \"no complication\"\n\nsum(sim1 == \"complication\") / 62\n\n[1] 0.0483871\n\n\nOh OK, this was exactly the consultant’s rate. Maybe it was a rare event? Let us repeat it."
+  },
+  {
+    "objectID": "lectures/W12.html#more-simulation",
+    "href": "lectures/W12.html#more-simulation",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "More simulation!",
+    "text": "More simulation!\n\nsum(\n  sample(outcomes, size = 62, prob = c(0.1, 0.9), replace = TRUE) ==\n    \"complication\"\n) /\n  62\n\n[1] 0.1129032\n\n\noutcomes &lt;- c(\"complication\", \"no complication\")\nsum(\n  sample(outcomes, size = 62, prob = c(0.1, 0.9), replace = TRUE) ==\n    \"complication\"\n) /\n  62"
+  },
+  {
+    "objectID": "lectures/W12.html#automating-with-tidymodels",
+    "href": "lectures/W12.html#automating-with-tidymodels",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Automating with tidymodels",
+    "text": "Automating with tidymodels\n\n\nnull_dist &lt;- organ_donor |&gt;\n  specify(response = outcome, success = \"complication\") |&gt;\n  hypothesize(\n    null = \"point\", # It is about a point estimate\n    p = c(\"complication\" = 0.10, \"no complication\" = 0.90)\n  ) |&gt;\n  generate(reps = 100, type = \"draw\") |&gt;\n  calculate(stat = \"prop\")\nnull_dist\n\n\nResponse: outcome (factor)\nNull Hypothesis: point\n# A tibble: 100 × 2\n   replicate   stat\n       &lt;int&gt;  &lt;dbl&gt;\n 1         1 0.0806\n 2         2 0.0968\n 3         3 0.0645\n 4         4 0.0645\n 5         5 0.113 \n 6         6 0.113 \n 7         7 0.113 \n 8         8 0.161 \n 9         9 0.0645\n10        10 0.0806\n# ℹ 90 more rows\n\n\nThis creates a sample of 100 from the null distribution. Each row is one simulated outcome of 62 patients with a complication rate under the null hypothesis of 10%."
+  },
+  {
+    "objectID": "lectures/W12.html#visualizing-the-null-distribution",
+    "href": "lectures/W12.html#visualizing-the-null-distribution",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Visualizing the null distribution",
+    "text": "Visualizing the null distribution\n\n\nCode\norgan_donor &lt;- tibble(\n  outcome = c(rep(\"complication\", 3), rep(\"no complication\", 59))\n)\nnull_dist &lt;- organ_donor |&gt;\n  specify(response = outcome, success = \"complication\") |&gt;\n  hypothesize(\n    null = \"point\", # It is about a point estimate\n    p = c(\"complication\" = 0.10, \"no complication\" = 0.90)\n  ) |&gt;\n  generate(reps = 100, type = \"draw\") |&gt;\n  calculate(stat = \"prop\")\nggplot(data = null_dist, mapping = aes(x = stat)) +\n  geom_bar(width = 0.005) +\n  labs(title = \"Null distribution\")"
+  },
+  {
+    "objectID": "lectures/W12.html#p-value",
+    "href": "lectures/W12.html#p-value",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "p-value",
+    "text": "p-value\nHypothesis testing procedure:\n\nStart with a null hypothesis, \\(H_0\\), that represents the status quo\nSet an alternative hypothesis, \\(H_A\\), that represents the research question, i.e. what we are testing for\nConduct a hypothesis test under the assumption that the null hypothesis is true and calculate a p-value.\n\n\nDefinition p-value:\nProbability of observed or more extreme outcome given that the null hypothesis is true."
+  },
+  {
+    "objectID": "lectures/W12.html#p-value-visualized",
+    "href": "lectures/W12.html#p-value-visualized",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "p-value visualized",
+    "text": "p-value visualized\nHow often was the simulated sample proportion at least as extreme as the observed sample proportion?*1\n\n\nggplot(data = null_dist, mapping = aes(x = stat)) +\n  geom_bar(width = 0.005) +\n  labs(title = \"Null distribution with observed value\") +\n  geom_vline(xintercept = 3 / 62, color = \"red\") +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\n\n\nnull_dist |&gt;\n  summarise(p_value = sum(stat &lt;= 3 / 62) / n())\n\n\n# A tibble: 1 × 1\n  p_value\n    &lt;dbl&gt;\n1    0.08\n\n\nThis is the fraction of simulations where complications was equal or below 0.0483871.\n\nThis a one-sided hypothesis test because we are looking for lower rates not also higher rates. We do one-sided test if we know the direction of interest, here “low” and “lower” rates."
+  },
+  {
+    "objectID": "lectures/W12.html#significance-level",
+    "href": "lectures/W12.html#significance-level",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Significance level",
+    "text": "Significance level\n\nA significance level \\(\\alpha\\) is a threshold we make up to make our judgment about the plausibility of the null hypothesis being true given the observed data.\nWe often use \\(\\alpha = 0.05 = 5\\%\\) as the cutoff for whether the p-value is low enough that the data are unlikely to have come from the null model.\nIf p-value &lt; \\(\\alpha\\), reject \\(H_0\\) in favor of \\(H_A\\): The data provide convincing evidence for the alternative hypothesis.\nIf p-value &gt; \\(\\alpha\\), fail to reject \\(H_0\\) in favor of \\(H_A\\): The data do not provide convincing evidence for the alternative hypothesis.\n\n\nWhat is the conclusion of the hypothesis test?\n\nSince the p-value 0.08 is greater than the significance level 0.05, we fail to reject the null hypothesis.\nThis data does not provide convincing evidence that this consultant incurs a lower complication rate than the 10% overall US complication rate."
+  },
+  {
+    "objectID": "lectures/W12.html#simulations-are-not-sufficient",
+    "href": "lectures/W12.html#simulations-are-not-sufficient",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "100 simulations are not sufficient!",
+    "text": "100 simulations are not sufficient!\nSimulate 15,000 times to get an accurate distribution.\n\n\nnull_dist &lt;- organ_donor |&gt;\n  specify(response = outcome, success = \"complication\") |&gt;\n  hypothesize(\n    null = \"point\",\n    p = c(\"complication\" = 0.10, \"no complication\" = 0.90)\n  ) |&gt;\n  generate(reps = 15000, type = \"simulate\") |&gt;\n  calculate(stat = \"prop\")\nggplot(data = null_dist, mapping = aes(x = stat)) +\n  geom_bar(width = 0.005) +\n  geom_vline(xintercept = 3 / 62, color = \"red\") +\n  theme_minimal(base_size = 24)\n\n\n\n\n\n\n\n\n\n\n\n\nnull_dist |&gt;\n  filter(stat &lt;= 3 / 62) |&gt;\n  summarise(p_value = n() / nrow(null_dist))\n\n\n# A tibble: 1 × 1\n  p_value\n    &lt;dbl&gt;\n1   0.122\n\n\nThis is a more robust p-value from simulation."
+  },
+  {
+    "objectID": "lectures/W12.html#p-value-in-model-outputs",
+    "href": "lectures/W12.html#p-value-in-model-outputs",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "p-value in model outputs",
+    "text": "p-value in model outputs\nModel output for a linear model with palmer penguins.\n\n\nlinear_reg() |&gt;\n  set_engine(\"lm\") |&gt;\n  fit(bill_length_mm ~ bill_depth_mm, data = penguins) |&gt;\n  tidy()\n\n\n# A tibble: 2 × 5\n  term          estimate std.error statistic  p.value\n  &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 (Intercept)     55.1       2.52      21.9  6.91e-67\n2 bill_depth_mm   -0.650     0.146     -4.46 1.12e- 5\n\n\nModel output for a logistic regression model with email from openintro\n\n\nlogistic_reg() |&gt;\n  set_engine(\"glm\") |&gt;\n  fit(spam ~ from + cc, data = email, family = \"binomial\") |&gt;\n  tidy()\n\n\n# A tibble: 3 × 5\n  term         estimate std.error statistic p.value\n  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;\n1 (Intercept)  13.6      309.        0.0439   0.965\n2 from1       -15.8      309.       -0.0513   0.959\n3 cc            0.00423    0.0193    0.220    0.826\n\n\nWhat do the p-values mean? What is the null hypothesis?\n\nNull-Hypothesis: There is no relationship between the predictor variable and the response variable, that means that the coefficient is equal to zero.\nSmaller p-value \\(\\to\\) more evidence for rejecting the hypothesis that there is no effect."
+  },
+  {
+    "objectID": "lectures/W12.html#xkcd-on-p-values",
+    "href": "lectures/W12.html#xkcd-on-p-values",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "xkcd on p-values",
+    "text": "xkcd on p-values\n\n\n \n\n\n\nSignificance levels are fairly arbitrary. Sometimes they are used (wrongly) as definitive judgments\nThey can even be used to do p-hacking: Searching for “significant” effects in observational data\nIn parts of science it has become a “gamed” performance metric.\nThe p-value says nothing about effect size!"
+  },
+  {
+    "objectID": "lectures/W12.html#p-value-misinterpretation",
+    "href": "lectures/W12.html#p-value-misinterpretation",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "p-value misinterpretation",
+    "text": "p-value misinterpretation\np-values do not measure1\n\nthe probability that the studied hypothesis is true\nthe probability that the data were produced by random chance alone\nthe size of an effect\nthe “importance of a result” or “evidence regarding a model or hypothesis” (it is only against the null hypothesis).\n\n\nCorrect:\nThe p-value is the probability of obtaining test results at least as extreme as the result actually observed, under the assumption that the null hypothesis is correct.\np-values and significance tests, when properly applied and interpreted, increase the rigor of the conclusions drawn from data.2\n\nFrom the American Statistical Association (ASA) 2016From the American Statistical Association (ASA) 2019"
+  },
+  {
+    "objectID": "lectures/W12.html#how-reliable-are-performance-metrics",
+    "href": "lectures/W12.html#how-reliable-are-performance-metrics",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "How reliable are performance metrics?",
+    "text": "How reliable are performance metrics?\n\nModel performance changes with the random selection of the training data. How can we then reliably compare models?\n\n\nA solution: Cross-validation\n\n\nMore specifically, \\(v\\)-fold cross-validation:\n\nShuffle your data and make a partition with \\(v\\) parts\n\nRecall from set theory: A partition is a division of a set into mutually disjoint parts which union covers the whole set.\n\nHere a partition of the the set of all rows in a data frame.\n\n\nUse 1 part for validation, and the remaining \\(v-1\\) parts for training\nRepeat \\(v\\) times"
+  },
+  {
+    "objectID": "lectures/W12.html#cross-validation",
+    "href": "lectures/W12.html#cross-validation",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Cross-validation",
+    "text": "Cross-validation"
+  },
+  {
+    "objectID": "lectures/W12.html#decision-tree",
+    "href": "lectures/W12.html#decision-tree",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Decision Tree",
+    "text": "Decision Tree\n\n\nset.seed(12345) # Test with other seeds to see how the Train-Test-Split changes results!\n# 1. Train-Test-Split\npeng_split &lt;- initial_split(na.omit(penguins), prop = 0.8, strata = sex)\npeng_train &lt;- training(peng_split)\npeng_test &lt;- testing(peng_split)\nset.seed(NULL) # Reset random. See that the decision tree algorithm is deterministic! Test it!\n# 2. Preprocessing-Recipe\npeng_recipe &lt;- recipe(body_mass_g ~ ., data = peng_train) |&gt;\n  step_rm(year)\n# 3. Model\npeng_regtree &lt;- decision_tree() |&gt;\n  set_engine(\"rpart\") |&gt;\n  set_mode(\"regression\")\n# 4. Workflow\npeng_regtree_wf &lt;- workflow() |&gt;\n  add_recipe(peng_recipe) |&gt;\n  add_model(peng_regtree)\n# 5. Fit\npeng_regtree_fit &lt;- peng_regtree_wf |&gt;\n  fit(data = peng_train)\n# 6. Predict with test data\npeng_regtree_pred &lt;- peng_regtree_fit |&gt;\n  augment(peng_test)\n# 7. Evaluate performance\npeng_regtree_pred |&gt;\n  metrics(truth = body_mass_g, estimate = .pred) |&gt;\n  filter(.metric == \"rmse\")\n\n\n# A tibble: 1 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard        350."
+  },
+  {
+    "objectID": "lectures/W12.html#cross-validation-1",
+    "href": "lectures/W12.html#cross-validation-1",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Cross-validation",
+    "text": "Cross-validation\nCross-validation replacing the Train-Test-Split in the workflow:\n\n# 1. 5-fold Cross validation\npeng_folds &lt;- vfold_cv(na.omit(penguins), v = 5, strata = sex)\n# 2. Preprocessing-Recipe: Same as before\n# 3. Model: Same as before\n# 4. Workflow: Same as before\n# 5. Fit: We use peng_regtree_wf and use fit_resamples() to fit for all folds\npeng_folds_regtree_fit &lt;- peng_regtree_wf |&gt;\n  fit_resamples(resamples = peng_folds)\npeng_folds_regtree_fit\n\n# Resampling results\n# 5-fold cross-validation using stratification \n# A tibble: 5 × 4\n  splits           id    .metrics         .notes          \n  &lt;list&gt;           &lt;chr&gt; &lt;list&gt;           &lt;list&gt;          \n1 &lt;split [266/67]&gt; Fold1 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;\n2 &lt;split [266/67]&gt; Fold2 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;\n3 &lt;split [266/67]&gt; Fold3 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;\n4 &lt;split [267/66]&gt; Fold4 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;\n5 &lt;split [267/66]&gt; Fold5 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;\n\n# 6./7. (Predict) and evaluate performance for all folds\npeng_folds_regtree_fit |&gt;\n  collect_metrics(summarize = FALSE, type = \"wide\")\n\n# A tibble: 5 × 4\n  .config         id     rmse   rsq\n  &lt;chr&gt;           &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 pre0_mod0_post0 Fold1  439. 0.607\n2 pre0_mod0_post0 Fold2  300. 0.876\n3 pre0_mod0_post0 Fold3  322. 0.818\n4 pre0_mod0_post0 Fold4  330. 0.847\n5 pre0_mod0_post0 Fold5  335. 0.851\n\n\n\n\nInterpretation:\n\nCross-validation shows variation\nThe original fit was worse than average\n\n\nFor comparision: Original split\n\n\n# A tibble: 2 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard     350.   \n2 rsq     standard       0.811\n\n\n\n\n\nBesides vfold_cv() the only new function are fit_resamples() and collect_metrics()."
+  },
+  {
+    "objectID": "lectures/W12.html#tuning",
+    "href": "lectures/W12.html#tuning",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Tuning",
+    "text": "Tuning\n\n\nset.seed(1234)\n# 1.a. Train-Test-Split (same as before)\n# 1.b. CREATE CROSS-VALIDATION FOLDS for TRAINING data\npeng_folds &lt;- vfold_cv(peng_train, v = 5, repeats = 5, strata = sex)\n# 2. Preprocessing-Recipe (same)\n# 3. Model WITH TUNING (modified)\npeng_regtree &lt;- decision_tree(\n  cost_complexity = 0,\n  tree_depth = tune(),\n  min_n = 2\n) |&gt;\n  set_engine(\"rpart\") |&gt;\n  set_mode(\"regression\")\n# 4.a. Workflow (same but with new model)\npeng_wf &lt;- workflow() |&gt;\n  add_recipe(peng_recipe) |&gt;\n  add_model(peng_regtree)\n# 4.b. TUNE WITH CROSS-VALIDATION\npeng_tune_results &lt;- peng_wf |&gt;\n  tune_grid(\n    resamples = peng_folds,\n    grid = expand_grid(\n      tree_depth = c(2, 3, 4, 5, 6, 7)\n    ),\n    metrics = metric_set(rmse)\n  )\n# 4.c. EXAMINE TUNING RESULTS\npeng_tune_results |&gt;\n  collect_metrics(summarize = TRUE) |&gt;\n  select(-.config, -.estimator)\n\n\n# A tibble: 6 × 5\n  tree_depth .metric  mean     n std_err\n       &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;\n1          2 rmse     314.    25    8.57\n2          3 rmse     320.    25    6.80\n3          4 rmse     316.    25    5.64\n4          5 rmse     331.    25    6.20\n5          6 rmse     343.    25    6.02\n6          7 rmse     357.    25    6.49\n\n\ncollect_metrics(summarize = TRUE) averages performance across folds and repeats!\nIn total there are 150 fits (6 parameter combinations \\(\\times\\) 5 folds \\(\\times\\) 5 repeats).\nHere all fits:\n\n\n# A tibble: 150 × 7\n    id      id2   tree_depth .metric .estimator .estimate .config        \n    &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;          \n  1 Repeat1 Fold1          2 rmse    standard        323. pre0_mod1_post0\n  2 Repeat1 Fold2          2 rmse    standard        324. pre0_mod1_post0\n  3 Repeat1 Fold3          2 rmse    standard        337. pre0_mod1_post0\n  4 Repeat1 Fold4          2 rmse    standard        283. pre0_mod1_post0\n  5 Repeat1 Fold5          2 rmse    standard        262. pre0_mod1_post0\n  6 Repeat2 Fold1          2 rmse    standard        290. pre0_mod1_post0\n  7 Repeat2 Fold2          2 rmse    standard        295. pre0_mod1_post0\n  8 Repeat2 Fold3          2 rmse    standard        337. pre0_mod1_post0\n  9 Repeat2 Fold4          2 rmse    standard        289. pre0_mod1_post0\n 10 Repeat2 Fold5          2 rmse    standard        324. pre0_mod1_post0\n 11 Repeat3 Fold1          2 rmse    standard        286. pre0_mod1_post0\n 12 Repeat3 Fold2          2 rmse    standard        351. pre0_mod1_post0\n 13 Repeat3 Fold3          2 rmse    standard        298. pre0_mod1_post0\n 14 Repeat3 Fold4          2 rmse    standard        285. pre0_mod1_post0\n 15 Repeat3 Fold5          2 rmse    standard        315. pre0_mod1_post0\n 16 Repeat4 Fold1          2 rmse    standard        274. pre0_mod1_post0\n 17 Repeat4 Fold2          2 rmse    standard        294. pre0_mod1_post0\n 18 Repeat4 Fold3          2 rmse    standard        326. pre0_mod1_post0\n 19 Repeat4 Fold4          2 rmse    standard        337. pre0_mod1_post0\n 20 Repeat4 Fold5          2 rmse    standard        291. pre0_mod1_post0\n 21 Repeat5 Fold1          2 rmse    standard        310. pre0_mod1_post0\n 22 Repeat5 Fold2          2 rmse    standard        300. pre0_mod1_post0\n 23 Repeat5 Fold3          2 rmse    standard        326. pre0_mod1_post0\n 24 Repeat5 Fold4          2 rmse    standard        489. pre0_mod1_post0\n 25 Repeat5 Fold5          2 rmse    standard        306. pre0_mod1_post0\n 26 Repeat1 Fold1          3 rmse    standard        352. pre0_mod2_post0\n 27 Repeat1 Fold2          3 rmse    standard        338. pre0_mod2_post0\n 28 Repeat1 Fold3          3 rmse    standard        325. pre0_mod2_post0\n 29 Repeat1 Fold4          3 rmse    standard        294. pre0_mod2_post0\n 30 Repeat1 Fold5          3 rmse    standard        273. pre0_mod2_post0\n 31 Repeat2 Fold1          3 rmse    standard        312. pre0_mod2_post0\n 32 Repeat2 Fold2          3 rmse    standard        313. pre0_mod2_post0\n 33 Repeat2 Fold3          3 rmse    standard        337. pre0_mod2_post0\n 34 Repeat2 Fold4          3 rmse    standard        294. pre0_mod2_post0\n 35 Repeat2 Fold5          3 rmse    standard        308. pre0_mod2_post0\n 36 Repeat3 Fold1          3 rmse    standard        286. pre0_mod2_post0\n 37 Repeat3 Fold2          3 rmse    standard        368. pre0_mod2_post0\n 38 Repeat3 Fold3          3 rmse    standard        298. pre0_mod2_post0\n 39 Repeat3 Fold4          3 rmse    standard        315. pre0_mod2_post0\n 40 Repeat3 Fold5          3 rmse    standard        339. pre0_mod2_post0\n 41 Repeat4 Fold1          3 rmse    standard        276. pre0_mod2_post0\n 42 Repeat4 Fold2          3 rmse    standard        305. pre0_mod2_post0\n 43 Repeat4 Fold3          3 rmse    standard        331. pre0_mod2_post0\n 44 Repeat4 Fold4          3 rmse    standard        331. pre0_mod2_post0\n 45 Repeat4 Fold5          3 rmse    standard        313. pre0_mod2_post0\n 46 Repeat5 Fold1          3 rmse    standard        333. pre0_mod2_post0\n 47 Repeat5 Fold2          3 rmse    standard        299. pre0_mod2_post0\n 48 Repeat5 Fold3          3 rmse    standard        343. pre0_mod2_post0\n 49 Repeat5 Fold4          3 rmse    standard        436. pre0_mod2_post0\n 50 Repeat5 Fold5          3 rmse    standard        292. pre0_mod2_post0\n 51 Repeat1 Fold1          4 rmse    standard        336. pre0_mod3_post0\n 52 Repeat1 Fold2          4 rmse    standard        317. pre0_mod3_post0\n 53 Repeat1 Fold3          4 rmse    standard        307. pre0_mod3_post0\n 54 Repeat1 Fold4          4 rmse    standard        327. pre0_mod3_post0\n 55 Repeat1 Fold5          4 rmse    standard        257. pre0_mod3_post0\n 56 Repeat2 Fold1          4 rmse    standard        314. pre0_mod3_post0\n 57 Repeat2 Fold2          4 rmse    standard        285. pre0_mod3_post0\n 58 Repeat2 Fold3          4 rmse    standard        343. pre0_mod3_post0\n 59 Repeat2 Fold4          4 rmse    standard        306. pre0_mod3_post0\n 60 Repeat2 Fold5          4 rmse    standard        306. pre0_mod3_post0\n 61 Repeat3 Fold1          4 rmse    standard        275. pre0_mod3_post0\n 62 Repeat3 Fold2          4 rmse    standard        372. pre0_mod3_post0\n 63 Repeat3 Fold3          4 rmse    standard        313. pre0_mod3_post0\n 64 Repeat3 Fold4          4 rmse    standard        305. pre0_mod3_post0\n 65 Repeat3 Fold5          4 rmse    standard        296. pre0_mod3_post0\n 66 Repeat4 Fold1          4 rmse    standard        321. pre0_mod3_post0\n 67 Repeat4 Fold2          4 rmse    standard        300. pre0_mod3_post0\n 68 Repeat4 Fold3          4 rmse    standard        315. pre0_mod3_post0\n 69 Repeat4 Fold4          4 rmse    standard        318. pre0_mod3_post0\n 70 Repeat4 Fold5          4 rmse    standard        286. pre0_mod3_post0\n 71 Repeat5 Fold1          4 rmse    standard        354. pre0_mod3_post0\n 72 Repeat5 Fold2          4 rmse    standard        303. pre0_mod3_post0\n 73 Repeat5 Fold3          4 rmse    standard        338. pre0_mod3_post0\n 74 Repeat5 Fold4          4 rmse    standard        383. pre0_mod3_post0\n 75 Repeat5 Fold5          4 rmse    standard        318. pre0_mod3_post0\n 76 Repeat1 Fold1          5 rmse    standard        331. pre0_mod4_post0\n 77 Repeat1 Fold2          5 rmse    standard        328. pre0_mod4_post0\n 78 Repeat1 Fold3          5 rmse    standard        324. pre0_mod4_post0\n 79 Repeat1 Fold4          5 rmse    standard        329. pre0_mod4_post0\n 80 Repeat1 Fold5          5 rmse    standard        277. pre0_mod4_post0\n 81 Repeat2 Fold1          5 rmse    standard        342. pre0_mod4_post0\n 82 Repeat2 Fold2          5 rmse    standard        308. pre0_mod4_post0\n 83 Repeat2 Fold3          5 rmse    standard        342. pre0_mod4_post0\n 84 Repeat2 Fold4          5 rmse    standard        329. pre0_mod4_post0\n 85 Repeat2 Fold5          5 rmse    standard        327. pre0_mod4_post0\n 86 Repeat3 Fold1          5 rmse    standard        365. pre0_mod4_post0\n 87 Repeat3 Fold2          5 rmse    standard        365. pre0_mod4_post0\n 88 Repeat3 Fold3          5 rmse    standard        325. pre0_mod4_post0\n 89 Repeat3 Fold4          5 rmse    standard        301. pre0_mod4_post0\n 90 Repeat3 Fold5          5 rmse    standard        314. pre0_mod4_post0\n 91 Repeat4 Fold1          5 rmse    standard        331. pre0_mod4_post0\n 92 Repeat4 Fold2          5 rmse    standard        339. pre0_mod4_post0\n 93 Repeat4 Fold3          5 rmse    standard        323. pre0_mod4_post0\n 94 Repeat4 Fold4          5 rmse    standard        348. pre0_mod4_post0\n 95 Repeat4 Fold5          5 rmse    standard        270. pre0_mod4_post0\n 96 Repeat5 Fold1          5 rmse    standard        396. pre0_mod4_post0\n 97 Repeat5 Fold2          5 rmse    standard        291. pre0_mod4_post0\n 98 Repeat5 Fold3          5 rmse    standard        327. pre0_mod4_post0\n 99 Repeat5 Fold4          5 rmse    standard        406. pre0_mod4_post0\n100 Repeat5 Fold5          5 rmse    standard        342. pre0_mod4_post0\n101 Repeat1 Fold1          6 rmse    standard        320. pre0_mod5_post0\n102 Repeat1 Fold2          6 rmse    standard        339. pre0_mod5_post0\n103 Repeat1 Fold3          6 rmse    standard        352. pre0_mod5_post0\n104 Repeat1 Fold4          6 rmse    standard        343. pre0_mod5_post0\n105 Repeat1 Fold5          6 rmse    standard        309. pre0_mod5_post0\n106 Repeat2 Fold1          6 rmse    standard        317. pre0_mod5_post0\n107 Repeat2 Fold2          6 rmse    standard        324. pre0_mod5_post0\n108 Repeat2 Fold3          6 rmse    standard        347. pre0_mod5_post0\n109 Repeat2 Fold4          6 rmse    standard        361. pre0_mod5_post0\n110 Repeat2 Fold5          6 rmse    standard        324. pre0_mod5_post0\n111 Repeat3 Fold1          6 rmse    standard        404. pre0_mod5_post0\n112 Repeat3 Fold2          6 rmse    standard        365. pre0_mod5_post0\n113 Repeat3 Fold3          6 rmse    standard        363. pre0_mod5_post0\n114 Repeat3 Fold4          6 rmse    standard        312. pre0_mod5_post0\n115 Repeat3 Fold5          6 rmse    standard        332. pre0_mod5_post0\n116 Repeat4 Fold1          6 rmse    standard        316. pre0_mod5_post0\n117 Repeat4 Fold2          6 rmse    standard        326. pre0_mod5_post0\n118 Repeat4 Fold3          6 rmse    standard        337. pre0_mod5_post0\n119 Repeat4 Fold4          6 rmse    standard        391. pre0_mod5_post0\n120 Repeat4 Fold5          6 rmse    standard        296. pre0_mod5_post0\n121 Repeat5 Fold1          6 rmse    standard        413. pre0_mod5_post0\n122 Repeat5 Fold2          6 rmse    standard        327. pre0_mod5_post0\n123 Repeat5 Fold3          6 rmse    standard        341. pre0_mod5_post0\n124 Repeat5 Fold4          6 rmse    standard        382. pre0_mod5_post0\n125 Repeat5 Fold5          6 rmse    standard        326. pre0_mod5_post0\n126 Repeat1 Fold1          7 rmse    standard        310. pre0_mod6_post0\n127 Repeat1 Fold2          7 rmse    standard        351. pre0_mod6_post0\n128 Repeat1 Fold3          7 rmse    standard        374. pre0_mod6_post0\n129 Repeat1 Fold4          7 rmse    standard        362. pre0_mod6_post0\n130 Repeat1 Fold5          7 rmse    standard        318. pre0_mod6_post0\n131 Repeat2 Fold1          7 rmse    standard        313. pre0_mod6_post0\n132 Repeat2 Fold2          7 rmse    standard        317. pre0_mod6_post0\n133 Repeat2 Fold3          7 rmse    standard        358. pre0_mod6_post0\n134 Repeat2 Fold4          7 rmse    standard        380. pre0_mod6_post0\n135 Repeat2 Fold5          7 rmse    standard        328. pre0_mod6_post0\n136 Repeat3 Fold1          7 rmse    standard        425. pre0_mod6_post0\n137 Repeat3 Fold2          7 rmse    standard        354. pre0_mod6_post0\n138 Repeat3 Fold3          7 rmse    standard        377. pre0_mod6_post0\n139 Repeat3 Fold4          7 rmse    standard        326. pre0_mod6_post0\n140 Repeat3 Fold5          7 rmse    standard        343. pre0_mod6_post0\n141 Repeat4 Fold1          7 rmse    standard        366. pre0_mod6_post0\n142 Repeat4 Fold2          7 rmse    standard        336. pre0_mod6_post0\n143 Repeat4 Fold3          7 rmse    standard        358. pre0_mod6_post0\n144 Repeat4 Fold4          7 rmse    standard        404. pre0_mod6_post0\n145 Repeat4 Fold5          7 rmse    standard        346. pre0_mod6_post0\n146 Repeat5 Fold1          7 rmse    standard        424. pre0_mod6_post0\n147 Repeat5 Fold2          7 rmse    standard        346. pre0_mod6_post0\n148 Repeat5 Fold3          7 rmse    standard        374. pre0_mod6_post0\n149 Repeat5 Fold4          7 rmse    standard        396. pre0_mod6_post0\n150 Repeat5 Fold5          7 rmse    standard        326. pre0_mod6_post0"
+  },
+  {
+    "objectID": "lectures/W12.html#tuning-visualizations",
+    "href": "lectures/W12.html#tuning-visualizations",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Tuning visualizations",
+    "text": "Tuning visualizations\nVisualization for evalution"
+  },
+  {
+    "objectID": "lectures/W12.html#tuning-best-parameters",
+    "href": "lectures/W12.html#tuning-best-parameters",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Tuning best parameters",
+    "text": "Tuning best parameters\nSelection of best parameters\n\n\n# 4.e. SEE BEST PARAMETERS AND SELECT BEST\nbest_params &lt;- select_best(peng_tune_results, metric = \"rmse\")\nshow_best(peng_tune_results, metric = \"rmse\") |&gt;\n  select(-.estimator, -.config)\n\n\n# A tibble: 5 × 5\n  tree_depth .metric  mean     n std_err\n       &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;\n1          2 rmse     314.    25    8.57\n2          4 rmse     316.    25    5.64\n3          3 rmse     320.    25    6.80\n4          5 rmse     331.    25    6.20\n5          6 rmse     343.    25    6.02\n\n\nBest parameters: tree_depth = 2"
+  },
+  {
+    "objectID": "lectures/W12.html#fit-with-tune-parameters",
+    "href": "lectures/W12.html#fit-with-tune-parameters",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Fit with tune parameters",
+    "text": "Fit with tune parameters\n\n\n# 5. Fit: FINALIZE AND FIT WITH BEST PARAMETERS and fit\npeng_regtree_fit &lt;- peng_wf |&gt;\n  finalize_workflow(best_params) |&gt;\n  fit(data = peng_train)\n# 6./7. Predict and Evaluatue with test data (as before)\npeng_regtree_fit |&gt;\n  augment(peng_test) |&gt;\n  metrics(truth = body_mass_g, estimate = .pred)\n\n\n# A tibble: 3 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard     350.   \n2 rsq     standard       0.811\n3 mae     standard     284.   \n\n\n\nAlthough, best parameters differ from default, performance is the same.\nThis can happen, especially when the model is simple and the dataset is small.\n\n\nHow can we improve the performance with the idea of trees?\nCreate several trees and aggregate them in a random forest!"
+  },
+  {
+    "objectID": "lectures/W12.html#random-forests-1",
+    "href": "lectures/W12.html#random-forests-1",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Random forests",
+    "text": "Random forests\n\n\n\nSource: https://de.wikipedia.org/wiki/Random_Forest"
+  },
+  {
+    "objectID": "lectures/W12.html#how-a-random-forest-is-made",
+    "href": "lectures/W12.html#how-a-random-forest-is-made",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "How a random forest is made",
+    "text": "How a random forest is made\n\nBuild many decision trees independently (default: 500 trees), each trained on the full dataset\nIn each tree do the following at each decision node:\n\nRandomly select mtry features from all available features (e.g., 2 out of 6, rule of thumb: square root of the number of features)\nFind the best split only among those randomly selected features.\nThe randomness in variable selection at each split ensures trees are different from each other, this shall reduce overfitting.\n\nMake predictions by\n\naveraging predictions across all trees (regression) or\nmajority vote (classification)"
+  },
+  {
+    "objectID": "lectures/W12.html#random-forest-regression",
+    "href": "lectures/W12.html#random-forest-regression",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Random forest regression",
+    "text": "Random forest regression\n\n\n# 1. Train-Test-Split\n# 2. Preprocessing-Recipe\n# 3. Model\npeng_regforest &lt;- rand_forest() |&gt;\n  set_engine(\"ranger\", importance = \"impurity\") |&gt;\n  set_mode(\"regression\")\n# 4. Workflow\npeng_regforest_fit &lt;- workflow() |&gt;\n  add_recipe(peng_recipe) |&gt;\n  add_model(peng_regforest) |&gt;\n  # 5. Fit\n  fit(data = peng_train)\npeng_regforest_fit\n\n\n══ Workflow [trained] ══════════════════════════════════════════════════════════\nPreprocessor: Recipe\nModel: rand_forest()\n\n── Preprocessor ────────────────────────────────────────────────────────────────\n1 Recipe Step\n\n• step_rm()\n\n── Model ───────────────────────────────────────────────────────────────────────\nRanger result\n\nCall:\n ranger::ranger(x = maybe_data_frame(x), y = y, importance = ~\"impurity\",      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1)) \n\nType:                             Regression \nNumber of trees:                  500 \nSample size:                      266 \nNumber of independent variables:  6 \nMtry:                             2 \nTarget node size:                 5 \nVariable importance mode:         impurity \nSplitrule:                        variance \nOOB prediction error (MSE):       83738.4 \nR squared (OOB):                  0.8721779 \n\n\nWith set_engine(\"ranger\", importance = \"impurity\") we specify the method of specification for the computation of variable importance."
+  },
+  {
+    "objectID": "lectures/W12.html#random-forest-regression-continued",
+    "href": "lectures/W12.html#random-forest-regression-continued",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Random forest regression continued",
+    "text": "Random forest regression continued\n\n\n# 6./7. Predict and Evaluatue with test data (as before)\npeng_regforest_fit |&gt;\n  augment(peng_test) |&gt;\n  metrics(truth = body_mass_g, estimate = .pred)\n\n\n# A tibble: 3 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 rmse    standard     325.   \n2 rsq     standard       0.835\n3 mae     standard     265.   \n\n\n\nRandom forest often outperform decision tree and linear models.\nHowever, they have no natural visualization and are less interpretable.\nThey have thousands of parameters with all these trees!"
+  },
+  {
+    "objectID": "lectures/W12.html#variable-importance",
+    "href": "lectures/W12.html#variable-importance",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Variable importance",
+    "text": "Variable importance\nVariable importance identify features that matter for good predicitions.\n\n\n# 6./7. Predict and Evaluatue with test data (as before)\n# Variable importance\nextract_fit_engine(peng_regforest_fit) |&gt;\n  vip() +\n  theme_minimal(base_size = 18)\n\n\n\n\n\n\n\n\n\n\nThe computation of variable importance is a step of post-hoc interpretation of complex models like random forests because it is computed after the model is fitted.\nIn contrast, pre-processing happens before fitting the model.\n\nAll details about exact definition and different methods to compute variable importance are skipped here."
+  },
+  {
+    "objectID": "lectures/W12.html#classification-with-random-forrest",
+    "href": "lectures/W12.html#classification-with-random-forrest",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Classification with random forrest",
+    "text": "Classification with random forrest\nFirst the spam prediction decision tree\n\n\nset.seed(12345) # Just to fix the presentation, test without when doing yourself!\n# 1. Train-Test-Split\nemail_split &lt;- initial_split(email, prop = 0.7, strata = spam)\nemail_train &lt;- training(email_split)\nemail_test &lt;- testing(email_split)\n# 2. Preprocessing-Recipe\nemail_recipe &lt;- recipe(spam ~ ., data = email) |&gt;\n  step_rm(from, sent_email, viagra) |&gt; # Remove some variables (see former lectures)\n  step_date(time, features = c(\"dow\", \"month\")) |&gt; # Make day-of-week and month features ...\n  step_rm(time) |&gt; # ... and remove the date-time itself\n  step_zv(all_predictors()) # remove predictors with zero variance\n# 3. Model\nemail_classtree &lt;- decision_tree() |&gt;\n  set_engine(\"rpart\") |&gt;\n  set_mode(\"classification\")\n# 4. Workflow\nemail_classtree_wf &lt;- workflow() |&gt;\n  add_recipe(email_recipe) |&gt;\n  add_model(email_classtree)\n# 5. Fit\nemail_classtree_fit &lt;- email_classtree_wf |&gt;\n  fit(data = email_train)\n# 6./7. Predict with test data and evaluate performance\nclass_metrics &lt;- metric_set(accuracy, sensitivity, specificity)\nemail_classtree_fit |&gt;\n  augment(email_test) |&gt;\n  class_metrics(truth = spam, estimate = .pred_class, event_level = \"second\")\n\n\n# A tibble: 3 × 3\n  .metric     .estimator .estimate\n  &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy    binary         0.910\n2 sensitivity binary         0.244\n3 specificity binary         0.988"
+  },
+  {
+    "objectID": "lectures/W12.html#random-forest-classification",
+    "href": "lectures/W12.html#random-forest-classification",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Random forest classification",
+    "text": "Random forest classification\n\n\n# 1. Train-Test-Split\nemail_split &lt;- initial_split(na.omit(email), prop = 0.8)\nemail_train &lt;- training(email_split)\nemail_test &lt;- testing(email_split)\n# 2. Preprocessing-Recipe\nemail_recipe &lt;- recipe(spam ~ ., data = email) |&gt;\n  step_rm(from, sent_email, viagra) |&gt; # Remove some variables (see former lectures)\n  step_date(time, features = c(\"dow\", \"month\")) |&gt; # Make day-of-week and month features ...\n  step_rm(time) |&gt; # ... and remove the date-time itself\n  step_zv(all_predictors()) # remove predictors with zero variance\n# 3. Model\nemail_forest &lt;- rand_forest() |&gt;\n  set_engine(\"ranger\", importance = \"impurity\") |&gt;\n  set_mode(\"classification\")\n# 4. Workflow\nemail_forest_fit &lt;- workflow() |&gt;\n  add_recipe(email_recipe) |&gt;\n  add_model(email_forest) |&gt;\n  # 5. Fit\n  fit(data = email_train)\nemail_forest_fit # Look at the fit object\n\n\n══ Workflow [trained] ══════════════════════════════════════════════════════════\nPreprocessor: Recipe\nModel: rand_forest()\n\n── Preprocessor ────────────────────────────────────────────────────────────────\n4 Recipe Steps\n\n• step_rm()\n• step_date()\n• step_rm()\n• step_zv()\n\n── Model ───────────────────────────────────────────────────────────────────────\nRanger result\n\nCall:\n ranger::ranger(x = maybe_data_frame(x), y = y, importance = ~\"impurity\",      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1), probability = TRUE) \n\nType:                             Probability estimation \nNumber of trees:                  500 \nSample size:                      3136 \nNumber of independent variables:  18 \nMtry:                             4 \nTarget node size:                 10 \nVariable importance mode:         impurity \nSplitrule:                        gini \nOOB prediction error (Brier s.):  0.04985914"
+  },
+  {
+    "objectID": "lectures/W12.html#random-forest-classification-continued",
+    "href": "lectures/W12.html#random-forest-classification-continued",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Random forest classification continued",
+    "text": "Random forest classification continued\n\n\n# 6./7. Predict with test data and evaluate performance\nemail_forest_fit |&gt;\n  augment(email_test) |&gt;\n  class_metrics(truth = spam, estimate = .pred_class, event_level = \"second\")\n\n\n# A tibble: 3 × 3\n  .metric     .estimator .estimate\n  &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy    binary         0.935\n2 sensitivity binary         0.378\n3 specificity binary         0.993\n\n\nIn particular specificity (true negative rate) is better than for the decision tree!\n\nHow does prediction work for classification with random forests? How do we aggregate the classification of all the trees in the forrest? (For regression we were averaging.)\nMajority vote across all trees!"
+  },
+  {
+    "objectID": "lectures/W12.html#variable-importance-1",
+    "href": "lectures/W12.html#variable-importance-1",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Variable importance",
+    "text": "Variable importance\n\n\n# Variable importance\nextract_fit_engine(email_classtree_fit) |&gt;\n  vip() +\n  theme_minimal(base_size = 18)\n\n\n\n\n\n\n\n\n\n\n\n# Variable importance\nextract_fit_engine(email_forest_fit) |&gt;\n  vip() +\n  theme_minimal(base_size = 18)"
+  },
+  {
+    "objectID": "lectures/W12.html#summary-new-insights-prediction",
+    "href": "lectures/W12.html#summary-new-insights-prediction",
+    "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
+    "section": "Summary new insights prediction",
+    "text": "Summary new insights prediction\n\nA decision tree is deterministic. However, results change with different train-test-splits.\nCross-validation helps to assess model performance more reliably.\nTuning hyperparameters can improve model performance, but often defaults are good.\n\nIt is all about quantifying when overfitting kicks in and out-of-sample performance degrades.\n\nRandom forests take the idea of decision trees further by creating many trees and aggregating their predictions. They are not deterministic but stochastic even with the same training data.\nWhy are random forrests better than individual trees?\n\nBy limiting choices at each split to a random subset of features, we prevent any single strong predictor from dominating all trees, creating a diverse “forest” of models that collectively perform better than any individual tree.\nThe wisdom of crowds in a random forrest of decision trees."
+  },
+  {
     "objectID": "lectures/W11.html#preliminaries",
     "href": "lectures/W11.html#preliminaries",
     "title": "W#11: Decision Trees, Overfitting, Clustering Algorithms",
     "section": "Preliminaries",
-    "text": "Preliminaries\n\nlibrary(tidymodels)\nlibrary(openintro)\nlibrary(palmerpenguins)\nlibrary(tidyverse)\nlibrary(rpart.plot)\nset.seed(12345) # To fix values for presentation consistency"
+    "text": "Preliminaries\n\nlibrary(tidymodels)\n\n── Attaching packages ────────────────────────────────────── tidymodels 1.5.0 ──\n\n\n✔ broom        1.0.13     ✔ recipes      1.4.0 \n✔ dials        1.4.4      ✔ rsample      1.3.2 \n✔ dplyr        1.2.1      ✔ tailor       0.1.0 \n✔ ggplot2      4.0.3      ✔ tidyr        1.3.2 \n✔ infer        1.1.0      ✔ tune         2.1.0 \n✔ modeldata    1.6.0      ✔ workflows    1.3.0 \n✔ parsnip      1.6.0      ✔ workflowsets 1.1.1 \n✔ purrr        1.2.2      ✔ yardstick    1.4.0 \n\n\n── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──\n✖ purrr::discard() masks scales::discard()\n✖ dplyr::filter()  masks stats::filter()\n✖ dplyr::lag()     masks stats::lag()\n✖ recipes::step()  masks stats::step()\n\nlibrary(openintro)\n\nLoading required package: airports\n\n\nLoading required package: cherryblossom\n\n\nLoading required package: usdata\n\n\n\nAttaching package: 'openintro'\n\n\nThe following object is masked from 'package:modeldata':\n\n    ames\n\nlibrary(palmerpenguins)\n\n\nAttaching package: 'palmerpenguins'\n\n\nThe following object is masked from 'package:modeldata':\n\n    penguins\n\n\nThe following objects are masked from 'package:datasets':\n\n    penguins, penguins_raw\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ lubridate 1.9.5     ✔ tibble    3.3.1\n✔ readr     2.2.0     \n\n\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ readr::col_factor() masks scales::col_factor()\n✖ purrr::discard()    masks scales::discard()\n✖ dplyr::filter()     masks stats::filter()\n✖ stringr::fixed()    masks recipes::fixed()\n✖ dplyr::lag()        masks stats::lag()\n✖ readr::spec()       masks yardstick::spec()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(rpart.plot)\n\nLoading required package: rpart\n\nAttaching package: 'rpart'\n\nThe following object is masked from 'package:dials':\n\n    prune\n\nset.seed(12345) # To fix values for presentation consistency"
   },
   {
     "objectID": "lectures/W11.html#workflow-prediction-model",
     "href": "lectures/W11.html#workflow-prediction-model",
     "title": "W#11: Decision Trees, Overfitting, Clustering Algorithms",
     "section": "Workflow prediction model",
-    "text": "Workflow prediction model\n\nData splitting into training and test data\ninitial_split(), training(), testing() \\(\\to\\) train and test datasets\nRecipe for preprocessing\nrecipe(), specify response variable and preprocessing steps for predictors\nModel specification\nFor example decision_tree(), set_engine(\"rpart\")\nWorkflow to combine recipe and model (still all just specifications)\nworkflow() with add_recipe(), add_model() creates a workflow object\nFit the model with training data using the workflow (finally the computation happens!) fit() with workflow and train data\nPredict response variable for rows of the test data and add original variable\naugment() the test data (this uses predict() and binds the original values)\nEvaluate performance using the orignal variable as ground truth in test data\nmetrics() by specifying truth and estimate columns"
+    "text": "Workflow prediction model\n\nData splitting into training and test data\ninitial_split(), training(), testing() \\(\\to\\) train and test datasets\nRecipe for preprocessing\nrecipe(), specify response variable and preprocessing steps for predictors\nModel specification\nFor example decision_tree(), set_engine(\"rpart\")\nWorkflow to combine recipe and model (still all just specifications)\nworkflow() with add_recipe(), add_model() creates a workflow object\nFit the model with training data using the workflow (finally the computation happens!) fit() with workflow and train data\nPredict response variable for rows of the test data and add original variable\naugment() the test data (this uses predict() and binds the original values)\nEvaluate performance using the original variable as ground truth in test data\nmetrics() by specifying truth and estimate columns"
   },
   {
     "objectID": "lectures/W11.html#binary-classification",
@@ -102,7 +543,7 @@
     "href": "lectures/W11.html#the-deepest-tree",
     "title": "W#11: Decision Trees, Overfitting, Clustering Algorithms",
     "section": "The deepest tree",
-    "text": "The deepest tree\n\n\nCode\npeng_regtree_deepest &lt;- decision_tree(\n  cost_complexity = 0,\n  min_n = 2\n) |&gt;\n  set_engine(\"rpart\") |&gt;\n  set_mode(\"regression\")\npeng_regtree_deepest_fit &lt;- workflow() |&gt;\n  add_recipe(peng_reg_recipe) |&gt;\n  add_model(peng_regtree_deepest) |&gt;\n  fit(data = peng_train)\nrpart.plot(peng_regtree_deepest_fit$fit$fit$fit, roundint = FALSE, tweak = 1)"
+    "text": "The deepest tree\n\n\nCode\npeng_regtree_deepest &lt;- decision_tree(\n  cost_complexity = 0,\n  min_n = 2\n) |&gt;\n  set_engine(\"rpart\") |&gt;\n  set_mode(\"regression\")\npeng_regtree_deepest_fit &lt;- workflow() |&gt;\n  add_recipe(peng_reg_recipe) |&gt;\n  add_model(peng_regtree_deepest) |&gt;\n  fit(data = peng_train)\nrpart.plot(peng_regtree_deepest_fit$fit$fit$fit, roundint = FALSE, tweak = 1)\n\n\nWarning: labs do not fit even at cex 0.15, there may be some overplotting"
   },
   {
     "objectID": "lectures/W11.html#make-predictions",
@@ -284,7 +725,7 @@
     "href": "lectures/W11.html#excursion-whats-in-prep-object",
     "title": "W#11: Decision Trees, Overfitting, Clustering Algorithms",
     "section": "Excursion: What’s in prep-object?",
-    "text": "Excursion: What’s in prep-object?\nA lot!\n\nglimpse(peng_prepped)\n\nList of 12\n $ var_info          : tibble [8 × 4] (S3: tbl_df/tbl/data.frame)\n  ..$ variable: chr [1:8] \"species\" \"island\" \"bill_length_mm\" \"bill_depth_mm\" ...\n  ..$ type    :List of 8\n  ..$ role    : chr [1:8] NA NA NA NA ...\n  ..$ source  : chr [1:8] \"original\" \"original\" \"original\" \"original\" ...\n $ term_info         : tibble [4 × 4] (S3: tbl_df/tbl/data.frame)\n  ..$ variable: chr [1:4] \"bill_length_mm\" \"bill_depth_mm\" \"flipper_length_mm\" \"body_mass_g\"\n  ..$ type    :List of 4\n  ..$ role    : chr [1:4] NA NA NA NA\n  ..$ source  : chr [1:4] \"original\" \"original\" \"original\" \"original\"\n $ steps             :List of 3\n  ..$ :List of 6\n  .. ..$ terms   :List of 2\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"quosures\" \"list\"\n  .. ..$ role    : logi NA\n  .. ..$ trained : logi TRUE\n  .. ..$ removals: Named chr [1:4] \"species\" \"island\" \"sex\" \"year\"\n  .. .. ..- attr(*, \"names\")= chr [1:4] \"species\" \"island\" \"sex\" \"year\"\n  .. ..$ skip    : logi FALSE\n  .. ..$ id      : chr \"rm_K3sZn\"\n  .. ..- attr(*, \"class\")= chr [1:2] \"step_rm\" \"step\"\n  ..$ :List of 8\n  .. ..$ terms       :List of 1\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"quosures\" \"list\"\n  .. ..$ role        : logi NA\n  .. ..$ trained     : logi TRUE\n  .. ..$ means       : Named num [1:4] 44 17.2 201 4207.1\n  .. .. ..- attr(*, \"names\")= chr [1:4] \"bill_length_mm\" \"bill_depth_mm\" \"flipper_length_mm\" \"body_mass_g\"\n  .. ..$ na_rm       : logi TRUE\n  .. ..$ skip        : logi FALSE\n  .. ..$ id          : chr \"center_tnMqa\"\n  .. ..$ case_weights: NULL\n  .. ..- attr(*, \"class\")= chr [1:2] \"step_center\" \"step\"\n  ..$ :List of 9\n  .. ..$ terms       :List of 1\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"quosures\" \"list\"\n  .. ..$ role        : logi NA\n  .. ..$ trained     : logi TRUE\n  .. ..$ sds         : Named num [1:4] 5.47 1.97 14.02 805.22\n  .. .. ..- attr(*, \"names\")= chr [1:4] \"bill_length_mm\" \"bill_depth_mm\" \"flipper_length_mm\" \"body_mass_g\"\n  .. ..$ factor      : num 1\n  .. ..$ na_rm       : logi TRUE\n  .. ..$ skip        : logi FALSE\n  .. ..$ id          : chr \"scale_Kmst3\"\n  .. ..$ case_weights: NULL\n  .. ..- attr(*, \"class\")= chr [1:2] \"step_scale\" \"step\"\n $ template          : tibble [333 × 4] (S3: tbl_df/tbl/data.frame)\n  ..$ bill_length_mm   : num [1:333] -0.895 -0.822 -0.675 -1.334 -0.858 ...\n  ..$ bill_depth_mm    : num [1:333] 0.78 0.119 0.424 1.084 1.744 ...\n  ..$ flipper_length_mm: num [1:333] -1.425 -1.068 -0.426 -0.568 -0.782 ...\n  ..$ body_mass_g      : num [1:333] -0.568 -0.506 -1.189 -0.94 -0.692 ...\n $ retained          : logi TRUE\n $ requirements      :List of 1\n  ..$ bake: Named logi(0) \n  .. ..- attr(*, \"names\")= chr(0) \n $ ptype             : tibble [0 × 8] (S3: tbl_df/tbl/data.frame)\n  ..$ species          : Factor w/ 3 levels \"Adelie\",\"Chinstrap\",..: \n  ..$ island           : Factor w/ 3 levels \"Biscoe\",\"Dream\",..: \n  ..$ bill_length_mm   : num(0) \n  ..$ bill_depth_mm    : num(0) \n  ..$ flipper_length_mm: int(0) \n  ..$ body_mass_g      : int(0) \n  ..$ sex              : Factor w/ 2 levels \"female\",\"male\": \n  ..$ year             : int(0) \n $ strings_as_factors: NULL\n $ tr_info           :'data.frame': 1 obs. of  2 variables:\n  ..$ nrows    : int 333\n  ..$ ncomplete: int 333\n $ orig_lvls         :List of 8\n  ..$ species          :List of 3\n  .. ..$ values : chr [1:3] \"Adelie\" \"Chinstrap\" \"Gentoo\"\n  .. ..$ ordered: logi FALSE\n  .. ..$ factor : logi TRUE\n  ..$ island           :List of 3\n  .. ..$ values : chr [1:3] \"Biscoe\" \"Dream\" \"Torgersen\"\n  .. ..$ ordered: logi FALSE\n  .. ..$ factor : logi TRUE\n  ..$ bill_length_mm   :List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n  ..$ bill_depth_mm    :List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n  ..$ flipper_length_mm:List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n  ..$ body_mass_g      :List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n  ..$ sex              :List of 3\n  .. ..$ values : chr [1:2] \"female\" \"male\"\n  .. ..$ ordered: logi FALSE\n  .. ..$ factor : logi TRUE\n  ..$ year             :List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n $ fit_times         : tibble [6 × 2] (S3: tbl_df/tbl/data.frame)\n  ..$ stage_id: chr [1:6] \"prep.rm_K3sZn\" \"bake.rm_K3sZn\" \"prep.center_tnMqa\" \"bake.center_tnMqa\" ...\n  ..$ elapsed : num [1:6] 0.002 0 0.002 0 0.002 ...\n $ last_term_info    : gropd_df [8 × 6] (S3: grouped_df/tbl_df/tbl/data.frame)\n  ..$ variable: chr [1:8] \"bill_depth_mm\" \"bill_length_mm\" \"body_mass_g\" \"flipper_length_mm\" ...\n  ..$ type    :List of 8\n  ..$ role    :List of 8\n  ..$ source  : chr [1:8] \"original\" \"original\" \"original\" \"original\" ...\n  ..$ number  : num [1:8] 3 3 3 3 0 0 0 0\n  ..$ skip    : logi [1:8] FALSE FALSE FALSE FALSE FALSE FALSE ...\n  ..- attr(*, \"groups\")= tibble [8 × 2] (S3: tbl_df/tbl/data.frame)\n  .. ..- attr(*, \".drop\")= logi TRUE\n - attr(*, \"class\")= chr \"recipe\""
+    "text": "Excursion: What’s in prep-object?\nA lot!\n\nglimpse(peng_prepped)\n\nList of 12\n $ var_info          : tibble [8 × 4] (S3: tbl_df/tbl/data.frame)\n  ..$ variable: chr [1:8] \"species\" \"island\" \"bill_length_mm\" \"bill_depth_mm\" ...\n  ..$ type    :List of 8\n  ..$ role    : chr [1:8] NA NA NA NA ...\n  ..$ source  : chr [1:8] \"original\" \"original\" \"original\" \"original\" ...\n $ term_info         : tibble [4 × 4] (S3: tbl_df/tbl/data.frame)\n  ..$ variable: chr [1:4] \"bill_length_mm\" \"bill_depth_mm\" \"flipper_length_mm\" \"body_mass_g\"\n  ..$ type    :List of 4\n  ..$ role    : chr [1:4] NA NA NA NA\n  ..$ source  : chr [1:4] \"original\" \"original\" \"original\" \"original\"\n $ steps             :List of 3\n  ..$ :List of 6\n  .. ..$ terms   :List of 2\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"quosures\" \"list\"\n  .. ..$ role    : logi NA\n  .. ..$ trained : logi TRUE\n  .. ..$ removals: Named chr [1:4] \"species\" \"island\" \"sex\" \"year\"\n  .. .. ..- attr(*, \"names\")= chr [1:4] \"species\" \"island\" \"sex\" \"year\"\n  .. ..$ skip    : logi FALSE\n  .. ..$ id      : chr \"rm_K3sZn\"\n  .. ..- attr(*, \"class\")= chr [1:2] \"step_rm\" \"step\"\n  ..$ :List of 8\n  .. ..$ terms       :List of 1\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"quosures\" \"list\"\n  .. ..$ role        : logi NA\n  .. ..$ trained     : logi TRUE\n  .. ..$ means       : Named num [1:4] 44 17.2 201 4207.1\n  .. .. ..- attr(*, \"names\")= chr [1:4] \"bill_length_mm\" \"bill_depth_mm\" \"flipper_length_mm\" \"body_mass_g\"\n  .. ..$ na_rm       : logi TRUE\n  .. ..$ skip        : logi FALSE\n  .. ..$ id          : chr \"center_tnMqa\"\n  .. ..$ case_weights: NULL\n  .. ..- attr(*, \"class\")= chr [1:2] \"step_center\" \"step\"\n  ..$ :List of 9\n  .. ..$ terms       :List of 1\n  .. .. ..- attr(*, \"class\")= chr [1:2] \"quosures\" \"list\"\n  .. ..$ role        : logi NA\n  .. ..$ trained     : logi TRUE\n  .. ..$ sds         : Named num [1:4] 5.47 1.97 14.02 805.22\n  .. .. ..- attr(*, \"names\")= chr [1:4] \"bill_length_mm\" \"bill_depth_mm\" \"flipper_length_mm\" \"body_mass_g\"\n  .. ..$ factor      : num 1\n  .. ..$ na_rm       : logi TRUE\n  .. ..$ skip        : logi FALSE\n  .. ..$ id          : chr \"scale_Kmst3\"\n  .. ..$ case_weights: NULL\n  .. ..- attr(*, \"class\")= chr [1:2] \"step_scale\" \"step\"\n $ template          : tibble [333 × 4] (S3: tbl_df/tbl/data.frame)\n  ..$ bill_length_mm   : num [1:333] -0.895 -0.822 -0.675 -1.334 -0.858 ...\n  ..$ bill_depth_mm    : num [1:333] 0.78 0.119 0.424 1.084 1.744 ...\n  ..$ flipper_length_mm: num [1:333] -1.425 -1.068 -0.426 -0.568 -0.782 ...\n  ..$ body_mass_g      : num [1:333] -0.568 -0.506 -1.189 -0.94 -0.692 ...\n $ retained          : logi TRUE\n $ requirements      :List of 1\n  ..$ bake: Named logi(0) \n  .. ..- attr(*, \"names\")= chr(0) \n $ ptype             : tibble [0 × 8] (S3: tbl_df/tbl/data.frame)\n  ..$ species          : Factor w/ 3 levels \"Adelie\",\"Chinstrap\",..: \n  ..$ island           : Factor w/ 3 levels \"Biscoe\",\"Dream\",..: \n  ..$ bill_length_mm   : num(0) \n  ..$ bill_depth_mm    : num(0) \n  ..$ flipper_length_mm: int(0) \n  ..$ body_mass_g      : int(0) \n  ..$ sex              : Factor w/ 2 levels \"female\",\"male\": \n  ..$ year             : int(0) \n $ strings_as_factors: NULL\n $ tr_info           :'data.frame': 1 obs. of  2 variables:\n  ..$ nrows    : int 333\n  ..$ ncomplete: int 333\n $ orig_lvls         :List of 8\n  ..$ species          :List of 3\n  .. ..$ values : chr [1:3] \"Adelie\" \"Chinstrap\" \"Gentoo\"\n  .. ..$ ordered: logi FALSE\n  .. ..$ factor : logi TRUE\n  ..$ island           :List of 3\n  .. ..$ values : chr [1:3] \"Biscoe\" \"Dream\" \"Torgersen\"\n  .. ..$ ordered: logi FALSE\n  .. ..$ factor : logi TRUE\n  ..$ bill_length_mm   :List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n  ..$ bill_depth_mm    :List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n  ..$ flipper_length_mm:List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n  ..$ body_mass_g      :List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n  ..$ sex              :List of 3\n  .. ..$ values : chr [1:2] \"female\" \"male\"\n  .. ..$ ordered: logi FALSE\n  .. ..$ factor : logi TRUE\n  ..$ year             :List of 2\n  .. ..$ values : logi NA\n  .. ..$ ordered: logi NA\n $ fit_times         : tibble [6 × 2] (S3: tbl_df/tbl/data.frame)\n  ..$ stage_id: chr [1:6] \"prep.rm_K3sZn\" \"bake.rm_K3sZn\" \"prep.center_tnMqa\" \"bake.center_tnMqa\" ...\n  ..$ elapsed : num [1:6] 0.001 0 0.001 0.001 0.002 ...\n $ last_term_info    : gropd_df [8 × 6] (S3: grouped_df/tbl_df/tbl/data.frame)\n  ..$ variable: chr [1:8] \"bill_depth_mm\" \"bill_length_mm\" \"body_mass_g\" \"flipper_length_mm\" ...\n  ..$ type    :List of 8\n  ..$ role    :List of 8\n  ..$ source  : chr [1:8] \"original\" \"original\" \"original\" \"original\" ...\n  ..$ number  : num [1:8] 3 3 3 3 0 0 0 0\n  ..$ skip    : logi [1:8] FALSE FALSE FALSE FALSE FALSE FALSE ...\n  ..- attr(*, \"groups\")= tibble [8 × 2] (S3: tbl_df/tbl/data.frame)\n  .. ..- attr(*, \".drop\")= logi TRUE\n - attr(*, \"class\")= chr \"recipe\""
   },
   {
     "objectID": "lectures/W11.html#preprocessing-in-a-list-in-steps",
@@ -333,7 +774,7 @@
     "href": "lectures/W11.html#visualization-scatter-plot",
     "title": "W#11: Decision Trees, Overfitting, Clustering Algorithms",
     "section": "Visualization: Scatter plot",
-    "text": "Visualization: Scatter plot\n\n\nCode\ng1 &lt;- assignments |&gt;\n  filter(k == 3) |&gt;\n  ggplot(aes(bill_length_mm, bill_depth_mm, color = .cluster)) +\n  geom_point() +\n  labs(title = \"kMeans: k = 3 clusters\")\ng2 &lt;- assignments |&gt;\n  filter(k == 6) |&gt;\n  mutate(species = na.omit(penguins)$species) |&gt;\n  ggplot(aes(bill_length_mm, bill_depth_mm, color = .cluster)) +\n  geom_point() +\n  labs(title = \"kMeans: k = 6 clusters\")\ng3 &lt;- penguins |&gt;\n  ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) +\n  geom_point() +\n  labs(title = \"Species\")\ng4 &lt;- penguins |&gt;\n  ggplot(aes(bill_length_mm, bill_depth_mm, color = sex)) +\n  geom_point() +\n  labs(title = \"Sex\")\ng1 + g2 + g3 + g4 + plot_layout(nrow = 2)\n\n\n\n\nThis 3-cluster solution “finds the species fairly well!\nCaution: These are just two out of four variables!"
+    "text": "Visualization: Scatter plot\n\n\nCode\ng1 &lt;- assignments |&gt;\n  filter(k == 3) |&gt;\n  ggplot(aes(bill_length_mm, bill_depth_mm, color = .cluster)) +\n  geom_point() +\n  labs(title = \"kMeans: k = 3 clusters\")\ng2 &lt;- assignments |&gt;\n  filter(k == 6) |&gt;\n  mutate(species = na.omit(penguins)$species) |&gt;\n  ggplot(aes(bill_length_mm, bill_depth_mm, color = .cluster)) +\n  geom_point() +\n  labs(title = \"kMeans: k = 6 clusters\")\ng3 &lt;- penguins |&gt;\n  ggplot(aes(bill_length_mm, bill_depth_mm, color = species)) +\n  geom_point() +\n  labs(title = \"Species\")\ng4 &lt;- penguins |&gt;\n  ggplot(aes(bill_length_mm, bill_depth_mm, color = sex)) +\n  geom_point() +\n  labs(title = \"Sex\")\ng1 + g2 + g3 + g4 + plot_layout(nrow = 2)\n\n\nWarning: Removed 2 rows containing missing values or values outside the scale range\n(`geom_point()`).\nRemoved 2 rows containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\nThis 3-cluster solution “finds the species fairly well!\nCaution: These are just two out of four variables!"
   },
   {
     "objectID": "lectures/W11.html#it-can-go-differently",
@@ -3729,7 +4170,7 @@
     "href": "schedule.html",
     "title": "Schedule",
     "section": "",
-    "text": "Caution\n\n\n\nThe titles are still tentative.\n\n\n\nTabular Schedule\nData Science Tools on Thursday\nData Science Concepts on Monday\nFor online participation you find all events in your Teams Calendar.\nConcepts General Channel\nTools General Channel.\n\n\n\nWeek\nDates Concepts\nTopics\nDates Tools\nTools Topic\n\n\n\n\n1\n\nOnly Tools: Hello to Data Science Tools and Concepts Technical Setup\nSep-03\nR\n\n\n2\nSep-07\nW#01 What is Data Science?\nSep-10\nR\n\n\n3\nSep-14\nW#02 Data Visualization, Data Formats, Tidy Data\nSep-17\nR\n\n\n4\nSep-21\nW#03 Data Import, Data Wrangling\nSep-24\nR\n\n\n5\nSep-28\nW#04 Strings, Relational Data, Functions\nOct-01\nR\n\n\n6\nOct-05\nW#05 Descriptive Statistics, Exploratory Data Analysis\nOct-08\nR\n\n\n7\nOct-12\nW#06 Principal Component Analysis, Epidemic Modeling, Calculus\nOct-15\nR\n\n\n8\nOct-19\nW#07 Models in Science, Linear Model  Social Scientist Input: Georgi Dragolov, Klaus Boehnke\nOct-22\npython\n\n\n9\nOct-26\nW#08 Fitting the Linear Model  Social Scientist Input: Ulrich Kühnen, Fabian Dehos\nOct-29\npython\n\n\n10\nNov-02\nW#09 More Linear Model, Nonlinear Models, Logistic Regression  Check-In: Final Project \nNov-05\npython\n\n\n11\nNov-09\nW#10 Binary Prediction, Sensitivity and Specificity, Logistic Regression and a Decision Tree\nNov-12\npython\n\n\n12\nNov-16\nW#11 Decision Trees, Overfitting, Clustering Algorithms\nNov-19\npython\n\n\n13\nNov-23\nW#12 More Prediction Modeling, Quantifying Uncertainty\nNov-26\npython\n\n\n14\nNov-30\nW#13 Hypothesis Testing, Matrices, Probability\nDec-03\npython\n\n\n15\nDec-07\nOnly Concepts Exam Preparation with a Mock Exam\n\n\n\n\nExam\n\nThe exam takes place as an online exam in the date range marked in the academic calendar\n\n\n\n\nProject\n\nDeadline for submission of the Final Project marked in the academic calendar\n\n\n\n\n\n\n2027\n\n\n\n\n2nd  Exam\n\nThose who fail the exam and those who are officially excused can sit in the second exam end of January 2027.  Date range marked in the academic calendar",
+    "text": "Caution\n\n\n\nThe titles are still tentative.\n\n\n\nTabular Schedule\nData Science Tools on Thursday\nData Science Concepts on Monday\nFor online participation you find all events in your Teams Calendar.\nConcepts General Channel\nTools General Channel.\n\n\n\nWeek\nDates Concepts\nTopics\nDates Tools\nTools Topic\n\n\n\n\n1\n\nOnly Tools: Hello to Data Science Tools and Concepts Technical Setup\nSep-03\nR\n\n\n2\nSep-07\nW#01 What is Data Science?\nSep-10\nR\n\n\n3\nSep-14\nW#02 Data Visualization, Data Formats, Tidy Data\nSep-17\nR\n\n\n4\nSep-21\nW#03 Data Import, Data Wrangling\nSep-24\nR\n\n\n5\nSep-28\nW#04 Strings, Relational Data, Functions\nOct-01\nR\n\n\n6\nOct-05\nW#05 Descriptive Statistics, Exploratory Data Analysis\nOct-08\nR\n\n\n7\nOct-12\nW#06 Principal Component Analysis, Epidemic Modeling, Calculus\nOct-15\nR\n\n\n8\nOct-19\nW#07 Models in Science, Linear Model  Social Scientist Input: Georgi Dragolov, Klaus Boehnke\nOct-22\npython\n\n\n9\nOct-26\nW#08 Fitting the Linear Model  Social Scientist Input: Ulrich Kühnen, Fabian Dehos\nOct-29\npython\n\n\n10\nNov-02\nW#09 More Linear Model, Nonlinear Models, Logistic Regression  Check-In: Final Project \nNov-05\npython\n\n\n11\nNov-09\nW#10 Binary Prediction, Sensitivity and Specificity, Logistic Regression and a Decision Tree\nNov-12\npython\n\n\n12\nNov-16\nW#11 Decision Trees, Overfitting, Clustering Algorithms\nNov-19\npython\n\n\n13\nNov-23\nW#12 Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom\nNov-26\npython\n\n\n14\nNov-30\nW#13 Hypothesis Testing, Matrices, Probability\nDec-03\npython\n\n\n15\nDec-07\nOnly Concepts Exam Preparation with a Mock Exam\n\n\n\n\nExam\nDec-15\n12:30-14:30 120 minutes remote online exam \n\n\n\n\nProject\n\nDeadline for submission of the Final Project marked in the academic calendar\n\n\n\n\n\n\n2027\n\n\n\n\n2nd  Exam\nJan-26\n11:00-13:00 Those who fail the exam and those who are officially excused can sit in the second exam. It is also remote online.",
     "crumbs": [
       "Syllabus",
       "Schedule"
@@ -4734,6 +5175,78 @@
       "Syllabus",
       "Schedule",
       "#W11"
+    ]
+  },
+  {
+    "objectID": "material/M12.html",
+    "href": "material/M12.html",
+    "title": "W#12",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W12"
+    ]
+  },
+  {
+    "objectID": "material/M12.html#uncertainty-bias-and-variance-hypothesis-tests-forrest-wisdom",
+    "href": "material/M12.html#uncertainty-bias-and-variance-hypothesis-tests-forrest-wisdom",
+    "title": "W#12",
+    "section": "",
+    "text": "Reconsider the Lecture Material, consider the Additional Readings and Material, and check the Achievements for yourself. Work on the Homework Projects reach out for help if you get stuck.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W12"
+    ]
+  },
+  {
+    "objectID": "material/M12.html#lecture-material",
+    "href": "material/M12.html#lecture-material",
+    "title": "W#12",
+    "section": "1 Lecture Material",
+    "text": "1 Lecture Material\nSlides: Direct Link\n\nFind the live recording in the Course’s Team’s Recording Folder.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W12"
+    ]
+  },
+  {
+    "objectID": "material/M12.html#additional-readings-and-material",
+    "href": "material/M12.html#additional-readings-and-material",
+    "title": "W#12",
+    "section": "2 Additional Readings and Material",
+    "text": "2 Additional Readings and Material\nThere is only one test. Short article by Andrew Heiss about the universal pattern in all statistical tests.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W12"
+    ]
+  },
+  {
+    "objectID": "material/M12.html#achievements",
+    "href": "material/M12.html#achievements",
+    "title": "W#12",
+    "section": "3 Achievements",
+    "text": "3 Achievements\nYou - [ ] you know what can be called a “model” and how this can mean things in different “granularity” - [ ] can explain the idea and process of bootstrapping to quantify the uncertainty of a statistic - [ ] know the difference between standard error and standard deviation - [ ] can interpret what 95% confidence interval means (also for other confidence levels than 95%) - [ ] can explain the relation of bias, variance, and MSE in the context of computing “crowd wisdom” estimates - [ ] can explain cross-validation and a use case of it - [ ] can explain the idea of tuning hyper-parameters in prediction models - [ ] can explain how the random forest algorithm works and how it extends the idea of decision trees - [ ] you now about the idea of variable importance for more complex machine learning models like random forests, and why such postmethods are not",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W12"
+    ]
+  },
+  {
+    "objectID": "material/M12.html#homework-projects-progress-guides",
+    "href": "material/M12.html#homework-projects-progress-guides",
+    "title": "W#12",
+    "section": "4 Homework Projects Progress Guides",
+    "text": "4 Homework Projects Progress Guides\nFind the Repositories of your Homework Projects in the Course’s GitHub-Organization’s CU-F26-MDSSB-01-Concepts-Tools &gt; Repositories.\nProject’s INSTRUCTIONS you should have completed:\nProject_NYCFlights: 1., 2., 3., 4. 5., 6., 7.\nProject_COVID19: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2\nProject_DataScienceProfiles: 1., 2., 3., 4., 5., 6.\nProject_FuelWatch: 1., 2., 3., 4., 5., 6.",
+    "crumbs": [
+      "Syllabus",
+      "Schedule",
+      "#W12"
     ]
   }
 ]

@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
+
+  <meta name="author" content="Jan Lorenz">
+  <title>Data Science Concepts / Data Science Tools – W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="slidestyles.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">W#12: Uncertainty, Bias and Variance, Hypothesis Tests, <em>Forrest Wisdom</em></h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Jan Lorenz 
+</div>
+</div>
+</div>
+
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Table of contents</h2>
+<ul>
+<li><a href="#/model-specification" id="/toc-model-specification">Model Specification</a></li>
+<li><a href="#/bootstrapping-to-quantify-uncertainty" id="/toc-bootstrapping-to-quantify-uncertainty">Bootstrapping to Quantify Uncertainty</a></li>
+<li><a href="#/bias-variance-mse-and-crowd-wisdom" id="/toc-bias-variance-mse-and-crowd-wisdom">Bias, Variance, MSE, and Crowd Wisdom</a></li>
+<li><a href="#/hypothesis-testing" id="/toc-hypothesis-testing">Hypothesis testing</a></li>
+<li><a href="#/cross-validation-to-improve-prediction" id="/toc-cross-validation-to-improve-prediction">Cross-Validation to Improve Prediction</a></li>
+<li><a href="#/tuning-hyperparameters" id="/toc-tuning-hyperparameters">Tuning Hyperparameters</a></li>
+<li><a href="#/random-forests" id="/toc-random-forests">Random Forests</a></li>
+</ul>
+</nav>
+</section>
+<section id="preliminary" class="slide level2">
+<h2>Preliminary</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-3"><a></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-4"><a></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-5"><a></a><span class="fu">library</span>(rpart)</span>
+<span id="cb1-6"><a></a><span class="fu">library</span>(ranger)</span>
+<span id="cb1-7"><a></a><span class="fu">library</span>(vip)</span>
+<span id="cb1-8"><a></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb1-9"><a></a><span class="fu">library</span>(openintro)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<!-- After fitting:
+- XAI: Explainable AI ("right to explanation"): Variable Importance, Evaluation
+- Postprocessing: 
+  Threshold Adjustment, Business Rule Enforcement: Applying hard constraints or filters to raw predictions (e.g., setting a minimum confidence score, rounding decimal values, or formatting dates/fields to a specific standard), Bias and Fairness Mitigation: Modifying output decisions or group-specific thresholds after scoring to reduce discriminatory outcomes across protected demographic groups.
+  - Diversity and Deduplication (Search/Recommendation): Filtering or re-ranking top-scoring items so a single user feed or search results page isn't dominated by identical or overly similar content.
+  - Model Pruning and Rule Filtering: Cleaning up symbolic models like decision trees or rule sets by removing redundant or noisy branches after induction.
+  - Ensemble Aggregation: Combining or weighting predictions coming from multiple distinct models or time
+Make a model better
+- Tuning
+- Better Data Collection
+- Feature Engineering
+- Postprocessing
+- What does "Model" mean-->
+</section>
+<section>
+<section id="model-specification" class="title-slide slide level1 center">
+<h1>Model Specification</h1>
+<ul>
+<li>What do we mean by “model”?</li>
+<li>How to be specific.</li>
+</ul>
+</section>
+<section id="model-in-statistical-learning" class="slide level2 smaller">
+<h2>“Model” in Statistical Learning</h2>
+<p>We already had the difference between <em>variable-based</em> and <em>agent-based</em> models.</p>
+<p>But even in the variable-based model setting of <strong>statistical learning</strong>, the term <em>model</em> can be more or less abstract:</p>
+<ol type="1">
+<li class="fragment">Very general: <span class="math inline">\(Y = f(X_1, \dots, X_m) + \varepsilon\)</span> where <span class="math inline">\(Y\)</span> is the response variable and <span class="math inline">\(X_i\)</span> are features which we put in our <strong>model</strong>: the abstract and unknown function <span class="math inline">\(f\)</span>.<br>
+<span class="math inline">\(\varepsilon\)</span> is the <em>error</em> which we can never explain and usually do not know.</li>
+<li class="fragment">More specific: The <strong>model</strong> <span class="math inline">\(f\)</span> could already be of a specific type, like <em>logistic regression</em>, a <em>decision tree</em> or other functional forms. As this need not be the <em>real</em> function we may call it <em>assumed model</em> <span class="math inline">\(\hat f\)</span> For example a linear model <span class="math inline">\(\hat f(X_1, \dots, X_m) = \beta_0 + \beta_1 X_1 + \dots + \beta_m X_m + \varepsilon\)</span>. Now, the model has specified parameters which values are unknown.</li>
+</ol>
+</section>
+<section id="more-specific-fitted-model" class="slide level2 smaller">
+<h2>More specific: Fitted model</h2>
+<ol start="3" type="1">
+<li class="fragment">Fitted model: When we have a data set with values for <span class="math inline">\(Y, X_1, \dots, X_m\)</span> we can fit values for the parameters <span class="math inline">\(\hat\beta_0, \dots, \hat\beta_m\)</span> to the data. This is the <em>fitted model</em> <span class="math inline">\(\hat f\)</span>. This is called parameter estimation: We estimate <span class="math inline">\(\hat\beta_0, \dots, \hat\beta_m\)</span> with the hope that they match the <em>real</em> values <span class="math inline">\(\beta_0, \dots, \beta_m\)</span> and that the linear model <span class="math inline">\(\hat f\)</span> matches the <em>real</em> function <span class="math inline">\(f\)</span>.</li>
+<li class="fragment">Now we could specify further to fit a specific parameterized model with a specific algorithm, and a specific set of hyperparameters, and maybe more …</li>
+</ol>
+<div class="fragment">
+<p>Sometimes model means only a certain aspect of all these, for example the <em>formula</em> like <code>sex ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g + species + island</code></p>
+</div>
+<div class="fragment">
+<p><span class="text-green">Take away:</span> “Model” can mean things with very different granularity. That is OK because they are all related and all fit the definition of being a <strong>simplified representation of reality</strong>.</p>
+<p><span class="text-green"><strong>Be prepared to be specific about what you mean by “model”.</strong></span></p>
+</div>
+</section></section>
+<section>
+<section id="bootstrapping-to-quantify-uncertainty" class="title-slide slide level1 center">
+<h1>Bootstrapping to Quantify Uncertainty</h1>
+<p>Thereby we treat common concepts: Resampling, Standard Error, Confidence Interval, p-Value</p>
+</section>
+<section id="purpose-quantify-uncertainty" class="slide level2">
+<h2>Purpose: Quantify uncertainty</h2>
+<ul>
+<li><strong>Uncertainty</strong> is a central concern in <span class="red"><strong>inferential data analysis</strong></span>.</li>
+<li>We want to <strong>estimate</strong> a <strong>parameter</strong> of a <span class="red"><strong>population</strong></span> from a <span class="red"><strong>sample</strong></span>.</li>
+</ul>
+<div class="fragment">
+<p>Central inferential assumption:</p>
+<ul>
+<li>Our data is a <strong>random sample</strong> from the <strong>population</strong> we are interested in.
+<ul>
+<li>No <strong>selection biases</strong>.</li>
+</ul></li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li>We want to know <strong>average height</strong> of <strong>all people</strong> but we only have a sample of people.</li>
+<li>We want know the <strong>mean estimate</strong> of all possible participants of the ox meat weigh guessing competition from the <strong>sample ballots</strong> of participants we have.</li>
+<li>We want to learn something about penguins from the data of the penguins in <code>palmerpenguins::penguins</code></li>
+</ul>
+</div>
+</section>
+<section id="practical-example-galtons-data" class="slide level2">
+<h2>Practical example: Galton’s Data</h2>
+<p>Competition: Guess the weight of the meat of an Ox? (Galton, 1907)</p>
+<p><em>What is the mean of all possible participants <span class="math inline">\(\mu\)</span>?</em></p>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>galton <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"galton.csv"</span>)</span>
+<span id="cb2-2"><a></a>galton <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(Estimate)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-2-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The (arithmetic) mean of the 787 estimates is <span class="math inline">\(\hat\mu =\)</span> 1196.71.</p>
+<p><em>How sure can we be that <span class="math inline">\(\hat\mu\)</span> is close to <span class="math inline">\(\mu\)</span> and how can we quantify?</em><sup>1</sup></p>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>We already assume that we have an unbiased sample of all possible participants!</p></li></ol></aside></section>
+<section id="practical-example-palmer-penguins" class="slide level2">
+<h2>Practical example: Palmer Penguins</h2>
+<p>A linear model for body mass of penguins: <span class="math inline">\(y_i = \beta_0 + \beta_1 x_i + \dots + \beta_m x_m  + \varepsilon_i\)</span>.</p>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>peng_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a></a>  <span class="fu">add_recipe</span>(<span class="fu">recipe</span>(body_mass_g <span class="sc">~</span> ., <span class="at">data =</span> penguins) <span class="sc">|&gt;</span> <span class="fu">step_rm</span>(year)) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a></a>  <span class="fu">add_model</span>(<span class="fu">linear_reg</span>() <span class="sc">|&gt;</span> <span class="fu">set_engine</span>(<span class="st">"lm"</span>))</span>
+<span id="cb3-4"><a></a>peng_fit <span class="ot">&lt;-</span> peng_workflow <span class="sc">|&gt;</span> <span class="fu">fit</span>(<span class="at">data =</span> penguins)</span>
+<span id="cb3-5"><a></a>peng_fit <span class="sc">|&gt;</span> <span class="fu">tidy</span>() <span class="sc">|&gt;</span> <span class="fu">mutate_if</span>(is.numeric, round, <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 5
+  term              estimate std.error statistic   p.value
+  &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)        -1500.     576.      -2.61  0.00961  
+2 speciesChinstrap    -260.      88.6     -2.94  0.00352  
+3 speciesGentoo        988.     137.       7.20  0        
+4 islandDream          -13.1     58.5     -0.224 0.823    
+5 islandTorgersen      -48.1     60.9     -0.789 0.431    
+6 bill_length_mm        18.2      7.14     2.55  0.0113   
+7 bill_depth_mm         67.6     19.8      3.41  0.000734 
+8 flipper_length_mm     16.2      2.94     5.52  0.0000001
+9 sexmale              387.      48.1      8.04  0        </code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>The column <code>estimate</code> shows the coefficients <span class="math inline">\(\hat\beta_0, \hat\beta_1, \dots, \hat\beta_m\)</span> of the linear model for the variables named in <code>term</code></p>
+<p><em>How sure can we be that the <span class="math inline">\(\hat\beta\)</span>’s are close to the <span class="math inline">\(\beta\)</span>’s we are interested in?</em><sup>1</sup></p>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn2"><p>We already assume that we have an unbiased sample of all penguins!</p></li></ol></aside></section>
+<section id="bootstrapping-idea" class="slide level2">
+<h2>Bootstrapping<sup>1</sup> idea</h2>
+<ol type="1">
+<li>Take a <strong>bootstrap sample</strong>: a random sample taken with replacement from the original sample with the same size.</li>
+<li>Calculate the <em>statistics</em> for the bootstrap sample.</li>
+<li>Repeat steps 1. and 2. many times to create a <strong>bootstrap distribution</strong> - a distribution of bootstrap statistics</li>
+<li>Use the bootstrap distribution to quantify the uncertainty.</li>
+</ol>
+<p>What is the statistic in the Galton example? <span class="fragment">The mean</span><br>
+What are the statistics in the penguins example? <span class="fragment">The coefficients</span></p>
+<aside><ol class="aside-footnotes"><li id="fn3"><p>The name comes from the saying “pull oneself up by one’s bootstrap”. It refers to the somehow <em>magical</em> idea that we can use our small sample to <em>mimic</em> the whole population.</p></li></ol></aside></section>
+<section id="bootstrapping-in-practice" class="slide level2">
+<h2>Bootstrapping in practice</h2>
+<ul>
+<li>You can do the bootstrapping procedure in various ways (including programming in base R or python).</li>
+<li>We will use convenient functions from <code>rsample</code> form the <code>tidymodels</code> packages.</li>
+</ul>
+</section>
+<section id="resamplings-galtons-data" class="slide level2">
+<h2>Resamplings: Galton’s Data</h2>
+<div class="columns">
+<div class="column" style="width:35%;">
+<p>The function <code>sample</code> selects <code>size</code> random elements from a vector <code>x</code> with or without <code>replace</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">set.seed</span>(<span class="dv">224</span>)</span>
+<span id="cb5-2"><a></a><span class="fu">sample</span>(galton<span class="sc">$</span>Estimate, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1177 1232 1242</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">sample</span>(galton<span class="sc">$</span>Estimate, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1270 1440 1232</code></pre>
+</div>
+</div>
+<p>For tibbles we can use <code>slice_sample</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>galton <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">3</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  Estimate    id
+     &lt;dbl&gt; &lt;dbl&gt;
+1     1189   320
+2     1203   367
+3     1181   278</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:35%;">
+<div class="fragment">
+<p>A <strong>bootstrap sample</strong> is with replace and of the same size as the original sample:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">nrow</span>(galton)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 787</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>galton <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">787</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 787 × 2
+   Estimate    id
+      &lt;dbl&gt; &lt;dbl&gt;
+ 1     1347   774
+ 2     1221   489
+ 3     1112    85
+ 4     1320   766
+ 5     1266   697
+ 6     1145   149
+ 7     1271   711
+ 8     1215   442
+ 9     1238   596
+10     1163   198
+# ℹ 777 more rows</code></pre>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:30%;">
+<div class="fragment">
+<p>Compute some <code>mean</code>s of bootstrapping samples manually:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>galton <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">787</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(Estimate))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  `mean(Estimate)`
+             &lt;dbl&gt;
+1            1194.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>galton <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">787</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(Estimate))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  `mean(Estimate)`
+             &lt;dbl&gt;
+1            1197.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>galton <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">787</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">mean</span>(Estimate))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  `mean(Estimate)`
+             &lt;dbl&gt;
+1            1193.</code></pre>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="bootstrap-set-galtons-data" class="slide level2">
+<h2>Bootstrap set: Galton’s Data</h2>
+<p>The function <code>bootstraps</code> from <code>rsample</code> does this type of bootstrapping for us.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>1,000 resamples:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>boots_galton <span class="ot">&lt;-</span> galton <span class="sc">|&gt;</span> <span class="fu">bootstraps</span>(<span class="at">times =</span> <span class="dv">1000</span>)</span>
+<span id="cb21-2"><a></a>boots_galton <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  splits            id           
+  &lt;list&gt;            &lt;chr&gt;        
+1 &lt;split [787/295]&gt; Bootstrap0001
+2 &lt;split [787/293]&gt; Bootstrap0002
+3 &lt;split [787/296]&gt; Bootstrap0003
+4 &lt;split [787/303]&gt; Bootstrap0004
+5 &lt;split [787/283]&gt; Bootstrap0005</code></pre>
+</div>
+</div>
+<p>The column <code>splits</code> contains split objects.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>boots_galton<span class="sc">$</span>splits[[<span class="dv">1</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;Analysis/Assess/Total&gt;
+&lt;787/295/787&gt;</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="fragment">
+<p>From each split we can extract the bootstrapped resample with <code>analysis</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>boots_galton<span class="sc">$</span>splits[[<span class="dv">1</span>]] <span class="sc">|&gt;</span> <span class="fu">analysis</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 787 × 2
+   Estimate    id
+      &lt;dbl&gt; &lt;dbl&gt;
+ 1     1160   192
+ 2     1260   678
+ 3     1147   153
+ 4     1221   484
+ 5     1204   373
+ 6     1165   211
+ 7     1112    85
+ 8     1415   780
+ 9     1081    43
+10     1168   220
+# ℹ 777 more rows</code></pre>
+</div>
+</div>
+<p>Note: An <code>assessment</code> set contains the observations not selected randomly in the resample. We ignore it here.</p>
+</div>
+</div></div>
+</section>
+<section id="bootstrap-distribution-galtons-data" class="slide level2">
+<h2>Bootstrap distribution: Galton’s Data</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>We iterate with a <code>map</code> function<sup>1</sup> over the splits and extract the analysis set and calculate the mean.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>boots_galton_mean <span class="ot">&lt;-</span> boots_galton <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-3"><a></a>    <span class="at">mean =</span> <span class="fu">map_dbl</span>(splits, \(x) <span class="fu">analysis</span>(x)<span class="sc">$</span>Estimate <span class="sc">|&gt;</span> <span class="fu">mean</span>())</span>
+<span id="cb27-4"><a></a>  )</span>
+<span id="cb27-5"><a></a>boots_galton_mean <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  splits            id             mean
+  &lt;list&gt;            &lt;chr&gt;         &lt;dbl&gt;
+1 &lt;split [787/295]&gt; Bootstrap0001 1194.
+2 &lt;split [787/293]&gt; Bootstrap0002 1196.
+3 &lt;split [787/296]&gt; Bootstrap0003 1199.
+4 &lt;split [787/303]&gt; Bootstrap0004 1196.
+5 &lt;split [787/283]&gt; Bootstrap0005 1194.</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="fragment">
+<p>Plot the bootstrap distribution of the mean.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>boots_galton_mean <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mean)) <span class="sc">+</span></span>
+<span id="cb29-3"><a></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb29-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-12-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>Compare distribution of estimates</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>galton <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Estimate)) <span class="sc">+</span></span>
+<span id="cb30-3"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn4"><p>Here we use <code>map_dbl</code> which iterates over the list of splits and reports the values as a vector of doubles (numbers), the default of <code>map</code> would be to report also a list.</p></li></ol></aside></section>
+<section id="quantify-uncertainty-standard-error" class="slide level2">
+<h2>Quantify uncertainty? Standard error</h2>
+<p>Compute the standard deviation of the bootstrap distribution.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">sd</span>(boots_galton_mean<span class="sc">$</span>mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.732243</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>The standard deviation of the bootstrap distribution is called the <strong>standard error</strong> of the statistic.</p>
+<p><span class="text-red"><strong>Do not confuse standard error (of a statistic) and standard deviation (of a variable).</strong></span></p>
+<p>The <strong>standard error of the mean</strong> can also be estimated directly from the original sample <span class="math inline">\(x\)</span> as <span class="math inline">\(\frac{\text{sd}(x)}{\sqrt{n}}\)</span> where <span class="math inline">\(n\)</span> is the sample size.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">sd</span>(galton<span class="sc">$</span>Estimate) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">nrow</span>(galton))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.623085</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><span class="text-green"><strong>Insight</strong>:</span> The standard error decreases with sample size! However, it decreases only with the square root of the sample size.</p>
+<p><span class="text-green"><strong>Question</strong>:</span> You want to shrink the standard error by half. How much larger does the sample size need to be? <span class="fragment">4 times</span></p>
+</div>
+</section>
+<section id="confidence-interval" class="slide level2">
+<h2>Confidence interval</h2>
+<p>Another way to quantify uncertainty is to compute a <strong>confidence interval</strong> (CI) for a certain <strong>confidence level</strong>:<br>
+The true value of the statistic is expected to lie with the CI with certain probability (the confidence level).</p>
+<div class="fragment">
+<div class="columns">
+<div class="column" style="width:30%;">
+<p>Compute the 95% confidence interval of the bootstrap distribution with <code>quantile</code>-functions:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>boots_galton_mean <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a></a>  <span class="fu">summarize</span>(</span>
+<span id="cb35-3"><a></a>    <span class="at">lower =</span> <span class="fu">quantile</span>(mean, <span class="fl">0.025</span>),</span>
+<span id="cb35-4"><a></a>    <span class="at">upper =</span> <span class="fu">quantile</span>(mean, <span class="fl">0.975</span>)</span>
+<span id="cb35-5"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  lower upper
+  &lt;dbl&gt; &lt;dbl&gt;
+1 1191. 1202.</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="fragment">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>boots_galton_mean <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mean)) <span class="sc">+</span></span>
+<span id="cb37-3"><a></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb37-4"><a></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb37-5"><a></a>    <span class="at">xintercept =</span> <span class="fu">quantile</span>(boots_galton_mean<span class="sc">$</span>mean, <span class="fl">0.025</span>),</span>
+<span id="cb37-6"><a></a>    <span class="at">color =</span> <span class="st">"red"</span></span>
+<span id="cb37-7"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb37-8"><a></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb37-9"><a></a>    <span class="at">xintercept =</span> <span class="fu">quantile</span>(boots_galton_mean<span class="sc">$</span>mean, <span class="fl">0.975</span>),</span>
+<span id="cb37-10"><a></a>    <span class="at">color =</span> <span class="st">"red"</span></span>
+<span id="cb37-11"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb37-12"><a></a>  <span class="fu">annotate</span>(</span>
+<span id="cb37-13"><a></a>    <span class="st">"text"</span>,</span>
+<span id="cb37-14"><a></a>    <span class="at">x =</span> <span class="dv">1197</span>,</span>
+<span id="cb37-15"><a></a>    <span class="at">y =</span> <span class="dv">10</span>,</span>
+<span id="cb37-16"><a></a>    <span class="at">label =</span> <span class="st">"95% of estimates"</span>,</span>
+<span id="cb37-17"><a></a>    <span class="at">color =</span> <span class="st">"white"</span>,</span>
+<span id="cb37-18"><a></a>    <span class="at">size =</span> <span class="fu">unit</span>(<span class="dv">12</span>, <span class="st">"pt"</span>)</span>
+<span id="cb37-19"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb37-20"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-17-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+</section>
+<section id="confidence-interval-meaning" class="slide level2">
+<h2>Confidence Interval: Meaning</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>boots_galton_mean <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a></a>  <span class="fu">summarize</span>(</span>
+<span id="cb38-3"><a></a>    <span class="at">lower =</span> <span class="fu">quantile</span>(mean, <span class="fl">0.025</span>),</span>
+<span id="cb38-4"><a></a>    <span class="at">upper =</span> <span class="fu">quantile</span>(mean, <span class="fl">0.975</span>)</span>
+<span id="cb38-5"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  lower upper
+  &lt;dbl&gt; &lt;dbl&gt;
+1 1191. 1202.</code></pre>
+</div>
+</div>
+<p>What is the correct interpretation?</p>
+<ol type="1">
+<li>95% of the estimates in this sample lie between 1191 and 1202.</li>
+<li>We are 95% confident that the mean estimate of all potential participants is between 1191 and 1202.</li>
+<li>We are 95% confident that the mean estimate of this sample is between 1191 and 1202.</li>
+</ol>
+<div class="fragment">
+<p>Correct: 2.<br>
+1. The confidence is about a statistic (here, population mean) not about sample values!<br>
+3. We know the mean of the sample precisely!<br>
+The confidence interval assesses where 95% of the values are when we sample anew.</p>
+</div>
+</section>
+<section id="certainty-in-confidence-intervals" class="slide level2">
+<h2>Certainty in Confidence Intervals</h2>
+<ul>
+<li>Can’t we increase the confidence level to 99% to get a more precise estimate with a more narrow confidence interval?</li>
+</ul>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>boots_galton_mean <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a></a>  <span class="fu">summarize</span>(</span>
+<span id="cb40-3"><a></a>    <span class="at">lower =</span> <span class="fu">quantile</span>(mean, <span class="fl">0.005</span>),</span>
+<span id="cb40-4"><a></a>    <span class="at">upper =</span> <span class="fu">quantile</span>(mean, <span class="fl">0.995</span>)</span>
+<span id="cb40-5"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  lower upper
+  &lt;dbl&gt; &lt;dbl&gt;
+1 1190. 1204.</code></pre>
+</div>
+</div>
+<p><span class="text-red">No, it is the other way round:</span> The smaller and more precise the confidence interval, the lower must the confidence level be.</p>
+</div>
+</section>
+<section id="bootstrap-linear-model-coefficients" class="slide level2">
+<h2>Bootstrap linear model coefficients</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>peng_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a></a>  <span class="fu">add_recipe</span>(<span class="fu">recipe</span>(body_mass_g <span class="sc">~</span> ., <span class="at">data =</span> penguins) <span class="sc">|&gt;</span> <span class="fu">step_rm</span>(year)) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a></a>  <span class="fu">add_model</span>(<span class="fu">linear_reg</span>() <span class="sc">|&gt;</span> <span class="fu">set_engine</span>(<span class="st">"lm"</span>))</span>
+<span id="cb42-4"><a></a>peng_fit <span class="ot">&lt;-</span> peng_workflow <span class="sc">|&gt;</span> <span class="fu">fit</span>(<span class="at">data =</span> penguins)</span>
+<span id="cb42-5"><a></a>peng_fit <span class="sc">|&gt;</span> <span class="fu">tidy</span>() <span class="sc">|&gt;</span> <span class="fu">mutate_if</span>(is.numeric, round, <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 5
+  term              estimate std.error statistic   p.value
+  &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)        -1500.     576.      -2.61  0.00961  
+2 speciesChinstrap    -260.      88.6     -2.94  0.00352  
+3 speciesGentoo        988.     137.       7.20  0        
+4 islandDream          -13.1     58.5     -0.224 0.823    
+5 islandTorgersen      -48.1     60.9     -0.789 0.431    
+6 bill_length_mm        18.2      7.14     2.55  0.0113   
+7 bill_depth_mm         67.6     19.8      3.41  0.000734 
+8 flipper_length_mm     16.2      2.94     5.52  0.0000001
+9 sexmale              387.      48.1      8.04  0        </code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>Let us now bootstrap whole models instead of just mean values!</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="co"># A function to fit a model to a bootstrap sample and tidy the coefficients</span></span>
+<span id="cb44-2"><a></a>fit_split <span class="ot">&lt;-</span> <span class="cf">function</span>(split) {</span>
+<span id="cb44-3"><a></a>  peng_workflow <span class="sc">|&gt;</span> <span class="fu">fit</span>(<span class="at">data =</span> <span class="fu">analysis</span>(split)) <span class="sc">|&gt;</span> <span class="fu">tidy</span>()</span>
+<span id="cb44-4"><a></a>}</span>
+<span id="cb44-5"><a></a><span class="co"># Make 1000 bootstrap samples and fit a model to each</span></span>
+<span id="cb44-6"><a></a>boots_peng <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(penguins, <span class="at">times =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb44-7"><a></a>  <span class="fu">mutate</span>(<span class="at">coefs =</span> <span class="fu">map</span>(splits, fit_split))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="bootstrap-data-frame" class="slide level2 scrollable">
+<h2>Bootstrap data frame</h2>
+<p>Now we have a column <code>coefs</code> with a list of data frames, each containing the fitted coefficients.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>boots_peng</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Bootstrap sampling 
+# A tibble: 1,000 × 3
+   splits            id            coefs           
+   &lt;list&gt;            &lt;chr&gt;         &lt;list&gt;          
+ 1 &lt;split [344/122]&gt; Bootstrap0001 &lt;tibble [9 × 5]&gt;
+ 2 &lt;split [344/123]&gt; Bootstrap0002 &lt;tibble [9 × 5]&gt;
+ 3 &lt;split [344/125]&gt; Bootstrap0003 &lt;tibble [9 × 5]&gt;
+ 4 &lt;split [344/126]&gt; Bootstrap0004 &lt;tibble [9 × 5]&gt;
+ 5 &lt;split [344/136]&gt; Bootstrap0005 &lt;tibble [9 × 5]&gt;
+ 6 &lt;split [344/120]&gt; Bootstrap0006 &lt;tibble [9 × 5]&gt;
+ 7 &lt;split [344/119]&gt; Bootstrap0007 &lt;tibble [9 × 5]&gt;
+ 8 &lt;split [344/136]&gt; Bootstrap0008 &lt;tibble [9 × 5]&gt;
+ 9 &lt;split [344/126]&gt; Bootstrap0009 &lt;tibble [9 × 5]&gt;
+10 &lt;split [344/120]&gt; Bootstrap0010 &lt;tibble [9 × 5]&gt;
+# ℹ 990 more rows</code></pre>
+</div>
+</div>
+<p>We can <code>unnest</code> the list column to make a much longer but unnested data frame:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>boots_peng <span class="sc">|&gt;</span> <span class="fu">unnest</span>(coefs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9,000 × 7
+   splits            id            term    estimate std.error statistic  p.value
+   &lt;list&gt;            &lt;chr&gt;         &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+ 1 &lt;split [344/122]&gt; Bootstrap0001 (Inter…  -1349.     584.       -2.31 2.15e- 2
+ 2 &lt;split [344/122]&gt; Bootstrap0001 specie…   -221.     102.       -2.17 3.04e- 2
+ 3 &lt;split [344/122]&gt; Bootstrap0001 specie…    938.     139.        6.75 6.62e-11
+ 4 &lt;split [344/122]&gt; Bootstrap0001 island…    -74.7     59.2      -1.26 2.08e- 1
+ 5 &lt;split [344/122]&gt; Bootstrap0001 island…   -101.      63.8      -1.57 1.16e- 1
+ 6 &lt;split [344/122]&gt; Bootstrap0001 bill_l…     11.4      8.58      1.33 1.83e- 1
+ 7 &lt;split [344/122]&gt; Bootstrap0001 bill_d…     66.0     20.3       3.26 1.24e- 3
+ 8 &lt;split [344/122]&gt; Bootstrap0001 flippe…     17.1      3.04      5.63 3.93e- 8
+ 9 &lt;split [344/122]&gt; Bootstrap0001 sexmale    435.      51.6       8.43 1.12e-15
+10 &lt;split [344/123]&gt; Bootstrap0002 (Inter…  -2296.     570.       -4.03 7.02e- 5
+# ℹ 8,990 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="some-coefficient-distributions" class="slide level2">
+<h2>Some coefficient distributions</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>g1 <span class="ot">&lt;-</span> boots_peng <span class="sc">|&gt;</span></span>
+<span id="cb49-2"><a></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span></span>
+<span id="cb49-3"><a></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"islandDream"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb49-4"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb49-5"><a></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb49-6"><a></a>  <span class="fu">xlab</span>(<span class="st">"coefficients islandDream"</span>) <span class="sc">+</span></span>
+<span id="cb49-7"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb49-8"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span>
+<span id="cb49-9"><a></a>g2 <span class="ot">&lt;-</span> boots_peng <span class="sc">|&gt;</span></span>
+<span id="cb49-10"><a></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span></span>
+<span id="cb49-11"><a></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"bill_length_mm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb49-12"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb49-13"><a></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb49-14"><a></a>  <span class="fu">xlab</span>(<span class="st">"coefficients bill_length_mm"</span>) <span class="sc">+</span></span>
+<span id="cb49-15"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb49-16"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span>
+<span id="cb49-17"><a></a>g3 <span class="ot">&lt;-</span> boots_peng <span class="sc">|&gt;</span></span>
+<span id="cb49-18"><a></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span></span>
+<span id="cb49-19"><a></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"flipper_length_mm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb49-20"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate)) <span class="sc">+</span></span>
+<span id="cb49-21"><a></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb49-22"><a></a>  <span class="fu">xlab</span>(<span class="st">"coefficients flipper_length_mm"</span>) <span class="sc">+</span></span>
+<span id="cb49-23"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb49-24"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span>
+<span id="cb49-25"><a></a>g1 <span class="sc">+</span> g2 <span class="sc">+</span> g3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="W12_files/figure-revealjs/unnamed-chunk-24-1.png" width="1728" class="r-stretch"><ul>
+<li>We could derive <em>bootstrapped p-values</em> from these distributions.</li>
+</ul>
+</section>
+<section id="computed-p-values-from-each-fit" class="slide level2">
+<h2>computed p-values from each fit</h2>
+<ul>
+<li>Each bootstrap fit also delivers computed p-values for each coefficient.<sup>1</sup></li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>g1 <span class="ot">&lt;-</span> boots_peng <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span></span>
+<span id="cb50-3"><a></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"islandDream"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb50-4"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> p.value)) <span class="sc">+</span></span>
+<span id="cb50-5"><a></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb50-6"><a></a>  <span class="fu">xlab</span>(<span class="st">"coefficients islandDream"</span>) <span class="sc">+</span></span>
+<span id="cb50-7"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span>
+<span id="cb50-8"><a></a>g2 <span class="ot">&lt;-</span> boots_peng <span class="sc">|&gt;</span></span>
+<span id="cb50-9"><a></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span></span>
+<span id="cb50-10"><a></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"bill_length_mm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb50-11"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> p.value)) <span class="sc">+</span></span>
+<span id="cb50-12"><a></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb50-13"><a></a>  <span class="fu">xlab</span>(<span class="st">"coefficients bill_length_mm"</span>) <span class="sc">+</span></span>
+<span id="cb50-14"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span>
+<span id="cb50-15"><a></a>g3 <span class="ot">&lt;-</span> boots_peng <span class="sc">|&gt;</span></span>
+<span id="cb50-16"><a></a>  <span class="fu">unnest</span>(coefs) <span class="sc">|&gt;</span></span>
+<span id="cb50-17"><a></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"flipper_length_mm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb50-18"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> p.value)) <span class="sc">+</span></span>
+<span id="cb50-19"><a></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb50-20"><a></a>  <span class="fu">xlab</span>(<span class="st">"coefficients flipper_length_mm"</span>) <span class="sc">+</span></span>
+<span id="cb50-21"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span>
+<span id="cb50-22"><a></a>g1 <span class="sc">+</span> g2 <span class="sc">+</span> g3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-25-1.png" width="1728"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>computed p-values in resamples vary widely (see <code>islandDream</code>) when <em>bootstrapped p-values</em> show insignificance.</li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn5"><p>These are computed based on theoretical assumptions with the help of t-tests and t-distributions.</p></li></ol></aside></section></section>
+<section>
+<section id="bias-variance-mse-and-crowd-wisdom" class="title-slide slide level1 center">
+<h1>Bias, Variance, MSE, and Crowd Wisdom</h1>
+
+</section>
+<section id="galtons-data" class="slide level2">
+<h2>Galton’s data</h2>
+<p><em>What is the weight of the meat of this ox?</em></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a>galton <span class="sc">|&gt;</span></span>
+<span id="cb51-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Estimate)) <span class="sc">+</span></span>
+<span id="cb51-3"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb51-4"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1198</span>, <span class="at">color =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb51-5"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(galton<span class="sc">$</span>Estimate), <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-26-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>787 estimates, <span style="color:green;">true value</span> 1198, <span style="color:red;">mean</span> 1196.7</p>
+
+<aside><div>
+<p>We focus on the arithmetic mean as aggregation function for the wisdom of the crowd here.</p>
+</div></aside></section>
+<section id="rmse-galtons-data" class="slide level2">
+<h2>RMSE Galton’s data</h2>
+<p>Describe the estimation game as a predictive model:</p>
+<ul>
+<li>All <em>estimates</em> are made to predict the same value: the truth.
+<ul>
+<li>In contrast to the regression model, the estimate come from people and not from a regression formula.</li>
+</ul></li>
+<li>The <em>truth</em> is the same for all.
+<ul>
+<li>In contrast to the regression model, the truth is one value and not a value for each prediction</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>rmse_galton <span class="ot">&lt;-</span> galton <span class="sc">|&gt;</span></span>
+<span id="cb52-2"><a></a>  <span class="fu">mutate</span>(<span class="at">true_value =</span> <span class="dv">1198</span>) <span class="sc">|&gt;</span></span>
+<span id="cb52-3"><a></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> true_value, Estimate)</span>
+<span id="cb52-4"><a></a>rmse_galton</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard        73.6</code></pre>
+</div>
+</div>
+<!-- ## Regression vs. crowd estimation -->
+<!-- The linear regression and the crowd estimation problems are similar but not identical! -->
+<!-- |Variable      | Linear Regression Model                       | Crowd estimation -->
+<!-- |--------------|-----------------------------------------------|-------------------------------------------- -->
+<!-- | $y_i$        | Data point of response variable               | True value, uniform for all estimators $y_i = y$ -->
+<!-- | $\hat{y}_i$  | Predicted value $\hat{y}_i=b_0+b_1+x_1+\dots$ | Estimate of one estimator -->
+<!-- | $\bar{y}$    | Mean of response variable                     | Mean of estimates  -->
+</section>
+<section id="mse-variance-and-bias-of-estimates" class="slide level2">
+<h2>MSE, Variance, and Bias of estimates</h2>
+<p>In a crowd estimation, <span class="math inline">\(n\)</span> estimators delivered the estimates <span class="math inline">\(\hat{y}_1,\dots,\hat{y}_n\)</span>. Let us look at the following measures</p>
+<ul>
+<li><p><span class="math inline">\(\bar{y} = \frac{1}{n}\sum_{i = 1}^n \hat{y}_i^2\)</span> is the mean estimate, it is the aggregated estimate of the crowd</p></li>
+<li><p><span class="math inline">\(\text{MSE} = \text{RMSE}^2 = \frac{1}{n}\sum_{i = 1}^n (\text{truth} - \hat{y}_i)^2\)</span></p></li>
+<li><p><span class="math inline">\(\text{Variance} = \frac{1}{n}\sum_{i = 1}^n (\hat{y}_i - \bar{y})^2\)</span></p></li>
+<li><p><span class="math inline">\(\text{Bias-squared} = (\bar{y} - \text{truth})^2\)</span> which is the square difference between truth and mean estimate.</p></li>
+</ul>
+<p>There is a mathematical relation (a math exercise to check):</p>
+<p><span class="math display">\[\text{MSE} = \text{Bias-squared} + \text{Variance}\]</span></p>
+</section>
+<section id="testing-for-galtons-data" class="slide level2">
+<h2>Testing for Galton’s data</h2>
+<p><span class="math display">\[\text{MSE} = \text{Bias-squared} + \text{Variance}\]</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>MSE <span class="ot">&lt;-</span> (rmse_galton<span class="sc">$</span>.estimate)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb54-2"><a></a>MSE</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5409.795</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>Variance <span class="ot">&lt;-</span> <span class="fu">var</span>(galton<span class="sc">$</span>Estimate) <span class="sc">*</span> (<span class="fu">nrow</span>(galton) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">nrow</span>(galton)</span>
+<span id="cb56-2"><a></a><span class="co"># Note, we had to correct for the divisor (n-1) in the classical statistical definition</span></span>
+<span id="cb56-3"><a></a><span class="co"># to get the sample variance instead of the estimate for the population variance</span></span>
+<span id="cb56-4"><a></a>Variance</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5408.132</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a>Bias_squared <span class="ot">&lt;-</span> (<span class="fu">mean</span>(galton<span class="sc">$</span>Estimate) <span class="sc">-</span> <span class="dv">1198</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb58-2"><a></a>Bias_squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.663346</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>Bias_squared <span class="sc">+</span> Variance</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5409.795</code></pre>
+</div>
+</div>
+
+<aside><div>
+<p>Such nice mathematical properties are probably one reason why these squared measures are so popular.</p>
+</div></aside></section>
+<section id="the-diversity-prediction-theorem" class="slide level2">
+<h2>The diversity prediction theorem<sup>1</sup></h2>
+<ul>
+<li><em>MSE</em> is a measure for the average <strong>individuals error</strong></li>
+<li><em>Bias-squared</em> is a measure for the <strong>collective error</strong></li>
+<li><em>Variance</em> is a measure for the <strong>diversity</strong> of estimates around the mean estimate</li>
+</ul>
+<p>The mathematical relation <span class="math display">\[\text{MSE} = \text{Bias-squared} + \text{Variance}\]</span> can be formulated as</p>
+<p><strong>Collective error = Individual error - Diversity</strong></p>
+<p>Interpretation: <em>The higher the diversity the lower the collective error!</em></p>
+<aside><ol class="aside-footnotes"><li id="fn6"><p>Notion from: Page, S. E. (2007). The Difference: How the Power of Diversity Creates Better Groups, Firms, Schools, and Societies. Princeton University Press.</p></li></ol></aside></section>
+<section id="why-is-this-message-a-bit-suggestive" class="slide level2">
+<h2>Why is this message a bit suggestive?</h2>
+<p>The mathematical relation <span class="math display">\[\text{MSE} = \text{Bias-squared} + \text{Variance}\]</span> can be formulated as</p>
+<p><strong>Collective error = Individual error - Diversity</strong></p>
+<p>Interpretation: <em>The higher the diversity the lower the collective error!</em></p>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(\text{MSE}\)</span> and <span class="math inline">\(\text{Variance}\)</span> are not independent!</li>
+<li>Activities to increase diversity (Variance) typically also increase the average individual error (MSE).</li>
+<li>For example, if we just add more random estimates with same mean but wild variance to our sample we increase both and do not gain any decrease of the collective error.</li>
+</ul>
+</div>
+</section>
+<section id="accuracy-for-numerical-estimate" class="slide level2">
+<h2>Accuracy for numerical estimate</h2>
+<ul>
+<li>For binary classifiers <strong>accuracy</strong> has a simple definition: Fraction of correct classifications.
+<ul>
+<li>It can be further informed by other more specific measures taken from the confusion matrix (sensitivity, specificity)</li>
+</ul></li>
+</ul>
+<p>How about numerical estimators?<br>
+For example outcomes of estimation games, or linear regression models?</p>
+<div class="fragment">
+<ul>
+<li>Accuracy is for example measured by (R)MSE</li>
+<li><span class="math inline">\(\text{MSE} = \text{Bias-squared} + \text{Variance}\)</span> shows us that we can make a<br>
+<strong>bias-variance decomposition</strong></li>
+<li>That means some part of the error is a systematic (the bias) and another part due to random variation (the variance).</li>
+</ul>
+</div>
+</section>
+<section id="d-accuracy-trueness-and-precision" class="slide level2">
+<h2>2-d Accuracy: Trueness and Precision</h2>
+<p>According to ISO 5725-1 Standard: <em>Accuracy (trueness and precision) of measurement methods and results - Part 1: General principles and definitions.</em> there are two dimension of accuracy of numerical measurement.</p>
+<p><img data-src="https://upload.wikimedia.org/wikipedia/commons/9/92/Accuracy_%28trueness_and_precision%29.svg"> <img data-src="img/accuracy_trueness_precision.png" height="300"></p>
+</section>
+<section id="what-is-a-wise-crowd" class="slide level2">
+<h2>What is a wise crowd?</h2>
+<p>Assume the dots are estimates. <strong>Which is a wise crowd?</strong></p>
+<p><img data-src="img/accuracy_trueness_precision.png" height="300"></p>
+<div class="fragment">
+<ul>
+<li>Of course, high trueness and high precision! But, …</li>
+<li>Focusing on the <strong>crowd</strong> being wise instead of its <strong>individuals</strong>: High trueness, low precision.</li>
+</ul>
+</div>
+</section>
+<section id="summary-crowd-wisdom" class="slide level2">
+<h2>Summary Crowd Wisdom</h2>
+<ul>
+<li>The <strong>wisdom of the crowd</strong> relies on aggregating diverse estimates.</li>
+<li>More generally as these simple guessing games, <strong>crowd wisdom</strong> is this idea:<br>
+<em>Many problems can be solved better by aggregating the answers of many individuals than by relying on a single expert.</em></li>
+<li>The <strong>random forest</strong> method of statistical learning is built on this idea:<br>
+<em>Instead of relying on on heavyily fine tuned decision tree, we create a forrest of many partly randomly generated trees and aggregate their predictions.</em>
+<ul>
+<li>It turns out that such forest typically produce predictions that <em>generalize</em> better to new data.</li>
+</ul></li>
+<li>The <strong>bias-variance decomposition</strong> helps to understand different sources of errors. It is used to understand error in predicion models (not shown here).
+<ul>
+<li>In an underfitted model, the error stems mostly from variance</li>
+<li>In an overfitted model, the error stems mostly from bias (in the training data)</li>
+</ul></li>
+</ul>
+</section></section>
+<section>
+<section id="hypothesis-testing" class="title-slide slide level1 center">
+<h1>Hypothesis testing</h1>
+<p>Large part of the content adapted from <a href="http://datasciencebox.org" class="uri">http://datasciencebox.org</a>.</p>
+</section>
+<section id="inference-in-statistics" class="slide level2">
+<h2>Inference in statistics</h2>
+<ul>
+<li><strong>Inference</strong> is the process of using data to make generalizations about a larger population.</li>
+<li>Two main types of statistical inference: <strong>Estimation</strong> and <strong>Hypothesis testing</strong>.
+<ul>
+<li><strong>Estimation:</strong> Estimate a population parameter based on a sample statistic. Example: Estimate the average height of all students at CU based on a sample of 50 students.
+<ul>
+<li>We can quantify the uncertainty of our estimate using <strong>confidence intervals</strong>.</li>
+<li>We can use <strong>bootstrapping</strong> to create confidence intervals.</li>
+</ul></li>
+<li><span class="red"><strong>Hypothesis testing:</strong></span> Test a claim about a population parameter using sample data. Examples:
+<ul>
+<li>Test if a new teaching method improves student performance compared to the traditional method.</li>
+<li>Test if a new drug is more effective than a placebo in treating a disease.</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="example-organ-donors" class="slide level2">
+<h2>Example: Organ donors</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><strong>Background:</strong></p>
+<ul>
+<li>Liver donors may seek help of “medical consultants” assisting in all aspects around the surgery to reduce the possibility of complications.</li>
+<li>Patients might choose a consultant based on the historical complication rate of the consultant’s clients.</li>
+</ul>
+<p><strong>Case:</strong> A consultant advertises:</p>
+<ul>
+<li>The average complication rate for liver donor surgeries in the US is 10%, but her clients have only had 3 complications in the 62 liver donor surgeries. So, she has just 4.8% complications!</li>
+</ul>
+</div><div class="column fragment" style="width:40%;">
+<p><span class="red"><strong>Is this evidence for a better track record?</strong></span></p>
+<p>Let us create the data frame for the consultant’s patients:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a>organ_donor <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb62-2"><a></a>  <span class="at">outcome =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"complication"</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="st">"no complication"</span>, <span class="dv">59</span>))</span>
+<span id="cb62-3"><a></a>)</span>
+<span id="cb62-4"><a></a>organ_donor <span class="sc">|&gt;</span> <span class="fu">count</span>(outcome)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  outcome             n
+  &lt;chr&gt;           &lt;int&gt;
+1 complication        3
+2 no complication    59</code></pre>
+</div>
+</div>
+</div></div>
+</section>
+<section id="formalizing-parameter-vs.-statistic" class="slide level2">
+<h2>Formalizing: Parameter vs.&nbsp;statistic</h2>
+<ul>
+<li>A <strong>parameter</strong> for a hypothesis test is the “true” value of interest.</li>
+<li>We <em>estimate</em> the parameter using a <strong>sample statistic</strong>, here a so called <strong>point estimate</strong> (just one number).</li>
+</ul>
+<p><span class="red"><strong>Parameter:</strong></span> <span class="math inline">\(q\)</span> true rate of complication: 10% complication rate in US<br>
+<span class="red"><strong>Statistic:</strong></span> <span class="math inline">\(\hat{q}\)</span> rate of complication in the sample: <span class="math inline">\(\frac{3}{62}\)</span> = 4.8% (point estimate)</p>
+<ul>
+<li class="fragment">The consultant claims that her clients have a lower complication rate than the US average <span class="red"><strong>because</strong></span> of here competence. This is a causal claim. Can we assess it with these data? <span class="fragement">No.&nbsp;The data is observational.</span> For example, maybe patients who can afford a medical consultant can afford better medical care, which can also lead to a lower complication rate.</li>
+<li class="fragment">What could be a randomized controlled trial (RCT, gold standard for causal analysis)?</li>
+<li class="fragment">But we can ask <span class="green"><strong>Could the low complication rate <span class="math inline">\(\hat{q} = 4.8\%\)</span> be due to chance?</strong></span></li>
+</ul>
+</section>
+<section id="formalizing-hypothesis-testing" class="slide level2">
+<h2>Formalizing: Hypothesis testing</h2>
+<ul>
+<li><p><span class="green"><strong>Null hypothesis <span class="math inline">\(H_0\)</span>:</strong></span> “There is nothing going on”<br>
+Here: The complication rate for this consultant is no different than the US average of 10%. The 3 out of 62 complications is just due to chance.</p></li>
+<li><p><span class="green"><strong>Alternative hypothesis <span class="math inline">\(H_1\)</span>:</strong></span> “There is something going on”<br>
+The complication rate for this consultant is <strong>lower</strong> than the US average of 10%.</p></li>
+</ul>
+<div class="fragment">
+<p>Idea: <span class="red"><strong>Understand hypothesis testing as a court trial</strong></span></p>
+<ol type="1">
+<li>Formulate <span class="math inline">\(H_0\)</span>: Defendant is innocent</li>
+<li>Formulate <span class="math inline">\(H_A\)</span>: Defendant is guilty</li>
+<li><strong>Present the evidence:</strong> Collect data</li>
+<li><strong>Judge the evidence:</strong> “Could these data plausibly have happened by chance if the null hypothesis were true?”<br>
+Yes: <strong>Fail to reject <span class="math inline">\(H_0\)</span></strong>; No: <strong>Reject <span class="math inline">\(H_0\)</span></strong></li>
+</ol>
+</div>
+</section>
+<section id="simulating-the-null-distribution" class="slide level2">
+<h2>Simulating the null distribution</h2>
+<p>We want simulate several outcomes of 62 patients where the probability of complication for each patient is 0.10. (Null hypothesis <span class="math inline">\(H_0: q = 0.10\)</span>.)</p>
+<p>These several outcomes is called the <span class="green"><strong>null distribution</strong></span>.</p>
+<div class="fragment">
+<p><strong>Think abstract of this using a bag of chips:</strong></p>
+<ul>
+<li>How many chips? <span class="fragment red">For example 10 which makes 10% choices possible</span></li>
+<li>How many colors? <span class="fragment red">2</span></li>
+<li>What should colors represent? <span class="fragment red">“complication”, “no complication”</span></li>
+<li>How many draws? <span class="fragment red">62 as the data</span></li>
+<li>With replacement or without replacement? <span class="fragment red">With replacement</span></li>
+</ul>
+</div>
+</section>
+<section id="simulation" class="slide level2">
+<h2>Simulation!</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>outcomes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"complication"</span>, <span class="st">"no complication"</span>)</span>
+<span id="cb64-2"><a></a>sim1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(outcomes, <span class="at">size =</span> <span class="dv">62</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb64-3"><a></a>sim1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "no complication" "no complication" "no complication" "no complication"
+ [5] "no complication" "complication"    "no complication" "complication"   
+ [9] "no complication" "no complication" "no complication" "no complication"
+[13] "no complication" "no complication" "no complication" "no complication"
+[17] "no complication" "no complication" "no complication" "no complication"
+[21] "no complication" "no complication" "no complication" "no complication"
+[25] "no complication" "complication"    "no complication" "no complication"
+[29] "no complication" "no complication" "no complication" "no complication"
+[33] "no complication" "no complication" "no complication" "no complication"
+[37] "no complication" "no complication" "no complication" "no complication"
+[41] "no complication" "no complication" "no complication" "no complication"
+[45] "no complication" "no complication" "no complication" "no complication"
+[49] "no complication" "no complication" "no complication" "no complication"
+[53] "no complication" "no complication" "no complication" "no complication"
+[57] "no complication" "no complication" "no complication" "no complication"
+[61] "no complication" "no complication"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a><span class="fu">sum</span>(sim1 <span class="sc">==</span> <span class="st">"complication"</span>) <span class="sc">/</span> <span class="dv">62</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0483871</code></pre>
+</div>
+</div>
+<p>Oh OK, this was exactly the consultant’s rate. Maybe it was a rare event? Let us repeat it.</p>
+</section>
+<section id="more-simulation" class="slide level2">
+<h2>More simulation!</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="fu">sum</span>(</span>
+<span id="cb68-2"><a></a>  <span class="fu">sample</span>(outcomes, <span class="at">size =</span> <span class="dv">62</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>), <span class="at">replace =</span> <span class="cn">TRUE</span>) <span class="sc">==</span></span>
+<span id="cb68-3"><a></a>    <span class="st">"complication"</span></span>
+<span id="cb68-4"><a></a>) <span class="sc">/</span></span>
+<span id="cb68-5"><a></a>  <span class="dv">62</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1129032</code></pre>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70"><pre class="sourceCode numberSource {webr-r} number-lines code-with-copy"><code class="sourceCode"><span id="cb70-1"><a></a>outcomes &lt;- c("complication", "no complication")</span>
+<span id="cb70-2"><a></a>sum(</span>
+<span id="cb70-3"><a></a>  sample(outcomes, size = 62, prob = c(0.1, 0.9), replace = TRUE) ==</span>
+<span id="cb70-4"><a></a>    "complication"</span>
+<span id="cb70-5"><a></a>) /</span>
+<span id="cb70-6"><a></a>  62</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="automating-with-tidymodels" class="slide level2">
+<h2>Automating with <code>tidymodels</code></h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>null_dist <span class="ot">&lt;-</span> organ_donor <span class="sc">|&gt;</span></span>
+<span id="cb71-2"><a></a>  <span class="fu">specify</span>(<span class="at">response =</span> outcome, <span class="at">success =</span> <span class="st">"complication"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb71-3"><a></a>  <span class="fu">hypothesize</span>(</span>
+<span id="cb71-4"><a></a>    <span class="at">null =</span> <span class="st">"point"</span>, <span class="co"># It is about a point estimate</span></span>
+<span id="cb71-5"><a></a>    <span class="at">p =</span> <span class="fu">c</span>(<span class="st">"complication"</span> <span class="ot">=</span> <span class="fl">0.10</span>, <span class="st">"no complication"</span> <span class="ot">=</span> <span class="fl">0.90</span>)</span>
+<span id="cb71-6"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb71-7"><a></a>  <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">100</span>, <span class="at">type =</span> <span class="st">"draw"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb71-8"><a></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"prop"</span>)</span>
+<span id="cb71-9"><a></a>null_dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code>Response: outcome (factor)
+Null Hypothesis: point
+# A tibble: 100 × 2
+   replicate   stat
+       &lt;int&gt;  &lt;dbl&gt;
+ 1         1 0.0806
+ 2         2 0.0968
+ 3         3 0.0645
+ 4         4 0.0645
+ 5         5 0.113 
+ 6         6 0.113 
+ 7         7 0.113 
+ 8         8 0.161 
+ 9         9 0.0645
+10        10 0.0806
+# ℹ 90 more rows</code></pre>
+</div>
+</div></div>
+<p>This creates a sample of 100 from the null distribution. Each row is one simulated outcome of 62 patients with a complication rate under the null hypothesis of 10%.</p>
+</section>
+<section id="visualizing-the-null-distribution" class="slide level2">
+<h2>Visualizing the null distribution</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a>organ_donor <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb73-2"><a></a>  <span class="at">outcome =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"complication"</span>, <span class="dv">3</span>), <span class="fu">rep</span>(<span class="st">"no complication"</span>, <span class="dv">59</span>))</span>
+<span id="cb73-3"><a></a>)</span>
+<span id="cb73-4"><a></a>null_dist <span class="ot">&lt;-</span> organ_donor <span class="sc">|&gt;</span></span>
+<span id="cb73-5"><a></a>  <span class="fu">specify</span>(<span class="at">response =</span> outcome, <span class="at">success =</span> <span class="st">"complication"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb73-6"><a></a>  <span class="fu">hypothesize</span>(</span>
+<span id="cb73-7"><a></a>    <span class="at">null =</span> <span class="st">"point"</span>, <span class="co"># It is about a point estimate</span></span>
+<span id="cb73-8"><a></a>    <span class="at">p =</span> <span class="fu">c</span>(<span class="st">"complication"</span> <span class="ot">=</span> <span class="fl">0.10</span>, <span class="st">"no complication"</span> <span class="ot">=</span> <span class="fl">0.90</span>)</span>
+<span id="cb73-9"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb73-10"><a></a>  <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">100</span>, <span class="at">type =</span> <span class="st">"draw"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb73-11"><a></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"prop"</span>)</span>
+<span id="cb73-12"><a></a><span class="fu">ggplot</span>(<span class="at">data =</span> null_dist, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> stat)) <span class="sc">+</span></span>
+<span id="cb73-13"><a></a>  <span class="fu">geom_bar</span>(<span class="at">width =</span> <span class="fl">0.005</span>) <span class="sc">+</span></span>
+<span id="cb73-14"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Null distribution"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+
+</div>
+<img data-src="W12_files/figure-revealjs/unnamed-chunk-33-1.png" width="960" class="r-stretch"></section>
+<section id="p-value" class="slide level2">
+<h2>p-value</h2>
+<p>Hypothesis testing procedure:</p>
+<ul>
+<li>Start with a null hypothesis, <span class="math inline">\(H_0\)</span>, that represents the status quo</li>
+<li>Set an alternative hypothesis, <span class="math inline">\(H_A\)</span>, that represents the research question, i.e.&nbsp;what we are testing for</li>
+<li>Conduct a hypothesis test under the assumption that the null hypothesis is true and calculate a <strong>p-value</strong>.</li>
+</ul>
+<div class="fragment">
+<p><strong>Definition p-value:</strong><br>
+<em>Probability of observed or more extreme outcome given that the null hypothesis is true.</em></p>
+</div>
+</section>
+<section id="p-value-visualized" class="slide level2">
+<h2>p-value visualized</h2>
+<p>How often was the simulated sample proportion at least as extreme as the observed sample proportion?*<sup>1</sup></p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">ggplot</span>(<span class="at">data =</span> null_dist, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> stat)) <span class="sc">+</span></span>
+<span id="cb74-2"><a></a>  <span class="fu">geom_bar</span>(<span class="at">width =</span> <span class="fl">0.005</span>) <span class="sc">+</span></span>
+<span id="cb74-3"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Null distribution with observed value"</span>) <span class="sc">+</span></span>
+<span id="cb74-4"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">3</span> <span class="sc">/</span> <span class="dv">62</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb74-5"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-34-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div class="fragment">
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>null_dist <span class="sc">|&gt;</span></span>
+<span id="cb75-2"><a></a>  <span class="fu">summarise</span>(<span class="at">p_value =</span> <span class="fu">sum</span>(stat <span class="sc">&lt;=</span> <span class="dv">3</span> <span class="sc">/</span> <span class="dv">62</span>) <span class="sc">/</span> <span class="fu">n</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  p_value
+    &lt;dbl&gt;
+1    0.08</code></pre>
+</div>
+</div></div>
+<p>This is the fraction of simulations where complications was equal or below 0.0483871.</p>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn7"><p>This a one-sided hypothesis test because we are looking for lower rates not also higher rates. We do one-sided test if we know the direction of interest, here “low” and “lower” rates.</p></li></ol></aside></section>
+<section id="significance-level" class="slide level2">
+<h2>Significance level</h2>
+<ul>
+<li class="fragment">A <strong>significance level</strong> <span class="math inline">\(\alpha\)</span> is a threshold we make up to make our judgment about the plausibility of the null hypothesis being true given the observed data.</li>
+<li class="fragment">We often use <span class="math inline">\(\alpha = 0.05 = 5\%\)</span> as the cutoff for whether the p-value is low enough that the data are unlikely to have come from the null model.</li>
+<li class="fragment">If p-value &lt; <span class="math inline">\(\alpha\)</span>, reject <span class="math inline">\(H_0\)</span> in favor of <span class="math inline">\(H_A\)</span>: The data provide convincing evidence for the alternative hypothesis.</li>
+<li class="fragment">If p-value &gt; <span class="math inline">\(\alpha\)</span>, fail to reject <span class="math inline">\(H_0\)</span> in favor of <span class="math inline">\(H_A\)</span>: The data do not provide convincing evidence for the alternative hypothesis.</li>
+</ul>
+<div class="fragment">
+<p><strong>What is the conclusion of the hypothesis test?</strong></p>
+<ul>
+<li>Since the p-value 0.08 is greater than the significance level 0.05, we fail to reject the null hypothesis.</li>
+<li>This data does not provide convincing evidence that this consultant incurs a lower complication rate than the 10% overall US complication rate.</li>
+</ul>
+</div>
+</section>
+<section id="simulations-are-not-sufficient" class="slide level2">
+<h2>100 simulations are not sufficient!</h2>
+<p>Simulate 15,000 times to get an accurate distribution.</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a>null_dist <span class="ot">&lt;-</span> organ_donor <span class="sc">|&gt;</span></span>
+<span id="cb77-2"><a></a>  <span class="fu">specify</span>(<span class="at">response =</span> outcome, <span class="at">success =</span> <span class="st">"complication"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb77-3"><a></a>  <span class="fu">hypothesize</span>(</span>
+<span id="cb77-4"><a></a>    <span class="at">null =</span> <span class="st">"point"</span>,</span>
+<span id="cb77-5"><a></a>    <span class="at">p =</span> <span class="fu">c</span>(<span class="st">"complication"</span> <span class="ot">=</span> <span class="fl">0.10</span>, <span class="st">"no complication"</span> <span class="ot">=</span> <span class="fl">0.90</span>)</span>
+<span id="cb77-6"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb77-7"><a></a>  <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">15000</span>, <span class="at">type =</span> <span class="st">"simulate"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb77-8"><a></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"prop"</span>)</span>
+<span id="cb77-9"><a></a><span class="fu">ggplot</span>(<span class="at">data =</span> null_dist, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> stat)) <span class="sc">+</span></span>
+<span id="cb77-10"><a></a>  <span class="fu">geom_bar</span>(<span class="at">width =</span> <span class="fl">0.005</span>) <span class="sc">+</span></span>
+<span id="cb77-11"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">3</span> <span class="sc">/</span> <span class="dv">62</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb77-12"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-36-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div class="fragment">
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>null_dist <span class="sc">|&gt;</span></span>
+<span id="cb78-2"><a></a>  <span class="fu">filter</span>(stat <span class="sc">&lt;=</span> <span class="dv">3</span> <span class="sc">/</span> <span class="dv">62</span>) <span class="sc">|&gt;</span></span>
+<span id="cb78-3"><a></a>  <span class="fu">summarise</span>(<span class="at">p_value =</span> <span class="fu">n</span>() <span class="sc">/</span> <span class="fu">nrow</span>(null_dist))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  p_value
+    &lt;dbl&gt;
+1   0.122</code></pre>
+</div>
+</div></div>
+<p>This is a more robust p-value from simulation.</p>
+</div>
+</section>
+<section id="p-value-in-model-outputs" class="slide level2">
+<h2>p-value in model outputs</h2>
+<p>Model output for a linear model with palmer penguins.</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb80-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb80-3"><a></a>  <span class="fu">fit</span>(bill_length_mm <span class="sc">~</span> bill_depth_mm, <span class="at">data =</span> penguins) <span class="sc">|&gt;</span></span>
+<span id="cb80-4"><a></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term          estimate std.error statistic  p.value
+  &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)     55.1       2.52      21.9  6.91e-67
+2 bill_depth_mm   -0.650     0.146     -4.46 1.12e- 5</code></pre>
+</div>
+</div></div>
+<p>Model output for a logistic regression model with email from <a href="https://www.openintro.org/data/index.php?data=email">openintro</a></p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a><span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb82-2"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb82-3"><a></a>  <span class="fu">fit</span>(spam <span class="sc">~</span> from <span class="sc">+</span> cc, <span class="at">data =</span> email, <span class="at">family =</span> <span class="st">"binomial"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb82-4"><a></a>  <span class="fu">tidy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  term         estimate std.error statistic p.value
+  &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 (Intercept)  13.6      309.        0.0439   0.965
+2 from1       -15.8      309.       -0.0513   0.959
+3 cc            0.00423    0.0193    0.220    0.826</code></pre>
+</div>
+</div></div>
+<p>What do the p-values mean? What is the null hypothesis?</p>
+<div class="fragment">
+<p><strong>Null-Hypothesis:</strong> There is no relationship between the predictor variable and the response variable, that means that the coefficient is equal to zero.</p>
+<p><strong>Smaller p-value</strong> <span class="math inline">\(\to\)</span> more evidence for rejecting the hypothesis that there is no effect.</p>
+</div>
+</section>
+<section id="xkcd-on-p-values" class="slide level2">
+<h2>xkcd on p-values</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><a href="https://xkcd.com/1478/"><img data-src="https://imgs.xkcd.com/comics/p_values_2x.png" height="500"></a> <a href="https://xkcd.com/882/"><img data-src="https://imgs.xkcd.com/comics/significant.png" height="500"></a></p>
+</div><div class="column" style="width:40%;">
+<div class="fragment">
+<ul>
+<li>Significance levels are fairly arbitrary. Sometimes they are used (wrongly) as definitive judgments</li>
+<li>They can even be used to do <em>p-hacking</em>: Searching for “significant” effects in observational data</li>
+<li>In parts of science it has become a “gamed” performance metric.</li>
+<li>The p-value says nothing about effect size!</li>
+</ul>
+</div>
+</div></div>
+</section>
+<section id="p-value-misinterpretation" class="slide level2">
+<h2>p-value misinterpretation</h2>
+<p>p-values do not measure<sup>1</sup></p>
+<ul>
+<li class="fragment">the probability that the studied hypothesis is true</li>
+<li class="fragment">the probability that the data were produced by random chance alone</li>
+<li class="fragment">the size of an effect</li>
+<li class="fragment">the “importance of a result” or “evidence regarding a model or hypothesis” (it is only against the null hypothesis).</li>
+</ul>
+<div class="fragment">
+<p>Correct:<br>
+<em>The p-value is the probability of obtaining test results at least as extreme as the result actually observed, under the assumption that the null hypothesis is correct.</em></p>
+<p>p-values and significance tests, when properly applied and interpreted, increase the rigor of the conclusions drawn from data.<sup>2</sup></p>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn8"><p>From the American Statistical Association (ASA) 2016</p></li><li id="fn9"><p>From the American Statistical Association (ASA) 2019</p></li></ol></aside></section></section>
+<section>
+<section id="cross-validation-to-improve-prediction" class="title-slide slide level1 center">
+<h1>Cross-Validation to Improve Prediction</h1>
+<ul>
+<li>Also in prediction we have uncertainty!</li>
+<li>We can address it with cross-validation, which should use when we tune hyperparameters</li>
+<li>We learn, that more trees are better than one in a random forrest</li>
+</ul>
+</section>
+<section id="how-reliable-are-performance-metrics" class="slide level2 smaller">
+<h2>How reliable are performance metrics?</h2>
+<ul>
+<li>Model performance changes with the random selection of the training data. How can we then reliably compare models?</li>
+</ul>
+<div class="fragment">
+<p>A solution: <span class="green"><strong>Cross-validation</strong></span></p>
+</div>
+<div class="fragment">
+<p>More specifically, <span class="green"><strong><span class="math inline">\(v\)</span>-fold cross-validation</strong></span>:</p>
+<ul>
+<li>Shuffle your data and make a partition with <span class="math inline">\(v\)</span> parts
+<ul>
+<li>Recall from set theory: A <strong>partition</strong> is a division of a set into mutually disjoint parts which union covers the whole set.
+<ul>
+<li>Here a partition of the the set of all rows in a data frame.</li>
+</ul></li>
+</ul></li>
+<li>Use 1 part for validation, and the remaining <span class="math inline">\(v-1\)</span> parts for training</li>
+<li>Repeat <span class="math inline">\(v\)</span> times</li>
+</ul>
+</div>
+</section>
+<section id="cross-validation" class="slide level2">
+<h2>Cross-validation</h2>
+
+<img data-src="img/cross-validation.png" class="r-stretch"></section>
+<section id="decision-tree" class="slide level2">
+<h2>Decision Tree</h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># Test with other seeds to see how the Train-Test-Split changes results!</span></span>
+<span id="cb84-2"><a></a><span class="co"># 1. Train-Test-Split</span></span>
+<span id="cb84-3"><a></a>peng_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(<span class="fu">na.omit</span>(penguins), <span class="at">prop =</span> <span class="fl">0.8</span>, <span class="at">strata =</span> sex)</span>
+<span id="cb84-4"><a></a>peng_train <span class="ot">&lt;-</span> <span class="fu">training</span>(peng_split)</span>
+<span id="cb84-5"><a></a>peng_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(peng_split)</span>
+<span id="cb84-6"><a></a><span class="fu">set.seed</span>(<span class="cn">NULL</span>) <span class="co"># Reset random. See that the decision tree algorithm is deterministic! Test it!</span></span>
+<span id="cb84-7"><a></a><span class="co"># 2. Preprocessing-Recipe</span></span>
+<span id="cb84-8"><a></a>peng_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(body_mass_g <span class="sc">~</span> ., <span class="at">data =</span> peng_train) <span class="sc">|&gt;</span></span>
+<span id="cb84-9"><a></a>  <span class="fu">step_rm</span>(year)</span>
+<span id="cb84-10"><a></a><span class="co"># 3. Model</span></span>
+<span id="cb84-11"><a></a>peng_regtree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span></span>
+<span id="cb84-12"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb84-13"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb84-14"><a></a><span class="co"># 4. Workflow</span></span>
+<span id="cb84-15"><a></a>peng_regtree_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb84-16"><a></a>  <span class="fu">add_recipe</span>(peng_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb84-17"><a></a>  <span class="fu">add_model</span>(peng_regtree)</span>
+<span id="cb84-18"><a></a><span class="co"># 5. Fit</span></span>
+<span id="cb84-19"><a></a>peng_regtree_fit <span class="ot">&lt;-</span> peng_regtree_wf <span class="sc">|&gt;</span></span>
+<span id="cb84-20"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
+<span id="cb84-21"><a></a><span class="co"># 6. Predict with test data</span></span>
+<span id="cb84-22"><a></a>peng_regtree_pred <span class="ot">&lt;-</span> peng_regtree_fit <span class="sc">|&gt;</span></span>
+<span id="cb84-23"><a></a>  <span class="fu">augment</span>(peng_test)</span>
+<span id="cb84-24"><a></a><span class="co"># 7. Evaluate performance</span></span>
+<span id="cb84-25"><a></a>peng_regtree_pred <span class="sc">|&gt;</span></span>
+<span id="cb84-26"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
+<span id="cb84-27"><a></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">"rmse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard        350.</code></pre>
+</div>
+</div></div>
+</section>
+<section id="cross-validation-1" class="slide level2 scrollable">
+<h2>Cross-validation</h2>
+<p>Cross-validation replacing the Train-Test-Split in the workflow:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="co"># 1. 5-fold Cross validation</span></span>
+<span id="cb86-2"><a></a>peng_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="fu">na.omit</span>(penguins), <span class="at">v =</span> <span class="dv">5</span>, <span class="at">strata =</span> sex)</span>
+<span id="cb86-3"><a></a><span class="co"># 2. Preprocessing-Recipe: Same as before</span></span>
+<span id="cb86-4"><a></a><span class="co"># 3. Model: Same as before</span></span>
+<span id="cb86-5"><a></a><span class="co"># 4. Workflow: Same as before</span></span>
+<span id="cb86-6"><a></a><span class="co"># 5. Fit: We use peng_regtree_wf and use fit_resamples() to fit for all folds</span></span>
+<span id="cb86-7"><a></a>peng_folds_regtree_fit <span class="ot">&lt;-</span> peng_regtree_wf <span class="sc">|&gt;</span></span>
+<span id="cb86-8"><a></a>  <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> peng_folds)</span>
+<span id="cb86-9"><a></a>peng_folds_regtree_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Resampling results
+# 5-fold cross-validation using stratification 
+# A tibble: 5 × 4
+  splits           id    .metrics         .notes          
+  &lt;list&gt;           &lt;chr&gt; &lt;list&gt;           &lt;list&gt;          
+1 &lt;split [266/67]&gt; Fold1 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;
+2 &lt;split [266/67]&gt; Fold2 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;
+3 &lt;split [266/67]&gt; Fold3 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;
+4 &lt;split [267/66]&gt; Fold4 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;
+5 &lt;split [267/66]&gt; Fold5 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 4]&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a><span class="co"># 6./7. (Predict) and evaluate performance for all folds</span></span>
+<span id="cb88-2"><a></a>peng_folds_regtree_fit <span class="sc">|&gt;</span></span>
+<span id="cb88-3"><a></a>  <span class="fu">collect_metrics</span>(<span class="at">summarize =</span> <span class="cn">FALSE</span>, <span class="at">type =</span> <span class="st">"wide"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+  .config         id     rmse   rsq
+  &lt;chr&gt;           &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 pre0_mod0_post0 Fold1  439. 0.607
+2 pre0_mod0_post0 Fold2  300. 0.876
+3 pre0_mod0_post0 Fold3  322. 0.818
+4 pre0_mod0_post0 Fold4  330. 0.847
+5 pre0_mod0_post0 Fold5  335. 0.851</code></pre>
+</div>
+</div>
+<div class="columns">
+<div class="column">
+<p>Interpretation:</p>
+<ul>
+<li>Cross-validation shows variation</li>
+<li>The original fit was worse than average</li>
+</ul>
+</div><div class="column">
+<p>For comparision: Original split</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard     350.   
+2 rsq     standard       0.811</code></pre>
+</div>
+</div>
+</div></div>
+
+<aside><div>
+<p>Besides <code>vfold_cv()</code> the only new function are <code>fit_resamples()</code> and <code>collect_metrics()</code>.</p>
+</div></aside></section></section>
+<section>
+<section id="tuning-hyperparameters" class="title-slide slide level1 center">
+<h1>Tuning Hyperparameters</h1>
+
+</section>
+<section id="tuning" class="slide level2 scrollable">
+<h2>Tuning</h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb91-2"><a></a><span class="co"># 1.a. Train-Test-Split (same as before)</span></span>
+<span id="cb91-3"><a></a><span class="co"># 1.b. CREATE CROSS-VALIDATION FOLDS for TRAINING data</span></span>
+<span id="cb91-4"><a></a>peng_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(peng_train, <span class="at">v =</span> <span class="dv">5</span>, <span class="at">repeats =</span> <span class="dv">5</span>, <span class="at">strata =</span> sex)</span>
+<span id="cb91-5"><a></a><span class="co"># 2. Preprocessing-Recipe (same)</span></span>
+<span id="cb91-6"><a></a><span class="co"># 3. Model WITH TUNING (modified)</span></span>
+<span id="cb91-7"><a></a>peng_regtree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
+<span id="cb91-8"><a></a>  <span class="at">cost_complexity =</span> <span class="dv">0</span>,</span>
+<span id="cb91-9"><a></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>(),</span>
+<span id="cb91-10"><a></a>  <span class="at">min_n =</span> <span class="dv">2</span></span>
+<span id="cb91-11"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb91-12"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb91-13"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb91-14"><a></a><span class="co"># 4.a. Workflow (same but with new model)</span></span>
+<span id="cb91-15"><a></a>peng_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb91-16"><a></a>  <span class="fu">add_recipe</span>(peng_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb91-17"><a></a>  <span class="fu">add_model</span>(peng_regtree)</span>
+<span id="cb91-18"><a></a><span class="co"># 4.b. TUNE WITH CROSS-VALIDATION</span></span>
+<span id="cb91-19"><a></a>peng_tune_results <span class="ot">&lt;-</span> peng_wf <span class="sc">|&gt;</span></span>
+<span id="cb91-20"><a></a>  <span class="fu">tune_grid</span>(</span>
+<span id="cb91-21"><a></a>    <span class="at">resamples =</span> peng_folds,</span>
+<span id="cb91-22"><a></a>    <span class="at">grid =</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb91-23"><a></a>      <span class="at">tree_depth =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>)</span>
+<span id="cb91-24"><a></a>    ),</span>
+<span id="cb91-25"><a></a>    <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse)</span>
+<span id="cb91-26"><a></a>  )</span>
+<span id="cb91-27"><a></a><span class="co"># 4.c. EXAMINE TUNING RESULTS</span></span>
+<span id="cb91-28"><a></a>peng_tune_results <span class="sc">|&gt;</span></span>
+<span id="cb91-29"><a></a>  <span class="fu">collect_metrics</span>(<span class="at">summarize =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb91-30"><a></a>  <span class="fu">select</span>(<span class="sc">-</span>.config, <span class="sc">-</span>.estimator)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  tree_depth .metric  mean     n std_err
+       &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+1          2 rmse     314.    25    8.57
+2          3 rmse     320.    25    6.80
+3          4 rmse     316.    25    5.64
+4          5 rmse     331.    25    6.20
+5          6 rmse     343.    25    6.02
+6          7 rmse     357.    25    6.49</code></pre>
+</div>
+</div></div>
+<p><code>collect_metrics(summarize = TRUE)</code> averages performance across folds and repeats!<br>
+In total there are 150 fits (6 parameter combinations <span class="math inline">\(\times\)</span> 5 folds <span class="math inline">\(\times\)</span> 5 repeats).</p>
+<p>Here all fits:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 150 × 7
+    id      id2   tree_depth .metric .estimator .estimate .config        
+    &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;          
+  1 Repeat1 Fold1          2 rmse    standard        323. pre0_mod1_post0
+  2 Repeat1 Fold2          2 rmse    standard        324. pre0_mod1_post0
+  3 Repeat1 Fold3          2 rmse    standard        337. pre0_mod1_post0
+  4 Repeat1 Fold4          2 rmse    standard        283. pre0_mod1_post0
+  5 Repeat1 Fold5          2 rmse    standard        262. pre0_mod1_post0
+  6 Repeat2 Fold1          2 rmse    standard        290. pre0_mod1_post0
+  7 Repeat2 Fold2          2 rmse    standard        295. pre0_mod1_post0
+  8 Repeat2 Fold3          2 rmse    standard        337. pre0_mod1_post0
+  9 Repeat2 Fold4          2 rmse    standard        289. pre0_mod1_post0
+ 10 Repeat2 Fold5          2 rmse    standard        324. pre0_mod1_post0
+ 11 Repeat3 Fold1          2 rmse    standard        286. pre0_mod1_post0
+ 12 Repeat3 Fold2          2 rmse    standard        351. pre0_mod1_post0
+ 13 Repeat3 Fold3          2 rmse    standard        298. pre0_mod1_post0
+ 14 Repeat3 Fold4          2 rmse    standard        285. pre0_mod1_post0
+ 15 Repeat3 Fold5          2 rmse    standard        315. pre0_mod1_post0
+ 16 Repeat4 Fold1          2 rmse    standard        274. pre0_mod1_post0
+ 17 Repeat4 Fold2          2 rmse    standard        294. pre0_mod1_post0
+ 18 Repeat4 Fold3          2 rmse    standard        326. pre0_mod1_post0
+ 19 Repeat4 Fold4          2 rmse    standard        337. pre0_mod1_post0
+ 20 Repeat4 Fold5          2 rmse    standard        291. pre0_mod1_post0
+ 21 Repeat5 Fold1          2 rmse    standard        310. pre0_mod1_post0
+ 22 Repeat5 Fold2          2 rmse    standard        300. pre0_mod1_post0
+ 23 Repeat5 Fold3          2 rmse    standard        326. pre0_mod1_post0
+ 24 Repeat5 Fold4          2 rmse    standard        489. pre0_mod1_post0
+ 25 Repeat5 Fold5          2 rmse    standard        306. pre0_mod1_post0
+ 26 Repeat1 Fold1          3 rmse    standard        352. pre0_mod2_post0
+ 27 Repeat1 Fold2          3 rmse    standard        338. pre0_mod2_post0
+ 28 Repeat1 Fold3          3 rmse    standard        325. pre0_mod2_post0
+ 29 Repeat1 Fold4          3 rmse    standard        294. pre0_mod2_post0
+ 30 Repeat1 Fold5          3 rmse    standard        273. pre0_mod2_post0
+ 31 Repeat2 Fold1          3 rmse    standard        312. pre0_mod2_post0
+ 32 Repeat2 Fold2          3 rmse    standard        313. pre0_mod2_post0
+ 33 Repeat2 Fold3          3 rmse    standard        337. pre0_mod2_post0
+ 34 Repeat2 Fold4          3 rmse    standard        294. pre0_mod2_post0
+ 35 Repeat2 Fold5          3 rmse    standard        308. pre0_mod2_post0
+ 36 Repeat3 Fold1          3 rmse    standard        286. pre0_mod2_post0
+ 37 Repeat3 Fold2          3 rmse    standard        368. pre0_mod2_post0
+ 38 Repeat3 Fold3          3 rmse    standard        298. pre0_mod2_post0
+ 39 Repeat3 Fold4          3 rmse    standard        315. pre0_mod2_post0
+ 40 Repeat3 Fold5          3 rmse    standard        339. pre0_mod2_post0
+ 41 Repeat4 Fold1          3 rmse    standard        276. pre0_mod2_post0
+ 42 Repeat4 Fold2          3 rmse    standard        305. pre0_mod2_post0
+ 43 Repeat4 Fold3          3 rmse    standard        331. pre0_mod2_post0
+ 44 Repeat4 Fold4          3 rmse    standard        331. pre0_mod2_post0
+ 45 Repeat4 Fold5          3 rmse    standard        313. pre0_mod2_post0
+ 46 Repeat5 Fold1          3 rmse    standard        333. pre0_mod2_post0
+ 47 Repeat5 Fold2          3 rmse    standard        299. pre0_mod2_post0
+ 48 Repeat5 Fold3          3 rmse    standard        343. pre0_mod2_post0
+ 49 Repeat5 Fold4          3 rmse    standard        436. pre0_mod2_post0
+ 50 Repeat5 Fold5          3 rmse    standard        292. pre0_mod2_post0
+ 51 Repeat1 Fold1          4 rmse    standard        336. pre0_mod3_post0
+ 52 Repeat1 Fold2          4 rmse    standard        317. pre0_mod3_post0
+ 53 Repeat1 Fold3          4 rmse    standard        307. pre0_mod3_post0
+ 54 Repeat1 Fold4          4 rmse    standard        327. pre0_mod3_post0
+ 55 Repeat1 Fold5          4 rmse    standard        257. pre0_mod3_post0
+ 56 Repeat2 Fold1          4 rmse    standard        314. pre0_mod3_post0
+ 57 Repeat2 Fold2          4 rmse    standard        285. pre0_mod3_post0
+ 58 Repeat2 Fold3          4 rmse    standard        343. pre0_mod3_post0
+ 59 Repeat2 Fold4          4 rmse    standard        306. pre0_mod3_post0
+ 60 Repeat2 Fold5          4 rmse    standard        306. pre0_mod3_post0
+ 61 Repeat3 Fold1          4 rmse    standard        275. pre0_mod3_post0
+ 62 Repeat3 Fold2          4 rmse    standard        372. pre0_mod3_post0
+ 63 Repeat3 Fold3          4 rmse    standard        313. pre0_mod3_post0
+ 64 Repeat3 Fold4          4 rmse    standard        305. pre0_mod3_post0
+ 65 Repeat3 Fold5          4 rmse    standard        296. pre0_mod3_post0
+ 66 Repeat4 Fold1          4 rmse    standard        321. pre0_mod3_post0
+ 67 Repeat4 Fold2          4 rmse    standard        300. pre0_mod3_post0
+ 68 Repeat4 Fold3          4 rmse    standard        315. pre0_mod3_post0
+ 69 Repeat4 Fold4          4 rmse    standard        318. pre0_mod3_post0
+ 70 Repeat4 Fold5          4 rmse    standard        286. pre0_mod3_post0
+ 71 Repeat5 Fold1          4 rmse    standard        354. pre0_mod3_post0
+ 72 Repeat5 Fold2          4 rmse    standard        303. pre0_mod3_post0
+ 73 Repeat5 Fold3          4 rmse    standard        338. pre0_mod3_post0
+ 74 Repeat5 Fold4          4 rmse    standard        383. pre0_mod3_post0
+ 75 Repeat5 Fold5          4 rmse    standard        318. pre0_mod3_post0
+ 76 Repeat1 Fold1          5 rmse    standard        331. pre0_mod4_post0
+ 77 Repeat1 Fold2          5 rmse    standard        328. pre0_mod4_post0
+ 78 Repeat1 Fold3          5 rmse    standard        324. pre0_mod4_post0
+ 79 Repeat1 Fold4          5 rmse    standard        329. pre0_mod4_post0
+ 80 Repeat1 Fold5          5 rmse    standard        277. pre0_mod4_post0
+ 81 Repeat2 Fold1          5 rmse    standard        342. pre0_mod4_post0
+ 82 Repeat2 Fold2          5 rmse    standard        308. pre0_mod4_post0
+ 83 Repeat2 Fold3          5 rmse    standard        342. pre0_mod4_post0
+ 84 Repeat2 Fold4          5 rmse    standard        329. pre0_mod4_post0
+ 85 Repeat2 Fold5          5 rmse    standard        327. pre0_mod4_post0
+ 86 Repeat3 Fold1          5 rmse    standard        365. pre0_mod4_post0
+ 87 Repeat3 Fold2          5 rmse    standard        365. pre0_mod4_post0
+ 88 Repeat3 Fold3          5 rmse    standard        325. pre0_mod4_post0
+ 89 Repeat3 Fold4          5 rmse    standard        301. pre0_mod4_post0
+ 90 Repeat3 Fold5          5 rmse    standard        314. pre0_mod4_post0
+ 91 Repeat4 Fold1          5 rmse    standard        331. pre0_mod4_post0
+ 92 Repeat4 Fold2          5 rmse    standard        339. pre0_mod4_post0
+ 93 Repeat4 Fold3          5 rmse    standard        323. pre0_mod4_post0
+ 94 Repeat4 Fold4          5 rmse    standard        348. pre0_mod4_post0
+ 95 Repeat4 Fold5          5 rmse    standard        270. pre0_mod4_post0
+ 96 Repeat5 Fold1          5 rmse    standard        396. pre0_mod4_post0
+ 97 Repeat5 Fold2          5 rmse    standard        291. pre0_mod4_post0
+ 98 Repeat5 Fold3          5 rmse    standard        327. pre0_mod4_post0
+ 99 Repeat5 Fold4          5 rmse    standard        406. pre0_mod4_post0
+100 Repeat5 Fold5          5 rmse    standard        342. pre0_mod4_post0
+101 Repeat1 Fold1          6 rmse    standard        320. pre0_mod5_post0
+102 Repeat1 Fold2          6 rmse    standard        339. pre0_mod5_post0
+103 Repeat1 Fold3          6 rmse    standard        352. pre0_mod5_post0
+104 Repeat1 Fold4          6 rmse    standard        343. pre0_mod5_post0
+105 Repeat1 Fold5          6 rmse    standard        309. pre0_mod5_post0
+106 Repeat2 Fold1          6 rmse    standard        317. pre0_mod5_post0
+107 Repeat2 Fold2          6 rmse    standard        324. pre0_mod5_post0
+108 Repeat2 Fold3          6 rmse    standard        347. pre0_mod5_post0
+109 Repeat2 Fold4          6 rmse    standard        361. pre0_mod5_post0
+110 Repeat2 Fold5          6 rmse    standard        324. pre0_mod5_post0
+111 Repeat3 Fold1          6 rmse    standard        404. pre0_mod5_post0
+112 Repeat3 Fold2          6 rmse    standard        365. pre0_mod5_post0
+113 Repeat3 Fold3          6 rmse    standard        363. pre0_mod5_post0
+114 Repeat3 Fold4          6 rmse    standard        312. pre0_mod5_post0
+115 Repeat3 Fold5          6 rmse    standard        332. pre0_mod5_post0
+116 Repeat4 Fold1          6 rmse    standard        316. pre0_mod5_post0
+117 Repeat4 Fold2          6 rmse    standard        326. pre0_mod5_post0
+118 Repeat4 Fold3          6 rmse    standard        337. pre0_mod5_post0
+119 Repeat4 Fold4          6 rmse    standard        391. pre0_mod5_post0
+120 Repeat4 Fold5          6 rmse    standard        296. pre0_mod5_post0
+121 Repeat5 Fold1          6 rmse    standard        413. pre0_mod5_post0
+122 Repeat5 Fold2          6 rmse    standard        327. pre0_mod5_post0
+123 Repeat5 Fold3          6 rmse    standard        341. pre0_mod5_post0
+124 Repeat5 Fold4          6 rmse    standard        382. pre0_mod5_post0
+125 Repeat5 Fold5          6 rmse    standard        326. pre0_mod5_post0
+126 Repeat1 Fold1          7 rmse    standard        310. pre0_mod6_post0
+127 Repeat1 Fold2          7 rmse    standard        351. pre0_mod6_post0
+128 Repeat1 Fold3          7 rmse    standard        374. pre0_mod6_post0
+129 Repeat1 Fold4          7 rmse    standard        362. pre0_mod6_post0
+130 Repeat1 Fold5          7 rmse    standard        318. pre0_mod6_post0
+131 Repeat2 Fold1          7 rmse    standard        313. pre0_mod6_post0
+132 Repeat2 Fold2          7 rmse    standard        317. pre0_mod6_post0
+133 Repeat2 Fold3          7 rmse    standard        358. pre0_mod6_post0
+134 Repeat2 Fold4          7 rmse    standard        380. pre0_mod6_post0
+135 Repeat2 Fold5          7 rmse    standard        328. pre0_mod6_post0
+136 Repeat3 Fold1          7 rmse    standard        425. pre0_mod6_post0
+137 Repeat3 Fold2          7 rmse    standard        354. pre0_mod6_post0
+138 Repeat3 Fold3          7 rmse    standard        377. pre0_mod6_post0
+139 Repeat3 Fold4          7 rmse    standard        326. pre0_mod6_post0
+140 Repeat3 Fold5          7 rmse    standard        343. pre0_mod6_post0
+141 Repeat4 Fold1          7 rmse    standard        366. pre0_mod6_post0
+142 Repeat4 Fold2          7 rmse    standard        336. pre0_mod6_post0
+143 Repeat4 Fold3          7 rmse    standard        358. pre0_mod6_post0
+144 Repeat4 Fold4          7 rmse    standard        404. pre0_mod6_post0
+145 Repeat4 Fold5          7 rmse    standard        346. pre0_mod6_post0
+146 Repeat5 Fold1          7 rmse    standard        424. pre0_mod6_post0
+147 Repeat5 Fold2          7 rmse    standard        346. pre0_mod6_post0
+148 Repeat5 Fold3          7 rmse    standard        374. pre0_mod6_post0
+149 Repeat5 Fold4          7 rmse    standard        396. pre0_mod6_post0
+150 Repeat5 Fold5          7 rmse    standard        326. pre0_mod6_post0</code></pre>
+</div>
+</div>
+</section>
+<section id="tuning-visualizations" class="slide level2">
+<h2>Tuning visualizations</h2>
+<p>Visualization for evalution</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-45-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-46-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="tuning-best-parameters" class="slide level2 scrollable">
+<h2>Tuning best parameters</h2>
+<p>Selection of best parameters</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="co"># 4.e. SEE BEST PARAMETERS AND SELECT BEST</span></span>
+<span id="cb94-2"><a></a>best_params <span class="ot">&lt;-</span> <span class="fu">select_best</span>(peng_tune_results, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
+<span id="cb94-3"><a></a><span class="fu">show_best</span>(peng_tune_results, <span class="at">metric =</span> <span class="st">"rmse"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb94-4"><a></a>  <span class="fu">select</span>(<span class="sc">-</span>.estimator, <span class="sc">-</span>.config)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+  tree_depth .metric  mean     n std_err
+       &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+1          2 rmse     314.    25    8.57
+2          4 rmse     316.    25    5.64
+3          3 rmse     320.    25    6.80
+4          5 rmse     331.    25    6.20
+5          6 rmse     343.    25    6.02</code></pre>
+</div>
+</div></div>
+<p>Best parameters: <code>tree_depth</code> = 2</p>
+</section>
+<section id="fit-with-tune-parameters" class="slide level2">
+<h2>Fit with tune parameters</h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a><span class="co"># 5. Fit: FINALIZE AND FIT WITH BEST PARAMETERS and fit</span></span>
+<span id="cb96-2"><a></a>peng_regtree_fit <span class="ot">&lt;-</span> peng_wf <span class="sc">|&gt;</span></span>
+<span id="cb96-3"><a></a>  <span class="fu">finalize_workflow</span>(best_params) <span class="sc">|&gt;</span></span>
+<span id="cb96-4"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
+<span id="cb96-5"><a></a><span class="co"># 6./7. Predict and Evaluatue with test data (as before)</span></span>
+<span id="cb96-6"><a></a>peng_regtree_fit <span class="sc">|&gt;</span></span>
+<span id="cb96-7"><a></a>  <span class="fu">augment</span>(peng_test) <span class="sc">|&gt;</span></span>
+<span id="cb96-8"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard     350.   
+2 rsq     standard       0.811
+3 mae     standard     284.   </code></pre>
+</div>
+</div></div>
+<ul>
+<li>Although, best parameters differ from default, performance is the same.</li>
+<li>This can happen, especially when the model is simple and the dataset is small.</li>
+</ul>
+<div class="fragment">
+<p>How can we improve the performance with the idea of trees?<br>
+<span class="green fragment"><strong>Create several trees and aggregate them in a random forest!</strong></span></p>
+</div>
+</section></section>
+<section>
+<section id="random-forests" class="title-slide slide level1 center">
+<h1>Random Forests</h1>
+<p><em>Crowd Wisdom through many decision trees</em></p>
+</section>
+<section id="random-forests-1" class="slide level2">
+<h2>Random forests</h2>
+<p><img data-src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Random_forest_explain.png"></p>
+
+<aside><div>
+<p>Source: <a href="https://de.wikipedia.org/wiki/Random_Forest" class="uri">https://de.wikipedia.org/wiki/Random_Forest</a></p>
+</div></aside></section>
+<section id="how-a-random-forest-is-made" class="slide level2">
+<h2>How a random forest is made</h2>
+<ul>
+<li>Build many decision trees independently (default: 500 trees), each trained on the full dataset<br>
+In each tree do the following at each decision node:
+<ul>
+<li>Randomly select <code>mtry</code> features from all available features (e.g., 2 out of 6, rule of thumb: square root of the number of features)</li>
+<li>Find the best split only among those randomly selected features.<br>
+The randomness in variable selection at each split ensures trees are different from each other, this shall reduce overfitting.</li>
+</ul></li>
+<li>Make predictions by
+<ul>
+<li>averaging predictions across all trees (regression) or</li>
+<li>majority vote (classification)</li>
+</ul></li>
+</ul>
+</section>
+<section id="random-forest-regression" class="slide level2">
+<h2>Random forest regression</h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a><span class="co"># 1. Train-Test-Split</span></span>
+<span id="cb98-2"><a></a><span class="co"># 2. Preprocessing-Recipe</span></span>
+<span id="cb98-3"><a></a><span class="co"># 3. Model</span></span>
+<span id="cb98-4"><a></a>peng_regforest <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>() <span class="sc">|&gt;</span></span>
+<span id="cb98-5"><a></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">importance =</span> <span class="st">"impurity"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb98-6"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb98-7"><a></a><span class="co"># 4. Workflow</span></span>
+<span id="cb98-8"><a></a>peng_regforest_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb98-9"><a></a>  <span class="fu">add_recipe</span>(peng_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb98-10"><a></a>  <span class="fu">add_model</span>(peng_regforest) <span class="sc">|&gt;</span></span>
+<span id="cb98-11"><a></a>  <span class="co"># 5. Fit</span></span>
+<span id="cb98-12"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
+<span id="cb98-13"><a></a>peng_regforest_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow [trained] ══════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: rand_forest()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+1 Recipe Step
+
+• step_rm()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Ranger result
+
+Call:
+ ranger::ranger(x = maybe_data_frame(x), y = y, importance = ~"impurity",      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1)) 
+
+Type:                             Regression 
+Number of trees:                  500 
+Sample size:                      266 
+Number of independent variables:  6 
+Mtry:                             2 
+Target node size:                 5 
+Variable importance mode:         impurity 
+Splitrule:                        variance 
+OOB prediction error (MSE):       83738.4 
+R squared (OOB):                  0.8721779 </code></pre>
+</div>
+</div></div>
+<p>With <code>set_engine("ranger", importance = "impurity")</code> we specify the method of specification for the computation of <span class="green"><strong>variable importance</strong></span>.</p>
+</section>
+<section id="random-forest-regression-continued" class="slide level2">
+<h2>Random forest regression continued</h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a></a><span class="co"># 6./7. Predict and Evaluatue with test data (as before)</span></span>
+<span id="cb100-2"><a></a>peng_regforest_fit <span class="sc">|&gt;</span></span>
+<span id="cb100-3"><a></a>  <span class="fu">augment</span>(peng_test) <span class="sc">|&gt;</span></span>
+<span id="cb100-4"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard     325.   
+2 rsq     standard       0.835
+3 mae     standard     265.   </code></pre>
+</div>
+</div></div>
+<ul>
+<li>Random forest often outperform decision tree and linear models.</li>
+<li>However, they have no natural visualization and are less interpretable.<br>
+They have thousands of parameters with all these trees!</li>
+</ul>
+</section>
+<section id="variable-importance" class="slide level2">
+<h2>Variable importance</h2>
+<p><strong>Variable importance</strong> identify features that matter for good predicitions.</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a></a><span class="co"># 6./7. Predict and Evaluatue with test data (as before)</span></span>
+<span id="cb102-2"><a></a><span class="co"># Variable importance</span></span>
+<span id="cb102-3"><a></a><span class="fu">extract_fit_engine</span>(peng_regforest_fit) <span class="sc">|&gt;</span></span>
+<span id="cb102-4"><a></a>  <span class="fu">vip</span>() <span class="sc">+</span></span>
+<span id="cb102-5"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-51-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<ul>
+<li>The computation of variable importance is a step of <span class="green"><strong>post-hoc interpretation</strong></span> of complex models like random forests because it is computed after the model is fitted.</li>
+<li>In contrast, <strong>pre-processing</strong> happens before fitting the model.</li>
+</ul>
+<p>All details about exact definition and different methods to compute variable importance are skipped here.</p>
+</section>
+<section id="classification-with-random-forrest" class="slide level2">
+<h2>Classification with random forrest</h2>
+<p>First the spam prediction decision tree</p>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># Just to fix the presentation, test without when doing yourself!</span></span>
+<span id="cb103-2"><a></a><span class="co"># 1. Train-Test-Split</span></span>
+<span id="cb103-3"><a></a>email_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(email, <span class="at">prop =</span> <span class="fl">0.7</span>, <span class="at">strata =</span> spam)</span>
+<span id="cb103-4"><a></a>email_train <span class="ot">&lt;-</span> <span class="fu">training</span>(email_split)</span>
+<span id="cb103-5"><a></a>email_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(email_split)</span>
+<span id="cb103-6"><a></a><span class="co"># 2. Preprocessing-Recipe</span></span>
+<span id="cb103-7"><a></a>email_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(spam <span class="sc">~</span> ., <span class="at">data =</span> email) <span class="sc">|&gt;</span></span>
+<span id="cb103-8"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span> <span class="co"># Remove some variables (see former lectures)</span></span>
+<span id="cb103-9"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span> <span class="co"># Make day-of-week and month features ...</span></span>
+<span id="cb103-10"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span> <span class="co"># ... and remove the date-time itself</span></span>
+<span id="cb103-11"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>()) <span class="co"># remove predictors with zero variance</span></span>
+<span id="cb103-12"><a></a><span class="co"># 3. Model</span></span>
+<span id="cb103-13"><a></a>email_classtree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span></span>
+<span id="cb103-14"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb103-15"><a></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb103-16"><a></a><span class="co"># 4. Workflow</span></span>
+<span id="cb103-17"><a></a>email_classtree_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb103-18"><a></a>  <span class="fu">add_recipe</span>(email_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb103-19"><a></a>  <span class="fu">add_model</span>(email_classtree)</span>
+<span id="cb103-20"><a></a><span class="co"># 5. Fit</span></span>
+<span id="cb103-21"><a></a>email_classtree_fit <span class="ot">&lt;-</span> email_classtree_wf <span class="sc">|&gt;</span></span>
+<span id="cb103-22"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> email_train)</span>
+<span id="cb103-23"><a></a><span class="co"># 6./7. Predict with test data and evaluate performance</span></span>
+<span id="cb103-24"><a></a>class_metrics <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, sensitivity, specificity)</span>
+<span id="cb103-25"><a></a>email_classtree_fit <span class="sc">|&gt;</span></span>
+<span id="cb103-26"><a></a>  <span class="fu">augment</span>(email_test) <span class="sc">|&gt;</span></span>
+<span id="cb103-27"><a></a>  <span class="fu">class_metrics</span>(<span class="at">truth =</span> spam, <span class="at">estimate =</span> .pred_class, <span class="at">event_level =</span> <span class="st">"second"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric     .estimator .estimate
+  &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy    binary         0.910
+2 sensitivity binary         0.244
+3 specificity binary         0.988</code></pre>
+</div>
+</div></div>
+</section>
+<section id="random-forest-classification" class="slide level2">
+<h2>Random forest classification</h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="co"># 1. Train-Test-Split</span></span>
+<span id="cb105-2"><a></a>email_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(<span class="fu">na.omit</span>(email), <span class="at">prop =</span> <span class="fl">0.8</span>)</span>
+<span id="cb105-3"><a></a>email_train <span class="ot">&lt;-</span> <span class="fu">training</span>(email_split)</span>
+<span id="cb105-4"><a></a>email_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(email_split)</span>
+<span id="cb105-5"><a></a><span class="co"># 2. Preprocessing-Recipe</span></span>
+<span id="cb105-6"><a></a>email_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(spam <span class="sc">~</span> ., <span class="at">data =</span> email) <span class="sc">|&gt;</span></span>
+<span id="cb105-7"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span> <span class="co"># Remove some variables (see former lectures)</span></span>
+<span id="cb105-8"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span> <span class="co"># Make day-of-week and month features ...</span></span>
+<span id="cb105-9"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span> <span class="co"># ... and remove the date-time itself</span></span>
+<span id="cb105-10"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>()) <span class="co"># remove predictors with zero variance</span></span>
+<span id="cb105-11"><a></a><span class="co"># 3. Model</span></span>
+<span id="cb105-12"><a></a>email_forest <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>() <span class="sc">|&gt;</span></span>
+<span id="cb105-13"><a></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">importance =</span> <span class="st">"impurity"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb105-14"><a></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb105-15"><a></a><span class="co"># 4. Workflow</span></span>
+<span id="cb105-16"><a></a>email_forest_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb105-17"><a></a>  <span class="fu">add_recipe</span>(email_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb105-18"><a></a>  <span class="fu">add_model</span>(email_forest) <span class="sc">|&gt;</span></span>
+<span id="cb105-19"><a></a>  <span class="co"># 5. Fit</span></span>
+<span id="cb105-20"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> email_train)</span>
+<span id="cb105-21"><a></a>email_forest_fit <span class="co"># Look at the fit object</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow [trained] ══════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: rand_forest()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+4 Recipe Steps
+
+• step_rm()
+• step_date()
+• step_rm()
+• step_zv()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Ranger result
+
+Call:
+ ranger::ranger(x = maybe_data_frame(x), y = y, importance = ~"impurity",      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1), probability = TRUE) 
+
+Type:                             Probability estimation 
+Number of trees:                  500 
+Sample size:                      3136 
+Number of independent variables:  18 
+Mtry:                             4 
+Target node size:                 10 
+Variable importance mode:         impurity 
+Splitrule:                        gini 
+OOB prediction error (Brier s.):  0.04985914 </code></pre>
+</div>
+</div></div>
+</section>
+<section id="random-forest-classification-continued" class="slide level2">
+<h2>Random forest classification continued</h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a><span class="co"># 6./7. Predict with test data and evaluate performance</span></span>
+<span id="cb107-2"><a></a>email_forest_fit <span class="sc">|&gt;</span></span>
+<span id="cb107-3"><a></a>  <span class="fu">augment</span>(email_test) <span class="sc">|&gt;</span></span>
+<span id="cb107-4"><a></a>  <span class="fu">class_metrics</span>(<span class="at">truth =</span> spam, <span class="at">estimate =</span> .pred_class, <span class="at">event_level =</span> <span class="st">"second"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric     .estimator .estimate
+  &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy    binary         0.935
+2 sensitivity binary         0.378
+3 specificity binary         0.993</code></pre>
+</div>
+</div></div>
+<p>In particular specificity (true negative rate) is better than for the decision tree!</p>
+<div class="fragment">
+<p>How does prediction work for classification with random forests? How do we aggregate the classification of all the trees in the forrest? (For regression we were averaging.)<br>
+<span class="green fragment"><strong>Majority vote across all trees!</strong></span></p>
+</div>
+</section>
+<section id="variable-importance-1" class="slide level2">
+<h2>Variable importance</h2>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a><span class="co"># Variable importance</span></span>
+<span id="cb109-2"><a></a><span class="fu">extract_fit_engine</span>(email_classtree_fit) <span class="sc">|&gt;</span></span>
+<span id="cb109-3"><a></a>  <span class="fu">vip</span>() <span class="sc">+</span></span>
+<span id="cb109-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-55-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div></div>
+<div class="cell columns column-output-location">
+<div class="column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a><span class="co"># Variable importance</span></span>
+<span id="cb110-2"><a></a><span class="fu">extract_fit_engine</span>(email_forest_fit) <span class="sc">|&gt;</span></span>
+<span id="cb110-3"><a></a>  <span class="fu">vip</span>() <span class="sc">+</span></span>
+<span id="cb110-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W12_files/figure-revealjs/unnamed-chunk-56-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div></div>
+</section>
+<section id="summary-new-insights-prediction" class="slide level2">
+<h2>Summary new insights prediction</h2>
+<ul>
+<li class="fragment">A <strong>decision tree</strong> is <em>deterministic</em>. However, results change with different train-test-splits.</li>
+<li class="fragment"><strong>Cross-validation</strong> helps to assess model performance more reliably.</li>
+<li class="fragment"><strong>Tuning hyperparameters</strong> can improve model performance, but often defaults are good.
+<ul>
+<li class="fragment">It is all about quantifying when <em>overfitting</em> kicks in and <em>out-of-sample performance</em> degrades.</li>
+</ul></li>
+<li class="fragment"><strong>Random forests</strong> take the idea of decision trees further by creating many trees and aggregating their predictions. They are not deterministic but <em>stochastic</em> even with the same training data.</li>
+<li class="fragment">Why are random forrests better than individual trees?
+<ul>
+<li class="fragment">By limiting choices at each split to a random subset of features, we prevent any single strong predictor from dominating all trees, creating a diverse “forest” of models that collectively perform better than any individual tree.</li>
+<li class="fragment"><span class="text-green"><strong>The wisdom of crowds in a random forrest of decision trees.</strong></span></li>
+</ul></li>
+</ul>
+
+
+</section></section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="img/ConstructorUniversity.png" class="slide-logo"></p>
+<div class="footer footer-default">
+<p>MDSSB-DSCO-02: Data Science Concepts</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': true,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: true,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/CU-F26-MDSSB-01-Concepts-Tools\.github\.io\/Website\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

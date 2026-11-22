@@ -226,12 +226,89 @@ Jan Lorenz
 <section id="preliminaries" class="slide level2">
 <h2>Preliminaries</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(tidymodels)</span>
-<span id="cb1-2"><a></a><span class="fu">library</span>(openintro)</span>
-<span id="cb1-3"><a></a><span class="fu">library</span>(palmerpenguins)</span>
-<span id="cb1-4"><a></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-5"><a></a><span class="fu">library</span>(rpart.plot)</span>
-<span id="cb1-6"><a></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># To fix values for presentation consistency</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(tidymodels)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ────────────────────────────────────── tidymodels 1.5.0 ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ broom        1.0.13     ✔ recipes      1.4.0 
+✔ dials        1.4.4      ✔ rsample      1.3.2 
+✔ dplyr        1.2.1      ✔ tailor       0.1.0 
+✔ ggplot2      4.0.3      ✔ tidyr        1.3.2 
+✔ infer        1.1.0      ✔ tune         2.1.0 
+✔ modeldata    1.6.0      ✔ workflows    1.3.0 
+✔ parsnip      1.6.0      ✔ workflowsets 1.1.1 
+✔ purrr        1.2.2      ✔ yardstick    1.4.0 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+✖ purrr::discard() masks scales::discard()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+✖ recipes::step()  masks stats::step()</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">library</span>(openintro)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: airports</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: cherryblossom</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: usdata</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'openintro'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:modeldata':
+
+    ames</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">library</span>(palmerpenguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'palmerpenguins'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:modeldata':
+
+    penguins</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:datasets':
+
+    penguins, penguins_raw</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ lubridate 1.9.5     ✔ tibble    3.3.1
+✔ readr     2.2.0     </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ readr::col_factor() masks scales::col_factor()
+✖ purrr::discard()    masks scales::discard()
+✖ dplyr::filter()     masks stats::filter()
+✖ stringr::fixed()    masks recipes::fixed()
+✖ dplyr::lag()        masks stats::lag()
+✖ readr::spec()       masks yardstick::spec()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">library</span>(rpart.plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: rpart
+
+Attaching package: 'rpart'
+
+The following object is masked from 'package:dials':
+
+    prune</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># To fix values for presentation consistency</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section>
@@ -253,42 +330,42 @@ Jan Lorenz
 <li><strong>Fit</strong> the model with training data using the workflow (finally the computation happens!) <span class="fragment"><code>fit()</code> with workflow and <code>train</code> data</span></li>
 <li><strong>Predict</strong> response variable for rows of the test data and add original variable<br>
 <span class="fragment"><code>augment()</code> the <code>test</code> data (this uses <code>predict()</code> and binds the original values)</span></li>
-<li><strong>Evaluate performance</strong> using the orignal variable as ground truth in test data<br>
+<li><strong>Evaluate performance</strong> using the original variable as ground truth in test data<br>
 <span class="fragment"><code>metrics()</code> by specifying <code>truth</code> and <code>estimate</code> columns</span></li>
 </ol>
 </section>
 <section id="binary-classification" class="slide level2 scrollable">
 <h2>Binary Classification</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># 1. Train-Test-Split</span></span>
-<span id="cb2-2"><a></a>peng_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(<span class="fu">na.omit</span>(penguins), <span class="at">prop =</span> <span class="fl">0.8</span>, <span class="at">strata =</span> sex)</span>
-<span id="cb2-3"><a></a>peng_train <span class="ot">&lt;-</span> <span class="fu">training</span>(peng_split)</span>
-<span id="cb2-4"><a></a>peng_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(peng_split)</span>
-<span id="cb2-5"><a></a><span class="co"># 2. Preprocessing-Recipe</span></span>
-<span id="cb2-6"><a></a>peng_class_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(sex <span class="sc">~</span> ., <span class="at">data =</span> peng_train) <span class="sc">|&gt;</span></span>
-<span id="cb2-7"><a></a>  <span class="fu">step_rm</span>(year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="co"># 1. Train-Test-Split</span></span>
+<span id="cb21-2"><a></a>peng_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(<span class="fu">na.omit</span>(penguins), <span class="at">prop =</span> <span class="fl">0.8</span>, <span class="at">strata =</span> sex)</span>
+<span id="cb21-3"><a></a>peng_train <span class="ot">&lt;-</span> <span class="fu">training</span>(peng_split)</span>
+<span id="cb21-4"><a></a>peng_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(peng_split)</span>
+<span id="cb21-5"><a></a><span class="co"># 2. Preprocessing-Recipe</span></span>
+<span id="cb21-6"><a></a>peng_class_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(sex <span class="sc">~</span> ., <span class="at">data =</span> peng_train) <span class="sc">|&gt;</span></span>
+<span id="cb21-7"><a></a>  <span class="fu">step_rm</span>(year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <div class="columns">
 <div class="column">
 <p><strong>Logistic Regression</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" data-code-line-numbers="|1-3|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># 3. Model</span></span>
-<span id="cb3-2"><a></a>peng_logreg <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
-<span id="cb3-4"><a></a><span class="co"># 4. Workflow</span></span>
-<span id="cb3-5"><a></a>peng_logreg_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a></a>  <span class="fu">add_recipe</span>(peng_class_recipe) <span class="sc">|&gt;</span></span>
-<span id="cb3-7"><a></a>  <span class="fu">add_model</span>(peng_logreg)</span>
-<span id="cb3-8"><a></a><span class="co"># 5. Fit</span></span>
-<span id="cb3-9"><a></a>peng_logreg_fit <span class="ot">&lt;-</span> peng_logreg_wf <span class="sc">|&gt;</span></span>
-<span id="cb3-10"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
-<span id="cb3-11"><a></a><span class="co"># 6. Predict with test data</span></span>
-<span id="cb3-12"><a></a>peng_logreg_pred <span class="ot">&lt;-</span> peng_logreg_fit <span class="sc">|&gt;</span></span>
-<span id="cb3-13"><a></a>  <span class="fu">augment</span>(peng_test)</span>
-<span id="cb3-14"><a></a><span class="co"># 7. Evaluate performance</span></span>
-<span id="cb3-15"><a></a>peng_logreg_pred <span class="sc">|&gt;</span></span>
-<span id="cb3-16"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" data-code-line-numbers="|1-3|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># 3. Model</span></span>
+<span id="cb22-2"><a></a>peng_logreg <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
+<span id="cb22-4"><a></a><span class="co"># 4. Workflow</span></span>
+<span id="cb22-5"><a></a>peng_logreg_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb22-6"><a></a>  <span class="fu">add_recipe</span>(peng_class_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb22-7"><a></a>  <span class="fu">add_model</span>(peng_logreg)</span>
+<span id="cb22-8"><a></a><span class="co"># 5. Fit</span></span>
+<span id="cb22-9"><a></a>peng_logreg_fit <span class="ot">&lt;-</span> peng_logreg_wf <span class="sc">|&gt;</span></span>
+<span id="cb22-10"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
+<span id="cb22-11"><a></a><span class="co"># 6. Predict with test data</span></span>
+<span id="cb22-12"><a></a>peng_logreg_pred <span class="ot">&lt;-</span> peng_logreg_fit <span class="sc">|&gt;</span></span>
+<span id="cb22-13"><a></a>  <span class="fu">augment</span>(peng_test)</span>
+<span id="cb22-14"><a></a><span class="co"># 7. Evaluate performance</span></span>
+<span id="cb22-15"><a></a>peng_logreg_pred <span class="sc">|&gt;</span></span>
+<span id="cb22-16"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 3
   .metric  .estimator .estimate
@@ -300,23 +377,23 @@ Jan Lorenz
 </div><div class="column fragment">
 <p><strong>Decision Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" data-code-line-numbers="|1-4|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># 3. Model</span></span>
-<span id="cb5-2"><a></a>peng_classtree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
-<span id="cb5-5"><a></a><span class="co"># 4. Workflow</span></span>
-<span id="cb5-6"><a></a>peng_classtree_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a></a>  <span class="fu">add_recipe</span>(peng_class_recipe) <span class="sc">|&gt;</span></span>
-<span id="cb5-8"><a></a>  <span class="fu">add_model</span>(peng_classtree)</span>
-<span id="cb5-9"><a></a><span class="co"># 5. Fit</span></span>
-<span id="cb5-10"><a></a>peng_classtree_fit <span class="ot">&lt;-</span> peng_classtree_wf <span class="sc">|&gt;</span></span>
-<span id="cb5-11"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
-<span id="cb5-12"><a></a><span class="co"># 6. Predict with test data</span></span>
-<span id="cb5-13"><a></a>peng_classtree_pred <span class="ot">&lt;-</span> peng_classtree_fit <span class="sc">|&gt;</span></span>
-<span id="cb5-14"><a></a>  <span class="fu">augment</span>(peng_test)</span>
-<span id="cb5-15"><a></a><span class="co"># 7. Evaluate performance</span></span>
-<span id="cb5-16"><a></a>peng_classtree_pred <span class="sc">|&gt;</span></span>
-<span id="cb5-17"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" data-code-line-numbers="|1-4|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="co"># 3. Model</span></span>
+<span id="cb24-2"><a></a>peng_classtree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb24-5"><a></a><span class="co"># 4. Workflow</span></span>
+<span id="cb24-6"><a></a>peng_classtree_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-7"><a></a>  <span class="fu">add_recipe</span>(peng_class_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb24-8"><a></a>  <span class="fu">add_model</span>(peng_classtree)</span>
+<span id="cb24-9"><a></a><span class="co"># 5. Fit</span></span>
+<span id="cb24-10"><a></a>peng_classtree_fit <span class="ot">&lt;-</span> peng_classtree_wf <span class="sc">|&gt;</span></span>
+<span id="cb24-11"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
+<span id="cb24-12"><a></a><span class="co"># 6. Predict with test data</span></span>
+<span id="cb24-13"><a></a>peng_classtree_pred <span class="ot">&lt;-</span> peng_classtree_fit <span class="sc">|&gt;</span></span>
+<span id="cb24-14"><a></a>  <span class="fu">augment</span>(peng_test)</span>
+<span id="cb24-15"><a></a><span class="co"># 7. Evaluate performance</span></span>
+<span id="cb24-16"><a></a>peng_classtree_pred <span class="sc">|&gt;</span></span>
+<span id="cb24-17"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 3
   .metric  .estimator .estimate
@@ -332,14 +409,14 @@ Jan Lorenz
 <h2>Choose a metric set</h2>
 <p>We select <strong>accuracy</strong>, <strong>sensitivity</strong>, <strong>specificity</strong>, and <strong>precision</strong>. Check the <a href="https://en.wikipedia.org/wiki/Confusion_matrix#Table_of_confusion">Confusion Matrix</a>!</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>our_metrics <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, sensitivity, specificity, precision)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>our_metrics <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, sensitivity, specificity, precision)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="columns">
 <div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="co"># 7. Evaluate performance</span></span>
-<span id="cb8-2"><a></a>peng_logreg_pred <span class="sc">|&gt;</span></span>
-<span id="cb8-3"><a></a>  <span class="fu">our_metrics</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="co"># 7. Evaluate performance</span></span>
+<span id="cb27-2"><a></a>peng_logreg_pred <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a></a>  <span class="fu">our_metrics</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
   .metric     .estimator .estimate
@@ -352,9 +429,9 @@ Jan Lorenz
 </div>
 </div><div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co"># 7. Evaluate performance</span></span>
-<span id="cb10-2"><a></a>peng_classtree_pred <span class="sc">|&gt;</span></span>
-<span id="cb10-3"><a></a>  <span class="fu">our_metrics</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="co"># 7. Evaluate performance</span></span>
+<span id="cb29-2"><a></a>peng_classtree_pred <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a></a>  <span class="fu">our_metrics</span>(<span class="at">truth =</span> sex, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 3
   .metric     .estimator .estimate
@@ -372,66 +449,66 @@ Jan Lorenz
 <div class="columns">
 <div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>peng_logreg_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>peng_logreg_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb13-1"><a></a>══ Workflow [trained] ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════</span>
-<span id="cb13-2"><a></a>Preprocessor: Recipe</span>
-<span id="cb13-3"><a></a>Model: logistic_reg()</span>
-<span id="cb13-4"><a></a></span>
-<span id="cb13-5"><a></a>── Preprocessor ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span id="cb13-6"><a></a>1 Recipe Step</span>
-<span id="cb13-7"><a></a></span>
-<span id="cb13-8"><a></a>• step_rm()</span>
-<span id="cb13-9"><a></a></span>
-<span id="cb13-10"><a></a>── Model ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span id="cb13-11"><a></a></span>
-<span id="cb13-12"><a></a>Call:  stats::glm(formula = ..y ~ ., family = stats::binomial, data = data)</span>
-<span id="cb13-13"><a></a></span>
-<span id="cb13-14"><a></a>Coefficients:</span>
-<span id="cb13-15"><a></a>      (Intercept)   speciesChinstrap      speciesGentoo        islandDream    islandTorgersen     bill_length_mm      bill_depth_mm  flipper_length_mm        body_mass_g  </span>
-<span id="cb13-16"><a></a>       -73.811549          -6.644630          -8.564175           0.357241          -0.155332           0.559094           1.433271           0.026396           0.005659  </span>
-<span id="cb13-17"><a></a></span>
-<span id="cb13-18"><a></a>Degrees of Freedom: 265 Total (i.e. Null);  257 Residual</span>
-<span id="cb13-19"><a></a>Null Deviance:      368.7 </span>
-<span id="cb13-20"><a></a>Residual Deviance: 112  AIC: 130</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb32-1"><a></a>══ Workflow [trained] ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════</span>
+<span id="cb32-2"><a></a>Preprocessor: Recipe</span>
+<span id="cb32-3"><a></a>Model: logistic_reg()</span>
+<span id="cb32-4"><a></a></span>
+<span id="cb32-5"><a></a>── Preprocessor ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span id="cb32-6"><a></a>1 Recipe Step</span>
+<span id="cb32-7"><a></a></span>
+<span id="cb32-8"><a></a>• step_rm()</span>
+<span id="cb32-9"><a></a></span>
+<span id="cb32-10"><a></a>── Model ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span id="cb32-11"><a></a></span>
+<span id="cb32-12"><a></a>Call:  stats::glm(formula = ..y ~ ., family = stats::binomial, data = data)</span>
+<span id="cb32-13"><a></a></span>
+<span id="cb32-14"><a></a>Coefficients:</span>
+<span id="cb32-15"><a></a>      (Intercept)   speciesChinstrap      speciesGentoo        islandDream    islandTorgersen     bill_length_mm      bill_depth_mm  flipper_length_mm        body_mass_g  </span>
+<span id="cb32-16"><a></a>       -73.811549          -6.644630          -8.564175           0.357241          -0.155332           0.559094           1.433271           0.026396           0.005659  </span>
+<span id="cb32-17"><a></a></span>
+<span id="cb32-18"><a></a>Degrees of Freedom: 265 Total (i.e. Null);  257 Residual</span>
+<span id="cb32-19"><a></a>Null Deviance:      368.7 </span>
+<span id="cb32-20"><a></a>Residual Deviance: 112  AIC: 130</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div><div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>peng_classtree_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>peng_classtree_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb15-1"><a></a>══ Workflow [trained] ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════</span>
-<span id="cb15-2"><a></a>Preprocessor: Recipe</span>
-<span id="cb15-3"><a></a>Model: decision_tree()</span>
-<span id="cb15-4"><a></a></span>
-<span id="cb15-5"><a></a>── Preprocessor ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span id="cb15-6"><a></a>1 Recipe Step</span>
-<span id="cb15-7"><a></a></span>
-<span id="cb15-8"><a></a>• step_rm()</span>
-<span id="cb15-9"><a></a></span>
-<span id="cb15-10"><a></a>── Model ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span id="cb15-11"><a></a>n= 266 </span>
-<span id="cb15-12"><a></a></span>
-<span id="cb15-13"><a></a>node), split, n, loss, yval, (yprob)</span>
-<span id="cb15-14"><a></a>      * denotes terminal node</span>
-<span id="cb15-15"><a></a></span>
-<span id="cb15-16"><a></a> 1) root 266 132 male (0.49624060 0.50375940)  </span>
-<span id="cb15-17"><a></a>   2) body_mass_g&lt; 3712.5 94  17 female (0.81914894 0.18085106)  </span>
-<span id="cb15-18"><a></a>     4) bill_depth_mm&lt; 18.55 69   2 female (0.97101449 0.02898551) *</span>
-<span id="cb15-19"><a></a>     5) bill_depth_mm&gt;=18.55 25  10 male (0.40000000 0.60000000)  </span>
-<span id="cb15-20"><a></a>      10) bill_length_mm&lt; 39.75 10   2 female (0.80000000 0.20000000) *</span>
-<span id="cb15-21"><a></a>      11) bill_length_mm&gt;=39.75 15   2 male (0.13333333 0.86666667) *</span>
-<span id="cb15-22"><a></a>   3) body_mass_g&gt;=3712.5 172  55 male (0.31976744 0.68023256)  </span>
-<span id="cb15-23"><a></a>     6) bill_depth_mm&lt; 14.85 41   3 female (0.92682927 0.07317073) *</span>
-<span id="cb15-24"><a></a>     7) bill_depth_mm&gt;=14.85 131  17 male (0.12977099 0.87022901)  </span>
-<span id="cb15-25"><a></a>      14) body_mass_g&lt; 3925 31   9 male (0.29032258 0.70967742)  </span>
-<span id="cb15-26"><a></a>        28) island=Biscoe 8   3 female (0.62500000 0.37500000) *</span>
-<span id="cb15-27"><a></a>        29) island=Dream,Torgersen 23   4 male (0.17391304 0.82608696) *</span>
-<span id="cb15-28"><a></a>      15) body_mass_g&gt;=3925 100   8 male (0.08000000 0.92000000)  </span>
-<span id="cb15-29"><a></a>        30) bill_depth_mm&lt; 15.55 22   7 male (0.31818182 0.68181818)  </span>
-<span id="cb15-30"><a></a>          60) body_mass_g&lt; 5025 9   2 female (0.77777778 0.22222222) *</span>
-<span id="cb15-31"><a></a>          61) body_mass_g&gt;=5025 13   0 male (0.00000000 1.00000000) *</span>
-<span id="cb15-32"><a></a>        31) bill_depth_mm&gt;=15.55 78   1 male (0.01282051 0.98717949) *</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb34-1"><a></a>══ Workflow [trained] ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════</span>
+<span id="cb34-2"><a></a>Preprocessor: Recipe</span>
+<span id="cb34-3"><a></a>Model: decision_tree()</span>
+<span id="cb34-4"><a></a></span>
+<span id="cb34-5"><a></a>── Preprocessor ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span id="cb34-6"><a></a>1 Recipe Step</span>
+<span id="cb34-7"><a></a></span>
+<span id="cb34-8"><a></a>• step_rm()</span>
+<span id="cb34-9"><a></a></span>
+<span id="cb34-10"><a></a>── Model ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span id="cb34-11"><a></a>n= 266 </span>
+<span id="cb34-12"><a></a></span>
+<span id="cb34-13"><a></a>node), split, n, loss, yval, (yprob)</span>
+<span id="cb34-14"><a></a>      * denotes terminal node</span>
+<span id="cb34-15"><a></a></span>
+<span id="cb34-16"><a></a> 1) root 266 132 male (0.49624060 0.50375940)  </span>
+<span id="cb34-17"><a></a>   2) body_mass_g&lt; 3712.5 94  17 female (0.81914894 0.18085106)  </span>
+<span id="cb34-18"><a></a>     4) bill_depth_mm&lt; 18.55 69   2 female (0.97101449 0.02898551) *</span>
+<span id="cb34-19"><a></a>     5) bill_depth_mm&gt;=18.55 25  10 male (0.40000000 0.60000000)  </span>
+<span id="cb34-20"><a></a>      10) bill_length_mm&lt; 39.75 10   2 female (0.80000000 0.20000000) *</span>
+<span id="cb34-21"><a></a>      11) bill_length_mm&gt;=39.75 15   2 male (0.13333333 0.86666667) *</span>
+<span id="cb34-22"><a></a>   3) body_mass_g&gt;=3712.5 172  55 male (0.31976744 0.68023256)  </span>
+<span id="cb34-23"><a></a>     6) bill_depth_mm&lt; 14.85 41   3 female (0.92682927 0.07317073) *</span>
+<span id="cb34-24"><a></a>     7) bill_depth_mm&gt;=14.85 131  17 male (0.12977099 0.87022901)  </span>
+<span id="cb34-25"><a></a>      14) body_mass_g&lt; 3925 31   9 male (0.29032258 0.70967742)  </span>
+<span id="cb34-26"><a></a>        28) island=Biscoe 8   3 female (0.62500000 0.37500000) *</span>
+<span id="cb34-27"><a></a>        29) island=Dream,Torgersen 23   4 male (0.17391304 0.82608696) *</span>
+<span id="cb34-28"><a></a>      15) body_mass_g&gt;=3925 100   8 male (0.08000000 0.92000000)  </span>
+<span id="cb34-29"><a></a>        30) bill_depth_mm&lt; 15.55 22   7 male (0.31818182 0.68181818)  </span>
+<span id="cb34-30"><a></a>          60) body_mass_g&lt; 5025 9   2 female (0.77777778 0.22222222) *</span>
+<span id="cb34-31"><a></a>          61) body_mass_g&gt;=5025 13   0 male (0.00000000 1.00000000) *</span>
+<span id="cb34-32"><a></a>        31) bill_depth_mm&gt;=15.55 78   1 male (0.01282051 0.98717949) *</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div></div>
@@ -441,11 +518,11 @@ Jan Lorenz
 <div class="columns">
 <div class="column" style="width:65%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">rpart.plot</span>(peng_classtree_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">rpart.plot</span>(peng_classtree_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W11_files/figure-revealjs/unnamed-chunk-10-1.png" width="960"></p>
+<p><img data-src="W11_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 </figure>
 </div>
 </div>
@@ -468,30 +545,30 @@ Jan Lorenz
 <h2>Regression (Numerical prediction)</h2>
 <p>Same exercise for a numerical target. Step 1. Train-Test-Split stays the same.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># 2. Preprocessing-Recipe</span></span>
-<span id="cb17-2"><a></a>peng_reg_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(body_mass_g <span class="sc">~</span> ., <span class="at">data =</span> peng_train) <span class="sc">|&gt;</span></span>
-<span id="cb17-3"><a></a>  <span class="fu">step_rm</span>(year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="co"># 2. Preprocessing-Recipe</span></span>
+<span id="cb36-2"><a></a>peng_reg_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(body_mass_g <span class="sc">~</span> ., <span class="at">data =</span> peng_train) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a></a>  <span class="fu">step_rm</span>(year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="columns">
 <div class="column">
 <p><strong>Linear Regression</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" data-code-line-numbers="|1-3,16|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="co"># 3. Model</span></span>
-<span id="cb18-2"><a></a>peng_linreg <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
-<span id="cb18-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
-<span id="cb18-4"><a></a><span class="co"># 4. Workflow</span></span>
-<span id="cb18-5"><a></a>peng_linreg_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb18-6"><a></a>  <span class="fu">add_recipe</span>(peng_reg_recipe) <span class="sc">|&gt;</span></span>
-<span id="cb18-7"><a></a>  <span class="fu">add_model</span>(peng_linreg)</span>
-<span id="cb18-8"><a></a><span class="co"># 5. Fit</span></span>
-<span id="cb18-9"><a></a>peng_linreg_fit <span class="ot">&lt;-</span> peng_linreg_wf <span class="sc">|&gt;</span></span>
-<span id="cb18-10"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
-<span id="cb18-11"><a></a><span class="co"># 6. Predict with test data</span></span>
-<span id="cb18-12"><a></a>peng_linreg_pred <span class="ot">&lt;-</span> peng_linreg_fit <span class="sc">|&gt;</span></span>
-<span id="cb18-13"><a></a>  <span class="fu">augment</span>(peng_test)</span>
-<span id="cb18-14"><a></a><span class="co"># 7. Evaluate performance</span></span>
-<span id="cb18-15"><a></a>peng_linreg_pred <span class="sc">|&gt;</span></span>
-<span id="cb18-16"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37" data-code-line-numbers="|1-3,16|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="co"># 3. Model</span></span>
+<span id="cb37-2"><a></a>peng_linreg <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
+<span id="cb37-4"><a></a><span class="co"># 4. Workflow</span></span>
+<span id="cb37-5"><a></a>peng_linreg_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb37-6"><a></a>  <span class="fu">add_recipe</span>(peng_reg_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb37-7"><a></a>  <span class="fu">add_model</span>(peng_linreg)</span>
+<span id="cb37-8"><a></a><span class="co"># 5. Fit</span></span>
+<span id="cb37-9"><a></a>peng_linreg_fit <span class="ot">&lt;-</span> peng_linreg_wf <span class="sc">|&gt;</span></span>
+<span id="cb37-10"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
+<span id="cb37-11"><a></a><span class="co"># 6. Predict with test data</span></span>
+<span id="cb37-12"><a></a>peng_linreg_pred <span class="ot">&lt;-</span> peng_linreg_fit <span class="sc">|&gt;</span></span>
+<span id="cb37-13"><a></a>  <span class="fu">augment</span>(peng_test)</span>
+<span id="cb37-14"><a></a><span class="co"># 7. Evaluate performance</span></span>
+<span id="cb37-15"><a></a>peng_linreg_pred <span class="sc">|&gt;</span></span>
+<span id="cb37-16"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
@@ -504,23 +581,23 @@ Jan Lorenz
 </div><div class="column fragment">
 <p><strong>Decision Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" data-code-line-numbers="|1-4,17|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="co"># 3. Model</span></span>
-<span id="cb20-2"><a></a>peng_regtree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span></span>
-<span id="cb20-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb20-4"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
-<span id="cb20-5"><a></a><span class="co"># 4. Workflow</span></span>
-<span id="cb20-6"><a></a>peng_regtree_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb20-7"><a></a>  <span class="fu">add_recipe</span>(peng_reg_recipe) <span class="sc">|&gt;</span></span>
-<span id="cb20-8"><a></a>  <span class="fu">add_model</span>(peng_regtree)</span>
-<span id="cb20-9"><a></a><span class="co"># 5. Fit</span></span>
-<span id="cb20-10"><a></a>peng_regtree_fit <span class="ot">&lt;-</span> peng_regtree_wf <span class="sc">|&gt;</span></span>
-<span id="cb20-11"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
-<span id="cb20-12"><a></a><span class="co"># 6. Predict with test data</span></span>
-<span id="cb20-13"><a></a>peng_regtree_pred <span class="ot">&lt;-</span> peng_regtree_fit <span class="sc">|&gt;</span></span>
-<span id="cb20-14"><a></a>  <span class="fu">augment</span>(peng_test)</span>
-<span id="cb20-15"><a></a><span class="co"># 7. Evaluate performance</span></span>
-<span id="cb20-16"><a></a>peng_regtree_pred <span class="sc">|&gt;</span></span>
-<span id="cb20-17"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39" data-code-line-numbers="|1-4,17|"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="co"># 3. Model</span></span>
+<span id="cb39-2"><a></a>peng_regtree <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb39-5"><a></a><span class="co"># 4. Workflow</span></span>
+<span id="cb39-6"><a></a>peng_regtree_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb39-7"><a></a>  <span class="fu">add_recipe</span>(peng_reg_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb39-8"><a></a>  <span class="fu">add_model</span>(peng_regtree)</span>
+<span id="cb39-9"><a></a><span class="co"># 5. Fit</span></span>
+<span id="cb39-10"><a></a>peng_regtree_fit <span class="ot">&lt;-</span> peng_regtree_wf <span class="sc">|&gt;</span></span>
+<span id="cb39-11"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
+<span id="cb39-12"><a></a><span class="co"># 6. Predict with test data</span></span>
+<span id="cb39-13"><a></a>peng_regtree_pred <span class="ot">&lt;-</span> peng_regtree_fit <span class="sc">|&gt;</span></span>
+<span id="cb39-14"><a></a>  <span class="fu">augment</span>(peng_test)</span>
+<span id="cb39-15"><a></a><span class="co"># 7. Evaluate performance</span></span>
+<span id="cb39-16"><a></a>peng_regtree_pred <span class="sc">|&gt;</span></span>
+<span id="cb39-17"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
@@ -537,53 +614,53 @@ Jan Lorenz
 <div class="columns">
 <div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>peng_linreg_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>peng_linreg_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb23-1"><a></a>══ Workflow [trained] ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════</span>
-<span id="cb23-2"><a></a>Preprocessor: Recipe</span>
-<span id="cb23-3"><a></a>Model: linear_reg()</span>
-<span id="cb23-4"><a></a></span>
-<span id="cb23-5"><a></a>── Preprocessor ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span id="cb23-6"><a></a>1 Recipe Step</span>
-<span id="cb23-7"><a></a></span>
-<span id="cb23-8"><a></a>• step_rm()</span>
-<span id="cb23-9"><a></a></span>
-<span id="cb23-10"><a></a>── Model ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span id="cb23-11"><a></a></span>
-<span id="cb23-12"><a></a>Call:</span>
-<span id="cb23-13"><a></a>stats::lm(formula = ..y ~ ., data = data)</span>
-<span id="cb23-14"><a></a></span>
-<span id="cb23-15"><a></a>Coefficients:</span>
-<span id="cb23-16"><a></a>      (Intercept)   speciesChinstrap      speciesGentoo        islandDream    islandTorgersen     bill_length_mm      bill_depth_mm  flipper_length_mm            sexmale  </span>
-<span id="cb23-17"><a></a>         -1320.43            -281.86            1023.42              10.28             -53.99              16.18              64.18              15.97             368.96  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb42-1"><a></a>══ Workflow [trained] ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════</span>
+<span id="cb42-2"><a></a>Preprocessor: Recipe</span>
+<span id="cb42-3"><a></a>Model: linear_reg()</span>
+<span id="cb42-4"><a></a></span>
+<span id="cb42-5"><a></a>── Preprocessor ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span id="cb42-6"><a></a>1 Recipe Step</span>
+<span id="cb42-7"><a></a></span>
+<span id="cb42-8"><a></a>• step_rm()</span>
+<span id="cb42-9"><a></a></span>
+<span id="cb42-10"><a></a>── Model ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span id="cb42-11"><a></a></span>
+<span id="cb42-12"><a></a>Call:</span>
+<span id="cb42-13"><a></a>stats::lm(formula = ..y ~ ., data = data)</span>
+<span id="cb42-14"><a></a></span>
+<span id="cb42-15"><a></a>Coefficients:</span>
+<span id="cb42-16"><a></a>      (Intercept)   speciesChinstrap      speciesGentoo        islandDream    islandTorgersen     bill_length_mm      bill_depth_mm  flipper_length_mm            sexmale  </span>
+<span id="cb42-17"><a></a>         -1320.43            -281.86            1023.42              10.28             -53.99              16.18              64.18              15.97             368.96  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div><div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>peng_regtree_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>peng_regtree_fit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb25-1"><a></a>══ Workflow [trained] ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════</span>
-<span id="cb25-2"><a></a>Preprocessor: Recipe</span>
-<span id="cb25-3"><a></a>Model: decision_tree()</span>
-<span id="cb25-4"><a></a></span>
-<span id="cb25-5"><a></a>── Preprocessor ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span id="cb25-6"><a></a>1 Recipe Step</span>
-<span id="cb25-7"><a></a></span>
-<span id="cb25-8"><a></a>• step_rm()</span>
-<span id="cb25-9"><a></a></span>
-<span id="cb25-10"><a></a>── Model ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span id="cb25-11"><a></a>n= 266 </span>
-<span id="cb25-12"><a></a></span>
-<span id="cb25-13"><a></a>node), split, n, deviance, yval</span>
-<span id="cb25-14"><a></a>      * denotes terminal node</span>
-<span id="cb25-15"><a></a></span>
-<span id="cb25-16"><a></a>1) root 266 173605900 4181.955  </span>
-<span id="cb25-17"><a></a>  2) species=Adelie,Chinstrap 173  29114270 3686.272  </span>
-<span id="cb25-18"><a></a>    4) sex=female 87   6889828 3412.931 *</span>
-<span id="cb25-19"><a></a>    5) sex=male 86   9148430 3962.791 *</span>
-<span id="cb25-20"><a></a>  3) species=Gentoo 93  22914110 5104.032  </span>
-<span id="cb25-21"><a></a>    6) sex=female 45   3507278 4692.222 *</span>
-<span id="cb25-22"><a></a>    7) sex=male 48   4620924 5490.104 *</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb44-1"><a></a>══ Workflow [trained] ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════</span>
+<span id="cb44-2"><a></a>Preprocessor: Recipe</span>
+<span id="cb44-3"><a></a>Model: decision_tree()</span>
+<span id="cb44-4"><a></a></span>
+<span id="cb44-5"><a></a>── Preprocessor ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span id="cb44-6"><a></a>1 Recipe Step</span>
+<span id="cb44-7"><a></a></span>
+<span id="cb44-8"><a></a>• step_rm()</span>
+<span id="cb44-9"><a></a></span>
+<span id="cb44-10"><a></a>── Model ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span id="cb44-11"><a></a>n= 266 </span>
+<span id="cb44-12"><a></a></span>
+<span id="cb44-13"><a></a>node), split, n, deviance, yval</span>
+<span id="cb44-14"><a></a>      * denotes terminal node</span>
+<span id="cb44-15"><a></a></span>
+<span id="cb44-16"><a></a>1) root 266 173605900 4181.955  </span>
+<span id="cb44-17"><a></a>  2) species=Adelie,Chinstrap 173  29114270 3686.272  </span>
+<span id="cb44-18"><a></a>    4) sex=female 87   6889828 3412.931 *</span>
+<span id="cb44-19"><a></a>    5) sex=male 86   9148430 3962.791 *</span>
+<span id="cb44-20"><a></a>  3) species=Gentoo 93  22914110 5104.032  </span>
+<span id="cb44-21"><a></a>    6) sex=female 45   3507278 4692.222 *</span>
+<span id="cb44-22"><a></a>    7) sex=male 48   4620924 5490.104 *</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div></div>
@@ -593,11 +670,11 @@ Jan Lorenz
 <div class="columns">
 <div class="column" style="width:65%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">rpart.plot</span>(peng_regtree_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">rpart.plot</span>(peng_regtree_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W11_files/figure-revealjs/unnamed-chunk-16-1.png" width="960"></p>
+<p><img data-src="W11_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 </figure>
 </div>
 </div>
@@ -624,7 +701,7 @@ Jan Lorenz
 <div class="column" style="width:50%;">
 <p><strong>Linear Regression</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">rsq</span>(peng_linreg_pred, <span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">rsq</span>(peng_linreg_pred, <span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -635,7 +712,7 @@ Jan Lorenz
 </div><div class="column" style="width:50%;">
 <p><strong>Decision Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">rsq</span>(peng_regtree_pred, <span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">rsq</span>(peng_regtree_pred, <span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -649,7 +726,7 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">rmse</span>(peng_linreg_pred, <span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">rmse</span>(peng_linreg_pred, <span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -659,7 +736,7 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">rmse</span>(peng_regtree_pred, <span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">rmse</span>(peng_regtree_pred, <span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -675,45 +752,45 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <p>In contrast to R-squared, RMSE can only be interpreted with knowledge about the range and of the response variable! It has the same unit (grams for <code>body_mass_g</code>).</p>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>peng_test <span class="sc">|&gt;</span></span>
-<span id="cb35-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> body_mass_g, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
-<span id="cb35-3"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
-<span id="cb35-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>peng_test <span class="sc">|&gt;</span></span>
+<span id="cb54-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> body_mass_g, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb54-3"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb54-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W11_files/figure-revealjs/unnamed-chunk-21-1.png" width="960"></p>
+<p><img data-src="W11_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
 </figure>
 </div>
 </div>
 </div></div>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>peng_linreg_pred <span class="sc">|&gt;</span></span>
-<span id="cb36-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .pred, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
-<span id="cb36-3"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
-<span id="cb36-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a>peng_linreg_pred <span class="sc">|&gt;</span></span>
+<span id="cb55-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .pred, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb55-3"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb55-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W11_files/figure-revealjs/unnamed-chunk-22-1.png" width="960"></p>
+<p><img data-src="W11_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
 </figure>
 </div>
 </div>
 </div></div>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>peng_regtree_pred <span class="sc">|&gt;</span></span>
-<span id="cb37-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .pred, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
-<span id="cb37-3"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
-<span id="cb37-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>peng_regtree_pred <span class="sc">|&gt;</span></span>
+<span id="cb56-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .pred, <span class="at">fill =</span> species)) <span class="sc">+</span></span>
+<span id="cb56-3"><a></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb56-4"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W11_files/figure-revealjs/unnamed-chunk-23-1.png" width="960"></p>
+<p><img data-src="W11_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
 </figure>
 </div>
 </div>
@@ -754,46 +831,49 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </ul>
 <p>Make a deeper tree with <code>cost_complexity = 0</code>, default <code>min_n</code>, and <code>tree_depth = 8</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>peng_regtree_deep <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
-<span id="cb38-2"><a></a>  <span class="at">tree_depth =</span> <span class="dv">8</span>,</span>
-<span id="cb38-3"><a></a>  <span class="at">cost_complexity =</span> <span class="dv">0</span></span>
-<span id="cb38-4"><a></a>) <span class="sc">|&gt;</span></span>
-<span id="cb38-5"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb38-6"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
-<span id="cb38-7"><a></a>peng_regtree_deep_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb38-8"><a></a>  <span class="fu">add_recipe</span>(peng_reg_recipe) <span class="sc">|&gt;</span></span>
-<span id="cb38-9"><a></a>  <span class="fu">add_model</span>(peng_regtree_deep) <span class="sc">|&gt;</span></span>
-<span id="cb38-10"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>peng_regtree_deep <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
+<span id="cb57-2"><a></a>  <span class="at">tree_depth =</span> <span class="dv">8</span>,</span>
+<span id="cb57-3"><a></a>  <span class="at">cost_complexity =</span> <span class="dv">0</span></span>
+<span id="cb57-4"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb57-5"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb57-6"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb57-7"><a></a>peng_regtree_deep_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb57-8"><a></a>  <span class="fu">add_recipe</span>(peng_reg_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb57-9"><a></a>  <span class="fu">add_model</span>(peng_regtree_deep) <span class="sc">|&gt;</span></span>
+<span id="cb57-10"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="the-deep-tree" class="slide level2">
 <h2>The deep tree</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">rpart.plot</span>(peng_regtree_deep_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="fu">rpart.plot</span>(peng_regtree_deep_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-25-1.png" width="960" class="r-stretch"><p>Note: Some variables are used multiple times in different parts of the tree.</p>
+<img data-src="W11_files/figure-html/unnamed-chunk-25-1.png" width="672" class="r-stretch"><p>Note: Some variables are used multiple times in different parts of the tree.</p>
 </section>
 <section id="the-deepest-tree" class="slide level2">
 <h2>The deepest tree</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>peng_regtree_deepest <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
-<span id="cb40-2"><a></a>  <span class="at">cost_complexity =</span> <span class="dv">0</span>,</span>
-<span id="cb40-3"><a></a>  <span class="at">min_n =</span> <span class="dv">2</span></span>
-<span id="cb40-4"><a></a>) <span class="sc">|&gt;</span></span>
-<span id="cb40-5"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb40-6"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
-<span id="cb40-7"><a></a>peng_regtree_deepest_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb40-8"><a></a>  <span class="fu">add_recipe</span>(peng_reg_recipe) <span class="sc">|&gt;</span></span>
-<span id="cb40-9"><a></a>  <span class="fu">add_model</span>(peng_regtree_deepest) <span class="sc">|&gt;</span></span>
-<span id="cb40-10"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
-<span id="cb40-11"><a></a><span class="fu">rpart.plot</span>(peng_regtree_deepest_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a>peng_regtree_deepest <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
+<span id="cb59-2"><a></a>  <span class="at">cost_complexity =</span> <span class="dv">0</span>,</span>
+<span id="cb59-3"><a></a>  <span class="at">min_n =</span> <span class="dv">2</span></span>
+<span id="cb59-4"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb59-5"><a></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb59-6"><a></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb59-7"><a></a>peng_regtree_deepest_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb59-8"><a></a>  <span class="fu">add_recipe</span>(peng_reg_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb59-9"><a></a>  <span class="fu">add_model</span>(peng_regtree_deepest) <span class="sc">|&gt;</span></span>
+<span id="cb59-10"><a></a>  <span class="fu">fit</span>(<span class="at">data =</span> peng_train)</span>
+<span id="cb59-11"><a></a><span class="fu">rpart.plot</span>(peng_regtree_deepest_fit<span class="sc">$</span>fit<span class="sc">$</span>fit<span class="sc">$</span>fit, <span class="at">roundint =</span> <span class="cn">FALSE</span>, <span class="at">tweak =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: labs do not fit even at cex 0.15, there may be some overplotting</code></pre>
+</div>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
+<img data-src="W11_files/figure-html/unnamed-chunk-26-1.png" width="672" class="r-stretch"></section>
 <section id="make-predictions" class="slide level2">
 <h2>Make predictions</h2>
 <p>6. Predict response variable for rows of the test data.</p>
@@ -801,9 +881,9 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <div class="column" style="width:33%;">
 <p><strong>Default Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>peng_regtree_pred <span class="ot">&lt;-</span> peng_regtree_fit <span class="sc">|&gt;</span></span>
-<span id="cb41-2"><a></a>  <span class="fu">augment</span>(peng_test)</span>
-<span id="cb41-3"><a></a>peng_regtree_pred <span class="sc">|&gt;</span> <span class="fu">select</span>(.pred, body_mass_g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>peng_regtree_pred <span class="ot">&lt;-</span> peng_regtree_fit <span class="sc">|&gt;</span></span>
+<span id="cb61-2"><a></a>  <span class="fu">augment</span>(peng_test)</span>
+<span id="cb61-3"><a></a>peng_regtree_pred <span class="sc">|&gt;</span> <span class="fu">select</span>(.pred, body_mass_g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 67 × 2
    .pred body_mass_g
@@ -824,9 +904,9 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div><div class="column" style="width:33%;">
 <p><strong>Deeper Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>peng_regtree_deep_pred <span class="ot">&lt;-</span> peng_regtree_deep_fit <span class="sc">|&gt;</span></span>
-<span id="cb43-2"><a></a>  <span class="fu">augment</span>(peng_test)</span>
-<span id="cb43-3"><a></a>peng_regtree_deep_pred <span class="sc">|&gt;</span> <span class="fu">select</span>(.pred, body_mass_g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a>peng_regtree_deep_pred <span class="ot">&lt;-</span> peng_regtree_deep_fit <span class="sc">|&gt;</span></span>
+<span id="cb63-2"><a></a>  <span class="fu">augment</span>(peng_test)</span>
+<span id="cb63-3"><a></a>peng_regtree_deep_pred <span class="sc">|&gt;</span> <span class="fu">select</span>(.pred, body_mass_g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 67 × 2
    .pred body_mass_g
@@ -847,9 +927,9 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div><div class="column" style="width:33%;">
 <p><strong>Deepest Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>peng_regtree_deepest_pred <span class="ot">&lt;-</span></span>
-<span id="cb45-2"><a></a>  <span class="fu">augment</span>(peng_regtree_deepest_fit, peng_test)</span>
-<span id="cb45-3"><a></a>peng_regtree_deepest_pred <span class="sc">|&gt;</span> <span class="fu">select</span>(.pred, body_mass_g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a>peng_regtree_deepest_pred <span class="ot">&lt;-</span></span>
+<span id="cb65-2"><a></a>  <span class="fu">augment</span>(peng_regtree_deepest_fit, peng_test)</span>
+<span id="cb65-3"><a></a>peng_regtree_deepest_pred <span class="sc">|&gt;</span> <span class="fu">select</span>(.pred, body_mass_g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 67 × 2
    .pred body_mass_g
@@ -879,8 +959,8 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <div class="column" style="width:33%;">
 <p><strong>Default Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>peng_regtree_pred <span class="sc">|&gt;</span></span>
-<span id="cb47-2"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>peng_regtree_pred <span class="sc">|&gt;</span></span>
+<span id="cb67-2"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
@@ -893,8 +973,8 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div><div class="column" style="width:33%;">
 <p><strong>Deeper Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>peng_regtree_deep_pred <span class="sc">|&gt;</span></span>
-<span id="cb49-2"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a>peng_regtree_deep_pred <span class="sc">|&gt;</span></span>
+<span id="cb69-2"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
@@ -907,8 +987,8 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div><div class="column" style="width:33%;">
 <p><strong>Deepest Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a>peng_regtree_deepest_pred <span class="sc">|&gt;</span></span>
-<span id="cb51-2"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>peng_regtree_deepest_pred <span class="sc">|&gt;</span></span>
+<span id="cb71-2"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
@@ -932,10 +1012,10 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <div class="column" style="width:33%;">
 <p><strong>Default Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>peng_regtree_fit <span class="sc">|&gt;</span></span>
-<span id="cb53-2"><a></a>  <span class="fu">augment</span>(peng_train) <span class="sc">|&gt;</span></span>
-<span id="cb53-3"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
-<span id="cb53-4"><a></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">"rmse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a>peng_regtree_fit <span class="sc">|&gt;</span></span>
+<span id="cb73-2"><a></a>  <span class="fu">augment</span>(peng_train) <span class="sc">|&gt;</span></span>
+<span id="cb73-3"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
+<span id="cb73-4"><a></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">"rmse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -946,10 +1026,10 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div><div class="column" style="width:33%;">
 <p><strong>Deeper Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a>peng_regtree_deep_fit <span class="sc">|&gt;</span></span>
-<span id="cb55-2"><a></a>  <span class="fu">augment</span>(peng_train) <span class="sc">|&gt;</span></span>
-<span id="cb55-3"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
-<span id="cb55-4"><a></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">"rmse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>peng_regtree_deep_fit <span class="sc">|&gt;</span></span>
+<span id="cb75-2"><a></a>  <span class="fu">augment</span>(peng_train) <span class="sc">|&gt;</span></span>
+<span id="cb75-3"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
+<span id="cb75-4"><a></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">"rmse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -960,10 +1040,10 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 </div><div class="column" style="width:33%;">
 <p><strong>Deepest Tree</strong></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>peng_regtree_deepest_fit <span class="sc">|&gt;</span></span>
-<span id="cb57-2"><a></a>  <span class="fu">augment</span>(peng_train) <span class="sc">|&gt;</span></span>
-<span id="cb57-3"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
-<span id="cb57-4"><a></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">"rmse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a>peng_regtree_deepest_fit <span class="sc">|&gt;</span></span>
+<span id="cb77-2"><a></a>  <span class="fu">augment</span>(peng_train) <span class="sc">|&gt;</span></span>
+<span id="cb77-3"><a></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
+<span id="cb77-4"><a></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">"rmse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -996,21 +1076,21 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <p>For a <span class="text-green"><strong>systematic comparison</strong></span> of the three models on train and test data we build an <span class="text-green"><strong>analysis dataframe</strong></span> with all combinations of model and data.</p>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a>peng_deep_analysis_structure <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
-<span id="cb59-2"><a></a>  <span class="fu">tibble</span>(</span>
-<span id="cb59-3"><a></a>    <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Default"</span>, <span class="st">"Deeper"</span>, <span class="st">"Deepest"</span>),</span>
-<span id="cb59-4"><a></a>    <span class="at">fit =</span> <span class="fu">list</span>(</span>
-<span id="cb59-5"><a></a>      peng_regtree_fit,</span>
-<span id="cb59-6"><a></a>      peng_regtree_deep_fit,</span>
-<span id="cb59-7"><a></a>      peng_regtree_deepest_fit</span>
-<span id="cb59-8"><a></a>    )</span>
-<span id="cb59-9"><a></a>  ),</span>
-<span id="cb59-10"><a></a>  <span class="fu">tibble</span>(</span>
-<span id="cb59-11"><a></a>    <span class="at">data_name =</span> <span class="fu">c</span>(<span class="st">"train"</span>, <span class="st">"test"</span>),</span>
-<span id="cb59-12"><a></a>    <span class="at">data =</span> <span class="fu">list</span>(peng_train, peng_test)</span>
-<span id="cb59-13"><a></a>  )</span>
-<span id="cb59-14"><a></a>)</span>
-<span id="cb59-15"><a></a>peng_deep_analysis_structure</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a>peng_deep_analysis_structure <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb79-2"><a></a>  <span class="fu">tibble</span>(</span>
+<span id="cb79-3"><a></a>    <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Default"</span>, <span class="st">"Deeper"</span>, <span class="st">"Deepest"</span>),</span>
+<span id="cb79-4"><a></a>    <span class="at">fit =</span> <span class="fu">list</span>(</span>
+<span id="cb79-5"><a></a>      peng_regtree_fit,</span>
+<span id="cb79-6"><a></a>      peng_regtree_deep_fit,</span>
+<span id="cb79-7"><a></a>      peng_regtree_deepest_fit</span>
+<span id="cb79-8"><a></a>    )</span>
+<span id="cb79-9"><a></a>  ),</span>
+<span id="cb79-10"><a></a>  <span class="fu">tibble</span>(</span>
+<span id="cb79-11"><a></a>    <span class="at">data_name =</span> <span class="fu">c</span>(<span class="st">"train"</span>, <span class="st">"test"</span>),</span>
+<span id="cb79-12"><a></a>    <span class="at">data =</span> <span class="fu">list</span>(peng_train, peng_test)</span>
+<span id="cb79-13"><a></a>  )</span>
+<span id="cb79-14"><a></a>)</span>
+<span id="cb79-15"><a></a>peng_deep_analysis_structure</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 4
@@ -1036,18 +1116,18 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <p>We predict for all combinations of model and data:</p>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>peng_deep_analysis <span class="ot">&lt;-</span> peng_deep_analysis_structure <span class="sc">|&gt;</span></span>
-<span id="cb61-2"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb61-3"><a></a>    <span class="at">predictions =</span> <span class="fu">map2</span>(fit, data, \(f, d) {</span>
-<span id="cb61-4"><a></a>      <span class="fu">augment</span>(f, d)</span>
-<span id="cb61-5"><a></a>    }),</span>
-<span id="cb61-6"><a></a>    <span class="at">r_squared =</span> <span class="fu">map_dbl</span>(predictions, \(p) {</span>
-<span id="cb61-7"><a></a>      p <span class="sc">|&gt;</span></span>
-<span id="cb61-8"><a></a>        <span class="fu">rsq</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
-<span id="cb61-9"><a></a>        <span class="fu">pull</span>(.estimate)</span>
-<span id="cb61-10"><a></a>    })</span>
-<span id="cb61-11"><a></a>  )</span>
-<span id="cb61-12"><a></a>peng_deep_analysis <span class="sc">|&gt;</span> <span class="fu">select</span>(model, data_name, r_squared)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a>peng_deep_analysis <span class="ot">&lt;-</span> peng_deep_analysis_structure <span class="sc">|&gt;</span></span>
+<span id="cb81-2"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb81-3"><a></a>    <span class="at">predictions =</span> <span class="fu">map2</span>(fit, data, \(f, d) {</span>
+<span id="cb81-4"><a></a>      <span class="fu">augment</span>(f, d)</span>
+<span id="cb81-5"><a></a>    }),</span>
+<span id="cb81-6"><a></a>    <span class="at">r_squared =</span> <span class="fu">map_dbl</span>(predictions, \(p) {</span>
+<span id="cb81-7"><a></a>      p <span class="sc">|&gt;</span></span>
+<span id="cb81-8"><a></a>        <span class="fu">rsq</span>(<span class="at">truth =</span> body_mass_g, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span></span>
+<span id="cb81-9"><a></a>        <span class="fu">pull</span>(.estimate)</span>
+<span id="cb81-10"><a></a>    })</span>
+<span id="cb81-11"><a></a>  )</span>
+<span id="cb81-12"><a></a>peng_deep_analysis <span class="sc">|&gt;</span> <span class="fu">select</span>(model, data_name, r_squared)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
@@ -1084,21 +1164,21 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <p>Trends for R-squared for test and train when the tree goes deeper.</p>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a>peng_deep_analysis <span class="sc">|&gt;</span></span>
-<span id="cb63-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
-<span id="cb63-3"><a></a>    <span class="at">x =</span> <span class="fu">fct_inorder</span>(model),</span>
-<span id="cb63-4"><a></a>    <span class="at">y =</span> r_squared,</span>
-<span id="cb63-5"><a></a>    <span class="at">color =</span> data_name,</span>
-<span id="cb63-6"><a></a>    <span class="at">group =</span> data_name</span>
-<span id="cb63-7"><a></a>  )) <span class="sc">+</span></span>
-<span id="cb63-8"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb63-9"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb63-10"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a>peng_deep_analysis <span class="sc">|&gt;</span></span>
+<span id="cb83-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb83-3"><a></a>    <span class="at">x =</span> <span class="fu">fct_inorder</span>(model),</span>
+<span id="cb83-4"><a></a>    <span class="at">y =</span> r_squared,</span>
+<span id="cb83-5"><a></a>    <span class="at">color =</span> data_name,</span>
+<span id="cb83-6"><a></a>    <span class="at">group =</span> data_name</span>
+<span id="cb83-7"><a></a>  )) <span class="sc">+</span></span>
+<span id="cb83-8"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb83-9"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb83-10"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W11_files/figure-revealjs/unnamed-chunk-38-1.png" width="960"></p>
+<p><img data-src="W11_files/figure-html/unnamed-chunk-38-1.png" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1107,21 +1187,21 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <p>Trends for R-squared for different trees when going from train to test.</p>
 <div class="cell columns column-output-location" data-fig-heigth="2.4">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>peng_deep_analysis <span class="sc">|&gt;</span></span>
-<span id="cb64-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
-<span id="cb64-3"><a></a>    <span class="at">x =</span> <span class="fu">fct_inorder</span>(data_name),</span>
-<span id="cb64-4"><a></a>    <span class="at">y =</span> r_squared,</span>
-<span id="cb64-5"><a></a>    <span class="at">color =</span> <span class="fu">fct_inorder</span>(model),</span>
-<span id="cb64-6"><a></a>    <span class="at">group =</span> <span class="fu">fct_inorder</span>(model)</span>
-<span id="cb64-7"><a></a>  )) <span class="sc">+</span></span>
-<span id="cb64-8"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb64-9"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb64-10"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>peng_deep_analysis <span class="sc">|&gt;</span></span>
+<span id="cb84-2"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb84-3"><a></a>    <span class="at">x =</span> <span class="fu">fct_inorder</span>(data_name),</span>
+<span id="cb84-4"><a></a>    <span class="at">y =</span> r_squared,</span>
+<span id="cb84-5"><a></a>    <span class="at">color =</span> <span class="fu">fct_inorder</span>(model),</span>
+<span id="cb84-6"><a></a>    <span class="at">group =</span> <span class="fu">fct_inorder</span>(model)</span>
+<span id="cb84-7"><a></a>  )) <span class="sc">+</span></span>
+<span id="cb84-8"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb84-9"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb84-10"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="W11_files/figure-revealjs/unnamed-chunk-39-1.png" width="960"></p>
+<p><img data-src="W11_files/figure-html/unnamed-chunk-39-1.png" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1133,16 +1213,16 @@ where <span class="math inline">\(\hat{y}_i\)</span> is the predicted value and 
 <p><code>email</code> dataset from <code>openintro</code>:<br>
 Steps: 1. Train-Test-Split, 2. Preprocessing-Recipe</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># Just to fix the presentation, test without when doing yourself!</span></span>
-<span id="cb65-2"><a></a>email_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(email, <span class="at">prop =</span> <span class="fl">0.7</span>, <span class="at">strata =</span> spam)</span>
-<span id="cb65-3"><a></a>email_train <span class="ot">&lt;-</span> <span class="fu">training</span>(email_split)</span>
-<span id="cb65-4"><a></a>email_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(email_split)</span>
-<span id="cb65-5"><a></a>email_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(spam <span class="sc">~</span> ., <span class="at">data =</span> email) <span class="sc">|&gt;</span></span>
-<span id="cb65-6"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span> <span class="co"># Remove some variables (see former lectures)</span></span>
-<span id="cb65-7"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span> <span class="co"># Make day-of-week and month features ...</span></span>
-<span id="cb65-8"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span> <span class="co"># ... and remove the date-time itself</span></span>
-<span id="cb65-9"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>()) <span class="co"># remove predictors with zero variance</span></span>
-<span id="cb65-10"><a></a>email_recipe</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a><span class="fu">set.seed</span>(<span class="dv">12345</span>) <span class="co"># Just to fix the presentation, test without when doing yourself!</span></span>
+<span id="cb85-2"><a></a>email_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(email, <span class="at">prop =</span> <span class="fl">0.7</span>, <span class="at">strata =</span> spam)</span>
+<span id="cb85-3"><a></a>email_train <span class="ot">&lt;-</span> <span class="fu">training</span>(email_split)</span>
+<span id="cb85-4"><a></a>email_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(email_split)</span>
+<span id="cb85-5"><a></a>email_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(spam <span class="sc">~</span> ., <span class="at">data =</span> email) <span class="sc">|&gt;</span></span>
+<span id="cb85-6"><a></a>  <span class="fu">step_rm</span>(from, sent_email, viagra) <span class="sc">|&gt;</span> <span class="co"># Remove some variables (see former lectures)</span></span>
+<span id="cb85-7"><a></a>  <span class="fu">step_date</span>(time, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span> <span class="co"># Make day-of-week and month features ...</span></span>
+<span id="cb85-8"><a></a>  <span class="fu">step_rm</span>(time) <span class="sc">|&gt;</span> <span class="co"># ... and remove the date-time itself</span></span>
+<span id="cb85-9"><a></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>()) <span class="co"># remove predictors with zero variance</span></span>
+<span id="cb85-10"><a></a>email_recipe</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code></code></pre>
 </div>
@@ -1187,84 +1267,84 @@ predictor: 20</code></pre>
 <p>Analysis structure for different complexity costs and train/test data</p>
 <div class="cell columns column-output-location">
 <div class="column">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>email_depth_analysis_structure <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
-<span id="cb78-2"><a></a>  <span class="fu">tibble</span>(</span>
-<span id="cb78-3"><a></a>    <span class="at">tree_depth =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">25</span>, <span class="at">by =</span> <span class="dv">2</span>),</span>
-<span id="cb78-4"><a></a>    <span class="at">model_spec =</span> <span class="fu">map</span>(tree_depth, \(x) {</span>
-<span id="cb78-5"><a></a>      <span class="fu">decision_tree</span>(</span>
-<span id="cb78-6"><a></a>        <span class="at">tree_depth =</span> x,</span>
-<span id="cb78-7"><a></a>        <span class="at">cost_complexity =</span> <span class="dv">0</span>,</span>
-<span id="cb78-8"><a></a>        <span class="at">min_n =</span> <span class="dv">2</span></span>
-<span id="cb78-9"><a></a>      ) <span class="sc">|&gt;</span></span>
-<span id="cb78-10"><a></a>        <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb78-11"><a></a>        <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
-<span id="cb78-12"><a></a>    })</span>
-<span id="cb78-13"><a></a>  ),</span>
-<span id="cb78-14"><a></a>  <span class="fu">tibble</span>(</span>
-<span id="cb78-15"><a></a>    <span class="at">data_name =</span> <span class="fu">c</span>(<span class="st">"train"</span>, <span class="st">"test"</span>),</span>
-<span id="cb78-16"><a></a>    <span class="at">data =</span> <span class="fu">list</span>(email_train, email_test)</span>
-<span id="cb78-17"><a></a>  )</span>
-<span id="cb78-18"><a></a>)</span>
-<span id="cb78-19"><a></a>email_depth_analysis_structure</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a>email_depth_analysis_structure <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb98-2"><a></a>  <span class="fu">tibble</span>(</span>
+<span id="cb98-3"><a></a>    <span class="at">tree_depth =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">25</span>, <span class="at">by =</span> <span class="dv">2</span>),</span>
+<span id="cb98-4"><a></a>    <span class="at">model_spec =</span> <span class="fu">map</span>(tree_depth, \(x) {</span>
+<span id="cb98-5"><a></a>      <span class="fu">decision_tree</span>(</span>
+<span id="cb98-6"><a></a>        <span class="at">tree_depth =</span> x,</span>
+<span id="cb98-7"><a></a>        <span class="at">cost_complexity =</span> <span class="dv">0</span>,</span>
+<span id="cb98-8"><a></a>        <span class="at">min_n =</span> <span class="dv">2</span></span>
+<span id="cb98-9"><a></a>      ) <span class="sc">|&gt;</span></span>
+<span id="cb98-10"><a></a>        <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb98-11"><a></a>        <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb98-12"><a></a>    })</span>
+<span id="cb98-13"><a></a>  ),</span>
+<span id="cb98-14"><a></a>  <span class="fu">tibble</span>(</span>
+<span id="cb98-15"><a></a>    <span class="at">data_name =</span> <span class="fu">c</span>(<span class="st">"train"</span>, <span class="st">"test"</span>),</span>
+<span id="cb98-16"><a></a>    <span class="at">data =</span> <span class="fu">list</span>(email_train, email_test)</span>
+<span id="cb98-17"><a></a>  )</span>
+<span id="cb98-18"><a></a>)</span>
+<span id="cb98-19"><a></a>email_depth_analysis_structure</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb79-1"><a></a># A tibble: 26 × 4</span>
-<span id="cb79-2"><a></a>   tree_depth model_spec data_name data                 </span>
-<span id="cb79-3"><a></a>        &lt;dbl&gt; &lt;list&gt;     &lt;chr&gt;     &lt;list&gt;               </span>
-<span id="cb79-4"><a></a> 1          1 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
-<span id="cb79-5"><a></a> 2          1 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
-<span id="cb79-6"><a></a> 3          3 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
-<span id="cb79-7"><a></a> 4          3 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
-<span id="cb79-8"><a></a> 5          5 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
-<span id="cb79-9"><a></a> 6          5 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
-<span id="cb79-10"><a></a> 7          7 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
-<span id="cb79-11"><a></a> 8          7 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
-<span id="cb79-12"><a></a> 9          9 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
-<span id="cb79-13"><a></a>10          9 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
-<span id="cb79-14"><a></a># ℹ 16 more rows</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb99"><pre class="sourceCode numberSource scroll-x number-lines code-with-copy"><code class="sourceCode"><span id="cb99-1"><a></a># A tibble: 26 × 4</span>
+<span id="cb99-2"><a></a>   tree_depth model_spec data_name data                 </span>
+<span id="cb99-3"><a></a>        &lt;dbl&gt; &lt;list&gt;     &lt;chr&gt;     &lt;list&gt;               </span>
+<span id="cb99-4"><a></a> 1          1 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
+<span id="cb99-5"><a></a> 2          1 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
+<span id="cb99-6"><a></a> 3          3 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
+<span id="cb99-7"><a></a> 4          3 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
+<span id="cb99-8"><a></a> 5          5 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
+<span id="cb99-9"><a></a> 6          5 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
+<span id="cb99-10"><a></a> 7          7 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
+<span id="cb99-11"><a></a> 8          7 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
+<span id="cb99-12"><a></a> 9          9 &lt;spec[+]&gt;  train     &lt;tibble [2,744 × 21]&gt;</span>
+<span id="cb99-13"><a></a>10          9 &lt;spec[+]&gt;  test      &lt;tibble [1,177 × 21]&gt;</span>
+<span id="cb99-14"><a></a># ℹ 16 more rows</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div></div>
 </section>
 <section id="fit-predict-evaluate-performance" class="slide level2">
 <h2>Fit, predict, evaluate performance</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a>email_depth_analysis <span class="ot">&lt;-</span> email_depth_analysis_structure <span class="sc">|&gt;</span></span>
-<span id="cb80-2"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb80-3"><a></a>    <span class="at">workflow =</span> <span class="fu">map</span>(model_spec, \(m) {</span>
-<span id="cb80-4"><a></a>      <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb80-5"><a></a>        <span class="fu">add_recipe</span>(email_recipe) <span class="sc">|&gt;</span></span>
-<span id="cb80-6"><a></a>        <span class="fu">add_model</span>(m)</span>
-<span id="cb80-7"><a></a>    }),</span>
-<span id="cb80-8"><a></a>    <span class="at">fit =</span> <span class="fu">map</span>(workflow, \(w, d) {</span>
-<span id="cb80-9"><a></a>      <span class="fu">fit</span>(w, <span class="at">data =</span> email_train)</span>
-<span id="cb80-10"><a></a>    }),</span>
-<span id="cb80-11"><a></a>    <span class="at">predictions =</span> <span class="fu">map2</span>(fit, data, \(f, d) {</span>
-<span id="cb80-12"><a></a>      <span class="fu">augment</span>(f, d)</span>
-<span id="cb80-13"><a></a>    }),</span>
-<span id="cb80-14"><a></a>    <span class="at">accuracy =</span> <span class="fu">map_dbl</span>(predictions, \(p) {</span>
-<span id="cb80-15"><a></a>      p <span class="sc">|&gt;</span></span>
-<span id="cb80-16"><a></a>        <span class="fu">accuracy</span>(<span class="at">truth =</span> spam, <span class="at">estimate =</span> .pred_class) <span class="sc">|&gt;</span></span>
-<span id="cb80-17"><a></a>        <span class="fu">pull</span>(.estimate)</span>
-<span id="cb80-18"><a></a>    }),</span>
-<span id="cb80-19"><a></a>    <span class="at">specificity =</span> <span class="fu">map_dbl</span>(predictions, \(p) {</span>
-<span id="cb80-20"><a></a>      p <span class="sc">|&gt;</span></span>
-<span id="cb80-21"><a></a>        <span class="fu">specificity</span>(</span>
-<span id="cb80-22"><a></a>          <span class="at">truth =</span> spam,</span>
-<span id="cb80-23"><a></a>          <span class="at">estimate =</span> .pred_class,</span>
-<span id="cb80-24"><a></a>          <span class="at">event_level =</span> <span class="st">"second"</span></span>
-<span id="cb80-25"><a></a>        ) <span class="sc">|&gt;</span></span>
-<span id="cb80-26"><a></a>        <span class="fu">pull</span>(.estimate)</span>
-<span id="cb80-27"><a></a>    }),</span>
-<span id="cb80-28"><a></a>    <span class="at">sensitivity =</span> <span class="fu">map_dbl</span>(predictions, \(p) {</span>
-<span id="cb80-29"><a></a>      p <span class="sc">|&gt;</span></span>
-<span id="cb80-30"><a></a>        <span class="fu">sensitivity</span>(</span>
-<span id="cb80-31"><a></a>          <span class="at">truth =</span> spam,</span>
-<span id="cb80-32"><a></a>          <span class="at">estimate =</span> .pred_class,</span>
-<span id="cb80-33"><a></a>          <span class="at">event_level =</span> <span class="st">"second"</span></span>
-<span id="cb80-34"><a></a>        ) <span class="sc">|&gt;</span></span>
-<span id="cb80-35"><a></a>        <span class="fu">pull</span>(.estimate)</span>
-<span id="cb80-36"><a></a>    })</span>
-<span id="cb80-37"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a></a>email_depth_analysis <span class="ot">&lt;-</span> email_depth_analysis_structure <span class="sc">|&gt;</span></span>
+<span id="cb100-2"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb100-3"><a></a>    <span class="at">workflow =</span> <span class="fu">map</span>(model_spec, \(m) {</span>
+<span id="cb100-4"><a></a>      <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb100-5"><a></a>        <span class="fu">add_recipe</span>(email_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb100-6"><a></a>        <span class="fu">add_model</span>(m)</span>
+<span id="cb100-7"><a></a>    }),</span>
+<span id="cb100-8"><a></a>    <span class="at">fit =</span> <span class="fu">map</span>(workflow, \(w, d) {</span>
+<span id="cb100-9"><a></a>      <span class="fu">fit</span>(w, <span class="at">data =</span> email_train)</span>
+<span id="cb100-10"><a></a>    }),</span>
+<span id="cb100-11"><a></a>    <span class="at">predictions =</span> <span class="fu">map2</span>(fit, data, \(f, d) {</span>
+<span id="cb100-12"><a></a>      <span class="fu">augment</span>(f, d)</span>
+<span id="cb100-13"><a></a>    }),</span>
+<span id="cb100-14"><a></a>    <span class="at">accuracy =</span> <span class="fu">map_dbl</span>(predictions, \(p) {</span>
+<span id="cb100-15"><a></a>      p <span class="sc">|&gt;</span></span>
+<span id="cb100-16"><a></a>        <span class="fu">accuracy</span>(<span class="at">truth =</span> spam, <span class="at">estimate =</span> .pred_class) <span class="sc">|&gt;</span></span>
+<span id="cb100-17"><a></a>        <span class="fu">pull</span>(.estimate)</span>
+<span id="cb100-18"><a></a>    }),</span>
+<span id="cb100-19"><a></a>    <span class="at">specificity =</span> <span class="fu">map_dbl</span>(predictions, \(p) {</span>
+<span id="cb100-20"><a></a>      p <span class="sc">|&gt;</span></span>
+<span id="cb100-21"><a></a>        <span class="fu">specificity</span>(</span>
+<span id="cb100-22"><a></a>          <span class="at">truth =</span> spam,</span>
+<span id="cb100-23"><a></a>          <span class="at">estimate =</span> .pred_class,</span>
+<span id="cb100-24"><a></a>          <span class="at">event_level =</span> <span class="st">"second"</span></span>
+<span id="cb100-25"><a></a>        ) <span class="sc">|&gt;</span></span>
+<span id="cb100-26"><a></a>        <span class="fu">pull</span>(.estimate)</span>
+<span id="cb100-27"><a></a>    }),</span>
+<span id="cb100-28"><a></a>    <span class="at">sensitivity =</span> <span class="fu">map_dbl</span>(predictions, \(p) {</span>
+<span id="cb100-29"><a></a>      p <span class="sc">|&gt;</span></span>
+<span id="cb100-30"><a></a>        <span class="fu">sensitivity</span>(</span>
+<span id="cb100-31"><a></a>          <span class="at">truth =</span> spam,</span>
+<span id="cb100-32"><a></a>          <span class="at">estimate =</span> .pred_class,</span>
+<span id="cb100-33"><a></a>          <span class="at">event_level =</span> <span class="st">"second"</span></span>
+<span id="cb100-34"><a></a>        ) <span class="sc">|&gt;</span></span>
+<span id="cb100-35"><a></a>        <span class="fu">pull</span>(.estimate)</span>
+<span id="cb100-36"><a></a>    })</span>
+<span id="cb100-37"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here, the value of modularized thinking in pipes of tidymodels becomes visible.</p>
 </section>
@@ -1280,26 +1360,26 @@ predictor: 20</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a>email_depth_analysis <span class="sc">|&gt;</span></span>
-<span id="cb81-2"><a></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb81-3"><a></a>    <span class="at">cols =</span> <span class="fu">c</span>(accuracy, specificity, sensitivity),</span>
-<span id="cb81-4"><a></a>    <span class="at">names_to =</span> <span class="st">"metric"</span>,</span>
-<span id="cb81-5"><a></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
-<span id="cb81-6"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb81-7"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
-<span id="cb81-8"><a></a>    <span class="at">x =</span> tree_depth,</span>
-<span id="cb81-9"><a></a>    <span class="at">y =</span> value,</span>
-<span id="cb81-10"><a></a>    <span class="at">color =</span> data_name,</span>
-<span id="cb81-11"><a></a>    <span class="at">group =</span> data_name</span>
-<span id="cb81-12"><a></a>  )) <span class="sc">+</span></span>
-<span id="cb81-13"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb81-14"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb81-15"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>metric, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb81-16"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a>email_depth_analysis <span class="sc">|&gt;</span></span>
+<span id="cb101-2"><a></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb101-3"><a></a>    <span class="at">cols =</span> <span class="fu">c</span>(accuracy, specificity, sensitivity),</span>
+<span id="cb101-4"><a></a>    <span class="at">names_to =</span> <span class="st">"metric"</span>,</span>
+<span id="cb101-5"><a></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
+<span id="cb101-6"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb101-7"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(</span>
+<span id="cb101-8"><a></a>    <span class="at">x =</span> tree_depth,</span>
+<span id="cb101-9"><a></a>    <span class="at">y =</span> value,</span>
+<span id="cb101-10"><a></a>    <span class="at">color =</span> data_name,</span>
+<span id="cb101-11"><a></a>    <span class="at">group =</span> data_name</span>
+<span id="cb101-12"><a></a>  )) <span class="sc">+</span></span>
+<span id="cb101-13"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb101-14"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb101-15"><a></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>metric, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb101-16"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">18</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-43-1.png" width="1344" class="r-stretch"></section>
+<img data-src="W11_files/figure-html/unnamed-chunk-43-1.png" width="1344" class="r-stretch"></section>
 <section id="summary-overfitting-analysis" class="slide level2">
 <h2>Summary: Overfitting Analysis</h2>
 <ul>
@@ -1467,13 +1547,13 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
 </ul>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a>peng_rec <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
-<span id="cb82-2"><a></a>  <span class="fu">recipe</span>() <span class="sc">|&gt;</span> <span class="co"># No model specification to distinguish response ond predictor!</span></span>
-<span id="cb82-3"><a></a>  <span class="fu">step_rm</span>(<span class="fu">all_nominal</span>(), year) <span class="sc">|&gt;</span> <span class="co"># Keep only numeric variables</span></span>
-<span id="cb82-4"><a></a>  <span class="fu">step_center</span>(<span class="fu">all_numeric</span>()) <span class="sc">|&gt;</span> <span class="co"># shift by mean</span></span>
-<span id="cb82-5"><a></a>  <span class="fu">step_scale</span>(<span class="fu">all_numeric</span>())</span>
-<span id="cb82-6"><a></a><span class="co"># Call prep to calculate transformed variables</span></span>
-<span id="cb82-7"><a></a>peng_prepped <span class="ot">&lt;-</span> peng_rec <span class="sc">|&gt;</span> <span class="fu">prep</span>(penguins <span class="sc">|&gt;</span> <span class="fu">drop_na</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a></a>peng_rec <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb102-2"><a></a>  <span class="fu">recipe</span>() <span class="sc">|&gt;</span> <span class="co"># No model specification to distinguish response ond predictor!</span></span>
+<span id="cb102-3"><a></a>  <span class="fu">step_rm</span>(<span class="fu">all_nominal</span>(), year) <span class="sc">|&gt;</span> <span class="co"># Keep only numeric variables</span></span>
+<span id="cb102-4"><a></a>  <span class="fu">step_center</span>(<span class="fu">all_numeric</span>()) <span class="sc">|&gt;</span> <span class="co"># shift by mean</span></span>
+<span id="cb102-5"><a></a>  <span class="fu">step_scale</span>(<span class="fu">all_numeric</span>())</span>
+<span id="cb102-6"><a></a><span class="co"># Call prep to calculate transformed variables</span></span>
+<span id="cb102-7"><a></a>peng_prepped <span class="ot">&lt;-</span> peng_rec <span class="sc">|&gt;</span> <span class="fu">prep</span>(penguins <span class="sc">|&gt;</span> <span class="fu">drop_na</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note: <code>prep</code> is a <code>tidymodel</code>-function to execute preprocessing steps specified in a <code>recipe</code> on a dataset. When we fit a prediction model, <code>prep</code> is done as a part of <code>fit</code>, so we do not see it.</p>
 </div>
@@ -1482,7 +1562,7 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
 <h2>Excursion: What’s in <code>prep</code>-object?</h2>
 <p>A lot!</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="fu">glimpse</span>(peng_prepped)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a><span class="fu">glimpse</span>(peng_prepped)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 12
  $ var_info          : tibble [8 × 4] (S3: tbl_df/tbl/data.frame)
@@ -1583,7 +1663,7 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
   .. ..$ ordered: logi NA
  $ fit_times         : tibble [6 × 2] (S3: tbl_df/tbl/data.frame)
   ..$ stage_id: chr [1:6] "prep.rm_K3sZn" "bake.rm_K3sZn" "prep.center_tnMqa" "bake.center_tnMqa" ...
-  ..$ elapsed : num [1:6] 0.002 0 0.002 0 0.002 ...
+  ..$ elapsed : num [1:6] 0.001 0 0.001 0.001 0.002 ...
  $ last_term_info    : gropd_df [8 × 6] (S3: grouped_df/tbl_df/tbl/data.frame)
   ..$ variable: chr [1:8] "bill_depth_mm" "bill_length_mm" "body_mass_g" "flipper_length_mm" ...
   ..$ type    :List of 8
@@ -1600,7 +1680,7 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
 <section id="preprocessing-in-a-list-in-steps" class="slide level2 smaller scrollable">
 <h2>Preprocessing in a list in <code>$steps</code></h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a><span class="fu">glimpse</span>(peng_prepped<span class="sc">$</span>steps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="fu">glimpse</span>(peng_prepped<span class="sc">$</span>steps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 3
  $ :List of 6
@@ -1652,12 +1732,12 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
 <section id="parameters-of-standardization" class="slide level2 smaller">
 <h2>Parameters of Standardization</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>peng_prepped<span class="sc">$</span>steps[[<span class="dv">2</span>]]<span class="sc">$</span>means <span class="co"># Shifting was step 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a>peng_prepped<span class="sc">$</span>steps[[<span class="dv">2</span>]]<span class="sc">$</span>means <span class="co"># Shifting was step 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   bill_length_mm     bill_depth_mm flipper_length_mm       body_mass_g 
          43.99279          17.16486         200.96697        4207.05706 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a>peng_prepped<span class="sc">$</span>steps[[<span class="dv">3</span>]]<span class="sc">$</span>sds <span class="co"># Scaling was step 3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a>peng_prepped<span class="sc">$</span>steps[[<span class="dv">3</span>]]<span class="sc">$</span>sds <span class="co"># Scaling was step 3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   bill_length_mm     bill_depth_mm flipper_length_mm       body_mass_g 
          5.468668          1.969235         14.015765        805.215802 </code></pre>
@@ -1665,8 +1745,8 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
 </div>
 <p>Transformed data in <code>$template</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a></a>peng_transformed <span class="ot">&lt;-</span> peng_prepped<span class="sc">$</span>template</span>
-<span id="cb91-2"><a></a>peng_transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a></a>peng_transformed <span class="ot">&lt;-</span> peng_prepped<span class="sc">$</span>template</span>
+<span id="cb111-2"><a></a>peng_transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 333 × 4
    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
@@ -1693,7 +1773,7 @@ Example: In a logistic regression, we assume the binary outcomes are realized ra
 <li><span class="text-red">Warning:</span> In principle, k-means can results in different clusters for different initial starting positions of clusters.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a></a>peng_transformed <span class="sc">|&gt;</span> <span class="fu">kmeans</span>(<span class="at">centers =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a>peng_transformed <span class="sc">|&gt;</span> <span class="fu">kmeans</span>(<span class="at">centers =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>K-means clustering with 3 clusters of sizes 58, 213, 62
 
@@ -1756,17 +1836,17 @@ Available components:
 <li>Compute solutions for different numbers of cluster <span class="math inline">\(k\)</span></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a></a><span class="fu">set.seed</span>(<span class="dv">2023</span>)</span>
-<span id="cb95-2"><a></a>kclusts <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">k =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">|&gt;</span></span>
-<span id="cb95-3"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb95-4"><a></a>    <span class="at">kclust =</span> <span class="fu">map</span>(k, \(x) <span class="fu">kmeans</span>(peng_transformed, x)), <span class="co"># kmeans for k=1:9</span></span>
-<span id="cb95-5"><a></a>    <span class="at">tidied =</span> <span class="fu">map</span>(kclust, tidy), <span class="co"># tidy extracts the centroids here</span></span>
-<span id="cb95-6"><a></a>    <span class="at">glanced =</span> <span class="fu">map</span>(kclust, glance), <span class="co">#</span></span>
-<span id="cb95-7"><a></a>    <span class="at">augmented =</span> <span class="fu">map</span>(kclust, augment, peng_transformed) <span class="co"># add cluster labels to data</span></span>
-<span id="cb95-8"><a></a>  ) <span class="co"># This is large data frame with nested objects as entries. We unnest next</span></span>
-<span id="cb95-9"><a></a></span>
-<span id="cb95-10"><a></a>clusters <span class="ot">&lt;-</span> kclusts <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(tidied))</span>
-<span id="cb95-11"><a></a>clusters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a><span class="fu">set.seed</span>(<span class="dv">2023</span>)</span>
+<span id="cb115-2"><a></a>kclusts <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">k =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">|&gt;</span></span>
+<span id="cb115-3"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb115-4"><a></a>    <span class="at">kclust =</span> <span class="fu">map</span>(k, \(x) <span class="fu">kmeans</span>(peng_transformed, x)), <span class="co"># kmeans for k=1:9</span></span>
+<span id="cb115-5"><a></a>    <span class="at">tidied =</span> <span class="fu">map</span>(kclust, tidy), <span class="co"># tidy extracts the centroids here</span></span>
+<span id="cb115-6"><a></a>    <span class="at">glanced =</span> <span class="fu">map</span>(kclust, glance), <span class="co">#</span></span>
+<span id="cb115-7"><a></a>    <span class="at">augmented =</span> <span class="fu">map</span>(kclust, augment, peng_transformed) <span class="co"># add cluster labels to data</span></span>
+<span id="cb115-8"><a></a>  ) <span class="co"># This is large data frame with nested objects as entries. We unnest next</span></span>
+<span id="cb115-9"><a></a></span>
+<span id="cb115-10"><a></a>clusters <span class="ot">&lt;-</span> kclusts <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(tidied))</span>
+<span id="cb115-11"><a></a>clusters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 44 × 11
        k kclust   bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
@@ -1785,8 +1865,8 @@ Available components:
 # ℹ 5 more variables: size &lt;int&gt;, withinss &lt;dbl&gt;, cluster &lt;fct&gt;,
 #   glanced &lt;list&gt;, augmented &lt;list&gt;</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a></a>clusterings <span class="ot">&lt;-</span> kclusts <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(glanced))</span>
-<span id="cb97-2"><a></a>clusterings</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a>clusterings <span class="ot">&lt;-</span> kclusts <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(glanced))</span>
+<span id="cb117-2"><a></a>clusterings</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 8
       k kclust   tidied           totss tot.withinss betweenss  iter augmented
@@ -1800,8 +1880,8 @@ Available components:
 7     8 &lt;kmeans&gt; &lt;tibble [8 × 7]&gt;  1328         167.     1161.     3 &lt;tibble&gt; 
 8     9 &lt;kmeans&gt; &lt;tibble [9 × 7]&gt;  1328         175.     1153.     4 &lt;tibble&gt; </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a>assignments <span class="ot">&lt;-</span> kclusts <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(augmented))</span>
-<span id="cb99-2"><a></a>assignments</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb119"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a></a>assignments <span class="ot">&lt;-</span> kclusts <span class="sc">|&gt;</span> <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(augmented))</span>
+<span id="cb119-2"><a></a>assignments</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2,664 × 9
        k kclust   tidied           glanced          bill_length_mm bill_depth_mm
@@ -1825,14 +1905,14 @@ Available components:
 <section id="total-within-sum-of-squares-to-decide" class="slide level2 smaller">
 <h2>Total within sum of squares to decide</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a><span class="fu">ggplot</span>(clusterings, <span class="fu">aes</span>(k, tot.withinss)) <span class="sc">+</span></span>
-<span id="cb101-2"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb101-3"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb101-4"><a></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">+</span></span>
-<span id="cb101-5"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a><span class="fu">ggplot</span>(clusterings, <span class="fu">aes</span>(k, tot.withinss)) <span class="sc">+</span></span>
+<span id="cb121-2"><a></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb121-3"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb121-4"><a></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">+</span></span>
+<span id="cb121-5"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-51-1.png" width="960" class="r-stretch"><ul>
+<img data-src="W11_files/figure-html/unnamed-chunk-51-1.png" width="672" class="r-stretch"><ul>
 <li>From 3 to 4 clusters there is little improvement</li>
 <li>From 6 to more clusters there is very little improvement (or worsening)</li>
 </ul>
@@ -1843,59 +1923,65 @@ Available components:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb102-2"><a></a>g_3clusters <span class="ot">&lt;-</span> clusters <span class="sc">|&gt;</span></span>
-<span id="cb102-3"><a></a>  <span class="fu">filter</span>(k <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb102-4"><a></a>  <span class="fu">select</span>(bill_length_mm<span class="sc">:</span>body_mass_g, cluster) <span class="sc">|&gt;</span></span>
-<span id="cb102-5"><a></a>  <span class="fu">pivot_longer</span>(bill_length_mm<span class="sc">:</span>body_mass_g) <span class="sc">|&gt;</span></span>
-<span id="cb102-6"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value, name)) <span class="sc">+</span></span>
-<span id="cb102-7"><a></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb102-8"><a></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>cluster) <span class="sc">+</span></span>
-<span id="cb102-9"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb102-10"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">16</span>)</span>
-<span id="cb102-11"><a></a>g_6clusters <span class="ot">&lt;-</span> clusters <span class="sc">|&gt;</span></span>
-<span id="cb102-12"><a></a>  <span class="fu">filter</span>(k <span class="sc">==</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
-<span id="cb102-13"><a></a>  <span class="fu">select</span>(bill_length_mm<span class="sc">:</span>body_mass_g, cluster) <span class="sc">|&gt;</span></span>
-<span id="cb102-14"><a></a>  <span class="fu">pivot_longer</span>(bill_length_mm<span class="sc">:</span>body_mass_g) <span class="sc">|&gt;</span></span>
-<span id="cb102-15"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value, name)) <span class="sc">+</span></span>
-<span id="cb102-16"><a></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb102-17"><a></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>cluster) <span class="sc">+</span></span>
-<span id="cb102-18"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb102-19"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">16</span>)</span>
-<span id="cb102-20"><a></a>g_3clusters <span class="sc">+</span> g_6clusters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb122-2"><a></a>g_3clusters <span class="ot">&lt;-</span> clusters <span class="sc">|&gt;</span></span>
+<span id="cb122-3"><a></a>  <span class="fu">filter</span>(k <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb122-4"><a></a>  <span class="fu">select</span>(bill_length_mm<span class="sc">:</span>body_mass_g, cluster) <span class="sc">|&gt;</span></span>
+<span id="cb122-5"><a></a>  <span class="fu">pivot_longer</span>(bill_length_mm<span class="sc">:</span>body_mass_g) <span class="sc">|&gt;</span></span>
+<span id="cb122-6"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value, name)) <span class="sc">+</span></span>
+<span id="cb122-7"><a></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb122-8"><a></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>cluster) <span class="sc">+</span></span>
+<span id="cb122-9"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb122-10"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">16</span>)</span>
+<span id="cb122-11"><a></a>g_6clusters <span class="ot">&lt;-</span> clusters <span class="sc">|&gt;</span></span>
+<span id="cb122-12"><a></a>  <span class="fu">filter</span>(k <span class="sc">==</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb122-13"><a></a>  <span class="fu">select</span>(bill_length_mm<span class="sc">:</span>body_mass_g, cluster) <span class="sc">|&gt;</span></span>
+<span id="cb122-14"><a></a>  <span class="fu">pivot_longer</span>(bill_length_mm<span class="sc">:</span>body_mass_g) <span class="sc">|&gt;</span></span>
+<span id="cb122-15"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(value, name)) <span class="sc">+</span></span>
+<span id="cb122-16"><a></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb122-17"><a></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span>cluster) <span class="sc">+</span></span>
+<span id="cb122-18"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb122-19"><a></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">16</span>)</span>
+<span id="cb122-20"><a></a>g_3clusters <span class="sc">+</span> g_6clusters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-52-1.png" width="1728" class="r-stretch"></section>
+<img data-src="W11_files/figure-html/unnamed-chunk-52-1.png" width="1728" class="r-stretch"></section>
 <section id="visualization-scatter-plot" class="slide level2 smaller">
 <h2>Visualization: Scatter plot</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a>g1 <span class="ot">&lt;-</span> assignments <span class="sc">|&gt;</span></span>
-<span id="cb103-2"><a></a>  <span class="fu">filter</span>(k <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb103-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> .cluster)) <span class="sc">+</span></span>
-<span id="cb103-4"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb103-5"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"kMeans: k = 3 clusters"</span>)</span>
-<span id="cb103-6"><a></a>g2 <span class="ot">&lt;-</span> assignments <span class="sc">|&gt;</span></span>
-<span id="cb103-7"><a></a>  <span class="fu">filter</span>(k <span class="sc">==</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
-<span id="cb103-8"><a></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">na.omit</span>(penguins)<span class="sc">$</span>species) <span class="sc">|&gt;</span></span>
-<span id="cb103-9"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> .cluster)) <span class="sc">+</span></span>
-<span id="cb103-10"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb103-11"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"kMeans: k = 6 clusters"</span>)</span>
-<span id="cb103-12"><a></a>g3 <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
-<span id="cb103-13"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
-<span id="cb103-14"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb103-15"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Species"</span>)</span>
-<span id="cb103-16"><a></a>g4 <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
-<span id="cb103-17"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
-<span id="cb103-18"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb103-19"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sex"</span>)</span>
-<span id="cb103-20"><a></a>g1 <span class="sc">+</span> g2 <span class="sc">+</span> g3 <span class="sc">+</span> g4 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">nrow =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a>g1 <span class="ot">&lt;-</span> assignments <span class="sc">|&gt;</span></span>
+<span id="cb123-2"><a></a>  <span class="fu">filter</span>(k <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb123-3"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> .cluster)) <span class="sc">+</span></span>
+<span id="cb123-4"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb123-5"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"kMeans: k = 3 clusters"</span>)</span>
+<span id="cb123-6"><a></a>g2 <span class="ot">&lt;-</span> assignments <span class="sc">|&gt;</span></span>
+<span id="cb123-7"><a></a>  <span class="fu">filter</span>(k <span class="sc">==</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb123-8"><a></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">na.omit</span>(penguins)<span class="sc">$</span>species) <span class="sc">|&gt;</span></span>
+<span id="cb123-9"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> .cluster)) <span class="sc">+</span></span>
+<span id="cb123-10"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb123-11"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"kMeans: k = 6 clusters"</span>)</span>
+<span id="cb123-12"><a></a>g3 <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb123-13"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb123-14"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb123-15"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Species"</span>)</span>
+<span id="cb123-16"><a></a>g4 <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb123-17"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb123-18"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb123-19"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sex"</span>)</span>
+<span id="cb123-20"><a></a>g1 <span class="sc">+</span> g2 <span class="sc">+</span> g3 <span class="sc">+</span> g4 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">nrow =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).
+Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-53-1.png" width="960" class="r-stretch"><ul>
+<img data-src="W11_files/figure-html/unnamed-chunk-53-1.png" width="672" class="r-stretch"><ul>
 <li>This 3-cluster solution “finds the species fairly well!</li>
 <li><span class="text-red">Caution:</span> These are just two out of four variables!</li>
 </ul>
@@ -1903,14 +1989,14 @@ Available components:
 <section id="it-can-go-differently" class="slide level2 smaller">
 <h2>It can go differently…</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
-<span id="cb104-2"><a></a>peng_transformed <span class="sc">|&gt;</span></span>
-<span id="cb104-3"><a></a>  <span class="fu">mutate</span>(<span class="at">cluster =</span> <span class="fu">kmeans</span>(peng_transformed, <span class="dv">3</span>)<span class="sc">$</span>cluster) <span class="sc">|&gt;</span></span>
-<span id="cb104-4"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> <span class="fu">factor</span>(cluster))) <span class="sc">+</span></span>
-<span id="cb104-5"><a></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb125"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb125-2"><a></a>peng_transformed <span class="sc">|&gt;</span></span>
+<span id="cb125-3"><a></a>  <span class="fu">mutate</span>(<span class="at">cluster =</span> <span class="fu">kmeans</span>(peng_transformed, <span class="dv">3</span>)<span class="sc">$</span>cluster) <span class="sc">|&gt;</span></span>
+<span id="cb125-4"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> <span class="fu">factor</span>(cluster))) <span class="sc">+</span></span>
+<span id="cb125-5"><a></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-54-1.png" width="960" class="r-stretch"><p>This 3-cluster solution divides the Gentoo penguins into two clusters and keeps most Adelie and Chinstrap in one cluster.</p>
+<img data-src="W11_files/figure-html/unnamed-chunk-54-1.png" width="672" class="r-stretch"><p>This 3-cluster solution divides the Gentoo penguins into two clusters and keeps most Adelie and Chinstrap in one cluster.</p>
 <p>Why? <span class="fragment">Different random starting positions of the cluster centroids!</span></p>
 </section></section>
 <section>
@@ -1983,7 +2069,7 @@ Available components:
 <li>First compute the distance matrix (entry <span class="math inline">\(i,j\)</span> is the distance between case <span class="math inline">\(i\)</span> and case <span class="math inline">\(j\)</span>)</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a>peng_transformed <span class="sc">|&gt;</span> <span class="fu">dist</span>(<span class="at">method =</span> <span class="st">"euclidean"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a>peng_transformed <span class="sc">|&gt;</span> <span class="fu">dist</span>(<span class="at">method =</span> <span class="st">"euclidean"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            1         2         3         4         5         6         7
 2   0.7564881                                                            
@@ -16491,10 +16577,10 @@ Available components:
 <li><code>hclust</code> from base-R</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a>peng_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(peng_transformed) <span class="co"># base-R data.frame</span></span>
-<span id="cb107-2"><a></a><span class="co">#row.names(peng_df) &lt;- peng_df$iso_code # base-R way to have row names for hclust</span></span>
-<span id="cb107-3"><a></a>hc_peng <span class="ot">&lt;-</span> peng_df <span class="sc">|&gt;</span> <span class="fu">dist</span>(<span class="at">method =</span> <span class="st">"euclidean"</span>) <span class="sc">|&gt;</span> <span class="fu">hclust</span>()</span>
-<span id="cb107-4"><a></a>hc_peng</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb128"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a></a>peng_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(peng_transformed) <span class="co"># base-R data.frame</span></span>
+<span id="cb128-2"><a></a><span class="co">#row.names(peng_df) &lt;- peng_df$iso_code # base-R way to have row names for hclust</span></span>
+<span id="cb128-3"><a></a>hc_peng <span class="ot">&lt;-</span> peng_df <span class="sc">|&gt;</span> <span class="fu">dist</span>(<span class="at">method =</span> <span class="st">"euclidean"</span>) <span class="sc">|&gt;</span> <span class="fu">hclust</span>()</span>
+<span id="cb128-4"><a></a>hc_peng</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -16504,7 +16590,7 @@ Cluster method   : complete
 Distance         : euclidean 
 Number of objects: 333 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a><span class="fu">glimpse</span>(hc_peng)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a><span class="fu">glimpse</span>(hc_peng)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 7
  $ merge      : int [1:332, 1:2] -153 -187 -32 -193 -71 -68 -295 -174 -281 -192 ...
@@ -16521,10 +16607,10 @@ Number of objects: 333 </code></pre>
 <section id="plot-the-dendrogram" class="slide level2 smaller">
 <h2>Plot the dendrogram</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a></a><span class="fu">plot</span>(hc_peng, <span class="at">cex =</span> <span class="fl">0.4</span>) <span class="co"># base-R way of plotting hclust object</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb132"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a></a><span class="fu">plot</span>(hc_peng, <span class="at">cex =</span> <span class="fl">0.4</span>) <span class="co"># base-R way of plotting hclust object</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-57-1.png" width="960" class="r-stretch"></section>
+<img data-src="W11_files/figure-html/unnamed-chunk-57-1.png" width="672" class="r-stretch"></section>
 <section id="plot-height-of-hierarchy-steps" class="slide level2 smaller">
 <h2>Plot height of hierarchy steps</h2>
 <ul>
@@ -16532,58 +16618,58 @@ Number of objects: 333 </code></pre>
 <li>Height at <span class="math inline">\(x\)</span> is the Euclidean distance which needs to be bridged to join the closest two clusters from the <span class="math inline">\(x+1\)</span>-cluster solution to get the <span class="math inline">\(x\)</span>-cluster solution. We should not cut where the increase in height is marginal.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a><span class="fu">tibble</span>(</span>
-<span id="cb112-2"><a></a>  <span class="at">height =</span> hc_peng<span class="sc">$</span>height <span class="sc">|&gt;</span> <span class="fu">tail</span>(<span class="dv">10</span>), <span class="co"># last ten values of height</span></span>
-<span id="cb112-3"><a></a>  <span class="at">num_cluster =</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">1</span></span>
-<span id="cb112-4"><a></a>) <span class="sc">|&gt;</span></span>
-<span id="cb112-5"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(num_cluster, height)) <span class="sc">+</span></span>
-<span id="cb112-6"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb112-7"><a></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a></a><span class="fu">tibble</span>(</span>
+<span id="cb133-2"><a></a>  <span class="at">height =</span> hc_peng<span class="sc">$</span>height <span class="sc">|&gt;</span> <span class="fu">tail</span>(<span class="dv">10</span>), <span class="co"># last ten values of height</span></span>
+<span id="cb133-3"><a></a>  <span class="at">num_cluster =</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">1</span></span>
+<span id="cb133-4"><a></a>) <span class="sc">|&gt;</span></span>
+<span id="cb133-5"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(num_cluster, height)) <span class="sc">+</span></span>
+<span id="cb133-6"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb133-7"><a></a>  <span class="fu">geom_line</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-58-1.png" width="960" class="r-stretch"><ul>
+<img data-src="W11_files/figure-html/unnamed-chunk-58-1.png" width="672" class="r-stretch"><ul>
 <li>Empirically, we do not see clear cut points in this case.</li>
 </ul>
 </section>
 <section id="dendrogram-with-cutpoints" class="slide level2 smaller">
 <h2>Dendrogram with cutpoints</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a><span class="fu">plot</span>(hc_peng, <span class="at">cex =</span> <span class="fl">0.4</span>) <span class="co"># base-R way of plotting hclust object</span></span>
-<span id="cb113-2"><a></a><span class="fu">rect.hclust</span>(hc_peng, <span class="at">k =</span> <span class="dv">3</span>) <span class="co"># base-R way of plotting in an existing plot</span></span>
-<span id="cb113-3"><a></a><span class="fu">rect.hclust</span>(hc_peng, <span class="at">k =</span> <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb134"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a></a><span class="fu">plot</span>(hc_peng, <span class="at">cex =</span> <span class="fl">0.4</span>) <span class="co"># base-R way of plotting hclust object</span></span>
+<span id="cb134-2"><a></a><span class="fu">rect.hclust</span>(hc_peng, <span class="at">k =</span> <span class="dv">3</span>) <span class="co"># base-R way of plotting in an existing plot</span></span>
+<span id="cb134-3"><a></a><span class="fu">rect.hclust</span>(hc_peng, <span class="at">k =</span> <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-59-1.png" width="960" class="r-stretch"></section>
+<img data-src="W11_files/figure-html/unnamed-chunk-59-1.png" width="672" class="r-stretch"></section>
 <section id="visualization-clusters" class="slide level2 smaller">
 <h2>Visualization: Clusters</h2>
 <p>Use <code>cutree</code>.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a></a>assignments <span class="ot">&lt;-</span> peng_transformed <span class="sc">|&gt;</span></span>
-<span id="cb114-2"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb114-3"><a></a>    <span class="at">species =</span> <span class="fu">na.omit</span>(penguins)<span class="sc">$</span>species,</span>
-<span id="cb114-4"><a></a>    <span class="at">sex =</span> <span class="fu">na.omit</span>(penguins)<span class="sc">$</span>sex,</span>
-<span id="cb114-5"><a></a>    <span class="at">hclust3 =</span> <span class="fu">cutree</span>(hc_peng, <span class="at">k =</span> <span class="dv">3</span>),</span>
-<span id="cb114-6"><a></a>    <span class="at">hclust6 =</span> <span class="fu">cutree</span>(hc_peng, <span class="at">k =</span> <span class="dv">6</span>)</span>
-<span id="cb114-7"><a></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb114-8"><a></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(hclust3, hclust6))</span>
-<span id="cb114-9"><a></a>g1hc <span class="ot">&lt;-</span> assignments <span class="sc">|&gt;</span></span>
-<span id="cb114-10"><a></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"hclust3"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb114-11"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> <span class="fu">factor</span>(value))) <span class="sc">+</span></span>
-<span id="cb114-12"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb114-13"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"HC: k = 3 clusters"</span>)</span>
-<span id="cb114-14"><a></a>g2hc <span class="ot">&lt;-</span> assignments <span class="sc">|&gt;</span></span>
-<span id="cb114-15"><a></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"hclust6"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb114-16"><a></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">na.omit</span>(penguins)<span class="sc">$</span>species) <span class="sc">|&gt;</span></span>
-<span id="cb114-17"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> <span class="fu">factor</span>(value))) <span class="sc">+</span></span>
-<span id="cb114-18"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb114-19"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"HC: k = 6 clusters"</span>)</span>
-<span id="cb114-20"><a></a>g1hc <span class="sc">+</span> g2hc <span class="sc">+</span> g1 <span class="sc">+</span> g2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">nrow =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a></a>assignments <span class="ot">&lt;-</span> peng_transformed <span class="sc">|&gt;</span></span>
+<span id="cb135-2"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb135-3"><a></a>    <span class="at">species =</span> <span class="fu">na.omit</span>(penguins)<span class="sc">$</span>species,</span>
+<span id="cb135-4"><a></a>    <span class="at">sex =</span> <span class="fu">na.omit</span>(penguins)<span class="sc">$</span>sex,</span>
+<span id="cb135-5"><a></a>    <span class="at">hclust3 =</span> <span class="fu">cutree</span>(hc_peng, <span class="at">k =</span> <span class="dv">3</span>),</span>
+<span id="cb135-6"><a></a>    <span class="at">hclust6 =</span> <span class="fu">cutree</span>(hc_peng, <span class="at">k =</span> <span class="dv">6</span>)</span>
+<span id="cb135-7"><a></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb135-8"><a></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(hclust3, hclust6))</span>
+<span id="cb135-9"><a></a>g1hc <span class="ot">&lt;-</span> assignments <span class="sc">|&gt;</span></span>
+<span id="cb135-10"><a></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"hclust3"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb135-11"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> <span class="fu">factor</span>(value))) <span class="sc">+</span></span>
+<span id="cb135-12"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb135-13"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"HC: k = 3 clusters"</span>)</span>
+<span id="cb135-14"><a></a>g2hc <span class="ot">&lt;-</span> assignments <span class="sc">|&gt;</span></span>
+<span id="cb135-15"><a></a>  <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"hclust6"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb135-16"><a></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">na.omit</span>(penguins)<span class="sc">$</span>species) <span class="sc">|&gt;</span></span>
+<span id="cb135-17"><a></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bill_length_mm, bill_depth_mm, <span class="at">color =</span> <span class="fu">factor</span>(value))) <span class="sc">+</span></span>
+<span id="cb135-18"><a></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb135-19"><a></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"HC: k = 6 clusters"</span>)</span>
+<span id="cb135-20"><a></a>g1hc <span class="sc">+</span> g2hc <span class="sc">+</span> g1 <span class="sc">+</span> g2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">nrow =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 
 </div>
-<img data-src="W11_files/figure-revealjs/unnamed-chunk-60-1.png" width="960" class="r-stretch"></section>
+<img data-src="W11_files/figure-html/unnamed-chunk-60-1.png" width="672" class="r-stretch"></section>
 <section id="clustering-summary" class="slide level2 smaller">
 <h2>Clustering Summary</h2>
 <ul>
@@ -16817,44 +16903,6 @@ Number of objects: 333 </code></pre>
         ]
       });
     </script>
-    
-    <script>
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-      // slide changes (different for each slide format).
-      (function () {
-        // dispatch for htmlwidgets
-        function fireSlideEnter() {
-          const event = window.document.createEvent("Event");
-          event.initEvent("slideenter", true, true);
-          window.document.dispatchEvent(event);
-        }
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-          fireSlideEnter();
-
-          // dispatch for shiny
-          if (window.jQuery) {
-            if (previousSlide) {
-              window.jQuery(previousSlide).trigger("hidden");
-            }
-            if (currentSlide) {
-              window.jQuery(currentSlide).trigger("shown");
-            }
-          }
-        }
-
-        // hookup for slidy
-        if (window.w3c_slidy) {
-          window.w3c_slidy.add_observer(function (slide_num) {
-            // slide_num starts at position 1
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-          });
-        }
-
-      })();
-    </script>
-
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
