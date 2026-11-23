@@ -151,7 +151,7 @@
     "href": "lectures/W12.html#mse-variance-and-bias-of-estimates",
     "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
     "section": "MSE, Variance, and Bias of estimates",
-    "text": "MSE, Variance, and Bias of estimates\nIn a crowd estimation, \\(n\\) estimators delivered the estimates \\(\\hat{y}_1,\\dots,\\hat{y}_n\\). Let us look at the following measures\n\n\\(\\bar{y} = \\frac{1}{n}\\sum_{i = 1}^n \\hat{y}_i^2\\) is the mean estimate, it is the aggregated estimate of the crowd\n\\(\\text{MSE} = \\text{RMSE}^2 = \\frac{1}{n}\\sum_{i = 1}^n (\\text{truth} - \\hat{y}_i)^2\\)\n\\(\\text{Variance} = \\frac{1}{n}\\sum_{i = 1}^n (\\hat{y}_i - \\bar{y})^2\\)\n\\(\\text{Bias-squared} = (\\bar{y} - \\text{truth})^2\\) which is the square difference between truth and mean estimate.\n\nThere is a mathematical relation (a math exercise to check):\n\\[\\text{MSE} = \\text{Bias-squared} + \\text{Variance}\\]"
+    "text": "MSE, Variance, and Bias of estimates\nIn a crowd estimation, \\(n\\) estimators delivered the estimates \\(\\hat{y}_1,\\dots,\\hat{y}_n\\). Let us look at the following measures\n\n\\(\\bar{y} = \\frac{1}{n}\\sum_{i = 1}^n \\hat{y}_i\\) is the mean estimate, it is the aggregated estimate of the crowd\n\\(\\text{MSE} = \\text{RMSE}^2 = \\frac{1}{n}\\sum_{i = 1}^n (\\text{truth} - \\hat{y}_i)^2\\)\n\\(\\text{Variance} = \\frac{1}{n}\\sum_{i = 1}^n (\\hat{y}_i - \\bar{y})^2\\)\n\\(\\text{Bias-squared} = (\\bar{y} - \\text{truth})^2\\) which is the square difference between truth and mean estimate.\n\nThere is a mathematical relation (a math exercise to check):\n\\[\\text{MSE} = \\text{Bias-squared} + \\text{Variance}\\]"
   },
   {
     "objectID": "lectures/W12.html#testing-for-galtons-data",
@@ -235,7 +235,7 @@
     "href": "lectures/W12.html#simulating-the-null-distribution",
     "title": "W#12: Uncertainty, Bias and Variance, Hypothesis Tests, Forrest Wisdom",
     "section": "Simulating the null distribution",
-    "text": "Simulating the null distribution\nWe want simulate several outcomes of 62 patients where the probability of complication for each patient is 0.10. (Null hypothesis \\(H_0: q = 0.10\\).)\nThese several outcomes is called the null distribution.\n\nThink abstract of this using a bag of chips:\n\nHow many chips? For example 10 which makes 10% choices possible\nHow many colors? 2\nWhat should colors represent? “complication”, “no complication”\nHow many draws? 62 as the data\nWith replacement or without replacement? With replacement"
+    "text": "Simulating the null distribution\nWe want to simulate several outcomes of 62 patients where the probability of complication for each patient is 0.10. (Null hypothesis \\(H_0: q = 0.10\\).)\nThese several outcomes are called the null distribution.\n\nThink abstract about simulating complication with probabilty 0.1 using a bag of chips:\n\nHow many chips? For example 10 which makes 10% choices possible\nHow many colors? 2\nWhat should colors represent? “complication”, “no complication”\nHow many draws? 62 as the data\nWith replacement or without replacement? With replacement"
   },
   {
     "objectID": "lectures/W12.html#simulation",

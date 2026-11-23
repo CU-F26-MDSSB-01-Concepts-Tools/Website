@@ -932,7 +932,7 @@ The confidence interval assesses where 95% of the values are when we sample anew
 <h2>MSE, Variance, and Bias of estimates</h2>
 <p>In a crowd estimation, <span class="math inline">\(n\)</span> estimators delivered the estimates <span class="math inline">\(\hat{y}_1,\dots,\hat{y}_n\)</span>. Let us look at the following measures</p>
 <ul>
-<li><p><span class="math inline">\(\bar{y} = \frac{1}{n}\sum_{i = 1}^n \hat{y}_i^2\)</span> is the mean estimate, it is the aggregated estimate of the crowd</p></li>
+<li><p><span class="math inline">\(\bar{y} = \frac{1}{n}\sum_{i = 1}^n \hat{y}_i\)</span> is the mean estimate, it is the aggregated estimate of the crowd</p></li>
 <li><p><span class="math inline">\(\text{MSE} = \text{RMSE}^2 = \frac{1}{n}\sum_{i = 1}^n (\text{truth} - \hat{y}_i)^2\)</span></p></li>
 <li><p><span class="math inline">\(\text{Variance} = \frac{1}{n}\sum_{i = 1}^n (\hat{y}_i - \bar{y})^2\)</span></p></li>
 <li><p><span class="math inline">\(\text{Bias-squared} = (\bar{y} - \text{truth})^2\)</span> which is the square difference between truth and mean estimate.</p></li>
@@ -1137,10 +1137,10 @@ Yes: <strong>Fail to reject <span class="math inline">\(H_0\)</span></strong>; N
 </section>
 <section id="simulating-the-null-distribution" class="slide level2">
 <h2>Simulating the null distribution</h2>
-<p>We want simulate several outcomes of 62 patients where the probability of complication for each patient is 0.10. (Null hypothesis <span class="math inline">\(H_0: q = 0.10\)</span>.)</p>
-<p>These several outcomes is called the <span class="green"><strong>null distribution</strong></span>.</p>
+<p>We want to simulate several outcomes of 62 patients where the probability of complication for each patient is 0.10. (Null hypothesis <span class="math inline">\(H_0: q = 0.10\)</span>.)</p>
+<p>These several outcomes are called the <span class="green"><strong>null distribution</strong></span>.</p>
 <div class="fragment">
-<p><strong>Think abstract of this using a bag of chips:</strong></p>
+<p><strong>Think abstract about simulating complication with probabilty 0.1 using a bag of chips:</strong></p>
 <ul>
 <li>How many chips? <span class="fragment red">For example 10 which makes 10% choices possible</span></li>
 <li>How many colors? <span class="fragment red">2</span></li>
@@ -1876,7 +1876,7 @@ In total there are 150 fits (6 parameter combinations <span class="math inline">
 </div>
 </div>
 </section>
-<section id="tuning-visualizations" class="slide level2">
+<section id="tuning-visualizations" class="slide level2 scrollable">
 <h2>Tuning visualizations</h2>
 <p>Visualization for evalution</p>
 <div class="cell">
